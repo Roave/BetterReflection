@@ -49,7 +49,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
@@ -62,7 +62,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
@@ -101,7 +101,7 @@ class ReflectionConstantTest extends TestCase
 
         self::assertFalse($reflection->inNamespace());
         self::assertSame('FOO', $reflection->getName());
-        self::assertSame('', $reflection->getNamespaceName());
+        self::assertNull($reflection->getNamespaceName());
         self::assertSame('FOO', $reflection->getShortName());
     }
 
@@ -134,6 +134,8 @@ class ReflectionConstantTest extends TestCase
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $reflection = $reflector->reflectConstant('FOO');
 
+        self::assertInstanceOf(Node\Expr::class, $reflection->getValueExpression());
+
         self::assertSame(1, $reflection->getValue());
         // Because of code coverage - should use optimization
         self::assertSame(1, $reflection->getValue());
@@ -149,6 +151,7 @@ class ReflectionConstantTest extends TestCase
         ]));
         $reflection = $reflector->reflectConstant('FOO');
 
+        self::assertInstanceOf(Node\Expr::class, $reflection->getValueExpression());
         self::assertSame(E_ALL, $reflection->getValue());
     }
 
@@ -217,10 +220,12 @@ class ReflectionConstantTest extends TestCase
 
     public function testGetLocatedSource(): void
     {
-        $node          = new Node\Stmt\Const_([new Node\Const_('FOO', BuilderHelpers::normalizeValue(1))]);
-        $locatedSource = new LocatedSource('<?php const FOO = 1', 'FOO');
-        $reflector     = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
-        $reflection    = ReflectionConstant::createFromNode($reflector, $node, $locatedSource, null, 0);
+        $constNode                 = new Node\Const_('FOO', BuilderHelpers::normalizeValue(1));
+        $constNode->namespacedName = new Node\Name\FullyQualified('FOO');
+        $node                      = new Node\Stmt\Const_([$constNode], ['startLine' => 1, 'endLine' => 1, 'startFilePos' => 6, 'endFilePos' => 18]);
+        $locatedSource             = new LocatedSource('<?php const FOO = 1', 'FOO');
+        $reflector                 = new DefaultReflector(new StringSourceLocator('<?php', $this->astLocator));
+        $reflection                = ReflectionConstant::createFromNode($reflector, $node, $locatedSource, null, 0);
 
         self::assertSame($locatedSource, $reflection->getLocatedSource());
     }
@@ -255,7 +260,7 @@ class ReflectionConstantTest extends TestCase
         self::assertStringContainsString('This constant comment should be used.', $reflection->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -265,7 +270,11 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider startEndLineProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider startEndLineProvider
+     */
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -275,7 +284,7 @@ class ReflectionConstantTest extends TestCase
         self::assertSame($expectedEnd, $reflection->getEndLine());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -284,7 +293,11 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider columnsProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider columnsProvider
+     */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -292,33 +305,6 @@ class ReflectionConstantTest extends TestCase
 
         self::assertSame($startColumn, $reflection->getStartColumn());
         self::assertSame($endColumn, $reflection->getEndColumn());
-    }
-
-    public function testGetAstByConst(): void
-    {
-        $php = '<?php const FOO = 1;';
-
-        $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $reflection = $reflector->reflectConstant('FOO');
-
-        $ast = $reflection->getAst();
-
-        self::assertInstanceOf(Node\Stmt\Const_::class, $ast);
-        self::assertSame('FOO', $ast->consts[0]->name->name);
-    }
-
-    public function testGetAstByDefine(): void
-    {
-        $php = '<?php define("FOO", 1);';
-
-        $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $reflection = $reflector->reflectConstant('FOO');
-
-        $ast = $reflection->getAst();
-
-        self::assertInstanceOf(Node\Expr\FuncCall::class, $ast);
-        self::assertInstanceOf(Node\Scalar\String_::class, $ast->args[0]->value);
-        self::assertSame('FOO', $ast->args[0]->value->value);
     }
 
     /** @return list<array{0: string, 1: bool}> */

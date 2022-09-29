@@ -26,6 +26,7 @@ class FileHelper
         }
 
         if (DIRECTORY_SEPARATOR === '\\') {
+            // @infection-ignore-all UnwrapStrReplace Needed only on Windows
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         }
 

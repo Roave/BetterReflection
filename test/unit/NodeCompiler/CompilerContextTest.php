@@ -92,7 +92,7 @@ PHP;
 
         $reflector     = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $class         = $reflector->reflectClass('Foo\Boo');
-        $classConstant = $class->getReflectionConstant('BAZ');
+        $classConstant = $class->getConstant('BAZ');
 
         $context = new CompilerContext($reflector, $classConstant);
 
@@ -244,6 +244,6 @@ PHP;
 
         $context = new CompilerContext($reflector, $constant);
 
-        self::assertSame('', $context->getNamespace());
+        self::assertNull($context->getNamespace());
     }
 }

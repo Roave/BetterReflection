@@ -77,7 +77,7 @@ final class ReflectionFunction extends CoreReflectionFunction
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionFunction->getDocComment() ?: false;
+        return $this->betterReflectionFunction->getDocComment() ?? false;
     }
 
     public function getStartLine(): int|false
@@ -115,7 +115,7 @@ final class ReflectionFunction extends CoreReflectionFunction
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionFunction->getNamespaceName();
+        return $this->betterReflectionFunction->getNamespaceName() ?? '';
     }
 
     public function getNumberOfParameters(): int

@@ -38,14 +38,22 @@ class ReflectionNamedType extends ReflectionType
 
     private string $name;
 
+    /** @internal */
     public function __construct(
-        Reflector $reflector,
-        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        private Reflector $reflector,
+        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         Identifier|Name $type,
     ) {
-        parent::__construct($reflector, $owner);
-
         $this->name = $type->toString();
+    }
+
+    /** @internal */
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    {
+        $clone        = clone $this;
+        $clone->owner = $owner;
+
+        return $clone;
     }
 
     public function getName(): string
@@ -80,7 +88,7 @@ class ReflectionNamedType extends ReflectionType
         $lowercaseName = strtolower($this->name);
 
         if ($lowercaseName === 'self') {
-            $class = $this->owner->getDeclaringClass();
+            $class = $this->owner->getImplementingClass();
             assert($class instanceof ReflectionClass);
 
             return $class;

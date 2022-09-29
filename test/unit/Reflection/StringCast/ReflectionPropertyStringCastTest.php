@@ -23,7 +23,7 @@ class ReflectionPropertyStringCastTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function toStringProvider(): array
     {
         return [
@@ -38,7 +38,11 @@ class ReflectionPropertyStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider toStringProvider
+     */
     public function testToString(string $propertyName, string $expectedString): void
     {
         $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastProperties.php', $this->astLocator));

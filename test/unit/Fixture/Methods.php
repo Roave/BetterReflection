@@ -34,6 +34,14 @@ abstract class Methods
     {
     }
 
+    protected static function staticProtectedMethod()
+    {
+    }
+
+    private static function staticPrivateMethod()
+    {
+    }
+
     function noVisibility()
     {
     }
@@ -61,51 +69,6 @@ abstract class Methods
         array $arrayParameter,
         callable $callableParameter
     ) {
-    }
-
-    public function methodIsArrayParameters(
-        $noTypeParameter,
-        bool $boolParameter,
-        array $arrayParameter,
-        ArRaY $arrayCaseInsensitiveParameter,
-        ?array $nullableArrayParameter,
-        null|array $unionArrayParameterNullFirst,
-        array|null $unionArrayParameterNullLast,
-        ARRAY|NULL $unionArrayParameterNullUppercase,
-        string|bool $unionNotArrayParameter,
-        array|string|null $unionWithArrayNotArrayParameter,
-        array|object $unionWithArrayAndObjectNotArrayParameter,
-        \stdClass&\Iterator $intersectionNotArrayParameter,
-    )
-    {
-    }
-
-    public function methodIsCallableParameters(
-        $noTypeParameter,
-        bool $boolParameter,
-        callable $callableParameter,
-        cAlLaBlE $callableCaseInsensitiveParameter,
-        ?callable $nullableCallableParameter,
-        null|callable $unionCallableParameterNullFirst,
-        callable|null $unionCallableParameterNullLast,
-        CALLABLE|NULL $unionCallableParameterNullUppercase,
-        string|bool $unionNotCallableParameter,
-        callable|string|null $unionWithCallableNotCallableParameter,
-        callable|object $unionWithCallableAndObjectNotArrayParameter,
-        \stdClass&\Iterator $intersectionNotCallableParameter,
-    )
-    {
-    }
-
-    public function methodGetClassParameters(
-        $untyped,
-        array $array,
-        \stdClass $object,
-        string|\stdClass $unionWithClass,
-        string|bool $unionWithoutClass,
-        \stdClass&\Iterator $intersection,
-    )
-    {
     }
 
     public function methodWithVariadic($nonVariadicParameter, ...$variadicParameter)

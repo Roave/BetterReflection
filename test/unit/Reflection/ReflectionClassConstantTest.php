@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -44,12 +46,13 @@ class ReflectionClassConstantTest extends TestCase
         );
     }
 
+    /** @param non-empty-string $name */
     private function getExampleConstant(string $name): ReflectionClassConstant|null
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
 
-        return $classInfo->getReflectionConstant($name);
+        return $classInfo->getConstant($name);
     }
 
     public function testDefaultVisibility(): void
@@ -58,27 +61,38 @@ class ReflectionClassConstantTest extends TestCase
         self::assertTrue($const->isPublic());
     }
 
-    public function testPublicVisibility(): void
+    public function testOnlyPublicVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
         self::assertTrue($const->isPublic());
+        self::assertFalse($const->isFinal());
     }
 
-    public function testProtectedVisibility(): void
+    public function testOnlyProtectedVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
         self::assertTrue($const->isProtected());
+        self::assertFalse($const->isFinal());
     }
 
     public function testPrivateVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
         self::assertTrue($const->isPrivate());
+        self::assertFalse($const->isFinal());
     }
 
-    public function testFinal(): void
+    public function testPublicFinal(): void
     {
         $const = $this->getExampleConstant('MY_CONST_6');
+        self::assertTrue($const->isPublic());
+        self::assertTrue($const->isFinal());
+    }
+
+    public function testProtectedFinal(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_7');
+        self::assertTrue($const->isProtected());
         self::assertTrue($const->isFinal());
     }
 
@@ -87,13 +101,17 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
-    /** @dataProvider getModifiersProvider */
+    /**
+     * @param non-empty-string $const
+     *
+     * @dataProvider getModifiersProvider
+     */
     public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
-    /** @return list<array{0: string, 1: int}> */
+    /** @return list<array{0: non-empty-string, 1: int}> */
     public function getModifiersProvider(): array
     {
         return [
@@ -102,8 +120,17 @@ class ReflectionClassConstantTest extends TestCase
             ['MY_CONST_3', CoreReflectionClassConstant::IS_PUBLIC],
             ['MY_CONST_4', CoreReflectionClassConstant::IS_PROTECTED],
             ['MY_CONST_5', CoreReflectionClassConstant::IS_PRIVATE],
-            ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstant::IS_FINAL],
+            ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstantAdapter::IS_FINAL],
+            ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstantAdapter::IS_FINAL],
         ];
+    }
+
+    public function testGetValue(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+
+        self::assertInstanceOf(Node\Expr::class, $const->getValueExpression());
+        self::assertSame(123, $const->getValue());
     }
 
     public function testGetDocComment(): void
@@ -112,31 +139,35 @@ class ReflectionClassConstantTest extends TestCase
         self::assertStringContainsString('This comment for constant should be used.', $const->getDocComment());
     }
 
-    public function testGetDocCommentReturnsEmptyStringWithNoComment(): void
+    public function testGetDocCommentReturnsNullWithNoComment(): void
     {
         $const = $this->getExampleConstant('MY_CONST_1');
-        self::assertSame('', $const->getDocComment());
+        self::assertNull($const->getDocComment());
     }
 
     public function testGetDeclaringClass(): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
-        $const     = $classInfo->getReflectionConstant('MY_CONST_1');
+        $const     = $classInfo->getConstant('MY_CONST_1');
         self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
-    /** @dataProvider startEndLineProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider startEndLineProvider
+     */
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection = $reflector->reflectClass('\T');
-        $constReflection = $classReflection->getReflectionConstant('TEST');
+        $constReflection = $classReflection->getConstant('TEST');
         self::assertEquals($startLine, $constReflection->getStartLine());
         self::assertEquals($endLine, $constReflection->getEndLine());
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function startEndLineProvider(): array
     {
         return [
@@ -147,7 +178,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @return list<array{0: string, 1: int, 2: int}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
     public function columnsProvider(): array
     {
         return [
@@ -157,50 +188,22 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider columnsProvider */
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider columnsProvider
+     */
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $classReflection    = $reflector->reflectClass('T');
-        $constantReflection = $classReflection->getReflectionConstant('TEST');
+        $constantReflection = $classReflection->getConstant('TEST');
 
         self::assertEquals($startColumn, $constantReflection->getStartColumn());
         self::assertEquals($endColumn, $constantReflection->getEndColumn());
     }
 
-    /** @return list<array{0: string, 1: int}> */
-    public function getAstProvider(): array
-    {
-        return [
-            ['TEST', 0],
-            ['TEST2', 1],
-        ];
-    }
-
-    /** @dataProvider getAstProvider */
-    public function testGetAst(string $constantName, int $positionInAst): void
-    {
-        $php = <<<'PHP'
-<?php
-class Foo
-{
-    const TEST = 'test',
-        TEST2 = 'test2';
-}
-PHP;
-
-        $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $classReflection    = $reflector->reflectClass('Foo');
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
-
-        $ast = $constantReflection->getAst();
-
-        self::assertInstanceOf(ClassConst::class, $ast);
-        self::assertSame($positionInAst, $constantReflection->getPositionInAst());
-        self::assertSame($constantName, $ast->consts[$positionInAst]->name->name);
-    }
-
-    /** @return list<array{0: string, 1: string, 2: string, 3: string}> */
+    /** @return list<array{0: non-empty-string, 1: string, 2: string, 3: string}> */
     public function declaringAndImplementingClassesProvider(): array
     {
         return [
@@ -213,12 +216,16 @@ PHP;
         ];
     }
 
-    /** @dataProvider declaringAndImplementingClassesProvider */
+    /**
+     * @param non-empty-string $constantName
+     *
+     * @dataProvider declaringAndImplementingClassesProvider
+     */
     public function testGetDeclaringAndImplementingClass(string $constantName, string $currentClassName, string $declaringClassName, string $implementingClassName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesWithConstants.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass($currentClassName);
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
+        $constantReflection = $classReflection->getConstant($constantName);
 
         self::assertSame($declaringClassName, $constantReflection->getDeclaringClass()->getName());
         self::assertSame($implementingClassName, $constantReflection->getImplementingClass()->getName());
@@ -258,7 +265,7 @@ PHP;
 
         $reflector          = new DefaultReflector(new StringSourceLocator($php, BetterReflectionSingleton::instance()->astLocator()));
         $classReflection    = $reflector->reflectClass('Foo');
-        $constantReflection = $classReflection->getReflectionConstant('FOO');
+        $constantReflection = $classReflection->getConstant('FOO');
 
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
@@ -267,7 +274,7 @@ PHP;
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ExampleClass::class);
-        $constantReflection = $classReflection->getReflectionConstant('MY_CONST_1');
+        $constantReflection = $classReflection->getConstant('MY_CONST_1');
         $attributes         = $constantReflection->getAttributes();
 
         self::assertCount(0, $attributes);
@@ -277,7 +284,7 @@ PHP;
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $constantReflection = $classReflection->getConstant('CONSTANT_WITH_ATTRIBUTES');
         $attributes         = $constantReflection->getAttributes();
 
         self::assertCount(2, $attributes);
@@ -287,7 +294,7 @@ PHP;
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $constantReflection = $classReflection->getConstant('CONSTANT_WITH_ATTRIBUTES');
         $attributes         = $constantReflection->getAttributesByName(Attr::class);
 
         self::assertCount(1, $attributes);
@@ -297,9 +304,32 @@ PHP;
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
         $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
-        $constantReflection = $classReflection->getReflectionConstant('CONSTANT_WITH_ATTRIBUTES');
+        $constantReflection = $classReflection->getConstant('CONSTANT_WITH_ATTRIBUTES');
         $attributes         = $constantReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testWithImplementingClass(): void
+    {
+        $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection    = $reflector->reflectClass(ClassWithAttributes::class);
+        $constantReflection = $classReflection->getConstant('CONSTANT_WITH_ATTRIBUTES');
+        $attributes         = $constantReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+
+        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+
+        $cloneConstantReflection = $constantReflection->withImplementingClass($implementingClassReflection);
+
+        self::assertNotSame($constantReflection, $cloneConstantReflection);
+        self::assertSame($constantReflection->getDeclaringClass(), $cloneConstantReflection->getDeclaringClass());
+        self::assertNotSame($constantReflection->getImplementingClass(), $cloneConstantReflection->getImplementingClass());
+
+        $cloneAttributes = $cloneConstantReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }

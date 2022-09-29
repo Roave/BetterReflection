@@ -10,7 +10,6 @@ use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\Exception\EmptyPhpSourceCode;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
@@ -61,11 +60,5 @@ class StringSourceLocatorTest extends TestCase
         );
 
         self::assertSame('Foo', $reflectionClass->getName());
-    }
-
-    public function testConstructorThrowsExceptionIfEmptyStringGiven(): void
-    {
-        $this->expectException(EmptyPhpSourceCode::class);
-        new StringSourceLocator('', $this->astLocator);
     }
 }

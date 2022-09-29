@@ -7,16 +7,16 @@ namespace Roave\BetterReflectionTest\Reflection;
 use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
-use Php4StyleCaseInsensitiveConstruct;
-use Php4StyleConstruct;
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use Reflection;
-use ReflectionClass;
+use ReflectionClass as CoreReflectionClass;
 use ReflectionMethod as CoreReflectionMethod;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -39,7 +39,6 @@ use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\Php4StyleConstructInNamespace;
 use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
@@ -78,12 +77,26 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('add', $method->getName());
     }
 
+    public function testCreateFromNameThrowsExceptionWhenMethodNotFound(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        self::expectExceptionMessage('Could not find method: notFound');
+        ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'notFound');
+    }
+
     public function testCreateFromInstance(): void
     {
         $method = ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'add');
 
         self::assertInstanceOf(ReflectionMethod::class, $method);
         self::assertSame('add', $method->getName());
+    }
+
+    public function testCreateFromInstanceThrowsExceptionWhenMethodNotFound(): void
+    {
+        self::expectException(OutOfBoundsException::class);
+        self::expectExceptionMessage('Could not find method: notFound');
+        ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'notFound');
     }
 
     public function testIsClosure(): void
@@ -94,7 +107,7 @@ class ReflectionMethodTest extends TestCase
         self::assertFalse($method->isClosure());
     }
 
-    /** @return array<string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
+    /** @return array<non-empty-string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
     public function visibilityProvider(): array
     {
         return [
@@ -104,11 +117,17 @@ class ReflectionMethodTest extends TestCase
             'finalPublicMethod' => ['finalPublicMethod', true, false, false, true, false, false],
             'abstractPublicMethod' => ['abstractPublicMethod', true, false, false, false, true, false],
             'staticPublicMethod' => ['staticPublicMethod', true, false, false, false, false, true],
+            'staticProtectedMethod' => ['staticProtectedMethod', false, false, true, false, false, true],
+            'staticPrivateMethod' => ['staticPrivateMethod', false, true, false, false, false, true],
             'noVisibility' => ['publicMethod', true, false, false, false, false, false],
         ];
     }
 
-    /** @dataProvider visibilityProvider */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider visibilityProvider
+     */
     public function testVisibilityOfMethods(
         string $methodName,
         bool $shouldBePublic,
@@ -157,33 +176,6 @@ class ReflectionMethodTest extends TestCase
 
         $method = $classInfo->getMethod('__DESTRUCT');
         self::assertTrue($method->isDestructor());
-    }
-
-    public function testIsConstructorWhenPhp4Style(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstruct.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleConstruct::class);
-
-        $method = $classInfo->getMethod('Php4StyleConstruct');
-        self::assertTrue($method->isConstructor());
-    }
-
-    public function testsIsConstructorWhenPhp4StyleInNamespace(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleConstructInNamespace.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleConstructInNamespace::class);
-
-        $method = $classInfo->getMethod('Php4StyleConstructInNamespace');
-        self::assertFalse($method->isConstructor());
-    }
-
-    public function testIsConstructorWhenPhp4StyleCaseInsensitive(): void
-    {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Php4StyleCaseInsensitiveConstruct.php', $this->astLocator));
-        $classInfo = $reflector->reflectClass(Php4StyleCaseInsensitiveConstruct::class);
-
-        $method = $classInfo->getMethod('PHP4STYLECASEINSENSITIVECONSTRUCT');
-        self::assertTrue($method->isConstructor());
     }
 
     public function testGetParameters(): void
@@ -239,7 +231,7 @@ class ReflectionMethodTest extends TestCase
 
         self::assertFalse($methodInfo->inNamespace());
         self::assertSame('someMethod', $methodInfo->getName());
-        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertNull($methodInfo->getNamespaceName());
         self::assertSame('someMethod', $methodInfo->getShortName());
     }
 
@@ -251,7 +243,7 @@ class ReflectionMethodTest extends TestCase
 
         self::assertFalse($methodInfo->inNamespace());
         self::assertSame('b_renamed', $methodInfo->getName());
-        self::assertSame('', $methodInfo->getNamespaceName());
+        self::assertNull($methodInfo->getNamespaceName());
         self::assertSame('b_renamed', $methodInfo->getShortName());
     }
 
@@ -274,7 +266,7 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('object', (string) $returnType);
     }
 
-    /** @return list<array{0: string, 1: int, 2: list<string>}> */
+    /** @return list<array{0: non-empty-string, 1: int, 2: list<string>}> */
     public function modifierProvider(): array
     {
         return [
@@ -289,7 +281,8 @@ class ReflectionMethodTest extends TestCase
     }
 
     /**
-     * @param list<string> $expectedModifierNames
+     * @param non-empty-string $methodName
+     * @param list<string>     $expectedModifierNames
      *
      * @dataProvider modifierProvider
      */
@@ -305,7 +298,7 @@ class ReflectionMethodTest extends TestCase
         );
     }
 
-    /** @return list<array{0: string, 1: string, 2: string|null}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: string|null}> */
     public function prototypeProvider(): array
     {
         return [
@@ -323,7 +316,11 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /** @dataProvider prototypeProvider */
+    /**
+     * @param non-empty-string $method
+     *
+     * @dataProvider prototypeProvider
+     */
     public function testGetPrototype(string $class, string $method, string|null $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
@@ -395,7 +392,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetExtensionName(): void
     {
-        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(ReflectionClass::class);
+        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(CoreReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertSame('Reflection', $method->getExtensionName());
@@ -403,7 +400,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testIsInternal(): void
     {
-        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(ReflectionClass::class);
+        $classInfo = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber)))->reflectClass(CoreReflectionClass::class);
         $method    = $classInfo->getMethod('isInternal');
 
         self::assertTrue($method->isInternal());
@@ -629,14 +626,6 @@ PHP;
         self::assertSame(107, $methodReflection->invoke($object, 3, 4));
     }
 
-    public function testInterfaceMethodBodyAst(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(InterfaceWithMethod::class);
-        $methodInfo = $classInfo->getMethod('someMethod');
-
-        self::assertSame([], $methodInfo->getBodyAst());
-    }
-
     public function testGetAttributesWithoutAttributes(): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
@@ -792,5 +781,73 @@ PHP;
         self::assertInstanceOf(ReflectionUnionType::class, $parameterType);
         self::assertTrue($parameterType->allowsNull());
         self::assertSame('string|array|null', (string) $parameterType);
+    }
+
+    public function testWithImplementingClass(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection = $classReflection->getMethod('methodWithAttributes');
+        $parameters       = $methodReflection->getParameters();
+        $attributes       = $methodReflection->getAttributes();
+
+        self::assertCount(1, $parameters);
+        self::assertCount(2, $attributes);
+
+        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+
+        $cloneMethodReflection = $methodReflection->withImplementingClass($implementingClassReflection, 'alias', CoreReflectionMethod::IS_PROTECTED);
+
+        self::assertNotSame($methodReflection, $cloneMethodReflection);
+        self::assertNotSame($methodReflection->getName(), $cloneMethodReflection->getName());
+        self::assertNotSame($methodReflection->getModifiers(), $cloneMethodReflection->getModifiers());
+        self::assertSame($methodReflection->getDeclaringClass(), $cloneMethodReflection->getDeclaringClass());
+        self::assertNotSame($methodReflection->getImplementingClass(), $cloneMethodReflection->getImplementingClass());
+        self::assertNotSame($methodReflection->getCurrentClass(), $cloneMethodReflection->getCurrentClass());
+
+        self::assertNotSame($methodReflection->getReturnType(), $cloneMethodReflection->getReturnType());
+
+        $cloneParameters = $cloneMethodReflection->getParameters();
+
+        self::assertCount(1, $cloneParameters);
+        self::assertNotSame($parameters[0], $cloneParameters[0]);
+
+        $cloneAttributes = $cloneMethodReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
+    }
+
+    public function testWithCurrentClass(): void
+    {
+        $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection  = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection = $classReflection->getMethod('methodWithAttributes');
+        $parameters       = $methodReflection->getParameters();
+        $attributes       = $methodReflection->getAttributes();
+
+        self::assertCount(1, $parameters);
+        self::assertCount(2, $attributes);
+
+        $currentClassReflection = $this->createMock(ReflectionClass::class);
+
+        $cloneMethodReflection = $methodReflection->withCurrentClass($currentClassReflection);
+
+        self::assertNotSame($methodReflection, $cloneMethodReflection);
+        self::assertSame($methodReflection->getDeclaringClass(), $cloneMethodReflection->getDeclaringClass());
+        self::assertSame($methodReflection->getImplementingClass(), $cloneMethodReflection->getImplementingClass());
+        self::assertNotSame($methodReflection->getCurrentClass(), $cloneMethodReflection->getCurrentClass());
+
+        self::assertNotSame($methodReflection->getReturnType(), $cloneMethodReflection->getReturnType());
+
+        $cloneParameters = $cloneMethodReflection->getParameters();
+
+        self::assertCount(1, $cloneParameters);
+        self::assertNotSame($parameters[0], $cloneParameters[0]);
+
+        $cloneAttributes = $cloneMethodReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }

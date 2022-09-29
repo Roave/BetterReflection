@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
+use PhpParser\Node\Identifier;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
@@ -17,9 +18,13 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionP
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass as BetterReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction as BetterReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionType as BetterReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUnionType;
+use Roave\BetterReflection\Reflector\Reflector;
 use ValueError;
 
 use function array_combine;
@@ -69,10 +74,6 @@ class ReflectionParameterTest extends TestCase
             ['getDeclaringFunction', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['getDeclaringClass', [], null, null, null, null],
             ['getDeclaringClass', [], $mockClassLike, null, null, ReflectionClassAdapter::class],
-            ['getClass', [], null, null, null, null],
-            ['getClass', [], $mockClassLike, null, null, ReflectionClassAdapter::class],
-            ['isArray', [], true, null, true, null],
-            ['isCallable', [], true, null, true, null],
             ['allowsNull', [], true, null, true, null],
             ['getPosition', [], 123, null, 123, null],
             ['isOptional', [], true, null, true, null],
@@ -323,5 +324,248 @@ class ReflectionParameterTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionParameter::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionParameterAdapter->foo;
+    }
+
+    /** @return array<array{0: BetterReflectionType|null, 1: string|null}> */
+    public function getClassProvider(): array
+    {
+        $betterReflectionClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass1
+            ->method('getName')
+            ->willReturn('Foo');
+        $betterReflectionClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass2
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass3
+            ->method('getName')
+            ->willReturn('Doo');
+
+        $betterReflectionFunction  = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getDeclaringFunction')
+            ->willReturn($betterReflectionFunction);
+
+        $nullType   = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('null'),
+        );
+        $classType1 = $this->createMock(BetterReflectionNamedType::class);
+        $classType1
+            ->method('getClass')
+            ->willReturn($betterReflectionClass1);
+        $classType1
+            ->method('allowsNull')
+            ->willReturn(false);
+        $classType2 = $this->createMock(BetterReflectionNamedType::class);
+        $classType2
+            ->method('getClass')
+            ->willReturn($betterReflectionClass2);
+        $classType2
+            ->method('allowsNull')
+            ->willReturn(false);
+        $classType3 = $this->createMock(BetterReflectionNamedType::class);
+        $classType3
+            ->method('getClass')
+            ->willReturn($betterReflectionClass3);
+        $classType3
+            ->method('allowsNull')
+            ->willReturn(true);
+        $intersectionType = $this->createMock(BetterReflectionIntersectionType::class);
+
+        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes
+            ->method('getTypes')
+            ->willReturn([$classType1, $classType2, $nullType]);
+
+        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes
+            ->method('getTypes')
+            ->willReturn([$classType1, $classType2]);
+
+        $unionTypeNullable = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeNullable
+            ->method('allowsNull')
+            ->willReturn(true);
+        $unionTypeNullable
+            ->method('getTypes')
+            ->willReturn([$classType1, $nullType]);
+
+        $unionWithIntersection = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection
+            ->method('allowsNull')
+            ->willReturn(true);
+        $unionWithIntersection
+            ->method('getTypes')
+            ->willReturn([$intersectionType, $classType1]);
+
+        $unionWithIntersection2 = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection2
+            ->method('allowsNull')
+            ->willReturn(true);
+        $unionWithIntersection2
+            ->method('getTypes')
+            ->willReturn([$classType3, $intersectionType]);
+
+        return [
+            [null, null],
+            [$intersectionType, null],
+            [$nullType, null],
+            [$classType1, 'Foo'],
+            [$unionTypeWithMoreThanTwoTypes, null],
+            [$unionTypeWithTwoNonNullableTypes, null],
+            [$unionTypeNullable, 'Foo'],
+            [$unionWithIntersection, null],
+            [$unionWithIntersection2, null],
+        ];
+    }
+
+    /** @dataProvider getClassProvider */
+    public function testGetClass(BetterReflectionType|null $type, string|null $className): void
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getType')
+            ->willReturn($type);
+
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+
+        if ($className === null) {
+            self::assertNull($reflectionParameterAdapter->getClass());
+        } else {
+            self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionParameterAdapter->getClass());
+            self::assertSame($className, $reflectionParameterAdapter->getClass()->getName());
+        }
+    }
+
+    /** @return array<array{0: BetterReflectionType|null, 1: bool}> */
+    public function isArrayProvider(): array
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+
+        $nullType           = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('null'),
+        );
+        $boolType           = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('bool'),
+        );
+        $arrayType          = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('array'),
+        );
+        $upperCaseArrayType = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('ARRAY'),
+        );
+        $nullableArrayType  = $this->createMock(BetterReflectionUnionType::class);
+        $nullableArrayType
+            ->method('getTypes')
+            ->willReturn([$arrayType, $nullType]);
+        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes
+            ->method('getTypes')
+            ->willReturn([$boolType, $arrayType, $nullType]);
+        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes
+            ->method('getTypes')
+            ->willReturn([$boolType, $arrayType]);
+
+        return [
+            [null, false],
+            [$nullType, false],
+            [$boolType, false],
+            [$arrayType, true],
+            [$upperCaseArrayType, true],
+            [$nullableArrayType, true],
+            [$unionTypeWithMoreThanTwoTypes, false],
+            [$unionTypeWithTwoNonNullableTypes, false],
+            [$this->createMock(BetterReflectionIntersectionType::class), false],
+        ];
+    }
+
+    /** @dataProvider isArrayProvider */
+    public function testIsArray(BetterReflectionType|null $type, bool $isArray): void
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getType')
+            ->willReturn($type);
+
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+
+        self::assertSame($isArray, $reflectionParameterAdapter->isArray());
+    }
+
+    /** @return array<array{0: BetterReflectionType|null, 1: bool}> */
+    public function isCallableProvider(): array
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+
+        $nullType              = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('null'),
+        );
+        $boolType              = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('bool'),
+        );
+        $callableType          = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('callable'),
+        );
+        $upperCaseCallableType = new BetterReflectionNamedType(
+            $this->createMock(Reflector::class),
+            $betterReflectionParameter,
+            new Identifier('CALLABLE'),
+        );
+        $nullableArrayType     = $this->createMock(BetterReflectionUnionType::class);
+        $nullableArrayType
+            ->method('getTypes')
+            ->willReturn([$callableType, $nullType]);
+        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes
+            ->method('getTypes')
+            ->willReturn([$boolType, $callableType, $nullType]);
+        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes
+            ->method('getTypes')
+            ->willReturn([$boolType, $callableType]);
+
+        return [
+            [null, false],
+            [$nullType, false],
+            [$boolType, false],
+            [$callableType, true],
+            [$upperCaseCallableType, true],
+            [$nullableArrayType, true],
+            [$unionTypeWithMoreThanTwoTypes, false],
+            [$unionTypeWithTwoNonNullableTypes, false],
+            [$this->createMock(BetterReflectionIntersectionType::class), false],
+        ];
+    }
+
+    /** @dataProvider isCallableProvider */
+    public function testIsCallable(BetterReflectionType|null $type, bool $isCallable): void
+    {
+        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getType')
+            ->willReturn($type);
+
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+
+        self::assertSame($isCallable, $reflectionParameterAdapter->isCallable());
     }
 }

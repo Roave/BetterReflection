@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -26,19 +25,62 @@ use function count;
 use function explode;
 use function implode;
 use function is_int;
-use function substr_count;
 
 class ReflectionConstant implements Reflection
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    /** @var non-empty-string */
+    private string $shortName;
+
+    private Node\Expr $value;
+
+    private string|null $docComment;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
+
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private Node\Stmt\Const_|Node\Expr\FuncCall $node,
+        Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace = null,
-        private int|null $positionInNode = null,
+        private string|null $namespace = null,
+        int|null $positionInNode = null,
     ) {
+        $this->setNamesFromNode($node, $positionInNode);
+
+        if ($node instanceof Node\Expr\FuncCall) {
+            $argumentValueNode = $node->args[1];
+            assert($argumentValueNode instanceof Node\Arg);
+            $this->value = $argumentValueNode->value;
+        } else {
+            /** @psalm-suppress PossiblyNullArrayOffset */
+            $this->value = $node->consts[$positionInNode]->value;
+        }
+
+        $this->docComment = GetLastDocComment::forNode($node);
+
+        $startLine = $node->getStartLine();
+        assert($startLine > 0);
+        $endLine = $node->getEndLine();
+        assert($endLine > 0);
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $node);
     }
 
     /**
@@ -62,7 +104,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace = null,
+        string|null $namespace = null,
         int|null $positionInNode = null,
     ): self {
         if ($node instanceof Node\Stmt\Const_) {
@@ -78,7 +120,7 @@ class ReflectionConstant implements Reflection
         Reflector $reflector,
         Node\Stmt\Const_ $node,
         LocatedSource $locatedSource,
-        NamespaceNode|null $namespace,
+        string|null $namespace,
         int $positionInNode,
     ): self {
         return new self(
@@ -108,71 +150,41 @@ class ReflectionConstant implements Reflection
     /**
      * Get the "short" name of the constant (e.g. for A\B\FOO, this will return
      * "FOO").
+     *
+     * @return non-empty-string
      */
     public function getShortName(): string
     {
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            $nameParts = explode('\\', $this->getNameFromDefineFunctionCall($this->node));
-
-            return $nameParts[count($nameParts) - 1];
-        }
-
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        return $this->node->consts[$this->positionInNode]->name->name;
+        return $this->shortName;
     }
 
     /**
      * Get the "full" name of the constant (e.g. for A\B\FOO, this will return
      * "A\B\FOO").
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
-        if (! $this->inNamespace()) {
-            return $this->getShortName();
-        }
-
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            return $this->getNameFromDefineFunctionCall($this->node);
-        }
-
-        /** @psalm-suppress PossiblyNullArrayOffset */
-        $namespacedName = $this->node->consts[$this->positionInNode]->namespacedName;
-        assert($namespacedName instanceof Node\Name);
-
-        return $namespacedName->toString();
+        return $this->name;
     }
 
     /**
      * Get the "namespace" name of the constant (e.g. for A\B\FOO, this will
      * return "A\B").
      */
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
-        if (! $this->inNamespace()) {
-            return '';
-        }
-
-        $namespaceParts = $this->node instanceof Node\Expr\FuncCall
-            ? array_slice(explode('\\', $this->getNameFromDefineFunctionCall($this->node)), 0, -1)
-            : $this->declaringNamespace->name->parts;
-
-        return implode('\\', $namespaceParts);
+        return $this->namespace;
     }
 
     /**
      * Decide if this constant is part of a namespace. Returns false if the constant
      * is in the global namespace or does not have a specified namespace.
-     *
-     * @psalm-assert-if-true NamespaceNode $this->declaringNamespace
-     * @psalm-assert-if-true Node\Name $this->declaringNamespace->name
      */
     public function inNamespace(): bool
     {
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            return substr_count($this->getNameFromDefineFunctionCall($this->node), '\\') !== 0;
-        }
-
-        return $this->declaringNamespace?->name !== null;
+        return $this->namespace !== null;
     }
 
     public function getExtensionName(): string|null
@@ -202,28 +214,22 @@ class ReflectionConstant implements Reflection
         return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
+    public function getValueExpression(): Node\Expr
+    {
+        return $this->value;
+    }
+
     /**
      * Returns constant value
      */
     public function getValue(): mixed
     {
-        if ($this->compiledValue !== null) {
-            return $this->compiledValue->value;
+        if ($this->compiledValue === null) {
+            $this->compiledValue = (new CompileNodeToValue())->__invoke(
+                $this->value,
+                new CompilerContext($this->reflector, $this),
+            );
         }
-
-        if ($this->node instanceof Node\Expr\FuncCall) {
-            $argumentValueNode = $this->node->args[1];
-            assert($argumentValueNode instanceof Node\Arg);
-            $valueNode = $argumentValueNode->value;
-        } else {
-            /** @psalm-suppress PossiblyNullArrayOffset */
-            $valueNode = $this->node->consts[$this->positionInNode]->value;
-        }
-
-        $this->compiledValue = (new CompileNodeToValue())->__invoke(
-            $valueNode,
-            new CompilerContext($this->reflector, $this),
-        );
 
         return $this->compiledValue->value;
     }
@@ -240,36 +246,42 @@ class ReflectionConstant implements Reflection
 
     /**
      * Get the line number that this constant starts on.
+     *
+     * @return positive-int
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this constant ends on.
+     *
+     * @return positive-int
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->locatedSource->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->locatedSource->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function __toString(): string
@@ -277,12 +289,33 @@ class ReflectionConstant implements Reflection
         return ReflectionConstantStringCast::toString($this);
     }
 
-    /** @return Node\Stmt\Const_|Node\Expr\FuncCall */
-    public function getAst(): Node
+    private function setNamesFromNode(Node\Stmt\Const_|Node\Expr\FuncCall $node, int|null $positionInNode): void
     {
-        return $this->node;
+        if ($node instanceof Node\Expr\FuncCall) {
+            $name = $this->getNameFromDefineFunctionCall($node);
+
+            $nameParts       = explode('\\', $name);
+            $this->namespace = implode('\\', array_slice($nameParts, 0, -1)) ?: null;
+
+            $shortName = $nameParts[count($nameParts) - 1];
+            assert($shortName !== '');
+        } else {
+            /** @psalm-suppress PossiblyNullArrayOffset */
+            $constNode      = $node->consts[$positionInNode];
+            $namespacedName = $constNode->namespacedName;
+            assert($namespacedName instanceof Node\Name);
+
+            $name = $namespacedName->toString();
+            assert($name !== '');
+            $shortName = $constNode->name->name;
+            assert($shortName !== '');
+        }
+
+        $this->name      = $name;
+        $this->shortName = $shortName;
     }
 
+    /** @return non-empty-string */
     private function getNameFromDefineFunctionCall(Node\Expr\FuncCall $node): string
     {
         $argumentNameNode = $node->args[0];
@@ -290,6 +323,7 @@ class ReflectionConstant implements Reflection
         $nameNode = $argumentNameNode->value;
         assert($nameNode instanceof Node\Scalar\String_);
 
+        /** @psalm-var non-empty-string */
         return $nameNode->value;
     }
 }

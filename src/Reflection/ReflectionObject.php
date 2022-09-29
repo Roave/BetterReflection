@@ -6,16 +6,12 @@ namespace Roave\BetterReflection\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Builder\Property as PropertyNodeBuilder;
-use PhpParser\Node\Stmt\Class_ as ClassNode;
-use PhpParser\Node\Stmt\Enum_ as EnumNode;
-use PhpParser\Node\Stmt\Interface_ as InterfaceNode;
-use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property as PropertyNode;
-use PhpParser\Node\Stmt\Trait_ as TraitNode;
 use ReflectionException;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
@@ -26,6 +22,7 @@ use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_filter;
 use function array_map;
 use function array_merge;
+use function assert;
 use function preg_match;
 
 class ReflectionObject extends ReflectionClass
@@ -66,15 +63,17 @@ class ReflectionObject extends ReflectionClass
      *
      * @see ReflectionClass::getProperties() for the usage of $filter
      *
-     * @return array<string, ReflectionProperty>
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
+     * @return array<non-empty-string, ReflectionProperty>
      */
-    private function getRuntimeProperties(int|null $filter = null): array
+    private function getRuntimeProperties(int $filter = 0): array
     {
         if (! $this->reflectionClass->isInstance($this->object)) {
             throw new InvalidArgumentException('Cannot reflect runtime properties of a separate class');
         }
 
-        if ($filter !== null && ! ($filter & CoreReflectionProperty::IS_PUBLIC)) {
+        if ($filter !== 0 && ! ($filter & CoreReflectionProperty::IS_PUBLIC)) {
             return [];
         }
 
@@ -87,18 +86,22 @@ class ReflectionObject extends ReflectionClass
         $runtimeProperties    = [];
 
         foreach ($reflectionProperties as $property) {
-            if ($this->reflectionClass->hasProperty($property->getName())) {
+            $propertyName = $property->getName();
+            assert($propertyName !== '');
+
+            if ($this->reflectionClass->hasProperty($propertyName)) {
                 continue;
             }
 
-            $runtimeProperties[$property->getName()] = ReflectionProperty::createFromNode(
+            $propertyNode = $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object);
+
+            $runtimeProperties[$propertyName] = ReflectionProperty::createFromNode(
                 $this->reflector,
-                $this->createPropertyNodeFromRuntimePropertyReflection($property, $this->object),
-                0,
+                $propertyNode,
+                $propertyNode->props[0],
                 $this,
                 $this,
-                false,
-                false,
+                declaredAtCompileTime: false,
             );
         }
 
@@ -130,7 +133,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getName();
     }
 
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
         return $this->reflectionClass->getNamespaceName();
     }
@@ -148,7 +151,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getMethods(int|null $filter = null): array
+    public function getMethods(int $filter = 0): array
     {
         return $this->reflectionClass->getMethods($filter);
     }
@@ -156,16 +159,18 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateMethods(int|null $filter = null): array
+    public function getImmediateMethods(int $filter = 0): array
     {
         return $this->reflectionClass->getImmediateMethods($filter);
     }
 
-    public function getMethod(string $methodName): ReflectionMethod
+    /** @param non-empty-string $methodName */
+    public function getMethod(string $methodName): ReflectionMethod|null
     {
         return $this->reflectionClass->getMethod($methodName);
     }
 
+    /** @param non-empty-string $methodName */
     public function hasMethod(string $methodName): bool
     {
         return $this->reflectionClass->hasMethod($methodName);
@@ -174,22 +179,17 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateConstants(): array
+    public function getImmediateConstants(int $filter = 0): array
     {
-        return $this->reflectionClass->getImmediateConstants();
+        return $this->reflectionClass->getImmediateConstants($filter);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConstants(): array
+    public function getConstants(int $filter = 0): array
     {
-        return $this->reflectionClass->getConstants();
-    }
-
-    public function getConstant(string $name): string|int|float|bool|array|null
-    {
-        return $this->reflectionClass->getConstant($name);
+        return $this->reflectionClass->getConstants($filter);
     }
 
     public function hasConstant(string $name): bool
@@ -197,28 +197,12 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->hasConstant($name);
     }
 
-    public function getReflectionConstant(string $name): ReflectionClassConstant|null
+    public function getConstant(string $name): ReflectionClassConstant|null
     {
-        return $this->reflectionClass->getReflectionConstant($name);
+        return $this->reflectionClass->getConstant($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getImmediateReflectionConstants(): array
-    {
-        return $this->reflectionClass->getImmediateReflectionConstants();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReflectionConstants(): array
-    {
-        return $this->reflectionClass->getReflectionConstants();
-    }
-
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethod|null
     {
         return $this->reflectionClass->getConstructor();
     }
@@ -226,7 +210,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getProperties(int|null $filter = null): array
+    public function getProperties(int $filter = 0): array
     {
         return array_merge(
             $this->reflectionClass->getProperties($filter),
@@ -237,7 +221,7 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritdoc}
      */
-    public function getImmediateProperties(int|null $filter = null): array
+    public function getImmediateProperties(int $filter = 0): array
     {
         return array_merge(
             $this->reflectionClass->getImmediateProperties($filter),
@@ -317,7 +301,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getParentClassNames();
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
         return $this->reflectionClass->getDocComment();
     }
@@ -471,16 +455,6 @@ class ReflectionObject extends ReflectionClass
     public function getStaticPropertyValue(string $propertyName): mixed
     {
         return $this->reflectionClass->getStaticPropertyValue($propertyName);
-    }
-
-    public function getAst(): ClassNode|InterfaceNode|TraitNode|EnumNode
-    {
-        return $this->reflectionClass->getAst();
-    }
-
-    public function getDeclaringNamespaceAst(): Namespace_|null
-    {
-        return $this->reflectionClass->getDeclaringNamespaceAst();
     }
 
     /** @return list<ReflectionAttribute> */

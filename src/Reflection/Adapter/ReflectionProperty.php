@@ -22,6 +22,8 @@ use function sprintf;
 
 final class ReflectionProperty extends CoreReflectionProperty
 {
+    public const IS_READONLY = 128;
+
     public function __construct(private BetterReflectionProperty $betterReflectionProperty)
     {
         unset($this->name);
@@ -112,7 +114,7 @@ final class ReflectionProperty extends CoreReflectionProperty
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionProperty->getDocComment() ?: false;
+        return $this->betterReflectionProperty->getDocComment() ?? false;
     }
 
     /**
@@ -121,15 +123,6 @@ final class ReflectionProperty extends CoreReflectionProperty
      */
     public function setAccessible(bool $accessible): void
     {
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @infection-ignore-all
-     */
-    public function isAccessible(): bool
-    {
-        return true;
     }
 
     public function hasDefaultValue(): bool

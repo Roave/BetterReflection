@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
-use Foo;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
-use PhpParser\Node\Param;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
-use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
-use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
@@ -31,9 +28,12 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\Methods;
 use Roave\BetterReflectionTest\Fixture\NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PhpParameterTypeDeclarations;
+use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
+use RuntimeException;
 use SplDoublyLinkedList;
 use stdClass;
+use Throwable;
 
 use function sprintf;
 
@@ -46,17 +46,14 @@ class ReflectionParameterTest extends TestCase
 
     private Locator $astLocator;
 
-    private SourceStubber $sourceStubber;
-
     public function setUp(): void
     {
         parent::setUp();
 
         $betterReflection = BetterReflectionSingleton::instance();
 
-        $this->astLocator    = $betterReflection->astLocator();
-        $this->sourceStubber = $betterReflection->sourceStubber();
-        $this->reflector     = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->astLocator = $betterReflection->astLocator();
+        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod(): void
@@ -152,8 +149,13 @@ class ReflectionParameterTest extends TestCase
     {
         require_once __DIR__ . '/../Fixture/ClassForHinting.php';
 
-        self::expectException(InvalidArgumentException::class);
-        ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'notExists');
+        try {
+            ReflectionParameter::createFromSpec('Roave\BetterReflectionTest\Fixture\testFunction', 'notExists');
+            self::fail('Parameter should not exits');
+        } catch (Throwable $e) {
+            self::assertInstanceOf(InvalidArgumentException::class, $e);
+            self::assertInstanceOf(OutOfBoundsException::class, $e->getPrevious());
+        }
     }
 
     public function testCreateFromSpecWithClosure(): void
@@ -190,13 +192,13 @@ class ReflectionParameterTest extends TestCase
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
 
-        $reflector   = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
-        $classInfo   = $reflector->reflectClass('Foo');
-        $methodInfo  = $classInfo->getMethod('myMethod');
-        $paramInfo   = $methodInfo->getParameter('var');
-        $actualValue = $paramInfo->getDefaultValue();
+        $reflector  = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
+        $classInfo  = $reflector->reflectClass('Foo');
+        $methodInfo = $classInfo->getMethod('myMethod');
+        $paramInfo  = $methodInfo->getParameter('var');
 
-        self::assertSame($expectedValue, $actualValue);
+        self::assertInstanceOf(Node\Expr::class, $paramInfo->getDefaultValueExpression());
+        self::assertSame($expectedValue, $paramInfo->getDefaultValue());
     }
 
     public function testGetDefaultValueWhenDefaultValueNotAvailableThrowsException(): void
@@ -207,6 +209,9 @@ class ReflectionParameterTest extends TestCase
         $classInfo  = $reflector->reflectClass('Foo');
         $methodInfo = $classInfo->getMethod('myMethod');
         $paramInfo  = $methodInfo->getParameter('var');
+
+        self::assertFalse($paramInfo->isDefaultValueAvailable());
+        self::assertNull($paramInfo->getDefaultValueExpression());
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('This parameter does not have a default value available');
@@ -238,7 +243,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(1, $param2->getPosition());
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string}> */
     public function typeProvider(): array
     {
         return [
@@ -251,8 +256,9 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
+     * @param non-empty-string $parameterToTest
+     *
      * @dataProvider typeProvider
-     * @parem string $expectedType
      */
     public function testGetType(
         string $parameterToTest,
@@ -297,7 +303,7 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function allowsNullProvider(): array
     {
         return [
@@ -311,7 +317,11 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /** @dataProvider allowsNullProvider */
+    /**
+     * @param non-empty-string $parameterName
+     *
+     * @dataProvider allowsNullProvider
+     */
     public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
@@ -335,64 +345,6 @@ class ReflectionParameterTest extends TestCase
         $method    = $classInfo->getMethod('foo');
 
         self::assertFalse($method->getParameter('noTypeParam')->hasType());
-    }
-
-    /** @return list<array{0: string, 1: bool}> */
-    public function isCallableProvider(): array
-    {
-        return [
-            ['noTypeParameter', false],
-            ['boolParameter', false],
-            ['callableParameter', true],
-            ['callableCaseInsensitiveParameter', true],
-            ['nullableCallableParameter', true],
-            ['unionCallableParameterNullFirst', true],
-            ['unionCallableParameterNullLast', true],
-            ['unionCallableParameterNullUppercase', true],
-            ['unionNotCallableParameter', false],
-            ['unionWithCallableNotCallableParameter', false],
-            ['unionWithCallableAndObjectNotArrayParameter', false],
-            ['intersectionNotCallableParameter', false],
-        ];
-    }
-
-    /** @dataProvider isCallableProvider */
-    public function testIsCallable(string $parameterName, bool $isCallable): void
-    {
-        $classReflection     = $this->reflector->reflectClass(Methods::class);
-        $methodReflection    = $classReflection->getMethod('methodIsCallableParameters');
-        $parameterReflection = $methodReflection->getParameter($parameterName);
-
-        self::assertSame($isCallable, $parameterReflection->isCallable());
-    }
-
-    /** @return list<array{0: string, 1: bool}> */
-    public function isArrayProvider(): array
-    {
-        return [
-            ['noTypeParameter', false],
-            ['boolParameter', false],
-            ['arrayParameter', true],
-            ['arrayCaseInsensitiveParameter', true],
-            ['nullableArrayParameter', true],
-            ['unionArrayParameterNullFirst', true],
-            ['unionArrayParameterNullLast', true],
-            ['unionArrayParameterNullUppercase', true],
-            ['unionNotArrayParameter', false],
-            ['unionWithArrayNotArrayParameter', false],
-            ['unionWithArrayAndObjectNotArrayParameter', false],
-            ['intersectionNotArrayParameter', false],
-        ];
-    }
-
-    /** @dataProvider isArrayProvider */
-    public function testIsArray(string $parameterName, bool $isArray): void
-    {
-        $classReflection     = $this->reflector->reflectClass(Methods::class);
-        $methodReflection    = $classReflection->getMethod('methodIsArrayParameters');
-        $parameterReflection = $methodReflection->getParameter($parameterName);
-
-        self::assertSame($isArray, $parameterReflection->isArray());
     }
 
     public function testIsVariadic(): void
@@ -590,7 +542,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame($classInfo, $paramInfo->getDeclaringClass());
     }
 
-    public function testGetDeclaringClassForFunctionReturnsNull(): void
+    public function testGetDeclaringAndImplementingClassForFunctionReturnsNull(): void
     {
         $content = '<?php function myMethod($var = 123) {}';
 
@@ -599,128 +551,167 @@ class ReflectionParameterTest extends TestCase
         $paramInfo    = $functionInfo->getParameter('var');
 
         self::assertNull($paramInfo->getDeclaringClass());
+        self::assertNull($paramInfo->getImplementingClass());
     }
 
-    /** @return list<array{0: string, 1: string|null}> */
-    public function getClassProvider(): array
+    /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */
+    public function linesAndColumnsProvider(): array
     {
         return [
-            ['untyped', null],
-            ['array', null],
-            ['object', 'stdClass'],
-            ['unionWithClass', 'stdClass'],
-            ['unionWithoutClass', null],
-            ['intersection', null],
+            ["<?php\n\nfunction foo(\n\$test\n) {}", 4, 4, 1, 5],
+            ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 4, 4, 5, 10],
+            ['<?php function foo(...$test) { }', 1, 1, 20, 27],
+            ["<?php function foo(array \$test\n=\nnull) { }", 1, 3, 20, 4],
         ];
     }
 
-    /** @dataProvider getClassProvider */
-    public function testGetClass(string $parameterName, string|null $className): void
-    {
-        $reflector = new DefaultReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
-            new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator),
-        ]));
-
-        $classReflection     = $reflector->reflectClass(Methods::class);
-        $methodReflection    = $classReflection->getMethod('methodGetClassParameters');
-        $parameterReflection = $methodReflection->getParameter($parameterName);
-
-        self::assertSame($className, $parameterReflection->getClass()?->getName());
-    }
-
-    public function testCannotClone(): void
-    {
-        $classInfo  = $this->reflector->reflectClass(Methods::class);
-        $methodInfo = $classInfo->getMethod('methodWithParameters');
-        $paramInfo  = $methodInfo->getParameter('parameter1');
-
-        $this->expectException(Uncloneable::class);
-        clone $paramInfo;
-    }
-
-    public function testGetClassFromSelfTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo { public function myMethod(self $param) {} }';
-
-        $reflector  = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
-        $classInfo  = $reflector->reflectClass('Foo');
-        $methodInfo = $classInfo->getMethod('myMethod');
-
-        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        self::assertSame('Foo', $hintedClassReflection->getName());
-    }
-
-    public function testGetClassFromParentTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo extends \stdClass { public function myMethod(parent $param) {} }';
-
-        $reflector  = new DefaultReflector(new AggregateSourceLocator([
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
-            new StringSourceLocator($content, $this->astLocator),
-        ]));
-        $classInfo  = $reflector->reflectClass('Foo');
-        $methodInfo = $classInfo->getMethod('myMethod');
-
-        $hintedClassReflection = $methodInfo->getParameter('param')->getClass();
-        self::assertInstanceOf(ReflectionClass::class, $hintedClassReflection);
-        self::assertSame('stdClass', $hintedClassReflection->getName());
-    }
-
-    public function testGetClassFromObjectTypeHintedProperty(): void
-    {
-        $content = '<?php class Foo { public function myMethod(object $param) {} }';
-
-        $parameter = (new DefaultReflector(new StringSourceLocator($content, $this->astLocator)))
-            ->reflectClass(Foo::class)
-            ->getMethod('myMethod')
-            ->getParameter('param');
-
-        self::assertInstanceOf(ReflectionParameter::class, $parameter);
-
-        self::assertNull($parameter->getClass());
-
-        $type = $parameter->getType();
-
-        self::assertTrue($type->isBuiltin());
-        self::assertSame('object', $type->__toString());
-    }
-
-    /** @return list<array{0: string, 1: int, 2: int}> */
-    public function columnsProvider(): array
-    {
-        return [
-            ["<?php\n\nfunction foo(\n\$test\n) {}", 1, 5],
-            ["<?php\n\n    function foo(\n    &\$test) {    \n    }\n", 5, 10],
-            ['<?php function foo(...$test) { }', 20, 27],
-            ['<?php function foo(array $test = null) { }', 20, 37],
-        ];
-    }
-
-    /** @dataProvider columnsProvider */
-    public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
+    /**
+     * @param non-empty-string $php
+     *
+     * @dataProvider linesAndColumnsProvider
+     */
+    public function testGetLinesAndColumns(string $php, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $function  = $reflector->reflectFunction('foo');
         $parameter = $function->getParameter('test');
 
+        self::assertSame($startLine, $parameter->getStartLine());
+        self::assertSame($endLine, $parameter->getEndLine());
         self::assertSame($startColumn, $parameter->getStartColumn());
         self::assertSame($endColumn, $parameter->getEndColumn());
     }
 
-    public function testGetAst(): void
+    public function testGetStartLineThrowsExceptionWhenMissing(): void
     {
-        $php = '<?php function foo($boo) {}';
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
 
-        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
-        $function  = $reflector->reflectFunction('foo');
-        $parameter = $function->getParameter('boo');
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
 
-        $ast = $parameter->getAst();
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartLine();
+    }
 
-        self::assertInstanceOf(Param::class, $ast);
-        self::assertSame('boo', $ast->var->name);
+    public function testGetEndLineThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndLine();
+    }
+
+    public function testGetStartColumnThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartColumn();
+    }
+
+    public function testGetEndColumnThrowsExceptionWhenMissing(): void
+    {
+        $reflector          = $this->createMock(Reflector::class);
+        $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
+        $functionReflection = $this->createMock(ReflectionFunction::class);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            $reflector,
+            $parameterNode,
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndColumn();
+    }
+
+    public function testGetStartLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartLine();
+    }
+
+    public function testGetEndLineThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndLine();
+    }
+
+    public function testGetStartColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getStartColumn();
+    }
+
+    public function testGetEndColumnThrowsExceptionForMagicallyAddedEnumMethod(): void
+    {
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator),
+            BetterReflectionSingleton::instance()->sourceLocator(),
+        ]));
+
+        $classReflection     = $reflector->reflectClass(StringEnum::class);
+        $methodReflection    = $classReflection->getMethod('tryFrom');
+        $parameterReflection = $methodReflection->getParameter('value');
+
+        self::expectException(RuntimeException::class);
+        $parameterReflection->getEndColumn();
     }
 
     public function testGetAttributesWithoutAttributes(): void
@@ -764,5 +755,29 @@ class ReflectionParameterTest extends TestCase
         $attributes          = $parameterReflection->getAttributesByInstance(Attr::class);
 
         self::assertCount(2, $attributes);
+    }
+
+    public function testWithFunction(): void
+    {
+        $reflector           = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Attributes.php', $this->astLocator));
+        $classReflection     = $reflector->reflectClass(ClassWithAttributes::class);
+        $methodReflection    = $classReflection->getMethod('methodWithAttributes');
+        $parameterReflection = $methodReflection->getParameter('parameterWithAttributes');
+        $attributes          = $parameterReflection->getAttributes();
+
+        self::assertCount(2, $attributes);
+
+        $functionReflection = $this->createMock(ReflectionMethod::class);
+
+        $cloneParameterReflection = $parameterReflection->withFunction($functionReflection);
+
+        self::assertNotSame($parameterReflection, $cloneParameterReflection);
+        self::assertNotSame($parameterReflection->getDeclaringFunction(), $cloneParameterReflection->getDeclaringFunction());
+        self::assertNotSame($parameterReflection->getType(), $cloneParameterReflection->getType());
+
+        $cloneAttributes = $cloneParameterReflection->getAttributes();
+
+        self::assertCount(2, $cloneAttributes);
+        self::assertNotSame($attributes[0], $cloneAttributes[0]);
     }
 }

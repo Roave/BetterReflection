@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
+use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassConst;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassConstantStringCast;
@@ -16,19 +18,64 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\GetLastDocComment;
 
+use function array_map;
+use function assert;
+
 class ReflectionClassConstant
 {
-    public const IS_FINAL = 32;
+    /** @var non-empty-string */
+    private string $name;
+
+    /** @var int-mask-of<ReflectionClassConstantAdapter::IS_*> */
+    private int $modifiers;
+
+    private Node\Expr $value;
+
+    private string|null $docComment;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
 
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private ClassConst $node,
-        private int $positionInNode,
+        ClassConst $node,
+        int $positionInNode,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
     ) {
+        $name = $node->consts[$positionInNode]->name->name;
+        assert($name !== '');
+
+        $this->name      = $name;
+        $this->modifiers = $this->computeModifiers($node);
+        $this->value     = $node->consts[$positionInNode]->value;
+
+        $this->docComment = GetLastDocComment::forNode($node);
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        $startLine = $node->getStartLine();
+        assert($startLine > 0);
+        $endLine = $node->getEndLine();
+        assert($endLine > 0);
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($declaringClass->getLocatedSource()->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($declaringClass->getLocatedSource()->getSource(), $node);
     }
 
     /**
@@ -52,13 +99,33 @@ class ReflectionClassConstant
         );
     }
 
+    /** @internal */
+    public function withImplementingClass(ReflectionClass $implementingClass): self
+    {
+        $clone                    = clone $this;
+        $clone->implementingClass = $implementingClass;
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        $this->compiledValue = null;
+
+        return $clone;
+    }
+
     /**
      * Get the name of the reflection (e.g. if this is a ReflectionClass this
      * will be the class name).
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
-        return $this->node->consts[$this->positionInNode]->name->name;
+        return $this->name;
+    }
+
+    public function getValueExpression(): Node\Expr
+    {
+        return $this->value;
     }
 
     /**
@@ -68,7 +135,7 @@ class ReflectionClassConstant
     {
         if ($this->compiledValue === null) {
             $this->compiledValue = (new CompileNodeToValue())->__invoke(
-                $this->node->consts[$this->positionInNode]->value,
+                $this->value,
                 new CompilerContext($this->reflector, $this),
             );
         }
@@ -81,7 +148,7 @@ class ReflectionClassConstant
      */
     public function isPublic(): bool
     {
-        return $this->node->isPublic();
+        return ($this->modifiers & CoreReflectionClassConstant::IS_PUBLIC) === CoreReflectionClassConstant::IS_PUBLIC;
     }
 
     /**
@@ -89,7 +156,8 @@ class ReflectionClassConstant
      */
     public function isPrivate(): bool
     {
-        return $this->node->isPrivate();
+        // Private constant cannot be final
+        return $this->modifiers === CoreReflectionClassConstant::IS_PRIVATE;
     }
 
     /**
@@ -97,51 +165,54 @@ class ReflectionClassConstant
      */
     public function isProtected(): bool
     {
-        return $this->node->isProtected();
+        return ($this->modifiers & CoreReflectionClassConstant::IS_PROTECTED) === CoreReflectionClassConstant::IS_PROTECTED;
     }
 
     public function isFinal(): bool
     {
-        return $this->node->isFinal();
+        return ($this->modifiers & ReflectionClassConstantAdapter::IS_FINAL) === ReflectionClassConstantAdapter::IS_FINAL;
     }
 
     /**
      * Returns a bitfield of the access modifiers for this constant
+     *
+     * @return int-mask-of<ReflectionClassConstantAdapter::IS_*>
      */
     public function getModifiers(): int
     {
-        $val  = $this->isPublic() ? CoreReflectionClassConstant::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? CoreReflectionClassConstant::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? CoreReflectionClassConstant::IS_PRIVATE : 0;
-        $val += $this->isFinal() ? self::IS_FINAL : 0;
-
-        return $val;
+        return $this->modifiers;
     }
 
     /**
      * Get the line number that this constant starts on.
+     *
+     * @return positive-int
      */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
     /**
      * Get the line number that this constant ends on.
+     *
+     * @return positive-int
      */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->declaringClass->getLocatedSource()->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     /**
@@ -163,9 +234,9 @@ class ReflectionClassConstant
     /**
      * Returns the doc comment for this constant
      */
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function isDeprecated(): bool
@@ -178,20 +249,10 @@ class ReflectionClassConstant
         return ReflectionClassConstantStringCast::toString($this);
     }
 
-    public function getAst(): ClassConst
-    {
-        return $this->node;
-    }
-
-    public function getPositionInAst(): int
-    {
-        return $this->positionInNode;
-    }
-
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */
@@ -208,5 +269,16 @@ class ReflectionClassConstant
     public function getAttributesByInstance(string $className): array
     {
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
+    }
+
+    /** @return int-mask-of<ReflectionClassConstantAdapter::IS_*> */
+    private function computeModifiers(ClassConst $node): int
+    {
+        $modifiers  = $node->isFinal() ? ReflectionClassConstantAdapter::IS_FINAL : 0;
+        $modifiers += $node->isPrivate() ? ReflectionClassConstantAdapter::IS_PRIVATE : 0;
+        $modifiers += $node->isProtected() ? ReflectionClassConstantAdapter::IS_PROTECTED : 0;
+        $modifiers += $node->isPublic() ? ReflectionClassConstantAdapter::IS_PUBLIC : 0;
+
+        return $modifiers;
     }
 }

@@ -19,9 +19,9 @@ use Roave\BetterReflection\Util\FileHelper;
 use ValueError;
 
 use function array_combine;
-use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -83,34 +83,59 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionObject->getDocComment() ?: false;
+        return $this->betterReflectionObject->getDocComment() ?? false;
     }
 
-    public function getConstructor(): ReflectionMethod
+    public function getConstructor(): ReflectionMethod|null
     {
-        return new ReflectionMethod($this->betterReflectionObject->getConstructor());
+        $constructor = $this->betterReflectionObject->getConstructor();
+
+        if ($constructor === null) {
+            return null;
+        }
+
+        return new ReflectionMethod($constructor);
     }
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasMethod($this->getMethodRealName($name));
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        return new ReflectionMethod($this->betterReflectionObject->getMethod($this->getMethodRealName($name)));
+        assert($name !== '');
+
+        $method = $this->betterReflectionObject->getMethod($this->getMethodRealName($name));
+
+        if ($method === null) {
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionObject->getName(), $name));
+        }
+
+        return new ReflectionMethod($method);
     }
 
+    /**
+     * @param non-empty-string $name
+     *
+     * @return non-empty-string
+     */
     private function getMethodRealName(string $name): string
     {
         $realMethodNames = array_map(static fn (BetterReflectionMethod $method): string => $method->getName(), $this->betterReflectionObject->getMethods());
 
         $methodNames = array_combine(array_map(static fn (string $methodName): string => strtolower($methodName), $realMethodNames), $realMethodNames);
 
-        return $methodNames[strtolower($name)] ?? $name;
+        $lowercasedName = strtolower($name);
+
+        return $methodNames[$lowercasedName] ?? $name;
     }
 
     /**
+     * @param int-mask-of<ReflectionMethod::IS_*>|null $filter
+     *
      * @return list<ReflectionMethod>
      *
      * @psalm-suppress MethodSignatureMismatch
@@ -119,67 +144,82 @@ final class ReflectionObject extends CoreReflectionObject
     {
         return array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
-            $this->betterReflectionObject->getMethods($filter),
+            $this->betterReflectionObject->getMethods($filter ?? 0),
         );
     }
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $property = $this->betterReflectionObject->getProperty($name);
 
         if ($property === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         return new ReflectionProperty($property);
     }
 
     /**
+     * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
+     *
      * @return list<ReflectionProperty>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionObject->getProperties()));
+        return array_values(array_map(
+            static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
+            $this->betterReflectionObject->getProperties($filter ?? 0),
+        ));
     }
 
     public function hasConstant(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionObject->hasConstant($name);
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, mixed>
+     */
     public function getConstants(int|null $filter = null): array
     {
-        $reflectionConstants = $this->betterReflectionObject->getReflectionConstants();
-
-        if ($filter !== null) {
-            $reflectionConstants = array_filter(
-                $reflectionConstants,
-                static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
-            );
-        }
-
         return array_map(
             static fn (BetterReflectionClassConstant $betterConstant): mixed => $betterConstant->getValue(),
-            $reflectionConstants,
+            $this->betterReflectionObject->getConstants($filter ?? 0),
         );
     }
 
     public function getConstant(string $name): mixed
     {
-        return $this->betterReflectionObject->getConstant($name);
+        assert($name !== '');
+
+        $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        $betterReflectionConstant = $this->betterReflectionObject->getReflectionConstant($name);
+        assert($name !== '');
+
+        $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
 
         if ($betterReflectionConstant === null) {
             return false;
@@ -188,12 +228,16 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionClassConstant($betterReflectionConstant);
     }
 
-    /** @return list<ReflectionClassConstant> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return list<ReflectionClassConstant>
+     */
     public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
             static fn (BetterReflectionClassConstant $betterConstant): ReflectionClassConstant => new ReflectionClassConstant($betterConstant),
-            $this->betterReflectionObject->getReflectionConstants(),
+            $this->betterReflectionObject->getConstants($filter ?? 0),
         ));
     }
 
@@ -326,6 +370,8 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
 
         if ($betterReflectionProperty === null) {
@@ -333,13 +379,13 @@ final class ReflectionObject extends CoreReflectionObject
                 return $default;
             }
 
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
         }
 
         return $property->getValue();
@@ -347,16 +393,18 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionObject->getName(), $name));
         }
 
         $property = new ReflectionProperty($betterReflectionProperty);
 
         if (! $property->isStatic()) {
-            throw new CoreReflectionException(sprintf('Property "%s" is not static', $name));
+            throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionObject->getName(), $name));
         }
 
         $property->setValue($value);
@@ -410,7 +458,7 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionObject->getNamespaceName();
+        return $this->betterReflectionObject->getNamespaceName() ?? '';
     }
 
     public function getShortName(): string

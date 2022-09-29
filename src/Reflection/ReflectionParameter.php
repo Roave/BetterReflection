@@ -16,11 +16,13 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
-use Roave\BetterReflection\Reflection\Exception\Uncloneable;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
+use Roave\BetterReflection\Util\Exception\NoNodePosition;
+use RuntimeException;
 
+use function array_map;
 use function assert;
 use function count;
 use function is_array;
@@ -30,21 +32,92 @@ use function sprintf;
 
 class ReflectionParameter
 {
-    private bool $isOptional;
+    /** @var non-empty-string */
+    private string $name;
+
+    private Node\Expr|null $default;
+
+    private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
+
+    private bool $isVariadic;
+
+    private bool $byRef;
+
+    private bool $isPromoted;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    /** @var positive-int|null */
+    private int|null $startLine;
+
+    /** @var positive-int|null */
+    private int|null $endLine;
+
+    /** @var positive-int|null */
+    private int|null $startColumn;
+
+    /** @var positive-int|null */
+    private int|null $endColumn;
 
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private ParamNode $node,
+        ParamNode $node,
         private ReflectionMethod|ReflectionFunction $function,
         private int $parameterIndex,
+        private bool $isOptional,
     ) {
-        $this->isOptional = $this->detectIsOptional();
+        assert($node->var instanceof Node\Expr\Variable);
+        assert(is_string($node->var->name));
+
+        $name = $node->var->name;
+        assert($name !== '');
+
+        $this->name       = $name;
+        $this->default    = $node->default;
+        $this->type       = $this->createType($node);
+        $this->isVariadic = $node->variadic;
+        $this->byRef      = $node->byRef;
+        $this->isPromoted = $node->flags !== 0;
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+
+        if ($node->hasAttribute('startLine')) {
+            $startLine = $node->getStartLine();
+            assert($startLine > 0);
+        } else {
+            $startLine = null;
+        }
+
+        if ($node->hasAttribute('endLine')) {
+            $endLine = $node->getEndLine();
+            assert($endLine > 0);
+        } else {
+            $endLine = null;
+        }
+
+        $this->startLine = $startLine;
+        $this->endLine   = $endLine;
+
+        try {
+            $this->startColumn = CalculateReflectionColumn::getStartColumn($function->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->startColumn = null;
+        }
+
+        try {
+            $this->endColumn = CalculateReflectionColumn::getEndColumn($function->getLocatedSource()->getSource(), $node);
+        } catch (NoNodePosition) {
+            $this->endColumn = null;
+        }
     }
 
     /**
      * Create a reflection of a parameter using a class name
+     *
+     * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
      *
      * @throws OutOfBoundsException
      */
@@ -55,7 +128,7 @@ class ReflectionParameter
     ): self {
         $parameter = ReflectionClass::createFromName($className)
             ->getMethod($methodName)
-            ->getParameter($parameterName);
+            ?->getParameter($parameterName);
 
         if ($parameter === null) {
             throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
@@ -67,6 +140,9 @@ class ReflectionParameter
     /**
      * Create a reflection of a parameter using an instance
      *
+     * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
+     *
      * @throws OutOfBoundsException
      */
     public static function createFromClassInstanceAndMethod(
@@ -76,7 +152,7 @@ class ReflectionParameter
     ): self {
         $parameter = ReflectionClass::createFromInstance($instance)
             ->getMethod($methodName)
-            ->getParameter($parameterName);
+            ?->getParameter($parameterName);
 
         if ($parameter === null) {
             throw new OutOfBoundsException(sprintf('Could not find parameter: %s', $parameterName));
@@ -87,6 +163,8 @@ class ReflectionParameter
 
     /**
      * Create a reflection of a parameter using a closure
+     *
+     * @param non-empty-string $parameterName
      *
      * @throws OutOfBoundsException
      */
@@ -111,6 +189,7 @@ class ReflectionParameter
      *  - [function () {}]
      *
      * @param object[]|string[]|string|Closure $spec
+     * @param non-empty-string                 $parameterName
      *
      * @throws Exception
      * @throws InvalidArgumentException
@@ -119,6 +198,8 @@ class ReflectionParameter
     {
         try {
             if (is_array($spec) && count($spec) === 2 && is_string($spec[1])) {
+                assert($spec[1] !== '');
+
                 if (is_object($spec[0])) {
                     return self::createFromClassInstanceAndMethod($spec[0], $spec[1], $parameterName);
                 }
@@ -160,13 +241,32 @@ class ReflectionParameter
         ParamNode $node,
         ReflectionMethod|ReflectionFunction $function,
         int $parameterIndex,
+        bool $isOptional,
     ): self {
         return new self(
             $reflector,
             $node,
             $function,
             $parameterIndex,
+            $isOptional,
         );
+    }
+
+    /** @internal */
+    public function withFunction(ReflectionMethod|ReflectionFunction $function): self
+    {
+        $clone           = clone $this;
+        $clone->function = $function;
+
+        if ($clone->type !== null) {
+            $clone->type = $clone->type->withOwner($clone);
+        }
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        $this->compiledDefaultValue = null;
+
+        return $clone;
     }
 
     /** @throws LogicException */
@@ -178,7 +278,7 @@ class ReflectionParameter
 
         if ($this->compiledDefaultValue === null) {
             $this->compiledDefaultValue = (new CompileNodeToValue())->__invoke(
-                $this->node->default,
+                $this->default,
                 new CompilerContext($this->reflector, $this),
             );
         }
@@ -188,13 +288,12 @@ class ReflectionParameter
 
     /**
      * Get the name of the parameter.
+     *
+     * @return non-empty-string
      */
     public function getName(): string
     {
-        assert($this->node->var instanceof Node\Expr\Variable);
-        assert(is_string($this->node->var->name));
-
-        return $this->node->var->name;
+        return $this->name;
     }
 
     /**
@@ -251,11 +350,16 @@ class ReflectionParameter
      * $foo parameter isOptional() == false, but isDefaultValueAvailable == true
      *
      * @example someMethod($foo = 'foo', $bar)
-     * @psalm-assert-if-true Node\Expr $this->node->default
+     * @psalm-assert-if-true Node\Expr $this->default
      */
     public function isDefaultValueAvailable(): bool
     {
-        return $this->node->default !== null;
+        return $this->default !== null;
+    }
+
+    public function getDefaultValueExpression(): Node\Expr|null
+    {
+        return $this->default;
     }
 
     /**
@@ -304,7 +408,12 @@ class ReflectionParameter
      */
     public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
     {
-        $type = $this->node->type;
+        return $this->type;
+    }
+
+    private function createType(ParamNode $node): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    {
+        $type = $node->type;
 
         if ($type === null) {
             return null;
@@ -312,7 +421,7 @@ class ReflectionParameter
 
         assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
 
-        $allowsNull = $this->isDefaultValueAvailable() && $this->getDefaultValue() === null && ! $this->isDefaultValueConstant();
+        $allowsNull = $this->default instanceof Node\Expr\ConstFetch && $this->default->name->toLowerString() === 'null';
 
         return ReflectionType::createFromNode($this->reflector, $this, $type, $allowsNull);
     }
@@ -324,61 +433,7 @@ class ReflectionParameter
      */
     public function hasType(): bool
     {
-        return $this->node->type !== null;
-    }
-
-    /**
-     * Is this parameter an array?
-     */
-    public function isArray(): bool
-    {
-        return $this->isType($this->getType(), 'array');
-    }
-
-    /**
-     * Is this parameter a callable?
-     */
-    public function isCallable(): bool
-    {
-        return $this->isType($this->getType(), 'callable');
-    }
-
-    /**
-     * For isArray() and isCallable().
-     */
-    private function isType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $typeReflection, string $type): bool
-    {
-        if ($typeReflection === null) {
-            return false;
-        }
-
-        if ($typeReflection instanceof ReflectionIntersectionType) {
-            return false;
-        }
-
-        $isOneOfAllowedTypes = static function (ReflectionNamedType $namedType, string ...$types): bool {
-            foreach ($types as $type) {
-                if ($namedType->getName() === $type) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        if ($typeReflection instanceof ReflectionUnionType) {
-            $unionTypes = $typeReflection->getTypes();
-
-            foreach ($unionTypes as $unionType) {
-                if (! $isOneOfAllowedTypes($unionType, $type, 'null')) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return $isOneOfAllowedTypes($typeReflection, $type);
+        return $this->type !== null;
     }
 
     /**
@@ -386,7 +441,7 @@ class ReflectionParameter
      */
     public function isVariadic(): bool
     {
-        return $this->node->variadic;
+        return $this->isVariadic;
     }
 
     /**
@@ -394,7 +449,7 @@ class ReflectionParameter
      */
     public function isPassedByReference(): bool
     {
-        return $this->node->byRef;
+        return $this->byRef;
     }
 
     public function canBePassedByValue(): bool
@@ -404,7 +459,7 @@ class ReflectionParameter
 
     public function isPromoted(): bool
     {
-        return $this->node->flags !== 0;
+        return $this->isPromoted;
     }
 
     /** @throws LogicException */
@@ -426,97 +481,65 @@ class ReflectionParameter
     }
 
     /**
-     * Gets a ReflectionClass for the type hint (returns null if not a class)
+     * @return positive-int
+     *
+     * @throws RuntimeException
      */
-    public function getClass(): ReflectionClass|null
+    public function getStartLine(): int
     {
-        $type = $this->getType();
-
-        if ($type === null) {
-            return null;
+        if ($this->startLine === null) {
+            throw new RuntimeException('Start line missing');
         }
 
-        if ($type instanceof ReflectionIntersectionType) {
-            return null;
-        }
-
-        if ($type instanceof ReflectionUnionType) {
-            foreach ($type->getTypes() as $innerType) {
-                $innerTypeClass = $this->getClassFromNamedType($innerType);
-                if ($innerTypeClass !== null) {
-                    return $innerTypeClass;
-                }
-            }
-
-            return null;
-        }
-
-        return $this->getClassFromNamedType($type);
-    }
-
-    private function getClassFromNamedType(ReflectionNamedType $namedType): ReflectionClass|null
-    {
-        try {
-            return $namedType->getClass();
-        } catch (LogicException) {
-            return null;
-        }
-    }
-
-    private function detectIsOptional(): bool
-    {
-        if ($this->node->variadic) {
-            return true;
-        }
-
-        if ($this->node->default === null) {
-            return false;
-        }
-
-        foreach ($this->function->getAst()->getParams() as $otherParameterIndex => $otherParameterNode) {
-            if ($otherParameterIndex <= $this->parameterIndex) {
-                continue;
-            }
-
-            // When we find next parameter that does not have a default or is not variadic,
-            // it means current parameter cannot be optional EVEN if it has a default value
-            if ($otherParameterNode->default === null && ! $otherParameterNode->variadic) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->startLine;
     }
 
     /**
-     * {@inheritdoc}
+     * @return positive-int
      *
-     * @throws Uncloneable
+     * @throws RuntimeException
      */
-    public function __clone()
+    public function getEndLine(): int
     {
-        throw Uncloneable::fromClass(self::class);
+        if ($this->endLine === null) {
+            throw new RuntimeException('End line missing');
+        }
+
+        return $this->endLine;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->function->getLocatedSource()->getSource(), $this->node);
+        if ($this->startColumn === null) {
+            throw new RuntimeException('Start column missing');
+        }
+
+        return $this->startColumn;
     }
 
+    /**
+     * @return positive-int
+     *
+     * @throws RuntimeException
+     */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->function->getLocatedSource()->getSource(), $this->node);
-    }
+        if ($this->endColumn === null) {
+            throw new RuntimeException('End column missing');
+        }
 
-    public function getAst(): ParamNode
-    {
-        return $this->node;
+        return $this->endColumn;
     }
 
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */

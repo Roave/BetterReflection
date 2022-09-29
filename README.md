@@ -1,7 +1,7 @@
 Better Reflection
 =================
 
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FRoave%2FBetterReflection%2F5.4.x)](https://dashboard.stryker-mutator.io/reports/github.com/Roave/BetterReflection/5.4.x)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FRoave%2FBetterReflection%2F6.0.x)](https://dashboard.stryker-mutator.io/reports/github.com/Roave/BetterReflection/6.0.x)
 [![Type Coverage](https://shepherd.dev/github/Roave/BetterReflection/coverage.svg)](https://shepherd.dev/github/Roave/BetterReflection)
 [![Latest Stable Version](https://poser.pugx.org/roave/better-reflection/v/stable)](https://packagist.org/packages/roave/better-reflection)
 [![License](https://poser.pugx.org/roave/better-reflection/license)](https://packagist.org/packages/roave/better-reflection)
@@ -55,7 +55,6 @@ $classInfo = (new BetterReflection())
 * [Using types](docs/types.md)
 * [The features](docs/features.md)
 * [Test suite](https://github.com/Roave/BetterReflection/blob/master/test/README.md)
-* [AST extraction](docs/ast-extraction.md)
 
 ## Upgrading
 

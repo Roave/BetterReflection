@@ -41,7 +41,6 @@ class ReflectionNamedTypeTest extends TestCase
 
         self::assertInstanceOf(ReflectionNamedType::class, $typeInfo);
         self::assertSame('string', $typeInfo->getName());
-        self::assertSame($this->owner, $typeInfo->getOwner());
     }
 
     public function testAllowsNull(): void
@@ -296,6 +295,35 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertSame($typeClassName, $class->getName());
     }
 
+    public function testGetClassWithSelfDefinedInTrait(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            trait TraitClass {
+                public function method(): self
+                {}
+            }
+
+            class ClassUsingTrait {
+                use TraitClass;
+            }
+
+            PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+
+        /** @var class-string $className */
+        $className = 'ClassUsingTrait';
+
+        $classReflection  = $reflector->reflectClass($className);
+        $methodReflection = $classReflection->getMethod('method');
+
+        $typeReflection = $methodReflection->getReturnType();
+        $class          = $typeReflection->getClass();
+
+        self::assertSame($className, $class->getName());
+    }
+
     /** @return list<array{0: string}> */
     public function dataGetClassWithParent(): array
     {
@@ -343,5 +371,16 @@ class ReflectionNamedTypeTest extends TestCase
 
         self::expectException(LogicException::class);
         $typeReflection->getClass();
+    }
+
+    public function testWithOwner(): void
+    {
+        $typeReflection = $this->createType('string');
+
+        $owner = $this->createMock(ReflectionParameter::class);
+
+        $cloneTypeReflection = $typeReflection->withOwner($owner);
+
+        self::assertNotSame($typeReflection, $cloneTypeReflection);
     }
 }

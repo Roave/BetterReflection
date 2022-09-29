@@ -43,7 +43,7 @@ final class ReflectionClassStringCast
 
         $type = self::typeToString($classReflection);
 
-        $constants         = $classReflection->getReflectionConstants();
+        $constants         = $classReflection->getConstants();
         $enumCases         = $classReflection instanceof ReflectionEnum ? $classReflection->getCases() : [];
         $staticProperties  = self::getStaticProperties($classReflection);
         $staticMethods     = self::getStaticMethods($classReflection);

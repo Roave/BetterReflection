@@ -16,6 +16,8 @@ parameters:
     excludePaths:
         analyse:
             - test/unit/Fixture/*
+        analyseAndScan:
+            - test/unit/Fixture/InvalidParents.php
 
     bootstrapFiles:
         - phar://%currentWorkingDirectory%/test/unit/Fixture/autoload.phar/vendor/autoload.php
@@ -25,3 +27,6 @@ parameters:
         -
             message: '#Call to an undefined method PhpParser\\NodeVisitorAbstract::(getNode|setConstantName)\(\)#'
             path: src/SourceLocator/Type/AutoloadSourceLocator.php
+        -
+            message: '#Method Roave\\BetterReflection\\Reflection\\ReflectionClass::computeModifiers\(\) never returns \d+ so it can be removed from the return type#'
+            path: src/Reflection/ReflectionClass.php

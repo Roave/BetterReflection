@@ -21,9 +21,9 @@ use Roave\BetterReflection\Util\FileHelper;
 use ValueError;
 
 use function array_combine;
-use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
 use function constant;
 use function sprintf;
 use function strtolower;
@@ -99,70 +99,102 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionEnum->getDocComment() ?: false;
+        return $this->betterReflectionEnum->getDocComment() ?? false;
     }
 
     public function getConstructor(): CoreReflectionMethod|null
     {
-        try {
-            return new ReflectionMethod($this->betterReflectionEnum->getConstructor());
-        } catch (OutOfBoundsException) {
+        $constructor = $this->betterReflectionEnum->getConstructor();
+
+        if ($constructor === null) {
             return null;
         }
+
+        return new ReflectionMethod($constructor);
     }
 
     public function hasMethod(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        return new ReflectionMethod($this->betterReflectionEnum->getMethod($name));
+        assert($name !== '');
+
+        $method = $this->betterReflectionEnum->getMethod($name);
+
+        if ($method === null) {
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionEnum->getName(), $name));
+        }
+
+        return new ReflectionMethod($method);
     }
 
     /**
+     * @param int-mask-of<ReflectionMethod::IS_*>|null $filter
+     *
      * @return list<ReflectionMethod>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getMethods(int|null $filter = null): array
     {
-        return array_map(static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method), $this->betterReflectionEnum->getMethods($filter));
+        return array_map(
+            static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
+            $this->betterReflectionEnum->getMethods($filter ?? 0),
+        );
     }
 
     public function hasProperty(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
+        assert($name !== '');
+
         $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
 
         if ($betterReflectionProperty === null) {
-            throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+            throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
         }
 
         return new ReflectionProperty($betterReflectionProperty);
     }
 
     /**
+     * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
+     *
      * @return list<ReflectionProperty>
      *
      * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
-        return array_values(array_map(static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property), $this->betterReflectionEnum->getProperties($filter)));
+        return array_values(array_map(
+            static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
+            $this->betterReflectionEnum->getProperties($filter ?? 0),
+        ));
     }
 
     public function hasConstant(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasCase($name) || $this->betterReflectionEnum->hasConstant($name);
     }
 
-    /** @return array<string, mixed|null> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, mixed|null>
+     */
     public function getConstants(int|null $filter = null): array
     {
         return array_map(
@@ -173,12 +205,19 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getConstant(string $name): mixed
     {
+        assert($name !== '');
+
         $enumCase = $this->betterReflectionEnum->getCase($name);
         if ($enumCase !== null) {
             return $this->getConstantValue($enumCase);
         }
 
-        return $this->betterReflectionEnum->getConstant($name);
+        $betterReflectionConstant = $this->betterReflectionEnum->getConstant($name);
+        if ($betterReflectionConstant === null) {
+            return false;
+        }
+
+        return $betterReflectionConstant->getValue();
     }
 
     private function getConstantValue(BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed
@@ -192,7 +231,10 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getReflectionConstant($name);
+        assert($name !== '');
+
+        // @infection-ignore-all Coalesce: There's no difference
+        $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getConstant($name);
         if ($betterReflectionConstantOrEnumCase === null) {
             return false;
         }
@@ -200,7 +242,11 @@ final class ReflectionEnum extends CoreReflectionEnum
         return new ReflectionClassConstant($betterReflectionConstantOrEnumCase);
     }
 
-    /** @return list<ReflectionClassConstant> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return list<ReflectionClassConstant>
+     */
     public function getReflectionConstants(int|null $filter = null): array
     {
         return array_values(array_map(
@@ -209,17 +255,14 @@ final class ReflectionEnum extends CoreReflectionEnum
         ));
     }
 
-    /** @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase> */
+    /**
+     * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
+     *
+     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
+     */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
-        $reflectionConstants = $this->betterReflectionEnum->getReflectionConstants();
-
-        if ($filter !== null) {
-            $reflectionConstants = array_filter(
-                $this->betterReflectionEnum->getReflectionConstants(),
-                static fn (BetterReflectionClassConstant $betterConstant): bool => (bool) ($betterConstant->getModifiers() & $filter),
-            );
-        }
+        $reflectionConstants = $this->betterReflectionEnum->getConstants($filter ?? 0);
 
         if (
             $filter === null
@@ -357,12 +400,12 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
     }
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
-        throw new CoreReflectionException(sprintf('Property "%s" does not exist', $name));
+        throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionEnum->getName(), $name));
     }
 
     /** @return array<string, scalar|array<scalar>|null> */
@@ -413,7 +456,7 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getNamespaceName(): string
     {
-        return $this->betterReflectionEnum->getNamespaceName();
+        return $this->betterReflectionEnum->getNamespaceName() ?? '';
     }
 
     public function getShortName(): string
@@ -450,11 +493,15 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasCase(string $name): bool
     {
+        assert($name !== '');
+
         return $this->betterReflectionEnum->hasCase($name);
     }
 
     public function getCase(string $name): ReflectionEnumUnitCase|ReflectionEnumBackedCase
     {
+        assert($name !== '');
+
         $case = $this->betterReflectionEnum->getCase($name);
 
         if ($case === null) {

@@ -346,4 +346,32 @@ PHP;
             ),
         );
     }
+
+    /** @return array<array{0: string, 1: string}> */
+    public function dataIdentifierDoesNotMatchTypeProvider(): array
+    {
+        return [
+            ['<?php class Foo {}', IdentifierType::IDENTIFIER_FUNCTION],
+            ['<?php function Foo () {}', IdentifierType::IDENTIFIER_CLASS],
+            ['<?php const FOO = 1;', IdentifierType::IDENTIFIER_CLASS],
+        ];
+    }
+
+    /** @dataProvider dataIdentifierDoesNotMatchTypeProvider */
+    public function testNoNodesWhenIdentifierDoesNotMatchType(string $code, string $identifierType): void
+    {
+        $strategy      = $this->createMock(NodeToReflection::class);
+        $reflector     = $this->createMock(Reflector::class);
+        $locatedSource = new LocatedSource($code, 'Foo');
+
+        self::assertSame(
+            [],
+            (new FindReflectionsInTree($strategy))->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType($identifierType),
+                $locatedSource,
+            ),
+        );
+    }
 }

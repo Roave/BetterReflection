@@ -24,6 +24,7 @@ use ReflectionNamedType as CoreReflectionNamedType;
 use ReflectionParameter as CoreReflectionParameter;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
@@ -181,7 +182,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertEquals(
+            $original->getConstants(),
+            array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $stubbed->getConstants()),
+        );
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
@@ -245,12 +249,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             return;
         }
 
-        // @ because isArray() is deprecated
-        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
-
-        // @ because isCallable() is deprecated
-        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
-
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         // Bugs in PHP
         if (
@@ -264,17 +262,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
-
-        // @ because getClass() is deprecated
-        $class = @$original->getClass();
-        if ($class) {
-            $stubbedClass = $stubbed->getClass();
-
-            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-        } else {
-            self::assertNull($stubbed->getClass(), $parameterName);
-        }
     }
 
     /** @return list<array{0: string}> */
@@ -326,20 +313,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 self::assertSame($originalReflectionParameter->canBePassedByValue(), $stubbedReflectionParameter->canBePassedByValue(), $parameterName);
             }
 
-            // @ because isCallable() is deprecated
-            self::assertSame(@$originalReflectionParameter->isCallable(), $stubbedReflectionParameter->isCallable(), $parameterName);
-
             self::assertSame($originalReflectionParameter->isVariadic(), $stubbedReflectionParameter->isVariadic(), $parameterName);
-
-            // @ because getClass() is deprecated
-            $class = @$originalReflectionParameter->getClass();
-            if ($class) {
-                $stubbedClass = $stubbedReflectionParameter->getClass();
-                self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-                self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-            } else {
-                self::assertNull($class, $parameterName);
-            }
         }
     }
 
@@ -401,7 +375,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($constantName, $constantReflection->getName());
         self::assertSame($constantName, $constantReflection->getShortName());
 
-        self::assertNotNull($constantReflection->getNamespaceName());
+        self::assertNull($constantReflection->getNamespaceName());
         self::assertFalse($constantReflection->inNamespace());
         self::assertTrue($constantReflection->isInternal());
         self::assertFalse($constantReflection->isUserDefined());
@@ -757,7 +731,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isSupported, array_key_exists($constantName, $constants));
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: string}> */
     public function dataMethodInPhpVersion(): array
     {
         return [
@@ -783,7 +757,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider dataMethodInPhpVersion
+     */
     public function testMethodInPhpVersion(
         string $className,
         string $methodName,
@@ -816,7 +794,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: non-empty-string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
     public function dataMethodParameterInPhpVersion(): array
     {
         return [
@@ -829,7 +807,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodParameterInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
+     *
+     * @dataProvider dataMethodParameterInPhpVersion
+     */
     public function testMethodParameterInPhpVersion(
         string $className,
         string $methodName,
@@ -858,7 +841,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool, 4?: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string}> */
     public function dataPropertyInPhpVersion(): array
     {
         return [
@@ -874,7 +857,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataPropertyInPhpVersion */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataPropertyInPhpVersion
+     */
     public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported, string|null $type = null): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -939,7 +926,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
-    /** @return list<array{0: string, 1: string, 2: int, 3: bool, 4?: string|null, 5?: bool}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: bool}> */
     public function dataFunctionParameterInPhpVersion(): array
     {
         return [
@@ -958,7 +945,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFunctionParameterInPhpVersion */
+    /**
+     * @param non-empty-string $parameterName
+     *
+     * @dataProvider dataFunctionParameterInPhpVersion
+     */
     public function testFunctionParameterInPhpVersion(
         string $functionName,
         string $parameterName,
@@ -1038,7 +1029,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $classReflection->isDeprecated());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataClassConstantIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1049,19 +1040,23 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassConstantIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $constantName
+     *
+     * @dataProvider dataClassConstantIsDeprecatedInPhpVersion
+     */
     public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
         $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
 
         $classReflection    = $reflector->reflectClass($className);
-        $constantReflection = $classReflection->getReflectionConstant($constantName);
+        $constantReflection = $classReflection->getConstant($constantName);
 
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataMethodIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1072,7 +1067,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataMethodIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $methodName
+     *
+     * @dataProvider dataMethodIsDeprecatedInPhpVersion
+     */
     public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1089,7 +1088,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame($isDeprecated, $methodReflection->isDeprecated());
     }
 
-    /** @return list<array{0: string, 1: string, 2: int, 3: bool}> */
+    /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool}> */
     public function dataPropertyIsDeprecatedInPhpVersion(): array
     {
         return [
@@ -1100,7 +1099,11 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataPropertyIsDeprecatedInPhpVersion */
+    /**
+     * @param non-empty-string $propertyName
+     *
+     * @dataProvider dataPropertyIsDeprecatedInPhpVersion
+     */
     public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);

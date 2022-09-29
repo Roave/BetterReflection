@@ -63,7 +63,7 @@ final class ReflectionEnumBackedCase extends CoreReflectionEnumBackedCase
 
     public function getDocComment(): string|false
     {
-        return $this->betterReflectionEnumCase->getDocComment() ?: false;
+        return $this->betterReflectionEnumCase->getDocComment() ?? false;
     }
 
     public function __toString(): string

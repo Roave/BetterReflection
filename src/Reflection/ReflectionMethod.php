@@ -8,10 +8,9 @@ use Closure;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Namespace_ as NamespaceNode;
 use ReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -21,6 +20,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
 
+use function array_map;
 use function assert;
 use function sprintf;
 use function strtolower;
@@ -29,13 +29,15 @@ class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 
-    private MethodNode $methodNode;
+    /** @var int-mask-of<ReflectionMethodAdapter::IS_*> */
+    private int $modifiers;
 
+    /** @param non-empty-string|null $aliasName */
     private function __construct(
         private Reflector $reflector,
-        private MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
+        MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
         private LocatedSource $locatedSource,
-        private NamespaceNode|null $declaringNamespace,
+        private string|null $namespace,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private ReflectionClass $currentClass,
@@ -43,15 +45,25 @@ class ReflectionMethod
     ) {
         assert($node instanceof MethodNode);
 
-        $this->methodNode = $node;
+        $name = $node->name->name;
+        assert($name !== '');
+
+        $this->name      = $name;
+        $this->modifiers = $this->computeModifiers($node);
+
+        $this->fillFromNode($node);
     }
 
-    /** @internal */
+    /**
+     * @internal
+     *
+     * @param non-empty-string|null $aliasName
+     */
     public static function createFromNode(
         Reflector $reflector,
         MethodNode $node,
         LocatedSource $locatedSource,
-        Namespace_|null $namespace,
+        string|null $namespace,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         ReflectionClass $currentClass,
@@ -72,16 +84,26 @@ class ReflectionMethod
     /**
      * Create a reflection of a method by it's name using a named class
      *
+     * @param non-empty-string $methodName
+     *
      * @throws IdentifierNotFound
      * @throws OutOfBoundsException
      */
     public static function createFromName(string $className, string $methodName): self
     {
-        return ReflectionClass::createFromName($className)->getMethod($methodName);
+        $method = ReflectionClass::createFromName($className)->getMethod($methodName);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
+        }
+
+        return $method;
     }
 
     /**
      * Create a reflection of a method by it's name using an instance
+     *
+     * @param non-empty-string $methodName
      *
      * @throws ReflectionException
      * @throws IdentifierNotFound
@@ -89,23 +111,67 @@ class ReflectionMethod
      */
     public static function createFromInstance(object $instance, string $methodName): self
     {
-        return ReflectionClass::createFromInstance($instance)->getMethod($methodName);
+        $method = ReflectionClass::createFromInstance($instance)->getMethod($methodName);
+
+        if ($method === null) {
+            throw new OutOfBoundsException(sprintf('Could not find method: %s', $methodName));
+        }
+
+        return $method;
     }
 
-    public function getAst(): MethodNode
+    /**
+     * @internal
+     *
+     * @param non-empty-string|null                      $aliasName
+     * @param int-mask-of<ReflectionMethodAdapter::IS_*> $modifiers
+     */
+    public function withImplementingClass(ReflectionClass $implementingClass, string|null $aliasName, int $modifiers): self
     {
-        return $this->methodNode;
+        $clone                    = $this->clone();
+        $clone->aliasName         = $aliasName;
+        $clone->modifiers         = $modifiers;
+        $clone->implementingClass = $implementingClass;
+        $clone->currentClass      = $implementingClass;
+
+        return $clone;
     }
 
+    /** @internal */
+    public function withCurrentClass(ReflectionClass $currentClass): self
+    {
+        $clone               = $this->clone();
+        $clone->currentClass = $currentClass;
+
+        return $clone;
+    }
+
+    private function clone(): self
+    {
+        $clone = clone $this;
+
+        if ($clone->returnType !== null) {
+            $clone->returnType = $clone->returnType->withOwner($clone);
+        }
+
+        $clone->parameters = array_map(static fn (ReflectionParameter $parameter): ReflectionParameter => $parameter->withFunction($clone), $this->parameters);
+
+        $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        return $clone;
+    }
+
+    /** @return non-empty-string */
     public function getShortName(): string
     {
         if ($this->aliasName !== null) {
             return $this->aliasName;
         }
 
-        return $this->methodNode->name->name;
+        return $this->name;
     }
 
+    /** @return non-empty-string|null */
     public function getAliasName(): string|null
     {
         return $this->aliasName;
@@ -123,24 +189,28 @@ class ReflectionMethod
 
         while ($currentClass) {
             foreach ($currentClass->getImmediateInterfaces() as $interface) {
-                if ($interface->hasMethod($this->getName())) {
-                    return $interface->getMethod($this->getName());
+                $interfaceMethod = $interface->getMethod($this->getName());
+
+                if ($interfaceMethod !== null) {
+                    return $interfaceMethod;
                 }
             }
 
             $currentClass = $currentClass->getParentClass();
 
             if ($currentClass === null || ! $currentClass->hasMethod($this->getName())) {
+                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
                 break;
             }
 
-            $prototype = $currentClass->getMethod($this->getName())->findPrototype();
+            $prototype = $currentClass->getMethod($this->getName())?->findPrototype();
 
-            if ($prototype !== null) {
-                if ($this->isConstructor() && ! $prototype->isAbstract()) {
-                    break;
-                }
+            if ($prototype === null) {
+                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
+                break;
+            }
 
+            if (! $this->isConstructor() || $prototype->isAbstract()) {
                 return $prototype;
             }
         }
@@ -171,17 +241,25 @@ class ReflectionMethod
 
     /**
      * Get the core-reflection-compatible modifier values.
+     *
+     * @return int-mask-of<ReflectionMethodAdapter::IS_*>
      */
     public function getModifiers(): int
     {
-        $val  = $this->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
-        $val += $this->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
-        $val += $this->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
-        $val += $this->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
-        $val += $this->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
-        $val += $this->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
+        return $this->modifiers;
+    }
 
-        return $val;
+    /** @return int-mask-of<ReflectionMethodAdapter::IS_*> */
+    private function computeModifiers(MethodNode $node): int
+    {
+        $modifiers  = $node->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
+        $modifiers += $node->isPublic() ? CoreReflectionMethod::IS_PUBLIC : 0;
+        $modifiers += $node->isProtected() ? CoreReflectionMethod::IS_PROTECTED : 0;
+        $modifiers += $node->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
+        $modifiers += $node->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
+        $modifiers += $node->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
+
+        return $modifiers;
     }
 
     public function __toString(): string
@@ -194,9 +272,9 @@ class ReflectionMethod
         return false;
     }
 
-    public function getNamespaceName(): string
+    public function getNamespaceName(): string|null
     {
-        return '';
+        return null;
     }
 
     public function isClosure(): bool
@@ -209,7 +287,8 @@ class ReflectionMethod
      */
     public function isAbstract(): bool
     {
-        return $this->methodNode->isAbstract() || $this->declaringClass->isInterface();
+        return ($this->modifiers & CoreReflectionMethod::IS_ABSTRACT) === CoreReflectionMethod::IS_ABSTRACT
+            || $this->declaringClass->isInterface();
     }
 
     /**
@@ -217,7 +296,7 @@ class ReflectionMethod
      */
     public function isFinal(): bool
     {
-        return $this->methodNode->isFinal();
+        return ($this->modifiers & CoreReflectionMethod::IS_FINAL) === CoreReflectionMethod::IS_FINAL;
     }
 
     /**
@@ -225,7 +304,7 @@ class ReflectionMethod
      */
     public function isPrivate(): bool
     {
-        return $this->methodNode->isPrivate();
+        return ($this->modifiers & CoreReflectionMethod::IS_PRIVATE) === CoreReflectionMethod::IS_PRIVATE;
     }
 
     /**
@@ -233,7 +312,7 @@ class ReflectionMethod
      */
     public function isProtected(): bool
     {
-        return $this->methodNode->isProtected();
+        return ($this->modifiers & CoreReflectionMethod::IS_PROTECTED) === CoreReflectionMethod::IS_PROTECTED;
     }
 
     /**
@@ -241,7 +320,7 @@ class ReflectionMethod
      */
     public function isPublic(): bool
     {
-        return $this->methodNode->isPublic();
+        return ($this->modifiers & CoreReflectionMethod::IS_PUBLIC) === CoreReflectionMethod::IS_PUBLIC;
     }
 
     /**
@@ -249,7 +328,7 @@ class ReflectionMethod
      */
     public function isStatic(): bool
     {
-        return $this->methodNode->isStatic();
+        return ($this->modifiers & CoreReflectionMethod::IS_STATIC) === CoreReflectionMethod::IS_STATIC;
     }
 
     /**
@@ -257,16 +336,7 @@ class ReflectionMethod
      */
     public function isConstructor(): bool
     {
-        if (strtolower($this->getName()) === '__construct') {
-            return true;
-        }
-
-        $declaringClass = $this->getDeclaringClass();
-        if ($declaringClass->inNamespace()) {
-            return false;
-        }
-
-        return strtolower($this->getName()) === strtolower($declaringClass->getShortName());
+        return strtolower($this->name) === '__construct';
     }
 
     /**

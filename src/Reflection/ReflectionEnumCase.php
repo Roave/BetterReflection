@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use LogicException;
+use PhpParser\Node;
 use PhpParser\Node\Stmt\EnumCase;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
 use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
@@ -22,13 +23,52 @@ use function is_string;
 
 class ReflectionEnumCase
 {
+    /** @var non-empty-string */
+    private string $name;
+
+    private Node\Expr|null $value;
+
+    /** @var list<ReflectionAttribute> */
+    private array $attributes;
+
+    private string|null $docComment;
+
+    /** @var positive-int */
+    private int $startLine;
+
+    /** @var positive-int */
+    private int $endLine;
+
+    /** @var positive-int */
+    private int $startColumn;
+
+    /** @var positive-int */
+    private int $endColumn;
+
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
-        private EnumCase $node,
+        EnumCase $node,
         private ReflectionEnum $enum,
     ) {
+        $name = $node->name->toString();
+        assert($name !== '');
+        $this->name = $name;
+
+        $this->value      = $node->expr;
+        $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
+        $this->docComment = GetLastDocComment::forNode($node);
+
+        $startLine = $node->getStartLine();
+        assert($startLine > 0);
+        $endLine = $node->getEndLine();
+        assert($endLine > 0);
+
+        $this->startLine   = $startLine;
+        $this->endLine     = $endLine;
+        $this->startColumn = CalculateReflectionColumn::getStartColumn($this->enum->getLocatedSource()->getSource(), $node);
+        $this->endColumn   = CalculateReflectionColumn::getEndColumn($this->enum->getLocatedSource()->getSource(), $node);
     }
 
     /** @internal */
@@ -40,9 +80,24 @@ class ReflectionEnumCase
         return new self($reflector, $node, $enum);
     }
 
+    /** @return non-empty-string */
     public function getName(): string
     {
-        return $this->node->name->toString();
+        return $this->name;
+    }
+
+    /**
+     * Check ReflectionEnum::isBacked() being true first to avoid throwing exception.
+     *
+     * @throws LogicException
+     */
+    public function getValueExpression(): Node\Expr
+    {
+        if ($this->value === null) {
+            throw new LogicException('This enum case does not have a value');
+        }
+
+        return $this->value;
     }
 
     public function getValue(): string|int
@@ -53,16 +108,20 @@ class ReflectionEnumCase
         return $value;
     }
 
-    /** @throws LogicException */
+    /**
+     * Check ReflectionEnum::isBacked() being true first to avoid throwing exception.
+     *
+     * @throws LogicException
+     */
     private function getCompiledValue(): CompiledValue
     {
-        if ($this->node->expr === null) {
+        if ($this->value === null) {
             throw new LogicException('This enum case does not have a value');
         }
 
         if ($this->compiledValue === null) {
             $this->compiledValue = (new CompileNodeToValue())->__invoke(
-                $this->node->expr,
+                $this->value,
                 new CompilerContext($this->reflector, $this),
             );
         }
@@ -70,29 +129,28 @@ class ReflectionEnumCase
         return $this->compiledValue;
     }
 
-    public function getAst(): EnumCase
-    {
-        return $this->node;
-    }
-
+    /** @return positive-int */
     public function getStartLine(): int
     {
-        return $this->node->getStartLine();
+        return $this->startLine;
     }
 
+    /** @return positive-int */
     public function getEndLine(): int
     {
-        return $this->node->getEndLine();
+        return $this->endLine;
     }
 
+    /** @return positive-int */
     public function getStartColumn(): int
     {
-        return CalculateReflectionColumn::getStartColumn($this->enum->getLocatedSource()->getSource(), $this->node);
+        return $this->startColumn;
     }
 
+    /** @return positive-int */
     public function getEndColumn(): int
     {
-        return CalculateReflectionColumn::getEndColumn($this->enum->getLocatedSource()->getSource(), $this->node);
+        return $this->endColumn;
     }
 
     public function getDeclaringEnum(): ReflectionEnum
@@ -105,20 +163,20 @@ class ReflectionEnumCase
         return $this->enum;
     }
 
-    public function getDocComment(): string
+    public function getDocComment(): string|null
     {
-        return GetLastDocComment::forNode($this->node);
+        return $this->docComment;
     }
 
     public function isDeprecated(): bool
     {
-        return AnnotationHelper::isDeprecated($this->getDocComment());
+        return AnnotationHelper::isDeprecated($this->docComment);
     }
 
     /** @return list<ReflectionAttribute> */
     public function getAttributes(): array
     {
-        return ReflectionAttributeHelper::createAttributes($this->reflector, $this);
+        return $this->attributes;
     }
 
     /** @return list<ReflectionAttribute> */

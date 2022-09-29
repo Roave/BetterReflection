@@ -27,15 +27,15 @@ class ClassWithAttributes
 
     #[Attr]
     #[AnotherAttr]
-    private $propertyWithAttributes = [];
+    private array $propertyWithAttributes = [];
 
     #[Attr]
     #[AnotherAttr]
     public function methodWithAttributes(
         #[Attr]
         #[AnotherAttr]
-        $parameterWithAttributes
-    )
+        array $parameterWithAttributes
+    ): array
     {
 
     }

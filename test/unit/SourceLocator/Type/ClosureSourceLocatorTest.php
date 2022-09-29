@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Exception\EvaledClosureCannotBeLocated;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 use Roave\BetterReflection\SourceLocator\Exception\TwoClosuresOnSameLine;
 use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
@@ -39,7 +40,7 @@ class ClosureSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    /** @return list<array{0: Closure, 1: string, 2: string, 3: int, 4: int}> */
+    /** @return list<array{0: Closure, 1: string|null, 2: string, 3: int, 4: int}> */
     public function closuresProvider(): array
     {
         $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
@@ -49,14 +50,14 @@ class ClosureSourceLocatorTest extends TestCase
 
         return [
             [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
-            [require $fileWithClosureNoNamespace, '', $fileWithClosureNoNamespace, 3, 6],
+            [require $fileWithClosureNoNamespace, null, $fileWithClosureNoNamespace, 3, 6],
             [require $fileWithArrowFunctionInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithArrowFunctionInNamespace, 5, 5],
-            [require $fileWithArrowFunctionNoNamespace, '', $fileWithArrowFunctionNoNamespace, 3, 3],
+            [require $fileWithArrowFunctionNoNamespace, null, $fileWithArrowFunctionNoNamespace, 3, 3],
         ];
     }
 
     /** @dataProvider closuresProvider */
-    public function testLocateIdentifier(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
+    public function testLocateIdentifier(Closure $closure, string|null $namespace, string $file, int $startLine, int $endLine): void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
@@ -97,7 +98,7 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /** @dataProvider closuresProvider */
-    public function testLocateIdentifiersByType(Closure $closure, string $namespace, string $file, int $startLine, int $endLine): void
+    public function testLocateIdentifiersByType(Closure $closure, string|null $namespace, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionFunction> $reflections */
         $reflections = (new ClosureSourceLocator($closure, $this->parser))->locateIdentifiersByType(
@@ -201,5 +202,24 @@ class ClosureSourceLocatorTest extends TestCase
 
         self::assertInstanceOf(ReflectionFunction::class, $reflection);
         self::assertSame('Roave\BetterReflectionTest\Fixture\ClassUsedAsClosureParameter', $reflection->getParameter('parameter')->getType()?->__toString());
+    }
+
+    public function testExceptionIfSourceFileIsNotReadable(): void
+    {
+        $sourceLocator = new ClosureSourceLocator(static function (): void {
+        }, $this->parser);
+
+        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue = $this->createMock(CoreReflectionFunction::class);
+        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue
+            ->method('getFileName')
+            ->willReturn('sdklfjdfslsdfhlkjsdglkjsdflgkj');
+
+        $sourceLocatorReflection                               = new CoreReflectionClass($sourceLocator);
+        $sourceLocatorReflectionCoreFunctionReflectionProperty = $sourceLocatorReflection->getProperty('coreFunctionReflection');
+        $sourceLocatorReflectionCoreFunctionReflectionProperty->setAccessible(true);
+        $sourceLocatorReflectionCoreFunctionReflectionProperty->setValue($sourceLocator, $sourceLocatorReflectionCoreFunctionReflectionPropertyValue);
+
+        $this->expectException(InvalidFileLocation::class);
+        $sourceLocator->locateIdentifier($this->reflector, new Identifier('whatever', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
     }
 }

@@ -36,7 +36,7 @@ class ReflectionEnumCaseTest extends TestCase
         $this->reflector  = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/Enums.php', $this->astLocator));
     }
 
-    /** @return list<array{0: class-string, 1: string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string}> */
     public function data(): array
     {
         return [
@@ -46,7 +46,11 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /** @dataProvider data */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider data
+     */
     public function testCanReflect(string $enumName, string $caseName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -59,7 +63,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($caseName, $caseReflection->getName());
     }
 
-    /** @return list<array{0: class-string, 1: string, 2: int|string}> */
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: int|string}> */
     public function dataGetValue(): array
     {
         return [
@@ -68,7 +72,11 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetValue */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider dataGetValue
+     */
     public function testGetValue(string $enumName, string $caseName, int|string $value): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -78,7 +86,20 @@ class ReflectionEnumCaseTest extends TestCase
         $caseReflection = $enumReflection->getCase($caseName);
 
         self::assertInstanceOf(ReflectionEnumCase::class, $caseReflection);
+        self::assertInstanceOf(Node\Expr::class, $caseReflection->getValueExpression());
         self::assertSame($value, $caseReflection->getValue());
+    }
+
+    public function testGetValueExpressionThrowsExceptionForPureEnum(): void
+    {
+        $enumReflection = $this->reflector->reflectClass(PureEnum::class);
+
+        self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
+
+        $caseReflection = $enumReflection->getCase('ONE');
+
+        self::expectException(LogicException::class);
+        $caseReflection->getValueExpression();
     }
 
     public function testGetValueThrowsExceptionForPureEnum(): void
@@ -93,31 +114,21 @@ class ReflectionEnumCaseTest extends TestCase
         $caseReflection->getValue();
     }
 
-    /** @dataProvider data */
-    public function testGetAst(string $enumName, string $caseName): void
-    {
-        $enumReflection = $this->reflector->reflectClass($enumName);
-
-        self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
-
-        $caseReflection = $enumReflection->getCase($caseName);
-        $ast            = $caseReflection->getAst();
-
-        self::assertInstanceOf(Node\Stmt\EnumCase::class, $ast);
-        self::assertSame($caseName, $ast->name->toString());
-    }
-
     /** @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}> */
     public function dataLinesAndColums(): array
     {
         return [
             [PureEnum::class, 'ONE', 7, 7, 5, 13],
-            [IntEnum::class, 'TWO', 15, 15, 5, 17],
-            [StringEnum::class, 'THREE', 26, 27, 5, 18],
+            [IntEnum::class, 'TWO', 19, 19, 5, 17],
+            [StringEnum::class, 'THREE', 34, 35, 5, 18],
         ];
     }
 
-    /** @dataProvider dataLinesAndColums */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider dataLinesAndColums
+     */
     public function testLinesAndColums(string $enumName, string $caseName, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -132,7 +143,11 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($endColumn, $caseReflection->getEndColumn());
     }
 
-    /** @dataProvider data */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider data
+     */
     public function testGetDeclaringClassAndEnum(string $enumName, string $caseName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -145,17 +160,21 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($enumReflection, $caseReflection->getDeclaringEnum());
     }
 
-    /** @return list<array{0: string, 1: string}> */
+    /** @return list<array{0: non-empty-string, 1: string|null}> */
     public function dataGetDocComment(): array
     {
         return [
             ['WITH_DOCCOMMENT', '/** With doccomment */'],
-            ['NO_DOCCOMMENT', ''],
+            ['NO_DOCCOMMENT', null],
         ];
     }
 
-    /** @dataProvider dataGetDocComment */
-    public function testGetDocComment(string $caseName, string $docComment): void
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider dataGetDocComment
+     */
+    public function testGetDocComment(string $caseName, string|null $docComment): void
     {
         $enumReflection = $this->reflector->reflectClass(DocComment::class);
 
@@ -166,7 +185,7 @@ class ReflectionEnumCaseTest extends TestCase
         self::assertSame($docComment, $caseReflection->getDocComment());
     }
 
-    /** @return list<array{0: string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool}> */
     public function dataIsDeprecated(): array
     {
         return [
@@ -175,7 +194,11 @@ class ReflectionEnumCaseTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsDeprecated */
+    /**
+     * @param non-empty-string $caseName
+     *
+     * @dataProvider dataIsDeprecated
+     */
     public function testIsDeprecated(string $caseName, bool $isDeprecated): void
     {
         $enumReflection = $this->reflector->reflectClass(IsDeprecated::class);

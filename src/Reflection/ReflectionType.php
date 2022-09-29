@@ -13,12 +13,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 abstract class ReflectionType
 {
-    protected function __construct(
-        protected Reflector $reflector,
-        protected ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
-    ) {
-    }
-
     /** @internal */
     public static function createFromNode(
         Reflector $reflector,
@@ -55,30 +49,21 @@ abstract class ReflectionType
             return new ReflectionUnionType($reflector, $owner, $type);
         }
 
-        $hasNull = false;
         foreach ($type->types as $innerUnionType) {
-            if (! $innerUnionType instanceof Identifier || $innerUnionType->toLowerString() !== 'null') {
-                continue;
+            /** @psalm-suppress RedundantConditionGivenDocblockType https://github.com/nikic/PHP-Parser/pull/889 */
+            if (
+                /** @phpstan-ignore-next-line https://github.com/nikic/PHP-Parser/pull/889 */
+                ($innerUnionType instanceof Identifier || $innerUnionType instanceof Name)
+                && $innerUnionType->toLowerString() === 'null'
+            ) {
+                return new ReflectionUnionType($reflector, $owner, $type);
             }
-
-            $hasNull = true;
-            break;
-        }
-
-        if ($hasNull) {
-            return new ReflectionUnionType($reflector, $owner, $type);
         }
 
         $types   = $type->types;
         $types[] = new Identifier('null');
 
         return new ReflectionUnionType($reflector, $owner, new UnionType($types));
-    }
-
-    /** @internal */
-    public function getOwner(): ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty
-    {
-        return $this->owner;
     }
 
     /**

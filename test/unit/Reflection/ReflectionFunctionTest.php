@@ -45,7 +45,7 @@ class ReflectionFunctionTest extends TestCase
 
         self::assertFalse($function->inNamespace());
         self::assertSame('foo', $function->getName());
-        self::assertSame('', $function->getNamespaceName());
+        self::assertNull($function->getNamespaceName());
         self::assertSame('foo', $function->getShortName());
     }
 
@@ -71,7 +71,7 @@ class ReflectionFunctionTest extends TestCase
 
         self::assertFalse($function->inNamespace());
         self::assertSame('foo', $function->getName());
-        self::assertSame('', $function->getNamespaceName());
+        self::assertNull($function->getNamespaceName());
         self::assertSame('foo', $function->getShortName());
     }
 
@@ -134,8 +134,10 @@ class ReflectionFunctionTest extends TestCase
         // phpcs:enable
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
-        $theParam = $reflection->getParameter('theParam')->getClass();
-        self::assertSame(stdClass::class, $theParam->getName());
+        $theParamType = $reflection->getParameter('theParam')->getType();
+
+        self::assertNotNull($theParamType);
+        self::assertSame(stdClass::class, $theParamType->getClass()->getName());
     }
 
     public function testCreateFromClosureCanReflectTypesInNamespace(): void
@@ -147,8 +149,10 @@ class ReflectionFunctionTest extends TestCase
         // phpcs:enable
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
-        $theParam = $reflection->getParameter('theParam')->getClass();
-        self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
+        $theParamType = $reflection->getParameter('theParam')->getType();
+
+        self::assertNotNull($theParamType);
+        self::assertSame(ClassWithStaticMethod::class, $theParamType->getClass()->getName());
     }
 
     public function testCreateFromClosureWithArrowFunction(): void
@@ -166,8 +170,10 @@ class ReflectionFunctionTest extends TestCase
 
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
-        $theParam = $reflection->getParameter('theParam')->getClass();
-        self::assertSame(stdClass::class, $theParam->getName());
+        $theParamType = $reflection->getParameter('theParam')->getType();
+
+        self::assertNotNull($theParamType);
+        self::assertSame(stdClass::class, $theParamType->getClass()->getName());
     }
 
     public function testCreateFromClosureWithArrowFunctionCanReflectTypesInNamespace(): void
@@ -176,8 +182,10 @@ class ReflectionFunctionTest extends TestCase
 
         $reflection = ReflectionFunction::createFromClosure($myClosure);
 
-        $theParam = $reflection->getParameter('theParam')->getClass();
-        self::assertSame(ClassWithStaticMethod::class, $theParam->getName());
+        $theParamType = $reflection->getParameter('theParam')->getType();
+
+        self::assertNotNull($theParamType);
+        self::assertSame(ClassWithStaticMethod::class, $theParamType->getClass()->getName());
     }
 
     public function testIsStaticFromClosure(): void

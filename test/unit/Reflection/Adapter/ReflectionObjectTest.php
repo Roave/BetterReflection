@@ -7,7 +7,9 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionException as CoreReflectionException;
+use ReflectionMethod as CoreReflectionMethod;
 use ReflectionObject as CoreReflectionObject;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
@@ -61,8 +63,6 @@ class ReflectionObjectTest extends TestCase
 
         $mockClassLike = $this->createMock(BetterReflectionClass::class);
 
-        $mockConstant = $this->createMock(BetterReflectionClassConstant::class);
-
         $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
 
         return [
@@ -76,8 +76,8 @@ class ReflectionObjectTest extends TestCase
             ['getFileName', [], 'filename', null, 'filename', null],
             ['getStartLine', [], 123, null, 123, null],
             ['getEndLine', [], 123, null, 123, null],
-            ['getDocComment', [], '', null, false, null],
-            ['getConstructor', [], $mockMethod, null, null, null],
+            ['getDocComment', [], null, null, false, null],
+            ['getConstructor', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['hasMethod', ['foo'], true, null, true, null],
             ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],
             ['getMethods', [], [$mockMethod], null, null, ReflectionMethodAdapter::class],
@@ -85,9 +85,6 @@ class ReflectionObjectTest extends TestCase
             ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
             ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
             ['hasConstant', ['foo'], true, null, true, null],
-            ['getConstant', ['foo'], 'a', null, 'a', null],
-            ['getReflectionConstant', ['foo'], $mockConstant, null, null, ReflectionClassConstantAdapter::class],
-            ['getReflectionConstants', [], [$mockConstant], null, null, ReflectionClassConstantAdapter::class],
             ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
             ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
             ['isInterface', [], true, null, true, null],
@@ -196,7 +193,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getDocComment')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -343,6 +340,9 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn(null);
@@ -350,6 +350,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getProperty('foo');
     }
 
@@ -406,13 +407,16 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" does not exist');
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -432,13 +436,16 @@ class ReflectionObjectTest extends TestCase
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" does not exist');
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -454,6 +461,9 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn($betterReflectionProperty);
@@ -461,7 +471,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not static');
+        $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('foo');
     }
 
@@ -477,6 +487,9 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
+            ->method('getName')
+            ->willReturn('Boo');
+        $betterReflectionObject
             ->method('getProperty')
             ->with('foo')
             ->willReturn($betterReflectionProperty);
@@ -484,7 +497,7 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         $this->expectException(CoreReflectionException::class);
-        $this->expectExceptionMessage('Property "foo" is not static');
+        $this->expectExceptionMessage('Class Boo does not have a property named foo');
         $reflectionObjectAdapter->setStaticPropertyValue('foo', null);
     }
 
@@ -500,6 +513,18 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($reflectionObjectAdapter->isIterable());
     }
 
+    public function testGetConstructorReturnsNullWhenNoConstructorExists(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstructor')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertNull($reflectionObjectAdapter->getConstructor());
+    }
+
     public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
@@ -507,9 +532,9 @@ class ReflectionObjectTest extends TestCase
             ->method('getExtensionName')
             ->willReturn('');
 
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertSame('', $betterReflectionObject->getExtensionName());
+        self::assertSame('', $reflectionObjectAdapter->getExtensionName());
     }
 
     public function testGetConstantsWithFilter(): void
@@ -520,20 +545,12 @@ class ReflectionObjectTest extends TestCase
         $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $publicBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PUBLIC);
-
-        $publicBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PUBLIC_CONSTANT');
 
         $publicBetterReflectionClassConstant
             ->method('getValue')
             ->willReturn('public constant');
-
-        $privateBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PRIVATE);
 
         $privateBetterReflectionClassConstant
             ->method('getName')
@@ -544,10 +561,6 @@ class ReflectionObjectTest extends TestCase
             ->willReturn('private constant');
 
         $protectedBetterReflectionClassConstant
-            ->method('getModifiers')
-            ->willReturn(CoreReflectionProperty::IS_PROTECTED);
-
-        $protectedBetterReflectionClassConstant
             ->method('getName')
             ->willReturn('PROTECTED_CONSTANT');
 
@@ -556,19 +569,27 @@ class ReflectionObjectTest extends TestCase
             ->willReturn('protected constant');
 
         $betterReflectionObject
-            ->method('getReflectionConstants')
-            ->willReturn([
-                $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
-                $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
-                $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+            ->method('getConstants')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
+                ],
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
             ]);
 
         $reflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
 
         $allConstants       = $reflectionObject->getConstants();
-        $publicConstants    = $reflectionObject->getConstants(CoreReflectionProperty::IS_PUBLIC);
-        $privateConstants   = $reflectionObject->getConstants(CoreReflectionProperty::IS_PRIVATE);
-        $protectedConstants = $reflectionObject->getConstants(CoreReflectionProperty::IS_PROTECTED);
+        $publicConstants    = $reflectionObject->getConstants(CoreReflectionClassConstant::IS_PUBLIC);
+        $privateConstants   = $reflectionObject->getConstants(CoreReflectionClassConstant::IS_PRIVATE);
+        $protectedConstants = $reflectionObject->getConstants(CoreReflectionClassConstant::IS_PROTECTED);
 
         self::assertCount(3, $allConstants);
 
@@ -582,13 +603,59 @@ class ReflectionObjectTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testGetConstant(): void
+    {
+        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant
+            ->method('getValue')
+            ->willReturn(123);
+
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($betterReflectionClassConstant);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertSame(123, $reflectionObjectAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn(null);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getConstant('FOO'));
+    }
+
+    public function testGetReflectionConstant(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+
+        $betterReflectionObject
+            ->expects($this->once())
+            ->method('getConstant')
+            ->with('FOO')
+            ->willReturn($this->createMock(BetterReflectionClassConstant::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('FOO'));
+    }
+
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('NON_EXISTENT_CONSTANT')
             ->willReturn(null);
 
@@ -604,7 +671,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstant')
+            ->method('getConstant')
             ->with('SOME_CONSTANT')
             ->willReturn($betterReflectionClassConstant);
 
@@ -613,14 +680,57 @@ class ReflectionObjectTest extends TestCase
         self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('SOME_CONSTANT'));
     }
 
-    public function testGetReflectionConstantsReturnsClassConstantAdapter(): void
+    public function testGetReflectionConstantsWithFilter(): void
+    {
+        $betterReflectionObject                 = $this->createMock(BetterReflectionObject::class);
+        $publicBetterReflectionClassConstant    = $this->createMock(BetterReflectionClassConstant::class);
+        $privateBetterReflectionClassConstant   = $this->createMock(BetterReflectionClassConstant::class);
+        $protectedBetterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+
+        $publicBetterReflectionClassConstant
+            ->method('getName')
+            ->willReturn('PUBLIC_CONSTANT');
+
+        $privateBetterReflectionClassConstant
+            ->method('getName')
+            ->willReturn('PRIVATE_CONSTANT');
+
+        $protectedBetterReflectionClassConstant
+            ->method('getName')
+            ->willReturn('PROTECTED_CONSTANT');
+
+        $betterReflectionObject
+            ->method('getConstants')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant,
+                        $privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant,
+                        $protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant,
+                    ],
+                ],
+                [CoreReflectionClassConstant::IS_PUBLIC, [$publicBetterReflectionClassConstant->getName() => $publicBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PRIVATE, [$privateBetterReflectionClassConstant->getName() => $privateBetterReflectionClassConstant]],
+                [CoreReflectionClassConstant::IS_PROTECTED, [$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant]],
+            ]);
+
+        $reflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(3, $reflectionObject->getReflectionConstants());
+        self::assertCount(1, $reflectionObject->getReflectionConstants(CoreReflectionClassConstant::IS_PUBLIC));
+        self::assertCount(1, $reflectionObject->getReflectionConstants(CoreReflectionClassConstant::IS_PRIVATE));
+        self::assertCount(1, $reflectionObject->getReflectionConstants(CoreReflectionClassConstant::IS_PROTECTED));
+    }
+
+    public function testGetConstantsReturnsClassConstantAdapter(): void
     {
         $betterReflectionObject        = $this->createMock(BetterReflectionObject::class);
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
 
         $betterReflectionObject
             ->expects($this->once())
-            ->method('getReflectionConstants')
+            ->method('getConstants')
             ->willReturn([$betterReflectionClassConstant]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
@@ -863,5 +973,105 @@ class ReflectionObjectTest extends TestCase
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionObject::$foo does not exist.');
         /** @phpstan-ignore-next-line */
         $reflectionObjectAdapter->foo;
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
+        $reflectionObjectAdapter->getMethod('doesNotExist');
+    }
+
+    public function testGetMethodsWithFilter(): void
+    {
+        $betterReflectionObject          = $this->createMock(BetterReflectionObject::class);
+        $publicBetterReflectionMethod    = $this->createMock(BetterReflectionMethod::class);
+        $privateBetterReflectionMethod   = $this->createMock(BetterReflectionMethod::class);
+        $protectedBetterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+
+        $publicBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('public');
+
+        $privateBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('private');
+
+        $protectedBetterReflectionMethod
+            ->method('getName')
+            ->willReturn('protected');
+
+        $betterReflectionObject
+            ->method('getMethods')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod,
+                        $privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod,
+                        $protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod,
+                    ],
+                ],
+                [CoreReflectionMethod::IS_PUBLIC, [$publicBetterReflectionMethod->getName() => $publicBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PRIVATE, [$privateBetterReflectionMethod->getName() => $privateBetterReflectionMethod]],
+                [CoreReflectionMethod::IS_PROTECTED, [$protectedBetterReflectionMethod->getName() => $protectedBetterReflectionMethod]],
+            ]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(3, $reflectionObjectAdapter->getMethods());
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PUBLIC));
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PRIVATE));
+        self::assertCount(1, $reflectionObjectAdapter->getMethods(CoreReflectionMethod::IS_PROTECTED));
+    }
+
+    public function testGetPropertiesWithFilter(): void
+    {
+        $betterReflectionObject            = $this->createMock(BetterReflectionObject::class);
+        $publicBetterReflectionProperty    = $this->createMock(BetterReflectionProperty::class);
+        $privateBetterReflectionProperty   = $this->createMock(BetterReflectionProperty::class);
+        $protectedBetterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+
+        $publicBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('public');
+
+        $privateBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('private');
+
+        $protectedBetterReflectionProperty
+            ->method('getName')
+            ->willReturn('protected');
+
+        $betterReflectionObject
+            ->method('getProperties')
+            ->willReturnMap([
+                [
+                    0,
+                    [
+                        $publicBetterReflectionProperty->getName() => $publicBetterReflectionProperty,
+                        $privateBetterReflectionProperty->getName() => $privateBetterReflectionProperty,
+                        $protectedBetterReflectionProperty->getName() => $protectedBetterReflectionProperty,
+                    ],
+                ],
+                [CoreReflectionProperty::IS_PUBLIC, [$publicBetterReflectionProperty->getName() => $publicBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PRIVATE, [$privateBetterReflectionProperty->getName() => $privateBetterReflectionProperty]],
+                [CoreReflectionProperty::IS_PROTECTED, [$protectedBetterReflectionProperty->getName() => $protectedBetterReflectionProperty]],
+            ]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(3, $reflectionObjectAdapter->getProperties());
+        self::assertCount(1, $reflectionObjectAdapter->getProperties(CoreReflectionProperty::IS_PUBLIC));
+        self::assertCount(1, $reflectionObjectAdapter->getProperties(CoreReflectionProperty::IS_PRIVATE));
+        self::assertCount(1, $reflectionObjectAdapter->getProperties(CoreReflectionProperty::IS_PROTECTED));
     }
 }

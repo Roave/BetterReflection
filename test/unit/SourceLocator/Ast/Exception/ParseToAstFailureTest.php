@@ -207,12 +207,16 @@ class ParseToAstFailureTest extends TestCase
     {
         $locatedSource = new LocatedSource('<?php abc', 'Whatever');
 
+        $filenameProperty = new ReflectionProperty($locatedSource, 'filename');
+        $filenameProperty->setAccessible(true);
+        $filenameProperty->setValue($locatedSource, '/foo/bar');
+
         $previous = new Exception('Unknown error');
 
         $exception = ParseToAstFailure::fromLocatedSource($locatedSource, $previous);
 
         self::assertInstanceOf(ParseToAstFailure::class, $exception);
-        self::assertSame('AST failed to parse in located source: Unknown error', $exception->getMessage());
+        self::assertSame('AST failed to parse in located source in file /foo/bar: Unknown error', $exception->getMessage());
         self::assertSame($previous, $exception->getPrevious());
     }
 }

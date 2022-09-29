@@ -47,6 +47,11 @@ class ReflectionTypeTest extends TestCase
         self::assertNull(ReflectionTypeAdapter::fromTypeOrNull(null));
     }
 
+    public function testFromTypeWithNamedType(): void
+    {
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionNamedType::class)));
+    }
+
     public function testFromTypeOrNullWithNamedType(): void
     {
         self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
@@ -107,9 +112,19 @@ class ReflectionTypeTest extends TestCase
         self::assertInstanceOf(ReflectionUnionTypeAdapter::class, $type);
     }
 
+    public function testFromTypeWithUnionType(): void
+    {
+        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionUnionType::class)));
+    }
+
     public function testFromTypeOrNullWithUnionType(): void
     {
         self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionUnionType::class)));
+    }
+
+    public function testFromTypeWithIntersectionType(): void
+    {
+        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionIntersectionType::class)));
     }
 
     public function testFromTypeOrNullWithIntersectionType(): void

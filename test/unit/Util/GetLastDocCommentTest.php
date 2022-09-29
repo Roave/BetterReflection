@@ -18,14 +18,14 @@ class GetLastDocCommentTest extends TestCase
         $comment = new Comment('/* An ordinary comment */');
         $node    = new Function_('test', [], ['comments' => [$comment]]);
 
-        self::assertSame('', GetLastDocComment::forNode($node));
+        self::assertNull(GetLastDocComment::forNode($node));
     }
 
     public function testWithoutComment(): void
     {
         $node = new Function_('test');
 
-        self::assertSame('', GetLastDocComment::forNode($node));
+        self::assertNull(GetLastDocComment::forNode($node));
     }
 
     public function testWithMixedCommentTypes(): void

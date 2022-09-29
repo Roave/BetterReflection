@@ -8,11 +8,17 @@ use PhpParser\Node;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
+use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
+
+use function uniqid;
 
 /** @covers \Roave\BetterReflection\BetterReflection */
 final class BetterReflectionTest extends TestCase
@@ -79,5 +85,46 @@ PHP;
         self::assertTrue($ast[0]->hasAttribute('endLine'));
         self::assertTrue($ast[0]->hasAttribute('startFilePos'));
         self::assertTrue($ast[0]->hasAttribute('endFilePos'));
+    }
+
+    public function testSourceLocatorCanLocateInternalIdentifier(): void
+    {
+        $betterReflection = new BetterReflection();
+        $sourceLocator    = $betterReflection->sourceLocator();
+        $reflector        = $betterReflection->reflector();
+
+        // Trying to locate the most obscure identifier, so it's not loaded by EvaledCodeSourceLocator
+        $reflection = $sourceLocator->locateIdentifier($reflector, new Identifier('confirm_pdo_ibm_compiled', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
+
+        self::assertInstanceOf(ReflectionFunction::class, $reflection);
+        self::assertSame('confirm_pdo_ibm_compiled', $reflection->getName());
+    }
+
+    public function testSourceLocatorCanLocateEvaledIdentifier(): void
+    {
+        $betterReflection = new BetterReflection();
+        $sourceLocator    = $betterReflection->sourceLocator();
+        $reflector        = $betterReflection->reflector();
+
+        $className = uniqid('foo');
+
+        eval('class ' . $className . ' {function foo(){}}');
+
+        $reflection = $sourceLocator->locateIdentifier($reflector, new Identifier($className, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)));
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame($className, $reflection->getName());
+    }
+
+    public function testSourceLocatorCanLocateAutoloadedIdentifier(): void
+    {
+        $betterReflection = new BetterReflection();
+        $sourceLocator    = $betterReflection->sourceLocator();
+        $reflector        = $betterReflection->reflector();
+
+        $reflection = $sourceLocator->locateIdentifier($reflector, new Identifier(self::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)));
+
+        self::assertInstanceOf(ReflectionClass::class, $reflection);
+        self::assertSame(self::class, $reflection->getName());
     }
 }

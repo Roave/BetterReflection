@@ -8,7 +8,9 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionIntersectionType as ReflectionIntersectionTypeAdapter;
+use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
+use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 
 use function array_combine;
 use function array_map;
@@ -66,5 +68,23 @@ class ReflectionIntersectionTypeTest extends TestCase
 
         $adapter = new ReflectionIntersectionTypeAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
+    }
+
+    public function testGetTypes(): void
+    {
+        $betterReflectionType1 = $this->createMock(BetterReflectionNamedType::class);
+        $betterReflectionType2 = $this->createMock(BetterReflectionNamedType::class);
+
+        $betterReflectionIntersectionType = $this->createMock(BetterReflectionIntersectionType::class);
+        $betterReflectionIntersectionType
+            ->method('getTypes')
+            ->willReturn([
+                $betterReflectionType1,
+                $betterReflectionType2,
+            ]);
+
+        $reflectionUnionTypeAdapter = new ReflectionIntersectionTypeAdapter($betterReflectionIntersectionType);
+
+        self::assertContainsOnlyInstancesOf(ReflectionNamedTypeAdapter::class, $reflectionUnionTypeAdapter->getTypes());
     }
 }

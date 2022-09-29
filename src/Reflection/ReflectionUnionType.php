@@ -4,36 +4,52 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection;
 
-use PhpParser\Node;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\IntersectionType;
+use PhpParser\Node\Name;
 use PhpParser\Node\UnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
-use function array_values;
 use function assert;
 use function implode;
+use function sprintf;
 
 class ReflectionUnionType extends ReflectionType
 {
-    /** @var list<ReflectionNamedType> */
+    /** @var non-empty-list<ReflectionNamedType|ReflectionIntersectionType> */
     private array $types;
 
+    /** @internal */
     public function __construct(
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         UnionType $type,
     ) {
-        parent::__construct($reflector, $owner);
-
-        $this->types = array_values(array_map(static function (Node\Identifier|Node\Name $type) use ($reflector, $owner): ReflectionNamedType {
+        /** @var non-empty-list<ReflectionNamedType|ReflectionIntersectionType> $types */
+        $types = array_map(static function (Identifier|Name|IntersectionType $type) use ($reflector, $owner): ReflectionNamedType|ReflectionIntersectionType {
             $type = ReflectionType::createFromNode($reflector, $owner, $type);
-            assert($type instanceof ReflectionNamedType);
+            assert($type instanceof ReflectionNamedType || $type instanceof ReflectionIntersectionType);
 
             return $type;
-        }, $type->types));
+        }, $type->types);
+
+        $this->types = $types;
     }
 
-    /** @return list<ReflectionNamedType> */
+    /** @internal */
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    {
+        $clone = clone $this;
+
+        foreach ($clone->types as $typeNo => $innerType) {
+            $clone->types[$typeNo] = $innerType->withOwner($owner);
+        }
+
+        return $clone;
+    }
+
+    /** @return non-empty-list<ReflectionNamedType|ReflectionIntersectionType> */
     public function getTypes(): array
     {
         return $this->types;
@@ -42,7 +58,7 @@ class ReflectionUnionType extends ReflectionType
     public function allowsNull(): bool
     {
         foreach ($this->types as $type) {
-            if ($type->getName() === 'null') {
+            if ($type->allowsNull()) {
                 return true;
             }
         }
@@ -52,6 +68,12 @@ class ReflectionUnionType extends ReflectionType
 
     public function __toString(): string
     {
-        return implode('|', array_map(static fn (ReflectionType $type): string => $type->__toString(), $this->types));
+        return implode('|', array_map(static function (ReflectionType $type): string {
+            if ($type instanceof ReflectionIntersectionType) {
+                return sprintf('(%s)', $type->__toString());
+            }
+
+            return $type->__toString();
+        }, $this->types));
     }
 }

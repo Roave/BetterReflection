@@ -79,7 +79,7 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Namespace_) {
-                return $context->getNamespace();
+                return $context->getNamespace() ?? '';
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Method) {
@@ -152,7 +152,10 @@ class CompileNodeToValue
 
         assert($node->var->name instanceof Node\Identifier);
 
-        $case = $class->getCase($node->var->name->name);
+        $caseName = $node->var->name->name;
+        assert($caseName !== '');
+
+        $case = $class->getCase($caseName);
 
         if ($case === null) {
             throw Exception\UnableToCompileNode::becauseOfInvalidEnumCasePropertyFetch($context, $class, $node);
@@ -170,7 +173,7 @@ class CompileNodeToValue
     private function resolveConstantName(Node\Expr\ConstFetch $constNode, CompilerContext $context): string
     {
         $constantName = $constNode->name->toString();
-        $namespace    = $context->getNamespace();
+        $namespace    = $context->getNamespace() ?? '';
 
         if ($constNode->name->isUnqualified()) {
             $namespacedConstantName = sprintf('%s\\%s', $namespace, $constantName);
@@ -205,6 +208,7 @@ class CompileNodeToValue
     private function getConstantValue(Node\Expr\ConstFetch $node, string|null $constantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
+        // @infection-ignore-all Assignment, AssignCoalesce: There's no difference, ??= is just optimization
         $constantName ??= $this->resolveConstantName($node, $context);
 
         if (defined($constantName)) {
@@ -227,9 +231,11 @@ class CompileNodeToValue
     private function getClassConstantValue(Node\Expr\ClassConstFetch $node, string|null $classConstantName, CompilerContext $context): mixed
     {
         // It's not resolved when constant value is expression
+        // @infection-ignore-all Assignment, AssignCoalesce: There's no difference, ??= is just optimization
         $classConstantName ??= $this->resolveClassConstantName($node, $context);
 
         [$className, $constantName] = explode('::', $classConstantName);
+        assert($constantName !== '');
 
         if ($constantName === 'class') {
             return $className;
@@ -238,7 +244,7 @@ class CompileNodeToValue
         $classContext    = $context->getClass();
         $classReflection = $classContext !== null && $classContext->getName() === $className ? $classContext : $context->getReflector()->reflectClass($className);
 
-        $reflectionConstant = $classReflection->getReflectionConstant($constantName);
+        $reflectionConstant = $classReflection->getConstant($constantName);
 
         if (! $reflectionConstant instanceof ReflectionClassConstant) {
             throw Exception\UnableToCompileNode::becauseOfNotFoundClassConstantReference($context, $classReflection, $node);

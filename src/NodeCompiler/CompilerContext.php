@@ -34,16 +34,18 @@ class CompilerContext
             return $this->contextReflection->getFileName();
         }
 
+        // @infection-ignore-all Coalesce: There's no difference
         return $this->getClass()?->getFileName() ?? $this->getFunction()?->getFileName();
     }
 
-    public function getNamespace(): string
+    public function getNamespace(): string|null
     {
         if ($this->contextReflection instanceof ReflectionConstant) {
             return $this->contextReflection->getNamespaceName();
         }
 
-        return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName() ?? '';
+        // @infection-ignore-all Coalesce: There's no difference
+        return $this->getClass()?->getNamespaceName() ?? $this->getFunction()?->getNamespaceName();
     }
 
     public function getClass(): ReflectionClass|null

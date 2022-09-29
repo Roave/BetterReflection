@@ -137,7 +137,7 @@ class UnableToCompileNode extends LogicException
         }
 
         $namespace = $fetchContext->getNamespace();
-        if ($namespace !== '') {
+        if ($namespace !== null) {
             return sprintf('namespace %s', $namespace);
         }
 

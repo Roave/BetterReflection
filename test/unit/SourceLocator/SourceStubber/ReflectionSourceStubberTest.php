@@ -13,6 +13,7 @@ use ReflectionMethod as CoreReflectionMethod;
 use ReflectionParameter as CoreReflectionParameter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -323,7 +324,10 @@ class ReflectionSourceStubberTest extends TestCase
             $this->assertSameMethodAttributes($method, $stubbed->getMethod($method->getName()));
         }
 
-        self::assertEquals($original->getConstants(), $stubbed->getConstants());
+        self::assertEquals(
+            $original->getConstants(),
+            array_map(static fn (ReflectionClassConstant $classConstant) => $classConstant->getValue(), $stubbed->getConstants()),
+        );
     }
 
     private function assertSameMethodAttributes(CoreReflectionMethod $original, ReflectionMethod $stubbed): void
@@ -389,27 +393,12 @@ class ReflectionSourceStubberTest extends TestCase
             self::assertSame($original->isDefaultValueAvailable(), $stubbed->isDefaultValueAvailable(), $parameterName);
         }
 
-        // @ because isArray() and isCallable() are deprecated
-        self::assertSame(@$original->isArray(), $stubbed->isArray(), $parameterName);
-        self::assertSame(@$original->isCallable(), $stubbed->isCallable(), $parameterName);
-
         //self::assertSame($original->allowsNull(), $stubbed->allowsNull()); @TODO WTF?
 
         self::assertSame($original->canBePassedByValue(), $stubbed->canBePassedByValue(), $parameterName);
         self::assertSame($original->isOptional(), $stubbed->isOptional(), $parameterName);
         self::assertSame($original->isPassedByReference(), $stubbed->isPassedByReference(), $parameterName);
         self::assertSame($original->isVariadic(), $stubbed->isVariadic(), $parameterName);
-
-        // @ because getClass() is deprecated
-        $class = @$original->getClass();
-        if ($class) {
-            $stubbedClass = $stubbed->getClass();
-
-            self::assertInstanceOf(ReflectionClass::class, $stubbedClass, $parameterName);
-            self::assertSame($class->getName(), $stubbedClass->getName(), $parameterName);
-        } else {
-            self::assertNull($stubbed->getClass(), $parameterName);
-        }
     }
 
     /** @return list<array{0: string}> */
@@ -549,7 +538,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertSame($constantName, $constantReflection->getName());
         self::assertSame($constantName, $constantReflection->getShortName());
 
-        self::assertNotNull($constantReflection->getNamespaceName());
+        self::assertNull($constantReflection->getNamespaceName());
         self::assertFalse($constantReflection->inNamespace());
         self::assertTrue($constantReflection->isInternal());
         self::assertFalse($constantReflection->isUserDefined());

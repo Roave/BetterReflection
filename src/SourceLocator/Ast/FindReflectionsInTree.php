@@ -66,10 +66,16 @@ final class FindReflectionsInTree
             {
                 if ($node instanceof Namespace_) {
                     $this->currentNamespace = $node;
-
-                    return null;
                 }
 
+                return null;
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            public function leaveNode(Node $node)
+            {
                 if (
                     $this->identifierType->isClass()
                     && (
@@ -131,19 +137,9 @@ final class FindReflectionsInTree
                     $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                 }
 
-                return null;
-            }
-
-            /**
-             * {@inheritDoc}
-             */
-            public function leaveNode(Node $node)
-            {
-                if (! ($node instanceof Namespace_)) {
-                    return null;
+                if ($node instanceof Namespace_) {
+                    $this->currentNamespace = null;
                 }
-
-                $this->currentNamespace = null;
 
                 return null;
             }

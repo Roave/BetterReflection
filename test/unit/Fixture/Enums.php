@@ -7,6 +7,10 @@ enum PureEnum implements InterfaceForEnum
     case ONE;
     case TWO;
     case THREE;
+
+    public function someMethod()
+    {
+    }
 }
 
 enum IntEnum: int implements InterfaceForEnum
@@ -15,6 +19,10 @@ enum IntEnum: int implements InterfaceForEnum
     case TWO = 2;
     case THREE = 3;
     case FOUR = 4;
+
+    public function someMethod()
+    {
+    }
 }
 
 enum StringEnum: string implements InterfaceForEnum
@@ -29,6 +37,10 @@ enum StringEnum: string implements InterfaceForEnum
         = 'four';
     case FIVE
         = 'five';
+
+    public function someMethod()
+    {
+    }
 }
 
 enum DocComment
