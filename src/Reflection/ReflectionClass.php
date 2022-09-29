@@ -384,7 +384,7 @@ class ReflectionClass implements Reflection
                         ),
                     );
                 },
-                $this->getTraits(),
+                $this->getTraitsCheckingForCircularReferences(),
             ),
         );
     }
@@ -708,7 +708,7 @@ class ReflectionClass implements Reflection
                             $trait->getConstants(),
                         );
                     },
-                    $this->getTraits(),
+                    $this->getTraitsCheckingForCircularReferences(),
                 ),
                 ...array_map(
                     static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
@@ -912,7 +912,7 @@ class ReflectionClass implements Reflection
                                 $trait->getProperties(),
                             );
                         },
-                        $this->getTraits(),
+                        $this->getTraitsCheckingForCircularReferences(),
                     ),
                 ),
                 $this->getImmediateProperties(),
@@ -1176,6 +1176,29 @@ class ReflectionClass implements Reflection
             fn (string $traitClassName): ReflectionClass => $this->reflector->reflectClass($traitClassName),
             $this->traitClassNames,
         );
+    }
+
+    /**
+     * @param list<trait-string> $traitClassNames
+     *
+     * @return list<ReflectionClass>
+     */
+    private function getTraitsCheckingForCircularReferences(array &$traitClassNames = []): array
+    {
+        $traits = $this->getTraits();
+
+        foreach ($traits as $trait) {
+            /** @psalm-var trait-string $traitClassName */
+            $traitClassName = $trait->getName();
+            if (in_array($traitClassName, $traitClassNames, true)) {
+                throw CircularReference::fromClassName($traitClassName);
+            }
+
+            $traitClassNames[] = $traitClassName;
+            $trait->getTraitsCheckingForCircularReferences($traitClassNames);
+        }
+
+        return $traits;
     }
 
     /**
