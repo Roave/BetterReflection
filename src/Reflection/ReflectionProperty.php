@@ -207,7 +207,7 @@ class ReflectionProperty
 
     public function isReadOnly(): bool
     {
-        return $this->node->isReadonly();
+        return $this->node->isReadonly() || $this->getDeclaringClass()->isReadOnly();
     }
 
     public function getDeclaringClass(): ReflectionClass
