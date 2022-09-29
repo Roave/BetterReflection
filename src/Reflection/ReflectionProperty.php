@@ -292,7 +292,8 @@ class ReflectionProperty
 
     public function isReadOnly(): bool
     {
-        return ($this->modifiers & ReflectionPropertyAdapter::IS_READONLY) === ReflectionPropertyAdapter::IS_READONLY;
+        return ($this->modifiers & ReflectionPropertyAdapter::IS_READONLY) === ReflectionPropertyAdapter::IS_READONLY
+            || $this->getDeclaringClass()->isReadOnly();
     }
 
     public function getDeclaringClass(): ReflectionClass
