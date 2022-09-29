@@ -122,6 +122,18 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($readOnlyProperty->isReadOnly());
     }
 
+    public function testIsReadOnlyInReadOnlyClass(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ExampleClass.php',
+            $this->astLocator,
+        ));
+        $classInfo = $reflector->reflectClass('\\Roave\\BetterReflectionTest\\Fixture\\ReadOnlyClass');
+
+        $property = $classInfo->getProperty('property');
+        self::assertTrue($property->isReadOnly());
+    }
+
     public function testGetDocComment(): void
     {
         $expectedDoc = "/**\n * @var string\n */";

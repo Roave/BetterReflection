@@ -70,6 +70,7 @@ namespace Roave\BetterReflectionTest\Fixture {
 
     readonly class ReadOnlyClass
     {
+        private int $property;
     }
 
     trait ExampleTrait
