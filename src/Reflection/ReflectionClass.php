@@ -960,7 +960,7 @@ class ReflectionClass implements Reflection
         return $this->getProperty($name) !== null;
     }
 
-    /** @return array<string, scalar|array<scalar>|null> */
+    /** @return array<non-empty-string, scalar|array<scalar>|null> */
     public function getDefaultProperties(): array
     {
         return array_map(
