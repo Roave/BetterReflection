@@ -2,18 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\Reflection;
+namespace Roave\BetterReflection\Reflection\Support;
 
 use Roave\BetterReflection\Reflection\Exception\CircularReference;
 
 use function array_key_exists;
 
-/**
- * @internal
- *
- * @psalm-immutable
- */
-final class ClassNameStack
+/** @internal */
+final class AlreadyVisitedClasses
 {
     /** @param array<class-string, null> $classNames */
     private function __construct(private array $classNames)
@@ -26,15 +22,12 @@ final class ClassNameStack
     }
 
     /** @param class-string $className */
-    public function push(string $className): self
+    public function push(string $className): void
     {
         if (array_key_exists($className, $this->classNames)) {
             throw CircularReference::fromClassName($className);
         }
 
-        $classNames             = $this->classNames;
-        $classNames[$className] = null;
-
-        return new self($classNames);
+        $this->classNames[$className] = null;
     }
 }
