@@ -365,7 +365,7 @@ class ReflectionClass implements Reflection
     {
         return array_map(
             fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-            $this->getParentClass()?->getMethods() ?? [],
+            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName() ?? []),
         );
     }
 
@@ -380,7 +380,7 @@ class ReflectionClass implements Reflection
                         [],
                         ...array_map(
                             fn (ReflectionMethod $method): array => $this->createMethodsFromTrait($method),
-                            $trait->getMethods(),
+                            array_values($trait->getMethodsIndexedByLowercasedName()),
                         ),
                     );
                 },
@@ -395,7 +395,7 @@ class ReflectionClass implements Reflection
         return array_merge(
             [],
             ...array_map(
-                static fn (ReflectionClass $ancestor): array => $ancestor->getMethods(),
+                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName()),
                 array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
             ),
         );
@@ -415,7 +415,7 @@ class ReflectionClass implements Reflection
      *
      * @return array<lowercase-string, ReflectionMethod> indexed by method name
      */
-    private function getMethodsIndexedByName(): array
+    private function getMethodsIndexedByLowercasedName(): array
     {
         if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
@@ -487,19 +487,22 @@ class ReflectionClass implements Reflection
      *
      * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
      *
-     * @return list<ReflectionMethod>
+     * @return array<non-empty-string, ReflectionMethod>
      */
     public function getMethods(int $filter = 0): array
     {
-        if ($filter === 0) {
-            return array_values($this->getMethodsIndexedByName());
+        $methods = $this->getMethodsIndexedByLowercasedName();
+
+        if ($filter !== 0) {
+            $methods = array_filter(
+                $methods,
+                static fn (ReflectionMethod $method): bool => (bool) ($filter & $method->getModifiers()),
+            );
         }
 
-        return array_values(
-            array_filter(
-                $this->getMethodsIndexedByName(),
-                static fn (ReflectionMethod $method): bool => (bool) ($filter & $method->getModifiers()),
-            ),
+        return array_combine(
+            array_map(static fn (ReflectionMethod $method): string => $method->getName(), $methods),
+            $methods,
         );
     }
 
@@ -611,7 +614,7 @@ class ReflectionClass implements Reflection
     public function getMethod(string $methodName): ReflectionMethod|null
     {
         $lowercaseMethodName = strtolower($methodName);
-        $methods             = $this->getMethodsIndexedByName();
+        $methods             = $this->getMethodsIndexedByLowercasedName();
 
         return $methods[$lowercaseMethodName] ?? null;
     }
