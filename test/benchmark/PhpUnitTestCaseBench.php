@@ -13,6 +13,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
 use function array_merge;
+use function array_values;
 
 /** @Iterations(5) */
 class PhpUnitTestCaseBench
@@ -30,7 +31,7 @@ class PhpUnitTestCaseBench
         $reflection       = new BetterReflection();
         $this->reflector  = $reflection->reflector();
         $reflectionClass  = $this->reflector->reflectClass(TestCase::class);
-        $this->methods    = $reflectionClass->getMethods();
+        $this->methods    = array_values($reflectionClass->getMethods());
         $this->parameters = array_merge([], ...array_map(static fn (ReflectionMethod $method): array => $method->getParameters(), $this->methods));
     }
 

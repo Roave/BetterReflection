@@ -142,10 +142,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getMethods(int|null $filter = null): array
     {
-        return array_map(
+        return array_values(array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
             $this->betterReflectionEnum->getMethods($filter ?? 0),
-        );
+        ));
     }
 
     public function hasProperty(string $name): bool

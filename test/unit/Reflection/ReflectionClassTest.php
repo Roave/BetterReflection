@@ -392,8 +392,6 @@ class ReflectionClassTest extends TestCase
             $this->astLocator,
         )))->reflectClass(MethodsOrder::class);
 
-        $actualMethodNames = array_map(static fn (ReflectionMethod $method): string => $method->getName(), $classInfo->getMethods());
-
         $expectedMethodNames = [
             'f1',
             'f2',
@@ -407,7 +405,7 @@ class ReflectionClassTest extends TestCase
             'f10',
         ];
 
-        self::assertSame($expectedMethodNames, $actualMethodNames);
+        self::assertSame($expectedMethodNames, array_keys($classInfo->getMethods()));
     }
 
     public function testGetImmediateMethods(): void
