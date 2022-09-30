@@ -892,50 +892,63 @@ class ReflectionClass implements Reflection
      */
     public function getProperties(int $filter = 0): array
     {
-        return $this->getPropertiesConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
-    }
-
-    /**
-     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
-     *
-     * @return array<non-empty-string, ReflectionProperty>
-     */
-    private function getPropertiesConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        $alreadyVisitedClasses->push($this->getName());
-
-        if ($this->cachedProperties === null) {
-            // merging together properties from parent class, interfaces, traits, current class (in this precise order)
-            $this->cachedProperties = array_merge(
-                array_merge(
-                    [],
-                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $alreadyVisitedClasses) ?? [],
-                    ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC, clone $alreadyVisitedClasses),
-                        array_values($this->getImmediateInterfaces()),
-                    ),
-                    ...array_map(
-                        function (ReflectionClass $trait) use ($alreadyVisitedClasses) {
-                            return array_map(
-                                fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getPropertiesConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
-                            );
-                        },
-                        $this->getTraits(),
-                    ),
-                ),
-                $this->getImmediateProperties(),
-            );
-        }
+        $properties = $this->getPropertiesConsideringAlreadyVisitedClasses(AlreadyVisitedClasses::createEmpty());
 
         if ($filter === 0) {
-            return $this->cachedProperties;
+            return $properties;
         }
 
         return array_filter(
-            $this->cachedProperties,
+            $properties,
             static fn (ReflectionProperty $property): bool => (bool) ($filter & $property->getModifiers()),
         );
+    }
+
+    /** @return array<non-empty-string, ReflectionProperty> */
+    private function getPropertiesConsideringAlreadyVisitedClasses(AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        if ($this->cachedProperties !== null) {
+            return $this->cachedProperties;
+        }
+
+        $alreadyVisitedClasses->push($this->getName());
+
+        $immediateProperties = $this->getImmediateProperties();
+
+        // Merging together properties from parent class, interfaces, traits, current class (in this precise order)
+
+        $properties = array_merge(
+            array_filter(
+                $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses($alreadyVisitedClasses) ?? [],
+                static fn (ReflectionProperty $property) => ! $property->isPrivate(),
+            ),
+            ...array_map(
+                static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(clone $alreadyVisitedClasses),
+                array_values($this->getImmediateInterfaces()),
+            ),
+        );
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getPropertiesConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $traitProperty) {
+                $traitPropertyName = $traitProperty->getName();
+
+                if (
+                    array_key_exists($traitPropertyName, $properties)
+                    || array_key_exists($traitPropertyName, $immediateProperties)
+                ) {
+                    continue;
+                }
+
+                $properties[$traitPropertyName] = $traitProperty->withImplementingClass($this);
+            }
+        }
+
+        // Merge immediate properties last to get the required order
+        $properties = array_merge($properties, $immediateProperties);
+
+        $this->cachedProperties = $properties;
+
+        return $this->cachedProperties;
     }
 
     /**
