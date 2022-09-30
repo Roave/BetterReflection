@@ -2661,4 +2661,62 @@ PHP;
         $fooBarDoFooMethod = $fooBar->getMethod('doFoo');
         self::assertTrue($fooBarDoFooMethod->isPublic());
     }
+
+    /** @return list<array{0: string}> */
+    public function traitUseCircularReferencesProvider(): array
+    {
+        return [
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\TraitUsesSelf'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\Trait1'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\Trait2'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\Trait3'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\Class1'],
+            ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\Class2'],
+        ];
+    }
+
+    /** @dataProvider traitUseCircularReferencesProvider */
+    public function testGetConstantsFailsWithCircularReference(string $className): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+            $this->astLocator,
+        ));
+
+        $class = $reflector->reflectClass($className);
+
+        $this->expectException(CircularReference::class);
+
+        $class->getConstants();
+    }
+
+    /** @dataProvider traitUseCircularReferencesProvider */
+    public function testGetMethodsFailsWithCircularReference(string $className): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+            $this->astLocator,
+        ));
+
+        $class = $reflector->reflectClass($className);
+
+        $this->expectException(CircularReference::class);
+
+        $class->getMethods();
+    }
+
+    /** @dataProvider traitUseCircularReferencesProvider */
+    public function testGetPropertiesFailsWithCircularReference(string $className): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+            $this->astLocator,
+        ));
+
+        $class = $reflector->reflectClass($className);
+
+        $this->expectException(CircularReference::class);
+
+        $class->getProperties();
+    }
 }

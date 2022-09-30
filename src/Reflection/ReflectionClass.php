@@ -360,27 +360,35 @@ class ReflectionClass implements Reflection
         return $methods;
     }
 
-    /** @return list<ReflectionMethod> */
-    private function getParentMethods(): array
+    /**
+     * @param list<class-string> $classNameStack
+     *
+     * @return list<ReflectionMethod>
+     */
+    private function getParentMethods(array &$classNameStack = []): array
     {
         return array_map(
             fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName() ?? []),
+            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName($classNameStack) ?? []),
         );
     }
 
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromTraits(): array
+    /**
+     * @param list<class-string> $classNameStack
+     *
+     * @return list<ReflectionMethod>
+     */
+    private function getMethodsFromTraits(array &$classNameStack = []): array
     {
         return array_merge(
             [],
             ...array_map(
-                function (ReflectionClass $trait): array {
+                function (ReflectionClass $trait) use (&$classNameStack): array {
                     return array_merge(
                         [],
                         ...array_map(
                             fn (ReflectionMethod $method): array => $this->createMethodsFromTrait($method),
-                            array_values($trait->getMethodsIndexedByLowercasedName()),
+                            array_values($trait->getMethodsIndexedByLowercasedName($classNameStack)),
                         ),
                     );
                 },
@@ -389,13 +397,17 @@ class ReflectionClass implements Reflection
         );
     }
 
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromInterfaces(): array
+    /**
+     * @param list<class-string> $classNameStack
+     *
+     * @return list<ReflectionMethod>
+     */
+    private function getMethodsFromInterfaces(array &$classNameStack = []): array
     {
         return array_merge(
             [],
             ...array_map(
-                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName()),
+                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName($classNameStack)),
                 array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
             ),
         );
@@ -413,19 +425,23 @@ class ReflectionClass implements Reflection
      * Methods are not merged via their name as array index, since internal PHP method
      * sorting does not follow `\array_merge()` semantics.
      *
+     * @param list<class-string> $classNameStack
+     *
      * @return array<lowercase-string, ReflectionMethod> indexed by method name
      */
-    private function getMethodsIndexedByLowercasedName(): array
+    private function getMethodsIndexedByLowercasedName(array &$classNameStack = []): array
     {
+        $classNameStack = $this->pushClassNameStack($classNameStack, $this->getName());
+
         if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
         }
 
         $classMethods     = $this->getImmediateMethods();
         $className        = $this->getName();
-        $parentMethods    = $this->getParentMethods();
-        $traitsMethods    = $this->getMethodsFromTraits();
-        $interfaceMethods = $this->getMethodsFromInterfaces();
+        $parentMethods    = $this->getParentMethods($classNameStack);
+        $traitsMethods    = $this->getMethodsFromTraits($classNameStack);
+        $interfaceMethods = $this->getMethodsFromInterfaces($classNameStack);
 
         $methods = [];
 
@@ -698,23 +714,36 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
+        return $this->getConstantsHelper($filter);
+    }
+
+    /**
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     * @param list<class-string>                                $classNameStack
+     *
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
+     */
+    private function getConstantsHelper(int $filter = 0, array &$classNameStack = []): array
+    {
+        $classNameStack = $this->pushClassNameStack($classNameStack, $this->getName());
+
         if ($this->cachedConstants === null) {
             // Note: constants are not merged via their name as array index, since internal PHP constant
             //       sorting does not follow `\array_merge()` semantics
             $constants = array_merge(
                 array_values($this->getImmediateConstants()),
-                array_values($this->getParentClass()?->getConstants(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED) ?? []),
+                array_values($this->getParentClass()?->getConstantsHelper(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, $classNameStack) ?? []),
                 ...array_map(
-                    function (ReflectionClass $trait): array {
+                    function (ReflectionClass $trait) use ($classNameStack): array {
                         return array_map(
                             fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                            $trait->getConstants(),
+                            $trait->getConstantsHelper(0, $classNameStack),
                         );
                     },
                     $this->getTraits(),
                 ),
                 ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
+                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsHelper(0, $classNameStack)),
                     array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                 ),
             );
@@ -898,21 +927,34 @@ class ReflectionClass implements Reflection
      */
     public function getProperties(int $filter = 0): array
     {
+        return $this->getPropertiesHelper($filter);
+    }
+
+    /**
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     * @param list<class-string>                           $classNameStack
+     *
+     * @return array<non-empty-string, ReflectionProperty>
+     */
+    private function getPropertiesHelper(int $filter = 0, array &$classNameStack = []): array
+    {
+        $classNameStack = $this->pushClassNameStack($classNameStack, $this->getName());
+
         if ($this->cachedProperties === null) {
             // merging together properties from parent class, interfaces, traits, current class (in this precise order)
             $this->cachedProperties = array_merge(
                 array_merge(
                     [],
-                    $this->getParentClass()?->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED) ?? [],
+                    $this->getParentClass()?->getPropertiesHelper(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $classNameStack) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesHelper(0, $classNameStack),
                         array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                     ),
                     ...array_map(
-                        function (ReflectionClass $trait) {
+                        function (ReflectionClass $trait) use ($classNameStack) {
                             return array_map(
                                 fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getProperties(),
+                                $trait->getPropertiesHelper(0, $classNameStack),
                             );
                         },
                         $this->getTraits(),
@@ -1588,24 +1630,20 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of this interface. Do not use on class nodes!
      *
-     * @param list<class-string> $interfaceClassNames
+     * @param list<class-string> $classNameStack
      *
      * @return array<class-string, ReflectionClass> parent interfaces of this interface
      *
      * @throws NotAnInterfaceReflection
      */
-    private function getInterfacesHierarchy(array &$interfaceClassNames = []): array
+    private function getInterfacesHierarchy(array &$classNameStack = []): array
     {
         if (! $this->isInterface) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
         $interfaceClassName = $this->getName();
-        if (in_array($interfaceClassName, $interfaceClassNames, true)) {
-            throw CircularReference::fromClassName($interfaceClassName);
-        }
-
-        $interfaceClassNames[] = $interfaceClassName;
+        $classNameStack     = $this->pushClassNameStack($classNameStack, $interfaceClassName);
 
         /** @var array<class-string, self> $interfaces */
         $interfaces = array_merge(
@@ -1613,12 +1651,29 @@ class ReflectionClass implements Reflection
             ...array_map(
                 fn (string $interfaceClassName): array => $this->reflector
                     ->reflectClass($interfaceClassName)
-                    ->getInterfacesHierarchy($interfaceClassNames),
+                    ->getInterfacesHierarchy($classNameStack),
                 $this->implementsClassNames,
             ),
         );
 
         return $this->addStringableInterface($interfaces);
+    }
+
+    /**
+     * @param list<class-string> $classNameStack
+     * @param class-string       $className
+     *
+     * @return list<class-string>
+     */
+    private function pushClassNameStack(array $classNameStack, string $className): array
+    {
+        if (in_array($className, $classNameStack, true)) {
+            throw CircularReference::fromClassName($className);
+        }
+
+        $classNameStack[] = $className;
+
+        return $classNameStack;
     }
 
     /**
