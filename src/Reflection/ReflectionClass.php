@@ -714,7 +714,7 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
-        return $this->getConstantsHelper($filter);
+        return $this->getConstantsConsideringAlreadyVisitedClasses($filter);
     }
 
     /**
@@ -723,7 +723,7 @@ class ReflectionClass implements Reflection
      *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
-    private function getConstantsHelper(int $filter = 0, array &$classNameStack = []): array
+    private function getConstantsConsideringAlreadyVisitedClasses(int $filter = 0, array &$classNameStack = []): array
     {
         $classNameStack = $this->pushClassNameStack($classNameStack, $this->getName());
 
@@ -732,18 +732,18 @@ class ReflectionClass implements Reflection
             //       sorting does not follow `\array_merge()` semantics
             $constants = array_merge(
                 array_values($this->getImmediateConstants()),
-                array_values($this->getParentClass()?->getConstantsHelper(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, $classNameStack) ?? []),
+                array_values($this->getParentClass()?->getConstantsConsideringAlreadyVisitedClasses(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, $classNameStack) ?? []),
                 ...array_map(
                     function (ReflectionClass $trait) use ($classNameStack): array {
                         return array_map(
                             fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                            $trait->getConstantsHelper(0, $classNameStack),
+                            $trait->getConstantsConsideringAlreadyVisitedClasses(0, $classNameStack),
                         );
                     },
                     $this->getTraits(),
                 ),
                 ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsHelper(0, $classNameStack)),
+                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, $classNameStack)),
                     array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                 ),
             );
@@ -927,7 +927,7 @@ class ReflectionClass implements Reflection
      */
     public function getProperties(int $filter = 0): array
     {
-        return $this->getPropertiesHelper($filter);
+        return $this->getPropertiesConsideringAlreadyVisitedClasses($filter);
     }
 
     /**
@@ -936,7 +936,7 @@ class ReflectionClass implements Reflection
      *
      * @return array<non-empty-string, ReflectionProperty>
      */
-    private function getPropertiesHelper(int $filter = 0, array &$classNameStack = []): array
+    private function getPropertiesConsideringAlreadyVisitedClasses(int $filter = 0, array &$classNameStack = []): array
     {
         $classNameStack = $this->pushClassNameStack($classNameStack, $this->getName());
 
@@ -945,16 +945,16 @@ class ReflectionClass implements Reflection
             $this->cachedProperties = array_merge(
                 array_merge(
                     [],
-                    $this->getParentClass()?->getPropertiesHelper(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $classNameStack) ?? [],
+                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $classNameStack) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesHelper(0, $classNameStack),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(0, $classNameStack),
                         array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                     ),
                     ...array_map(
                         function (ReflectionClass $trait) use ($classNameStack) {
                             return array_map(
                                 fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getPropertiesHelper(0, $classNameStack),
+                                $trait->getPropertiesConsideringAlreadyVisitedClasses(0, $classNameStack),
                             );
                         },
                         $this->getTraits(),
