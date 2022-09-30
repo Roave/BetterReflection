@@ -361,47 +361,6 @@ class ReflectionClass implements Reflection
         return $methods;
     }
 
-    /** @return list<ReflectionMethod> */
-    private function getParentMethods(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_map(
-            fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) ?? []),
-        );
-    }
-
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromTraits(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_merge(
-            [],
-            ...array_map(
-                function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
-                    return array_merge(
-                        [],
-                        ...array_map(
-                            fn (ReflectionMethod $method): array => $this->createMethodsFromTrait($method),
-                            array_values($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses)),
-                        ),
-                    );
-                },
-                $this->getTraits(),
-            ),
-        );
-    }
-
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromInterfaces(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_merge(
-            [],
-            ...array_map(
-                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName(clone $alreadyVisitedClasses)),
-                array_values($this->getImmediateInterfaces()),
-            ),
-        );
-    }
-
     /**
      * Construct a flat list of all methods in this precise order from:
      *  - current class
@@ -418,54 +377,74 @@ class ReflectionClass implements Reflection
      */
     private function getMethodsIndexedByLowercasedName(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
-        $alreadyVisitedClasses->push($this->getName());
-
         if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
         }
 
-        $classMethods     = $this->getImmediateMethods();
+        $alreadyVisitedClasses->push($this->getName());
+
+        $immediateMethods = $this->getImmediateMethods();
         $className        = $this->getName();
-        $parentMethods    = $this->getParentMethods(AlreadyVisitedClasses::createEmpty());
-        $traitsMethods    = $this->getMethodsFromTraits($alreadyVisitedClasses);
-        $interfaceMethods = $this->getMethodsFromInterfaces($alreadyVisitedClasses);
 
-        $methods = [];
+        $methods = array_combine(
+            array_map(static fn (ReflectionMethod $method): string => strtolower($method->getName()), $immediateMethods),
+            $immediateMethods,
+        );
 
-        foreach ([$classMethods, $parentMethods, 'traits' => $traitsMethods, $interfaceMethods] as $type => $typeMethods) {
-            foreach ($typeMethods as $method) {
-                $methodName = strtolower($method->getName());
-
-                if (! array_key_exists($methodName, $methods)) {
-                    $methods[$methodName] = $method;
+        $parentClass = $this->getParentClass();
+        if ($parentClass !== null) {
+            foreach ($parentClass->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) as $lowercasedMethodName => $method) {
+                if (array_key_exists($lowercasedMethodName, $methods)) {
                     continue;
                 }
 
-                if ($type !== 'traits') {
+                $methods[$lowercasedMethodName] = $method->withCurrentClass($this);
+            }
+        }
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) as $method) {
+                foreach ($this->createMethodsFromTrait($method) as $traitMethod) {
+                    $lowercasedMethodName = strtolower($traitMethod->getName());
+
+                    if (! array_key_exists($lowercasedMethodName, $methods)) {
+                        $methods[$lowercasedMethodName] = $traitMethod;
+                        continue;
+                    }
+
+                    if ($traitMethod->isAbstract()) {
+                        continue;
+                    }
+
+                    // Non-abstract trait method can overwrite existing method:
+                    // - when existing method comes from parent class
+                    // - when existing method comes from trait and is abstract
+
+                    $existingMethod = $methods[$lowercasedMethodName];
+
+                    if (
+                        $existingMethod->getDeclaringClass()->getName() === $className
+                        && ! (
+                            $existingMethod->isAbstract()
+                            && $existingMethod->getDeclaringClass()->isTrait()
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    $methods[$lowercasedMethodName] = $traitMethod;
+                }
+            }
+        }
+
+        foreach ($this->getImmediateInterfaces() as $interface) {
+            $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+            foreach ($interface->getMethodsIndexedByLowercasedName($alreadyVisitedClassesCopy) as $lowercasedMethodName => $method) {
+                if (array_key_exists($lowercasedMethodName, $methods)) {
                     continue;
                 }
 
-                $existingMethod = $methods[$methodName];
-
-                // Non-abstract trait method can overwrite existing method:
-                // - when existing method comes from parent class
-                // - when existing method comes from trait and is abstract
-
-                if ($method->isAbstract()) {
-                    continue;
-                }
-
-                if (
-                    $existingMethod->getDeclaringClass()->getName() === $className
-                    && ! (
-                        $existingMethod->isAbstract()
-                        && $existingMethod->getDeclaringClass()->isTrait()
-                    )
-                ) {
-                    continue;
-                }
-
-                $methods[$methodName] = $method;
+                $methods[$lowercasedMethodName] = $method;
             }
         }
 
