@@ -4607,16 +4607,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v6.0.12",
+            "version": "v6.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "3a975ba1a1508ad97df45f4590f55b7cc4c1a0a0"
+                "reference": "65e99fb179e7241606377e4042cd2161f3dd1c05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/3a975ba1a1508ad97df45f4590f55b7cc4c1a0a0",
-                "reference": "3a975ba1a1508ad97df45f4590f55b7cc4c1a0a0",
+                "url": "https://api.github.com/repos/symfony/string/zipball/65e99fb179e7241606377e4042cd2161f3dd1c05",
+                "reference": "65e99fb179e7241606377e4042cd2161f3dd1c05",
                 "shasum": ""
             },
             "require": {
@@ -4672,7 +4672,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v6.0.12"
+                "source": "https://github.com/symfony/string/tree/v6.0.13"
             },
             "funding": [
                 {
@@ -4688,7 +4688,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-12T18:05:20+00:00"
+            "time": "2022-09-02T08:05:03+00:00"
         },
         {
             "name": "thecodingmachine/safe",
