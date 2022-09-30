@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use ArrayIterator;
 use BackedEnum;
 use Bar;
 use Baz;
@@ -36,6 +37,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\MemoizingSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
@@ -79,6 +81,7 @@ use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
+use SplFileInfo;
 use stdClass;
 use Stringable;
 use TypeError;
@@ -2675,11 +2678,19 @@ PHP;
         ];
     }
 
-    /** @dataProvider traitUseCircularReferencesProvider */
+    /**
+     * @dataProvider interfaceExtendsCircularReferencesProvider
+     * @dataProvider circularReferencesProvider
+     * @dataProvider traitUseCircularReferencesProvider
+     */
     public function testGetConstantsFailsWithCircularReference(string $className): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+        $reflector = new DefaultReflector(new FileIteratorSourceLocator(
+            new ArrayIterator([
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidInterfaceParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidTraitUses.php'),
+            ]),
             $this->astLocator,
         ));
 
@@ -2690,11 +2701,19 @@ PHP;
         $class->getConstants();
     }
 
-    /** @dataProvider traitUseCircularReferencesProvider */
+    /**
+     * @dataProvider interfaceExtendsCircularReferencesProvider
+     * @dataProvider circularReferencesProvider
+     * @dataProvider traitUseCircularReferencesProvider
+     */
     public function testGetMethodsFailsWithCircularReference(string $className): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+        $reflector = new DefaultReflector(new FileIteratorSourceLocator(
+            new ArrayIterator([
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidInterfaceParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidTraitUses.php'),
+            ]),
             $this->astLocator,
         ));
 
@@ -2705,11 +2724,19 @@ PHP;
         $class->getMethods();
     }
 
-    /** @dataProvider traitUseCircularReferencesProvider */
+    /**
+     * @dataProvider interfaceExtendsCircularReferencesProvider
+     * @dataProvider circularReferencesProvider
+     * @dataProvider traitUseCircularReferencesProvider
+     */
     public function testGetPropertiesFailsWithCircularReference(string $className): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(
-            __DIR__ . '/../Fixture/InvalidTraitUses.php',
+        $reflector = new DefaultReflector(new FileIteratorSourceLocator(
+            new ArrayIterator([
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidInterfaceParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidParents.php'),
+                new SplFileInfo(__DIR__ . '/../Fixture/InvalidTraitUses.php'),
+            ]),
             $this->astLocator,
         ));
 
