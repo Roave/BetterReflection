@@ -361,7 +361,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param list<class-string> $classNameStack
+     * @param array<class-string, null> $classNameStack
      *
      * @return list<ReflectionMethod>
      */
@@ -374,7 +374,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param list<class-string> $classNameStack
+     * @param array<class-string, null> $classNameStack
      *
      * @return list<ReflectionMethod>
      */
@@ -398,7 +398,7 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param list<class-string> $classNameStack
+     * @param array<class-string, null> $classNameStack
      *
      * @return list<ReflectionMethod>
      */
@@ -425,7 +425,7 @@ class ReflectionClass implements Reflection
      * Methods are not merged via their name as array index, since internal PHP method
      * sorting does not follow `\array_merge()` semantics.
      *
-     * @param list<class-string> $classNameStack
+     * @param array<class-string, null> $classNameStack
      *
      * @return array<lowercase-string, ReflectionMethod> indexed by method name
      */
@@ -719,7 +719,7 @@ class ReflectionClass implements Reflection
 
     /**
      * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
-     * @param list<class-string>                                $classNameStack
+     * @param array<class-string, null>                         $classNameStack
      *
      * @return array<non-empty-string, ReflectionClassConstant> indexed by name
      */
@@ -932,7 +932,7 @@ class ReflectionClass implements Reflection
 
     /**
      * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
-     * @param list<class-string>                           $classNameStack
+     * @param array<class-string, null>                    $classNameStack
      *
      * @return array<non-empty-string, ReflectionProperty>
      */
@@ -1630,7 +1630,7 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of this interface. Do not use on class nodes!
      *
-     * @param list<class-string> $classNameStack
+     * @param array<class-string, null> $classNameStack
      *
      * @return array<class-string, ReflectionClass> parent interfaces of this interface
      *
@@ -1660,18 +1660,18 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param list<class-string> $classNameStack
-     * @param class-string       $className
+     * @param array<class-string, null> $classNameStack
+     * @param class-string              $className
      *
-     * @return list<class-string>
+     * @return array<class-string, null>
      */
     private function pushClassNameStack(array $classNameStack, string $className): array
     {
-        if (in_array($className, $classNameStack, true)) {
+        if (array_key_exists($className, $classNameStack)) {
             throw CircularReference::fromClassName($className);
         }
 
-        $classNameStack[] = $className;
+        $classNameStack[$className] = null;
 
         return $classNameStack;
     }
