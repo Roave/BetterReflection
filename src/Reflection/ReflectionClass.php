@@ -365,7 +365,7 @@ class ReflectionClass implements Reflection
      *
      * @return list<ReflectionMethod>
      */
-    private function getParentMethods(array &$classNameStack = []): array
+    private function getParentMethods(array $classNameStack = []): array
     {
         return array_map(
             fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
@@ -378,12 +378,12 @@ class ReflectionClass implements Reflection
      *
      * @return list<ReflectionMethod>
      */
-    private function getMethodsFromTraits(array &$classNameStack = []): array
+    private function getMethodsFromTraits(array $classNameStack = []): array
     {
         return array_merge(
             [],
             ...array_map(
-                function (ReflectionClass $trait) use (&$classNameStack): array {
+                function (ReflectionClass $trait) use ($classNameStack): array {
                     return array_merge(
                         [],
                         ...array_map(
@@ -402,7 +402,7 @@ class ReflectionClass implements Reflection
      *
      * @return list<ReflectionMethod>
      */
-    private function getMethodsFromInterfaces(array &$classNameStack = []): array
+    private function getMethodsFromInterfaces(array $classNameStack = []): array
     {
         return array_merge(
             [],
