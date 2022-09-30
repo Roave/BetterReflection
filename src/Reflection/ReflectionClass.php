@@ -1218,7 +1218,7 @@ class ReflectionClass implements Reflection
         /** @psalm-var class-string $stringableClassName */
         $stringableClassName = Stringable::class;
 
-        if (array_key_exists($stringableClassName, $interfaces)) {
+        if (array_key_exists($stringableClassName, $interfaces) || ($this->isInterface && $this->getName() === $stringableClassName)) {
             return $interfaces;
         }
 

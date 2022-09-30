@@ -2422,6 +2422,10 @@ PHP;
         $interfaceNotExtendingStringable = $reflector->reflectClass('InterfaceHasStringableAutomatically');
         self::assertContains(Stringable::class, $interfaceNotExtendingStringable->getInterfaceNames());
         self::assertArrayHasKey(Stringable::class, $interfaceNotExtendingStringable->getImmediateInterfaces());
+
+        $stringable = $reflector->reflectClass('Stringable');
+        self::assertNotContains(Stringable::class, $stringable->getInterfaceNames());
+        self::assertArrayNotHasKey(Stringable::class, $stringable->getImmediateInterfaces());
     }
 
     public function testNoStringableInterface(): void
