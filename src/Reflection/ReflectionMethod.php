@@ -128,27 +128,12 @@ class ReflectionMethod
      */
     public function withImplementingClass(ReflectionClass $implementingClass, string|null $aliasName, int $modifiers): self
     {
-        $clone                    = $this->clone();
+        $clone = clone $this;
+
         $clone->aliasName         = $aliasName;
         $clone->modifiers         = $modifiers;
         $clone->implementingClass = $implementingClass;
         $clone->currentClass      = $implementingClass;
-
-        return $clone;
-    }
-
-    /** @internal */
-    public function withCurrentClass(ReflectionClass $currentClass): self
-    {
-        $clone               = $this->clone();
-        $clone->currentClass = $currentClass;
-
-        return $clone;
-    }
-
-    private function clone(): self
-    {
-        $clone = clone $this;
 
         if ($clone->returnType !== null) {
             $clone->returnType = $clone->returnType->withOwner($clone);
@@ -157,6 +142,21 @@ class ReflectionMethod
         $clone->parameters = array_map(static fn (ReflectionParameter $parameter): ReflectionParameter => $parameter->withFunction($clone), $this->parameters);
 
         $clone->attributes = array_map(static fn (ReflectionAttribute $attribute): ReflectionAttribute => $attribute->withOwner($clone), $this->attributes);
+
+        return $clone;
+    }
+
+    /** @internal */
+    public function withCurrentClass(ReflectionClass $currentClass): self
+    {
+        $clone               = clone $this;
+        $clone->currentClass = $currentClass;
+
+        if ($clone->returnType !== null) {
+            $clone->returnType = $clone->returnType->withOwner($clone);
+        }
+
+        // We don't need to clone parameters and attributes
 
         return $clone;
     }
@@ -365,6 +365,8 @@ class ReflectionMethod
 
     /**
      * Get the current reflected class.
+     *
+     * @internal
      */
     public function getCurrentClass(): ReflectionClass
     {

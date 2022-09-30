@@ -843,11 +843,11 @@ PHP;
         $cloneParameters = $cloneMethodReflection->getParameters();
 
         self::assertCount(1, $cloneParameters);
-        self::assertNotSame($parameters[0], $cloneParameters[0]);
+        self::assertSame($parameters[0], $cloneParameters[0]);
 
         $cloneAttributes = $cloneMethodReflection->getAttributes();
 
         self::assertCount(2, $cloneAttributes);
-        self::assertNotSame($attributes[0], $cloneAttributes[0]);
+        self::assertSame($attributes[0], $cloneAttributes[0]);
     }
 }
