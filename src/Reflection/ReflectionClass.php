@@ -680,60 +680,71 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
-        return $this->getConstantsConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
-    }
-
-    /**
-     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
-     *
-     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
-     */
-    private function getConstantsConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        $alreadyVisitedClasses->push($this->getName());
-
-        if ($this->cachedConstants === null) {
-            // Note: constants are not merged via their name as array index, since internal PHP constant
-            //       sorting does not follow `\array_merge()` semantics
-            $constants = array_merge(
-                array_values($this->getImmediateConstants()),
-                array_values($this->getParentClass()?->getConstantsConsideringAlreadyVisitedClasses(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? []),
-                ...array_map(
-                    function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
-                        return array_map(
-                            fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                            $trait->getConstantsConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
-                        );
-                    },
-                    $this->getTraits(),
-                ),
-                ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, clone $alreadyVisitedClasses)),
-                    array_values($this->getImmediateInterfaces()),
-                ),
-            );
-
-            $this->cachedConstants = [];
-
-            foreach ($constants as $constant) {
-                $constantName = $constant->getName();
-
-                if (isset($this->cachedConstants[$constantName])) {
-                    continue;
-                }
-
-                $this->cachedConstants[$constantName] = $constant;
-            }
-        }
+        $constants = $this->getConstantsConsideringAlreadyVisitedClasses(AlreadyVisitedClasses::createEmpty());
 
         if ($filter === 0) {
-            return $this->cachedConstants;
+            return $constants;
         }
 
         return array_filter(
-            $this->cachedConstants,
+            $constants,
             static fn (ReflectionClassConstant $constant): bool => (bool) ($filter & $constant->getModifiers()),
         );
+    }
+
+    /** @return array<non-empty-string, ReflectionClassConstant> indexed by name */
+    private function getConstantsConsideringAlreadyVisitedClasses(AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        if ($this->cachedConstants !== null) {
+            return $this->cachedConstants;
+        }
+
+        $alreadyVisitedClasses->push($this->getName());
+
+        // Note: constants are not merged via their name as array index, since internal PHP constant
+        //       sorting does not follow `\array_merge()` semantics
+
+        $constants = $this->getImmediateConstants();
+
+        $parentClass = $this->getParentClass();
+        if ($parentClass !== null) {
+            foreach ($parentClass->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $constantName => $constant) {
+                if ($constant->isPrivate()) {
+                    continue;
+                }
+
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant;
+            }
+        }
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $constantName => $constant) {
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant->withImplementingClass($this);
+            }
+        }
+
+        foreach ($this->getImmediateInterfaces() as $interface) {
+            $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+            foreach ($interface->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClassesCopy) as $constantName => $constant) {
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant;
+            }
+        }
+
+        $this->cachedConstants = $constants;
+
+        return $this->cachedConstants;
     }
 
     /**
