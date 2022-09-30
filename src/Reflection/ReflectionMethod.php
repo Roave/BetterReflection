@@ -365,6 +365,8 @@ class ReflectionMethod
 
     /**
      * Get the current reflected class.
+     *
+     * @internal
      */
     public function getCurrentClass(): ReflectionClass
     {
