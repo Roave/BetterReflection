@@ -31,6 +31,7 @@ use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
+use Roave\BetterReflection\Reflection\Support\AlreadyVisitedClasses;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\InternalLocatedSource;
@@ -361,26 +362,26 @@ class ReflectionClass implements Reflection
     }
 
     /** @return list<ReflectionMethod> */
-    private function getParentMethods(): array
+    private function getParentMethods(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
         return array_map(
             fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName() ?? []),
+            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) ?? []),
         );
     }
 
     /** @return list<ReflectionMethod> */
-    private function getMethodsFromTraits(): array
+    private function getMethodsFromTraits(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
         return array_merge(
             [],
             ...array_map(
-                function (ReflectionClass $trait): array {
+                function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
                     return array_merge(
                         [],
                         ...array_map(
                             fn (ReflectionMethod $method): array => $this->createMethodsFromTrait($method),
-                            array_values($trait->getMethodsIndexedByLowercasedName()),
+                            array_values($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses)),
                         ),
                     );
                 },
@@ -390,12 +391,12 @@ class ReflectionClass implements Reflection
     }
 
     /** @return list<ReflectionMethod> */
-    private function getMethodsFromInterfaces(): array
+    private function getMethodsFromInterfaces(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
         return array_merge(
             [],
             ...array_map(
-                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName()),
+                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName($alreadyVisitedClasses)),
                 array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
             ),
         );
@@ -415,17 +416,19 @@ class ReflectionClass implements Reflection
      *
      * @return array<lowercase-string, ReflectionMethod> indexed by method name
      */
-    private function getMethodsIndexedByLowercasedName(): array
+    private function getMethodsIndexedByLowercasedName(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
+        $alreadyVisitedClasses->push($this->getName());
+
         if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
         }
 
         $classMethods     = $this->getImmediateMethods();
         $className        = $this->getName();
-        $parentMethods    = $this->getParentMethods();
-        $traitsMethods    = $this->getMethodsFromTraits();
-        $interfaceMethods = $this->getMethodsFromInterfaces();
+        $parentMethods    = $this->getParentMethods(AlreadyVisitedClasses::createEmpty());
+        $traitsMethods    = $this->getMethodsFromTraits($alreadyVisitedClasses);
+        $interfaceMethods = $this->getMethodsFromInterfaces(AlreadyVisitedClasses::createEmpty());
 
         $methods = [];
 
@@ -491,7 +494,7 @@ class ReflectionClass implements Reflection
      */
     public function getMethods(int $filter = 0): array
     {
-        $methods = $this->getMethodsIndexedByLowercasedName();
+        $methods = $this->getMethodsIndexedByLowercasedName(AlreadyVisitedClasses::createEmpty());
 
         if ($filter !== 0) {
             $methods = array_filter(
@@ -614,7 +617,7 @@ class ReflectionClass implements Reflection
     public function getMethod(string $methodName): ReflectionMethod|null
     {
         $lowercaseMethodName = strtolower($methodName);
-        $methods             = $this->getMethodsIndexedByLowercasedName();
+        $methods             = $this->getMethodsIndexedByLowercasedName(AlreadyVisitedClasses::createEmpty());
 
         return $methods[$lowercaseMethodName] ?? null;
     }
@@ -698,23 +701,35 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
+        return $this->getConstantsConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
+    }
+
+    /**
+     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
+     *
+     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
+     */
+    private function getConstantsConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        $alreadyVisitedClasses->push($this->getName());
+
         if ($this->cachedConstants === null) {
             // Note: constants are not merged via their name as array index, since internal PHP constant
             //       sorting does not follow `\array_merge()` semantics
             $constants = array_merge(
                 array_values($this->getImmediateConstants()),
-                array_values($this->getParentClass()?->getConstants(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED) ?? []),
+                array_values($this->getParentClass()?->getConstantsConsideringAlreadyVisitedClasses(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? []),
                 ...array_map(
-                    function (ReflectionClass $trait): array {
+                    function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
                         return array_map(
                             fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                            $trait->getConstants(),
+                            $trait->getConstantsConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
                         );
                     },
                     $this->getTraits(),
                 ),
                 ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstants()),
+                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, AlreadyVisitedClasses::createEmpty())),
                     array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                 ),
             );
@@ -898,21 +913,33 @@ class ReflectionClass implements Reflection
      */
     public function getProperties(int $filter = 0): array
     {
+        return $this->getPropertiesConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
+    }
+
+    /**
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
+     *
+     * @return array<non-empty-string, ReflectionProperty>
+     */
+    private function getPropertiesConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        $alreadyVisitedClasses->push($this->getName());
+
         if ($this->cachedProperties === null) {
             // merging together properties from parent class, interfaces, traits, current class (in this precise order)
             $this->cachedProperties = array_merge(
                 array_merge(
                     [],
-                    $this->getParentClass()?->getProperties(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED) ?? [],
+                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getProperties(),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(0, AlreadyVisitedClasses::createEmpty()),
                         array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                     ),
                     ...array_map(
-                        function (ReflectionClass $trait) {
+                        function (ReflectionClass $trait) use ($alreadyVisitedClasses) {
                             return array_map(
                                 fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getProperties(),
+                                $trait->getPropertiesConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
                             );
                         },
                         $this->getTraits(),
@@ -1565,7 +1592,7 @@ class ReflectionClass implements Reflection
 
         if ($this->isInterface) {
             // assumption: first key is the current interface
-            return array_slice($this->getInterfacesHierarchy(), 1);
+            return array_slice($this->getInterfacesHierarchy(AlreadyVisitedClasses::createEmpty()), 1);
         }
 
         $interfaces = array_merge(
@@ -1573,7 +1600,7 @@ class ReflectionClass implements Reflection
             ...array_map(
                 fn (string $interfaceClassName): array => $this->reflector
                     ->reflectClass($interfaceClassName)
-                    ->getInterfacesHierarchy(),
+                    ->getInterfacesHierarchy(AlreadyVisitedClasses::createEmpty()),
                 $this->implementsClassNames,
             ),
         );
@@ -1588,24 +1615,18 @@ class ReflectionClass implements Reflection
     /**
      * This method allows us to retrieve all interfaces parent of this interface. Do not use on class nodes!
      *
-     * @param list<class-string> $interfaceClassNames
-     *
      * @return array<class-string, ReflectionClass> parent interfaces of this interface
      *
      * @throws NotAnInterfaceReflection
      */
-    private function getInterfacesHierarchy(array &$interfaceClassNames = []): array
+    private function getInterfacesHierarchy(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
         if (! $this->isInterface) {
             throw NotAnInterfaceReflection::fromReflectionClass($this);
         }
 
         $interfaceClassName = $this->getName();
-        if (in_array($interfaceClassName, $interfaceClassNames, true)) {
-            throw CircularReference::fromClassName($interfaceClassName);
-        }
-
-        $interfaceClassNames[] = $interfaceClassName;
+        $alreadyVisitedClasses->push($interfaceClassName);
 
         /** @var array<class-string, self> $interfaces */
         $interfaces = array_merge(
@@ -1613,7 +1634,7 @@ class ReflectionClass implements Reflection
             ...array_map(
                 fn (string $interfaceClassName): array => $this->reflector
                     ->reflectClass($interfaceClassName)
-                    ->getInterfacesHierarchy($interfaceClassNames),
+                    ->getInterfacesHierarchy($alreadyVisitedClasses),
                 $this->implementsClassNames,
             ),
         );
