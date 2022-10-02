@@ -932,7 +932,7 @@ class ReflectionClass implements Reflection
                     [],
                     $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(0, AlreadyVisitedClasses::createEmpty()),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC, AlreadyVisitedClasses::createEmpty()),
                         array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
                     ),
                     ...array_map(
