@@ -2750,4 +2750,27 @@ PHP;
 
         $class->getProperties();
     }
+
+    public function testInterfacesNotCircular(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            interface CacheableDependencyInterface {}
+            interface RefinableCacheableDependencyInterface extends CacheableDependencyInterface {}
+            interface AccessibleInterface {}
+            interface EntityInterface extends AccessibleInterface, CacheableDependencyInterface, RefinableCacheableDependencyInterface {}
+        PHP;
+
+        $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
+        $classReflection = $reflector->reflectClass('EntityInterface');
+
+        /** @var list<class-string> $expectedInterfaceNames */
+        $expectedInterfaceNames = [
+            'AccessibleInterface',
+            'CacheableDependencyInterface',
+            'RefinableCacheableDependencyInterface',
+        ];
+
+        self::assertSame($expectedInterfaceNames, $classReflection->getInterfaceNames());
+    }
 }

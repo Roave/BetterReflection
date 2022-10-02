@@ -1628,16 +1628,15 @@ class ReflectionClass implements Reflection
         $interfaceClassName = $this->getName();
         $alreadyVisitedClasses->push($interfaceClassName);
 
+        $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+
         /** @var array<class-string, self> $interfaces */
-        $interfaces = array_merge(
-            [$interfaceClassName => $this],
-            ...array_map(
-                fn (string $interfaceClassName): array => $this->reflector
-                    ->reflectClass($interfaceClassName)
-                    ->getInterfacesHierarchy($alreadyVisitedClasses),
-                $this->implementsClassNames,
-            ),
-        );
+        $interfaces = [$interfaceClassName => $this];
+        foreach ($this->getImmediateInterfaces() as $interface) {
+            foreach ($interface->getInterfacesHierarchy(clone $alreadyVisitedClassesCopy) as $extendedInterfaceName => $extendedInterface) {
+                $interfaces[$extendedInterfaceName] = $extendedInterface;
+            }
+        }
 
         return $this->addStringableInterface($interfaces);
     }
