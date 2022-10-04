@@ -361,47 +361,6 @@ class ReflectionClass implements Reflection
         return $methods;
     }
 
-    /** @return list<ReflectionMethod> */
-    private function getParentMethods(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_map(
-            fn (ReflectionMethod $method): ReflectionMethod => $method->withCurrentClass($this),
-            array_values($this->getParentClass()?->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) ?? []),
-        );
-    }
-
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromTraits(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_merge(
-            [],
-            ...array_map(
-                function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
-                    return array_merge(
-                        [],
-                        ...array_map(
-                            fn (ReflectionMethod $method): array => $this->createMethodsFromTrait($method),
-                            array_values($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses)),
-                        ),
-                    );
-                },
-                $this->getTraits(),
-            ),
-        );
-    }
-
-    /** @return list<ReflectionMethod> */
-    private function getMethodsFromInterfaces(AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        return array_merge(
-            [],
-            ...array_map(
-                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName(clone $alreadyVisitedClasses)),
-                array_values($this->getImmediateInterfaces()),
-            ),
-        );
-    }
-
     /**
      * Construct a flat list of all methods in this precise order from:
      *  - current class
@@ -418,54 +377,74 @@ class ReflectionClass implements Reflection
      */
     private function getMethodsIndexedByLowercasedName(AlreadyVisitedClasses $alreadyVisitedClasses): array
     {
-        $alreadyVisitedClasses->push($this->getName());
-
         if ($this->cachedMethods !== null) {
             return $this->cachedMethods;
         }
 
-        $classMethods     = $this->getImmediateMethods();
+        $alreadyVisitedClasses->push($this->getName());
+
+        $immediateMethods = $this->getImmediateMethods();
         $className        = $this->getName();
-        $parentMethods    = $this->getParentMethods(AlreadyVisitedClasses::createEmpty());
-        $traitsMethods    = $this->getMethodsFromTraits($alreadyVisitedClasses);
-        $interfaceMethods = $this->getMethodsFromInterfaces($alreadyVisitedClasses);
 
-        $methods = [];
+        $methods = array_combine(
+            array_map(static fn (ReflectionMethod $method): string => strtolower($method->getName()), $immediateMethods),
+            $immediateMethods,
+        );
 
-        foreach ([$classMethods, $parentMethods, 'traits' => $traitsMethods, $interfaceMethods] as $type => $typeMethods) {
-            foreach ($typeMethods as $method) {
-                $methodName = strtolower($method->getName());
-
-                if (! array_key_exists($methodName, $methods)) {
-                    $methods[$methodName] = $method;
+        $parentClass = $this->getParentClass();
+        if ($parentClass !== null) {
+            foreach ($parentClass->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) as $lowercasedMethodName => $method) {
+                if (array_key_exists($lowercasedMethodName, $methods)) {
                     continue;
                 }
 
-                if ($type !== 'traits') {
+                $methods[$lowercasedMethodName] = $method->withCurrentClass($this);
+            }
+        }
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) as $method) {
+                foreach ($this->createMethodsFromTrait($method) as $traitMethod) {
+                    $lowercasedMethodName = strtolower($traitMethod->getName());
+
+                    if (! array_key_exists($lowercasedMethodName, $methods)) {
+                        $methods[$lowercasedMethodName] = $traitMethod;
+                        continue;
+                    }
+
+                    if ($traitMethod->isAbstract()) {
+                        continue;
+                    }
+
+                    // Non-abstract trait method can overwrite existing method:
+                    // - when existing method comes from parent class
+                    // - when existing method comes from trait and is abstract
+
+                    $existingMethod = $methods[$lowercasedMethodName];
+
+                    if (
+                        $existingMethod->getDeclaringClass()->getName() === $className
+                        && ! (
+                            $existingMethod->isAbstract()
+                            && $existingMethod->getDeclaringClass()->isTrait()
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    $methods[$lowercasedMethodName] = $traitMethod;
+                }
+            }
+        }
+
+        foreach ($this->getImmediateInterfaces() as $interface) {
+            $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+            foreach ($interface->getMethodsIndexedByLowercasedName($alreadyVisitedClassesCopy) as $lowercasedMethodName => $method) {
+                if (array_key_exists($lowercasedMethodName, $methods)) {
                     continue;
                 }
 
-                $existingMethod = $methods[$methodName];
-
-                // Non-abstract trait method can overwrite existing method:
-                // - when existing method comes from parent class
-                // - when existing method comes from trait and is abstract
-
-                if ($method->isAbstract()) {
-                    continue;
-                }
-
-                if (
-                    $existingMethod->getDeclaringClass()->getName() === $className
-                    && ! (
-                        $existingMethod->isAbstract()
-                        && $existingMethod->getDeclaringClass()->isTrait()
-                    )
-                ) {
-                    continue;
-                }
-
-                $methods[$methodName] = $method;
+                $methods[$lowercasedMethodName] = $method;
             }
         }
 
@@ -701,60 +680,71 @@ class ReflectionClass implements Reflection
      */
     public function getConstants(int $filter = 0): array
     {
-        return $this->getConstantsConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
-    }
-
-    /**
-     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
-     *
-     * @return array<non-empty-string, ReflectionClassConstant> indexed by name
-     */
-    private function getConstantsConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        $alreadyVisitedClasses->push($this->getName());
-
-        if ($this->cachedConstants === null) {
-            // Note: constants are not merged via their name as array index, since internal PHP constant
-            //       sorting does not follow `\array_merge()` semantics
-            $constants = array_merge(
-                array_values($this->getImmediateConstants()),
-                array_values($this->getParentClass()?->getConstantsConsideringAlreadyVisitedClasses(ReflectionClassConstantAdapter::IS_PUBLIC | ReflectionClassConstantAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? []),
-                ...array_map(
-                    function (ReflectionClass $trait) use ($alreadyVisitedClasses): array {
-                        return array_map(
-                            fn (ReflectionClassConstant $classConstant): ReflectionClassConstant => $classConstant->withImplementingClass($this),
-                            $trait->getConstantsConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
-                        );
-                    },
-                    $this->getTraits(),
-                ),
-                ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, clone $alreadyVisitedClasses)),
-                    array_values($this->getImmediateInterfaces()),
-                ),
-            );
-
-            $this->cachedConstants = [];
-
-            foreach ($constants as $constant) {
-                $constantName = $constant->getName();
-
-                if (isset($this->cachedConstants[$constantName])) {
-                    continue;
-                }
-
-                $this->cachedConstants[$constantName] = $constant;
-            }
-        }
+        $constants = $this->getConstantsConsideringAlreadyVisitedClasses(AlreadyVisitedClasses::createEmpty());
 
         if ($filter === 0) {
-            return $this->cachedConstants;
+            return $constants;
         }
 
         return array_filter(
-            $this->cachedConstants,
+            $constants,
             static fn (ReflectionClassConstant $constant): bool => (bool) ($filter & $constant->getModifiers()),
         );
+    }
+
+    /** @return array<non-empty-string, ReflectionClassConstant> indexed by name */
+    private function getConstantsConsideringAlreadyVisitedClasses(AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        if ($this->cachedConstants !== null) {
+            return $this->cachedConstants;
+        }
+
+        $alreadyVisitedClasses->push($this->getName());
+
+        // Note: constants are not merged via their name as array index, since internal PHP constant
+        //       sorting does not follow `\array_merge()` semantics
+
+        $constants = $this->getImmediateConstants();
+
+        $parentClass = $this->getParentClass();
+        if ($parentClass !== null) {
+            foreach ($parentClass->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $constantName => $constant) {
+                if ($constant->isPrivate()) {
+                    continue;
+                }
+
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant;
+            }
+        }
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $constantName => $constant) {
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant->withImplementingClass($this);
+            }
+        }
+
+        foreach ($this->getImmediateInterfaces() as $interface) {
+            $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+            foreach ($interface->getConstantsConsideringAlreadyVisitedClasses($alreadyVisitedClassesCopy) as $constantName => $constant) {
+                if (array_key_exists($constantName, $constants)) {
+                    continue;
+                }
+
+                $constants[$constantName] = $constant;
+            }
+        }
+
+        $this->cachedConstants = $constants;
+
+        return $this->cachedConstants;
     }
 
     /**
@@ -913,50 +903,63 @@ class ReflectionClass implements Reflection
      */
     public function getProperties(int $filter = 0): array
     {
-        return $this->getPropertiesConsideringAlreadyVisitedClasses($filter, AlreadyVisitedClasses::createEmpty());
-    }
-
-    /**
-     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $filter
-     *
-     * @return array<non-empty-string, ReflectionProperty>
-     */
-    private function getPropertiesConsideringAlreadyVisitedClasses(int $filter, AlreadyVisitedClasses $alreadyVisitedClasses): array
-    {
-        $alreadyVisitedClasses->push($this->getName());
-
-        if ($this->cachedProperties === null) {
-            // merging together properties from parent class, interfaces, traits, current class (in this precise order)
-            $this->cachedProperties = array_merge(
-                array_merge(
-                    [],
-                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $alreadyVisitedClasses) ?? [],
-                    ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC, clone $alreadyVisitedClasses),
-                        array_values($this->getImmediateInterfaces()),
-                    ),
-                    ...array_map(
-                        function (ReflectionClass $trait) use ($alreadyVisitedClasses) {
-                            return array_map(
-                                fn (ReflectionProperty $property): ReflectionProperty => $property->withImplementingClass($this),
-                                $trait->getPropertiesConsideringAlreadyVisitedClasses(0, $alreadyVisitedClasses),
-                            );
-                        },
-                        $this->getTraits(),
-                    ),
-                ),
-                $this->getImmediateProperties(),
-            );
-        }
+        $properties = $this->getPropertiesConsideringAlreadyVisitedClasses(AlreadyVisitedClasses::createEmpty());
 
         if ($filter === 0) {
-            return $this->cachedProperties;
+            return $properties;
         }
 
         return array_filter(
-            $this->cachedProperties,
+            $properties,
             static fn (ReflectionProperty $property): bool => (bool) ($filter & $property->getModifiers()),
         );
+    }
+
+    /** @return array<non-empty-string, ReflectionProperty> */
+    private function getPropertiesConsideringAlreadyVisitedClasses(AlreadyVisitedClasses $alreadyVisitedClasses): array
+    {
+        if ($this->cachedProperties !== null) {
+            return $this->cachedProperties;
+        }
+
+        $alreadyVisitedClasses->push($this->getName());
+
+        $immediateProperties = $this->getImmediateProperties();
+
+        // Merging together properties from parent class, interfaces, traits, current class (in this precise order)
+
+        $properties = array_merge(
+            array_filter(
+                $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses($alreadyVisitedClasses) ?? [],
+                static fn (ReflectionProperty $property) => ! $property->isPrivate(),
+            ),
+            ...array_map(
+                static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(clone $alreadyVisitedClasses),
+                array_values($this->getImmediateInterfaces()),
+            ),
+        );
+
+        foreach ($this->getTraits() as $trait) {
+            foreach ($trait->getPropertiesConsideringAlreadyVisitedClasses($alreadyVisitedClasses) as $traitProperty) {
+                $traitPropertyName = $traitProperty->getName();
+
+                if (
+                    array_key_exists($traitPropertyName, $properties)
+                    || array_key_exists($traitPropertyName, $immediateProperties)
+                ) {
+                    continue;
+                }
+
+                $properties[$traitPropertyName] = $traitProperty->withImplementingClass($this);
+            }
+        }
+
+        // Merge immediate properties last to get the required order
+        $properties = array_merge($properties, $immediateProperties);
+
+        $this->cachedProperties = $properties;
+
+        return $this->cachedProperties;
     }
 
     /**
@@ -1633,7 +1636,8 @@ class ReflectionClass implements Reflection
         /** @var array<class-string, self> $interfaces */
         $interfaces = [$interfaceClassName => $this];
         foreach ($this->getImmediateInterfaces() as $interface) {
-            foreach ($interface->getInterfacesHierarchy(clone $alreadyVisitedClassesCopy) as $extendedInterfaceName => $extendedInterface) {
+            $alreadyVisitedClassesCopyForInterface = clone $alreadyVisitedClassesCopy;
+            foreach ($interface->getInterfacesHierarchy($alreadyVisitedClassesCopyForInterface) as $extendedInterfaceName => $extendedInterface) {
                 $interfaces[$extendedInterfaceName] = $extendedInterface;
             }
         }
