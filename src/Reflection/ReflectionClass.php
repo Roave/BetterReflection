@@ -396,8 +396,8 @@ class ReflectionClass implements Reflection
         return array_merge(
             [],
             ...array_map(
-                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName($alreadyVisitedClasses)),
-                array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
+                static fn (ReflectionClass $ancestor): array => array_values($ancestor->getMethodsIndexedByLowercasedName(clone $alreadyVisitedClasses)),
+                array_values($this->getImmediateInterfaces()),
             ),
         );
     }
@@ -428,7 +428,7 @@ class ReflectionClass implements Reflection
         $className        = $this->getName();
         $parentMethods    = $this->getParentMethods(AlreadyVisitedClasses::createEmpty());
         $traitsMethods    = $this->getMethodsFromTraits($alreadyVisitedClasses);
-        $interfaceMethods = $this->getMethodsFromInterfaces(AlreadyVisitedClasses::createEmpty());
+        $interfaceMethods = $this->getMethodsFromInterfaces($alreadyVisitedClasses);
 
         $methods = [];
 
@@ -729,8 +729,8 @@ class ReflectionClass implements Reflection
                     $this->getTraits(),
                 ),
                 ...array_map(
-                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, AlreadyVisitedClasses::createEmpty())),
-                    array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
+                    static fn (ReflectionClass $interface): array => array_values($interface->getConstantsConsideringAlreadyVisitedClasses(0, clone $alreadyVisitedClasses)),
+                    array_values($this->getImmediateInterfaces()),
                 ),
             );
 
@@ -930,10 +930,10 @@ class ReflectionClass implements Reflection
             $this->cachedProperties = array_merge(
                 array_merge(
                     [],
-                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, AlreadyVisitedClasses::createEmpty()) ?? [],
+                    $this->getParentClass()?->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED, $alreadyVisitedClasses) ?? [],
                     ...array_map(
-                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC, AlreadyVisitedClasses::createEmpty()),
-                        array_values($this->getCurrentClassImplementedInterfacesIndexedByName()),
+                        static fn (ReflectionClass $ancestor): array => $ancestor->getPropertiesConsideringAlreadyVisitedClasses(ReflectionPropertyAdapter::IS_PUBLIC, clone $alreadyVisitedClasses),
+                        array_values($this->getImmediateInterfaces()),
                     ),
                     ...array_map(
                         function (ReflectionClass $trait) use ($alreadyVisitedClasses) {

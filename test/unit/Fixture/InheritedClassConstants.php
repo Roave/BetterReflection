@@ -4,11 +4,11 @@ interface Foo {
     const A = 'a';
 }
 
-interface Boo {
+interface Boo extends Foo {
     public const B = 'b';
 }
 
-interface Coo {
+interface Coo extends Foo {
     public const B = 'wrong-b';
 }
 

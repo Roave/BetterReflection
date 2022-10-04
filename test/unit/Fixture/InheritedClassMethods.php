@@ -4,11 +4,14 @@ interface Foo {
     public function a();
 }
 
+interface Boo extends Foo
+{}
+
 trait Bar {
     public function b() {}
 }
 
-class Baz {
+class Baz implements Foo {
     public function c() {}
 
     protected function d() {}
@@ -16,7 +19,7 @@ class Baz {
     private function e() {}
 }
 
-abstract class Qux extends Baz implements Foo {
+abstract class Qux extends Baz implements Foo, Boo {
     use Bar;
     public function f() {}
 }
