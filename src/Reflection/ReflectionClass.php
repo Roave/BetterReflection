@@ -1636,7 +1636,8 @@ class ReflectionClass implements Reflection
         /** @var array<class-string, self> $interfaces */
         $interfaces = [$interfaceClassName => $this];
         foreach ($this->getImmediateInterfaces() as $interface) {
-            foreach ($interface->getInterfacesHierarchy(clone $alreadyVisitedClassesCopy) as $extendedInterfaceName => $extendedInterface) {
+            $alreadyVisitedClassesCopyForInterface = clone $alreadyVisitedClassesCopy;
+            foreach ($interface->getInterfacesHierarchy($alreadyVisitedClassesCopyForInterface) as $extendedInterfaceName => $extendedInterface) {
                 $interfaces[$extendedInterfaceName] = $extendedInterface;
             }
         }
