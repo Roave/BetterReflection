@@ -13,6 +13,7 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastBackedEnum;
@@ -29,6 +30,8 @@ class ReflectionClassStringCastTest extends TestCase
 
     private SourceStubber $sourceStubber;
 
+    private SourceLocator $sourceLocator;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +40,7 @@ class ReflectionClassStringCastTest extends TestCase
 
         $this->astLocator    = $betterReflection->astLocator();
         $this->sourceStubber = $betterReflection->sourceStubber();
+        $this->sourceLocator = $betterReflection->sourceLocator();
     }
 
     public function testToString(): void
@@ -50,12 +54,11 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
-    /** @requires PHP >= 8.1 */
     public function testPureEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([
             new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastPureEnum.php', $this->astLocator),
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+            $this->sourceLocator,
         ]));
         $classReflection = $reflector->reflectClass(StringCastPureEnum::class);
 
@@ -65,12 +68,11 @@ class ReflectionClassStringCastTest extends TestCase
         );
     }
 
-    /** @requires PHP >= 8.1 */
     public function testBackedEnumToString(): void
     {
         $reflector       = new DefaultReflector(new AggregateSourceLocator([
             new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastBackedEnum.php', $this->astLocator),
-            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+            $this->sourceLocator,
         ]));
         $classReflection = $reflector->reflectClass(StringCastBackedEnum::class);
 
