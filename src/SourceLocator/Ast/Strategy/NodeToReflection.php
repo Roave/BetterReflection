@@ -49,23 +49,19 @@ class NodeToReflection implements AstConversionStrategy
             );
         }
 
-        if (
-            $node instanceof Node\Stmt\Function_
-            || $node instanceof Node\Expr\Closure
-            || $node instanceof Node\Expr\ArrowFunction
-        ) {
-            return ReflectionFunction::createFromNode(
-                $reflector,
-                $node,
-                $locatedSource,
-                $namespaceName,
-            );
-        }
-
         if ($node instanceof Node\Stmt\Const_) {
             return ReflectionConstant::createFromNode($reflector, $node, $locatedSource, $namespaceName, $positionInNode);
         }
 
-        return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
+        if ($node instanceof Node\Expr\FuncCall) {
+            return ReflectionConstant::createFromNode($reflector, $node, $locatedSource);
+        }
+
+        return ReflectionFunction::createFromNode(
+            $reflector,
+            $node,
+            $locatedSource,
+            $namespaceName,
+        );
     }
 }

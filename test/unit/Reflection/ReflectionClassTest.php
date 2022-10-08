@@ -348,7 +348,7 @@ class ReflectionClassTest extends TestCase
         )))->reflectClass('Qux');
 
         $methods = $classInfo->getMethods();
-        self::assertCount(6, $methods);
+        self::assertCount(11, $methods);
         self::assertContainsOnlyInstancesOf(ReflectionMethod::class, $methods);
 
         self::assertSame('a', $classInfo->getMethod('a')->getName(), 'Failed asserting that method a from interface Foo was returned');
@@ -366,8 +366,23 @@ class ReflectionClassTest extends TestCase
         self::assertSame('e', $classInfo->getMethod('e')->getName(), 'Failed asserting that private method e from parent class Baz was returned');
         self::assertSame('Baz', $classInfo->getMethod('e')->getDeclaringClass()->getName());
 
-        self::assertSame('f', $classInfo->getMethod('f')->getName(), 'Failed asserting that method from SUT was returned');
+        self::assertSame('f', $classInfo->getMethod('f')->getName(), 'Failed asserting that method from Qux was returned');
         self::assertSame('Qux', $classInfo->getMethod('f')->getDeclaringClass()->getName());
+
+        self::assertSame('g', $classInfo->getMethod('g')->getName(), 'Failed asserting that method from Boo was returned');
+        self::assertSame('Boo', $classInfo->getMethod('g')->getDeclaringClass()->getName());
+
+        self::assertSame('h', $classInfo->getMethod('h')->getName(), 'Failed asserting that method h from trait Bar was returned');
+        self::assertSame('Bar', $classInfo->getMethod('h')->getDeclaringClass()->getName());
+
+        self::assertSame('i', $classInfo->getMethod('i')->getName(), 'Failed asserting that method h from trait Bar2 was returned');
+        self::assertSame('Bar2', $classInfo->getMethod('i')->getDeclaringClass()->getName());
+
+        self::assertSame('j', $classInfo->getMethod('j')->getName(), 'Failed asserting that method j from trait Bar2 was returned');
+        self::assertSame('Bar', $classInfo->getMethod('j')->getDeclaringClass()->getName());
+
+        self::assertSame('k', $classInfo->getMethod('k')->getName(), 'Failed asserting that method k from trait Bar2 was returned');
+        self::assertSame('Bar3', $classInfo->getMethod('k')->getDeclaringClass()->getName());
     }
 
     public function testGetMethodsWithBrokenClass(): void
@@ -639,7 +654,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getProperties();
-        self::assertCount(6, $properties);
+        self::assertCount(8, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
@@ -653,6 +668,8 @@ PHP;
             ['d', Baz::class, Baz::class],
             ['f', Qux::class, Qux::class],
             ['g', Qux::class, Qux::class],
+            ['h', Qux::class, Qux::class],
+            ['i', Baz::class, Baz::class],
         ];
     }
 
@@ -685,7 +702,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
-        self::assertCount(2, $properties);
+        self::assertCount(3, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         $fProperty = $classInfo->getProperty('f');
@@ -697,6 +714,11 @@ PHP;
 
         self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
         self::assertTrue($gProperty->isPromoted());
+
+        $hProperty = $classInfo->getProperty('h');
+
+        self::assertSame(Qux::class, $hProperty->getDeclaringClass()->getName());
+        self::assertFalse($hProperty->isPromoted());
     }
 
     public function testGetProperty(): void

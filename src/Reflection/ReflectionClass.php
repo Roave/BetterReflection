@@ -346,16 +346,17 @@ class ReflectionClass implements Reflection
         };
 
         $methods = [];
+
+        if (! array_key_exists($methodHash, $this->traitsData['precedences'])) {
+            $methods[] = $createMethod($method->getAliasName());
+        }
+
         foreach ($this->traitsData['aliases'] as $aliasMethodName => $traitAliasDefinition) {
             if ($methodHash !== $traitAliasDefinition) {
                 continue;
             }
 
             $methods[] = $createMethod($aliasMethodName);
-        }
-
-        if (! array_key_exists($methodHash, $this->traitsData['precedences'])) {
-            $methods[] = $createMethod($method->getAliasName());
         }
 
         return $methods;
@@ -403,7 +404,8 @@ class ReflectionClass implements Reflection
         }
 
         foreach ($this->getTraits() as $trait) {
-            foreach ($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClasses) as $method) {
+            $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
+            foreach ($trait->getMethodsIndexedByLowercasedName($alreadyVisitedClassesCopy) as $method) {
                 foreach ($this->createMethodsFromTrait($method) as $traitMethod) {
                     $lowercasedMethodName = strtolower($traitMethod->getName());
 
@@ -1631,12 +1633,10 @@ class ReflectionClass implements Reflection
         $interfaceClassName = $this->getName();
         $alreadyVisitedClasses->push($interfaceClassName);
 
-        $alreadyVisitedClassesCopy = clone $alreadyVisitedClasses;
-
         /** @var array<class-string, self> $interfaces */
         $interfaces = [$interfaceClassName => $this];
         foreach ($this->getImmediateInterfaces() as $interface) {
-            $alreadyVisitedClassesCopyForInterface = clone $alreadyVisitedClassesCopy;
+            $alreadyVisitedClassesCopyForInterface = clone $alreadyVisitedClasses;
             foreach ($interface->getInterfacesHierarchy($alreadyVisitedClassesCopyForInterface) as $extendedInterfaceName => $extendedInterface) {
                 $interfaces[$extendedInterfaceName] = $extendedInterface;
             }
