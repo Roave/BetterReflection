@@ -1,5 +1,13 @@
 <?php
 
+interface One
+{
+}
+
+interface Two extends One
+{
+}
+
 trait Bar
 {
     public $a;
@@ -11,7 +19,7 @@ trait Bar
     public $i;
 }
 
-class Baz
+class Baz implements One
 {
     public $c;
 
@@ -22,7 +30,7 @@ class Baz
     public $i;
 }
 
-abstract class Qux extends Baz
+abstract class Qux extends Baz implements Two
 {
     use Bar;
 
