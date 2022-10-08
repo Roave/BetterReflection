@@ -5,6 +5,10 @@ trait Bar
     public $a;
 
     private $b;
+
+    public $h;
+
+    public $i;
 }
 
 class Baz
@@ -14,6 +18,8 @@ class Baz
     protected $d;
 
     private $e;
+
+    public $i;
 }
 
 abstract class Qux extends Baz
@@ -21,6 +27,8 @@ abstract class Qux extends Baz
     use Bar;
 
     public $f;
+
+    public $h;
 
     public function unrelatedMethodBeforeConstructor()
     {

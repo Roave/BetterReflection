@@ -654,7 +654,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getProperties();
-        self::assertCount(6, $properties);
+        self::assertCount(8, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
@@ -668,6 +668,8 @@ PHP;
             ['d', Baz::class, Baz::class],
             ['f', Qux::class, Qux::class],
             ['g', Qux::class, Qux::class],
+            ['h', Qux::class, Qux::class],
+            ['i', Baz::class, Baz::class],
         ];
     }
 
@@ -700,7 +702,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getImmediateProperties();
-        self::assertCount(2, $properties);
+        self::assertCount(3, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
 
         $fProperty = $classInfo->getProperty('f');
@@ -712,6 +714,11 @@ PHP;
 
         self::assertSame(Qux::class, $gProperty->getDeclaringClass()->getName());
         self::assertTrue($gProperty->isPromoted());
+
+        $hProperty = $classInfo->getProperty('h');
+
+        self::assertSame(Qux::class, $hProperty->getDeclaringClass()->getName());
+        self::assertFalse($hProperty->isPromoted());
     }
 
     public function testGetProperty(): void
