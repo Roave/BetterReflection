@@ -7,7 +7,7 @@
         "ext-json": "*",
         "jetbrains/phpstorm-stubs": "2022.2",
         "nikic/php-parser": "^4.15.1",
-        "roave/signature": "^1.6"
+        "roave/signature": "^1.7"
     },
     "authors": [
         {
