@@ -3832,16 +3832,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v6.0.13",
+            "version": "v6.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "8f14753b865651c2aad107ef97475740a9b0730f"
+                "reference": "1f89cab8d52c84424f798495b3f10342a7b1a070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/8f14753b865651c2aad107ef97475740a9b0730f",
-                "reference": "8f14753b865651c2aad107ef97475740a9b0730f",
+                "url": "https://api.github.com/repos/symfony/console/zipball/1f89cab8d52c84424f798495b3f10342a7b1a070",
+                "reference": "1f89cab8d52c84424f798495b3f10342a7b1a070",
                 "shasum": ""
             },
             "require": {
@@ -3907,7 +3907,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v6.0.13"
+                "source": "https://github.com/symfony/console/tree/v6.0.14"
             },
             "funding": [
                 {
@@ -3923,7 +3923,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-03T14:23:25+00:00"
+            "time": "2022-10-07T08:02:12+00:00"
         },
         {
             "name": "symfony/filesystem",
