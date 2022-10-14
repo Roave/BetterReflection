@@ -808,6 +808,14 @@ class ReflectionClassTest extends TestCase
         self::assertNull($reflectionClassAdapter->getConstructor());
     }
 
+    public function testHasConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->hasConstant(''));
+    }
+
     public function testGetConstant(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
@@ -824,6 +832,14 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->getConstant(''));
     }
 
     public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
@@ -863,6 +879,14 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertFalse($reflectionClassAdapter->getReflectionConstant('FOO'));
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->getReflectionConstant(''));
     }
 
     public function testPropertyName(): void

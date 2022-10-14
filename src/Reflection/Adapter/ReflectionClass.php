@@ -22,7 +22,6 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
-use function assert;
 use function constant;
 use function func_num_args;
 use function sprintf;
@@ -187,7 +186,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasConstant(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
             return true;
@@ -211,7 +212,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getConstant(string $name): mixed
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);
@@ -239,7 +242,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);

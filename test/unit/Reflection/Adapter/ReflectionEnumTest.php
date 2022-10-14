@@ -719,6 +719,14 @@ class ReflectionEnumTest extends TestCase
         self::assertTrue($reflectionClassAdapter->hasConstant('ENUM_CASE'));
     }
 
+    public function testHasConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasConstant(''));
+    }
+
     public function testGetConstant(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
@@ -735,6 +743,14 @@ class ReflectionEnumTest extends TestCase
         $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum   = $this->createMock(BetterReflectionEnum::class);
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getConstant(''));
     }
 
     public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
@@ -781,6 +797,14 @@ class ReflectionEnumTest extends TestCase
         $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         self::assertInstanceOf(AutoloadableEnum::class, $reflectionClassAdapter->getConstant('ENUM_CASE'));
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum   = $this->createMock(BetterReflectionEnum::class);
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getReflectionConstant(''));
     }
 
     public function testGetReflectionConstantWithEnumCase(): void

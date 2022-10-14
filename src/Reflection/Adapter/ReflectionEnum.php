@@ -185,7 +185,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasConstant(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasCase($name) || $this->betterReflectionEnum->hasConstant($name);
     }
@@ -205,7 +207,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getConstant(string $name): mixed
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         $enumCase = $this->betterReflectionEnum->getCase($name);
         if ($enumCase !== null) {
@@ -231,7 +235,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         // @infection-ignore-all Coalesce: There's no difference
         $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getConstant($name);

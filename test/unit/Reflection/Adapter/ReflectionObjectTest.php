@@ -653,6 +653,14 @@ class ReflectionObjectTest extends TestCase
         self::assertEquals([$protectedBetterReflectionClassConstant->getName() => $protectedBetterReflectionClassConstant->getValue()], $protectedConstants);
     }
 
+    public function testHasConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->hasConstant(''));
+    }
+
     public function testGetConstant(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
@@ -669,6 +677,14 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertSame(123, $reflectionObjectAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getConstant(''));
     }
 
     public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
@@ -697,6 +713,14 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
         self::assertInstanceOf(ReflectionClassConstantAdapter::class, $reflectionObjectAdapter->getReflectionConstant('FOO'));
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->getReflectionConstant(''));
     }
 
     public function testGetReflectionConstantReturnsFalseWhenConstantDoesNotExist(): void

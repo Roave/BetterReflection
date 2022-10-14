@@ -21,7 +21,6 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
-use function assert;
 use function func_num_args;
 use function sprintf;
 use function strtolower;
@@ -185,7 +184,9 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasConstant(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionObject->hasConstant($name);
     }
@@ -205,7 +206,9 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getConstant(string $name): mixed
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
         if ($betterReflectionConstant === null) {
@@ -217,7 +220,9 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         $betterReflectionConstant = $this->betterReflectionObject->getConstant($name);
 
