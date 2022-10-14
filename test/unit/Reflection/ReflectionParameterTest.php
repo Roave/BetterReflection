@@ -9,6 +9,7 @@ use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -30,7 +31,6 @@ use Roave\BetterReflectionTest\Fixture\NullableParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PhpParameterTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\FixtureOther\OtherClass;
-use RuntimeException;
 use SplDoublyLinkedList;
 use stdClass;
 use Throwable;
@@ -596,7 +596,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -614,7 +614,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -632,7 +632,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -650,7 +650,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 
@@ -665,7 +665,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -680,7 +680,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -695,7 +695,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -710,7 +710,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 
