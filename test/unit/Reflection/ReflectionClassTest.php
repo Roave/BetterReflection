@@ -654,7 +654,7 @@ PHP;
         )))->reflectClass(Qux::class);
 
         $properties = $classInfo->getProperties();
-        self::assertCount(8, $properties);
+        self::assertCount(9, $properties);
         self::assertContainsOnlyInstancesOf(ReflectionProperty::class, $properties);
     }
 
@@ -670,6 +670,7 @@ PHP;
             ['g', Qux::class, Qux::class],
             ['h', Qux::class, Qux::class],
             ['i', Baz::class, Baz::class],
+            ['j', Bar::class, Qux::class],
         ];
     }
 

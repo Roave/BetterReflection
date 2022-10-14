@@ -17,6 +17,8 @@ trait Bar
     public $h;
 
     public $i;
+
+    public $j;
 }
 
 class Baz implements One
