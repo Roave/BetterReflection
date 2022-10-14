@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -41,7 +42,6 @@ use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 use Roave\BetterReflectionTest\Fixture\TraitStaticPropertyGetSet;
-use RuntimeException;
 use stdClass;
 use TraitWithProperty;
 
@@ -388,7 +388,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $propertyReflection->getStartLine();
     }
 
@@ -402,7 +402,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $propertyReflection->getEndLine();
     }
 
@@ -416,7 +416,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $propertyReflection->getStartColumn();
     }
 
@@ -430,7 +430,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $propertyReflection->getEndColumn();
     }
 

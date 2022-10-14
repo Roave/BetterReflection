@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -23,7 +24,6 @@ use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
-use RuntimeException;
 use stdClass;
 
 use function sprintf;
@@ -296,7 +296,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $methodReflection->getStartLine();
     }
 
@@ -310,7 +310,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $methodReflection->getEndLine();
     }
 
@@ -324,7 +324,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $methodReflection->getStartColumn();
     }
 
@@ -338,7 +338,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(RuntimeException::class);
+        self::expectException(CodeLocationMissing::class);
         $methodReflection->getEndColumn();
     }
 

@@ -16,11 +16,11 @@ use Roave\BetterReflection\NodeCompiler\CompileNodeToValue;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
-use RuntimeException;
 
 use function array_map;
 use function assert;
@@ -483,12 +483,12 @@ class ReflectionParameter
     /**
      * @return positive-int
      *
-     * @throws RuntimeException
+     * @throws CodeLocationMissing
      */
     public function getStartLine(): int
     {
         if ($this->startLine === null) {
-            throw new RuntimeException('Start line missing');
+            throw CodeLocationMissing::create();
         }
 
         return $this->startLine;
@@ -497,12 +497,12 @@ class ReflectionParameter
     /**
      * @return positive-int
      *
-     * @throws RuntimeException
+     * @throws CodeLocationMissing
      */
     public function getEndLine(): int
     {
         if ($this->endLine === null) {
-            throw new RuntimeException('End line missing');
+            throw CodeLocationMissing::create();
         }
 
         return $this->endLine;
@@ -511,12 +511,12 @@ class ReflectionParameter
     /**
      * @return positive-int
      *
-     * @throws RuntimeException
+     * @throws CodeLocationMissing
      */
     public function getStartColumn(): int
     {
         if ($this->startColumn === null) {
-            throw new RuntimeException('Start column missing');
+            throw CodeLocationMissing::create();
         }
 
         return $this->startColumn;
@@ -525,12 +525,12 @@ class ReflectionParameter
     /**
      * @return positive-int
      *
-     * @throws RuntimeException
+     * @throws CodeLocationMissing
      */
     public function getEndColumn(): int
     {
         if ($this->endColumn === null) {
-            throw new RuntimeException('End column missing');
+            throw CodeLocationMissing::create();
         }
 
         return $this->endColumn;
