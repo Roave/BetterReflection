@@ -150,16 +150,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasProperty(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionEnum->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));

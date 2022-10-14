@@ -246,6 +246,28 @@ class ReflectionEnumTest extends TestCase
         self::assertNull($reflectionEnumAdapter->getConstructor());
     }
 
+    public function testHasPropertyReturnFalseWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasProperty(''));
+    }
+
+    public function testGetPropertyThrowsExceptionWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$ does not exist');
+        $reflectionEnumAdapter->getProperty('');
+    }
+
     public function testGetPropertyThrowsExceptionWhenPropertyDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);

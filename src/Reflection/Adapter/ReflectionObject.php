@@ -150,16 +150,16 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function hasProperty(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionObject->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
-        assert($name !== '');
-
-        $property = $this->betterReflectionObject->getProperty($name);
+        $property = $name !== '' ? $this->betterReflectionObject->getProperty($name) : null;
 
         if ($property === null) {
             throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionObject->getName(), $name));
@@ -370,9 +370,7 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionObject->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             if (func_num_args() === 2) {
@@ -393,9 +391,7 @@ final class ReflectionObject extends CoreReflectionObject
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionObject->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionObject->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionObject->getName(), $name));
