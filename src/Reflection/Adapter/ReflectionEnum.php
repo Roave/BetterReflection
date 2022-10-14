@@ -23,7 +23,6 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
-use function assert;
 use function constant;
 use function sprintf;
 use function strtolower;
@@ -115,16 +114,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasMethod(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        assert($name !== '');
-
-        $method = $this->betterReflectionEnum->getMethod($name);
+        $method = $name !== '' ? $this->betterReflectionEnum->getMethod($name) : null;
 
         if ($method === null) {
             throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionEnum->getName(), $name));
@@ -150,16 +149,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasProperty(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionEnum->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionEnum->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionEnum->getName(), $name));
@@ -185,7 +184,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasConstant(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasCase($name) || $this->betterReflectionEnum->hasConstant($name);
     }
@@ -205,7 +206,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getConstant(string $name): mixed
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         $enumCase = $this->betterReflectionEnum->getCase($name);
         if ($enumCase !== null) {
@@ -231,7 +234,9 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         // @infection-ignore-all Coalesce: There's no difference
         $betterReflectionConstantOrEnumCase = $this->betterReflectionEnum->getCase($name) ?? $this->betterReflectionEnum->getConstant($name);
@@ -493,16 +498,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasCase(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasCase($name);
     }
 
     public function getCase(string $name): ReflectionEnumUnitCase|ReflectionEnumBackedCase
     {
-        assert($name !== '');
-
-        $case = $this->betterReflectionEnum->getCase($name);
+        $case = $name !== '' ? $this->betterReflectionEnum->getCase($name) : null;
 
         if ($case === null) {
             throw new CoreReflectionException(sprintf('Case %s::%s does not exist', $this->betterReflectionEnum->getName(), $name));

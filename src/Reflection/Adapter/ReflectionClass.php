@@ -22,7 +22,6 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
-use function assert;
 use function constant;
 use function func_num_args;
 use function sprintf;
@@ -117,16 +116,16 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasMethod(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionClass->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        assert($name !== '');
-
-        $method = $this->betterReflectionClass->getMethod($name);
+        $method = $name !== '' ? $this->betterReflectionClass->getMethod($name) : null;
 
         if ($method === null) {
             throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionClass->getName(), $name));
@@ -152,16 +151,16 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasProperty(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionClass->hasProperty($name);
     }
 
     public function getProperty(string $name): ReflectionProperty
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionClass->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Property %s::$%s does not exist', $this->betterReflectionClass->getName(), $name));
@@ -187,7 +186,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasConstant(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum && $this->betterReflectionClass->hasCase($name)) {
             return true;
@@ -211,7 +212,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getConstant(string $name): mixed
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);
@@ -239,7 +242,9 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         if ($this->betterReflectionClass instanceof BetterReflectionEnum) {
             $enumCase = $this->betterReflectionClass->getCase($name);
@@ -420,9 +425,7 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function getStaticPropertyValue(string $name, mixed $default = null): mixed
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionClass->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             if (func_num_args() === 2) {
@@ -443,9 +446,7 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function setStaticPropertyValue(string $name, mixed $value): void
     {
-        assert($name !== '');
-
-        $betterReflectionProperty = $this->betterReflectionClass->getProperty($name);
+        $betterReflectionProperty = $name !== '' ? $this->betterReflectionClass->getProperty($name) : null;
 
         if ($betterReflectionProperty === null) {
             throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionClass->getName(), $name));

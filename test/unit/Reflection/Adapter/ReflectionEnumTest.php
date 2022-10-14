@@ -246,6 +246,28 @@ class ReflectionEnumTest extends TestCase
         self::assertNull($reflectionEnumAdapter->getConstructor());
     }
 
+    public function testHasPropertyReturnFalseWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasProperty(''));
+    }
+
+    public function testGetPropertyThrowsExceptionWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('Boo');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$ does not exist');
+        $reflectionEnumAdapter->getProperty('');
+    }
+
     public function testGetPropertyThrowsExceptionWhenPropertyDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
@@ -572,6 +594,28 @@ class ReflectionEnumTest extends TestCase
         $reflectionEnumAdapter->getAttributes(null, 123);
     }
 
+    public function testHasCaseReturnsFalseWhenCaseNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasCase(''));
+    }
+
+    public function testGetCaseThrowsExceptionWhenCaseNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('SomeEnum');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Case SomeEnum:: does not exist');
+        $reflectionEnumAdapter->getCase('');
+    }
+
     public function testGetCaseWhenCaseDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
@@ -697,6 +741,14 @@ class ReflectionEnumTest extends TestCase
         self::assertTrue($reflectionClassAdapter->hasConstant('ENUM_CASE'));
     }
 
+    public function testHasConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasConstant(''));
+    }
+
     public function testGetConstant(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
@@ -713,6 +765,14 @@ class ReflectionEnumTest extends TestCase
         $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum   = $this->createMock(BetterReflectionEnum::class);
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getConstant(''));
     }
 
     public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
@@ -759,6 +819,14 @@ class ReflectionEnumTest extends TestCase
         $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
         self::assertInstanceOf(AutoloadableEnum::class, $reflectionClassAdapter->getConstant('ENUM_CASE'));
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionEnum   = $this->createMock(BetterReflectionEnum::class);
+        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionClassAdapter->getReflectionConstant(''));
     }
 
     public function testGetReflectionConstantWithEnumCase(): void
@@ -857,6 +925,28 @@ class ReflectionEnumTest extends TestCase
         self::assertCount(2, $traits);
         self::assertArrayHasKey($traitOneClassName, $traits);
         self::assertArrayHasKey($traitTwoClassName, $traits);
+    }
+
+    public function testHasMethodReturnsFalseWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasMethod(''));
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::() does not exist');
+        $reflectionEnumAdapter->getMethod('');
     }
 
     public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void

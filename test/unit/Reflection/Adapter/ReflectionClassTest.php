@@ -212,6 +212,28 @@ class ReflectionClassTest extends TestCase
         self::assertFalse($reflectionClassAdapter->getParentClass());
     }
 
+    public function testHasMethodReturnsFalseWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->hasMethod(''));
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::() does not exist');
+        $reflectionClassAdapter->getMethod('');
+    }
+
     public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
@@ -496,6 +518,28 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflectionClassAdapter->implementsInterface('FoO'));
     }
 
+    public function testHasPropertyReturnFalseWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->hasProperty(''));
+    }
+
+    public function testGetPropertyThrowsExceptionWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('Boo');
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property Boo::$ does not exist');
+        $reflectionClassAdapter->getProperty('');
+    }
+
     public function testGetPropertyThrowsExceptionWhenPropertyDoesNotExist(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
@@ -574,6 +618,20 @@ class ReflectionClassTest extends TestCase
         self::assertSame(123, $reflectionClassAdapter->getStaticPropertyValue('foo'));
     }
 
+    public function testGetStaticPropertyValueThrowsExceptionWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Property SomeClass::$ does not exist');
+        $reflectionClassAdapter->getStaticPropertyValue('');
+    }
+
     public function testSetStaticPropertyValue(): void
     {
         $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
@@ -597,6 +655,20 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         $reflectionClassAdapter->setStaticPropertyValue('foo', 123);
+    }
+
+    public function testSetStaticPropertyValueThrowsExceptionWhenPropertyNameIsEmpty(): void
+    {
+        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Class SomeClass does not have a property named ');
+        $reflectionClassAdapter->setStaticPropertyValue('', '');
     }
 
     public function testGetStaticPropertyValueThrowsExceptionWhenPropertyDoesNotExist(): void
@@ -736,6 +808,14 @@ class ReflectionClassTest extends TestCase
         self::assertNull($reflectionClassAdapter->getConstructor());
     }
 
+    public function testHasConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->hasConstant(''));
+    }
+
     public function testGetConstant(): void
     {
         $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
@@ -752,6 +832,14 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertSame(123, $reflectionClassAdapter->getConstant('FOO'));
+    }
+
+    public function testGetConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->getConstant(''));
     }
 
     public function testGetConstantReturnsFalseWhenConstantDoesNotExist(): void
@@ -791,6 +879,14 @@ class ReflectionClassTest extends TestCase
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
         self::assertFalse($reflectionClassAdapter->getReflectionConstant('FOO'));
+    }
+
+    public function testGetReflectionConstantReturnsFalseWhenConstantNameIsEmpty(): void
+    {
+        $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
+
+        self::assertFalse($reflectionClassAdapter->getReflectionConstant(''));
     }
 
     public function testPropertyName(): void
