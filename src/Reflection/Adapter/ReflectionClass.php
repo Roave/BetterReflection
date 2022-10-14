@@ -117,16 +117,16 @@ final class ReflectionClass extends CoreReflectionClass
 
     public function hasMethod(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionClass->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        assert($name !== '');
-
-        $method = $this->betterReflectionClass->getMethod($name);
+        $method = $name !== '' ? $this->betterReflectionClass->getMethod($name) : null;
 
         if ($method === null) {
             throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionClass->getName(), $name));

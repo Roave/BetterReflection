@@ -115,16 +115,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasMethod(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasMethod($name);
     }
 
     public function getMethod(string $name): ReflectionMethod
     {
-        assert($name !== '');
-
-        $method = $this->betterReflectionEnum->getMethod($name);
+        $method = $name !== '' ? $this->betterReflectionEnum->getMethod($name) : null;
 
         if ($method === null) {
             throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $this->betterReflectionEnum->getName(), $name));

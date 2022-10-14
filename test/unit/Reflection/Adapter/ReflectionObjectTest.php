@@ -975,6 +975,28 @@ class ReflectionObjectTest extends TestCase
         $reflectionObjectAdapter->foo;
     }
 
+    public function testHasMethodReturnsFalseWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertFalse($reflectionObjectAdapter->hasMethod(''));
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::() does not exist');
+        $reflectionObjectAdapter->getMethod('');
+    }
+
     public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);

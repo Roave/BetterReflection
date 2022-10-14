@@ -859,6 +859,28 @@ class ReflectionEnumTest extends TestCase
         self::assertArrayHasKey($traitTwoClassName, $traits);
     }
 
+    public function testHasMethodReturnsFalseWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasMethod(''));
+    }
+
+    public function testGetMethodThrowsExceptionWhenMethodNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('SomeClass');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Method SomeClass::() does not exist');
+        $reflectionEnumAdapter->getMethod('');
+    }
+
     public function testGetMethodThrowsExceptionWhenMethodDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
