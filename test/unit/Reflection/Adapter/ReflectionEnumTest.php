@@ -594,6 +594,28 @@ class ReflectionEnumTest extends TestCase
         $reflectionEnumAdapter->getAttributes(null, 123);
     }
 
+    public function testHasCaseReturnsFalseWhenCaseNameIsEmpty(): void
+    {
+        $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertFalse($reflectionEnumAdapter->hasCase(''));
+    }
+
+    public function testGetCaseThrowsExceptionWhenCaseNameIsEmpty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getName')
+            ->willReturn('SomeEnum');
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Case SomeEnum:: does not exist');
+        $reflectionEnumAdapter->getCase('');
+    }
+
     public function testGetCaseWhenCaseDoesNotExist(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);

@@ -23,7 +23,6 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function array_values;
-use function assert;
 use function constant;
 use function sprintf;
 use function strtolower;
@@ -499,16 +498,16 @@ final class ReflectionEnum extends CoreReflectionEnum
 
     public function hasCase(string $name): bool
     {
-        assert($name !== '');
+        if ($name === '') {
+            return false;
+        }
 
         return $this->betterReflectionEnum->hasCase($name);
     }
 
     public function getCase(string $name): ReflectionEnumUnitCase|ReflectionEnumBackedCase
     {
-        assert($name !== '');
-
-        $case = $this->betterReflectionEnum->getCase($name);
+        $case = $name !== '' ? $this->betterReflectionEnum->getCase($name) : null;
 
         if ($case === null) {
             throw new CoreReflectionException(sprintf('Case %s::%s does not exist', $this->betterReflectionEnum->getName(), $name));
