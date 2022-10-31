@@ -1070,6 +1070,23 @@ PHP;
         self::assertSame(Fixture\FixtureParent::class, $parent->getName());
     }
 
+    public function testAnonymousClassWithParentDefinedLater(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/AnonymousClassInstanceWithParentDefinedLater.php',
+            $this->astLocator,
+        ));
+
+        $allClassesInfo = $reflector->reflectAllClasses();
+        self::assertCount(2, $allClassesInfo);
+
+        $classInfo = $allClassesInfo[0];
+
+        self::assertTrue($classInfo->isAnonymous());
+        self::assertFalse($classInfo->inNamespace());
+        self::assertStringStartsWith(Fixture\FixtureParent::class, $classInfo->getName());
+    }
+
     public function testAnonymousClassWithInterface(): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(

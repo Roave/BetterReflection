@@ -270,14 +270,12 @@ class ReflectionClass implements Reflection
      */
     private function getAnonymousClassNamePrefix(): string
     {
-        $parentClassNames = $this->getParentClassNames();
-        if ($parentClassNames !== []) {
-            return $parentClassNames[0];
+        if ($this->parentClassName !== null) {
+            return $this->parentClassName;
         }
 
-        $interfaceNames = $this->getInterfaceNames();
-        if ($interfaceNames !== []) {
-            return $interfaceNames[0];
+        if ($this->implementsClassNames !== []) {
+            return $this->implementsClassNames[0];
         }
 
         return 'class';
