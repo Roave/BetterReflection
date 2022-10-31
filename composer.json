@@ -36,7 +36,7 @@
         "doctrine/coding-standard": "^10.0.0",
         "phpstan/phpstan": "^1.8.10",
         "phpstan/phpstan-phpunit": "^1.2.2",
-        "phpunit/phpunit": "^9.5.25",
+        "phpunit/phpunit": "^9.5.26",
         "vimeo/psalm": "^4.29",
         "roave/infection-static-analysis-plugin": "^1.25.0"
     },
