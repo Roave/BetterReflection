@@ -44,7 +44,7 @@ final class ReflectionProperty extends CoreReflectionProperty
     {
         try {
             return $this->betterReflectionProperty->getValue($object);
-        } catch (NoObjectProvided | TypeError) {
+        } catch (NoObjectProvided) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), previous: $e);

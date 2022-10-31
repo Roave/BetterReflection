@@ -19,7 +19,6 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
-use TypeError;
 use ValueError;
 
 use function array_map;
@@ -237,7 +236,7 @@ final class ReflectionMethod extends CoreReflectionMethod
     {
         try {
             return $this->betterReflectionMethod->invoke($object, ...$args);
-        } catch (NoObjectProvided | TypeError) {
+        } catch (NoObjectProvided) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), previous: $e);
@@ -249,7 +248,7 @@ final class ReflectionMethod extends CoreReflectionMethod
     {
         try {
             return $this->betterReflectionMethod->invokeArgs($object, $args);
-        } catch (NoObjectProvided | TypeError) {
+        } catch (NoObjectProvided) {
             return null;
         } catch (Throwable $e) {
             throw new CoreReflectionException($e->getMessage(), previous: $e);
