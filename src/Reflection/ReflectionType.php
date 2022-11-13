@@ -51,7 +51,6 @@ abstract class ReflectionType
 
         foreach ($type->types as $innerUnionType) {
             if (
-                /** @phpstan-ignore-next-line https://github.com/nikic/PHP-Parser/pull/889 */
                 ($innerUnionType instanceof Identifier || $innerUnionType instanceof Name)
                 && $innerUnionType->toLowerString() === 'null'
             ) {
