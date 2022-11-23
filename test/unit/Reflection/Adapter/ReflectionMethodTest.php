@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClass
 use Roave\BetterReflection\Reflection\Adapter\ReflectionMethod as ReflectionMethodAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionParameter as ReflectionParameterAdapter;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -585,5 +586,29 @@ class ReflectionMethodTest extends TestCase
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
         self::assertFalse($reflectionMethodAdapter->hasPrototype());
+    }
+
+    public function testGetStartLineReturnsFalseWhenLocationMissing(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getStartLine')
+            ->willThrowException(new CodeLocationMissing());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertFalse($reflectionMethodAdapter->getStartLine());
+    }
+
+    public function testGetEndLineReturnsFalseWhenLocationMissing(): void
+    {
+        $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
+        $betterReflectionMethod
+            ->method('getEndLine')
+            ->willThrowException(new CodeLocationMissing());
+
+        $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
+
+        self::assertFalse($reflectionMethodAdapter->getEndLine());
     }
 }
