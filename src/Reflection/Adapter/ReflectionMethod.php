@@ -12,6 +12,7 @@ use ReflectionExtension as CoreReflectionExtension;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionType as CoreReflectionType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
+use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
@@ -84,12 +85,20 @@ final class ReflectionMethod extends CoreReflectionMethod
 
     public function getStartLine(): int|false
     {
-        return $this->betterReflectionMethod->getStartLine();
+        try {
+            return $this->betterReflectionMethod->getStartLine();
+        } catch (CodeLocationMissing) {
+            return false;
+        }
     }
 
     public function getEndLine(): int|false
     {
-        return $this->betterReflectionMethod->getEndLine();
+        try {
+            return $this->betterReflectionMethod->getEndLine();
+        } catch (CodeLocationMissing) {
+            return false;
+        }
     }
 
     /** @psalm-suppress ImplementedReturnTypeMismatch */
