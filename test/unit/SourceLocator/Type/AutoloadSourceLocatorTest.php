@@ -61,8 +61,7 @@ class AutoloadSourceLocatorTest extends TestCase
         $this->astLocator = $configuration->astLocator();
     }
 
-    /** @return Reflector&MockObject */
-    private function getMockReflector()
+    private function getMockReflector(): Reflector&MockObject
     {
         return $this->createMock(Reflector::class);
     }
