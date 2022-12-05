@@ -26,8 +26,7 @@ use function sort;
 /** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator */
 class PsrAutoloaderLocatorTest extends TestCase
 {
-    /** @var PsrAutoloaderMapping&MockObject */
-    private $psrMapping;
+    private PsrAutoloaderMapping&MockObject $psrMapping;
 
     private Reflector $reflector;
 

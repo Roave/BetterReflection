@@ -28,7 +28,6 @@ use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use ReflectionEnum as CoreReflectionEnum;
 use ReflectionEnumBackedCase as CoreReflectionEnumBackedCase;
-use ReflectionEnumUnitCase as CoreReflectionEnumUnitCase;
 use ReflectionFunction as CoreReflectionFunction;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionIntersectionType as CoreReflectionIntersectionType;
@@ -139,7 +138,6 @@ final class ReflectionSourceStubber implements SourceStubber
 
         $returnType = $functionReflection->getReturnType();
         if ($returnType === null && method_exists($functionReflection, 'getTentativeReturnType')) {
-            /** @psalm-var CoreReflectionType|null $returnType */
             $returnType = $functionReflection->getTentativeReturnType();
         }
 
@@ -393,7 +391,6 @@ final class ReflectionSourceStubber implements SourceStubber
     private function addEnumCases(Enum_ $enumNode, CoreReflectionEnum $enumReflection): void
     {
         foreach ($enumReflection->getCases() as $enumCaseReflection) {
-            assert($enumCaseReflection instanceof CoreReflectionEnumUnitCase);
             $enumCaseNode = $this->builderFactory->enumCase($enumCaseReflection->getName());
 
             if ($enumCaseReflection instanceof CoreReflectionEnumBackedCase) {
@@ -457,7 +454,6 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $returnType = $methodReflection->getReturnType();
             if ($returnType === null && method_exists($methodReflection, 'getTentativeReturnType')) {
-                /** @psalm-var CoreReflectionType|null $returnType */
                 $returnType = $methodReflection->getTentativeReturnType();
             }
 

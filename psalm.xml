@@ -7,7 +7,6 @@
     errorLevel="1"
     usePhpDocPropertiesWithoutMagicCall="true"
     findUnusedPsalmSuppress="true"
-    autoloader="psalm.bootstrap.php"
 >
     <projectFiles>
         <directory name="src" />

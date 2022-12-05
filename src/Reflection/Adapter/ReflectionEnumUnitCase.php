@@ -14,6 +14,7 @@ use ValueError;
 use function array_map;
 use function sprintf;
 
+/** @psalm-suppress MissingImmutableAnnotation */
 final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
 {
     public function __construct(private BetterReflectionEnumCase $betterReflectionEnumCase)
