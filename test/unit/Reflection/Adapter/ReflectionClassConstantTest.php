@@ -104,7 +104,6 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testGetValueForEnumCase(): void
     {
         require_once __DIR__ . '/../../Fixture/Enums.php';

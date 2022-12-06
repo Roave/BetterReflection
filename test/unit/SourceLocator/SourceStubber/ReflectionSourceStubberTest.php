@@ -118,7 +118,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testPureEnumStub(): void
     {
         require_once __DIR__ . '/../../Fixture/EnumPureForSourceStubber.php';
@@ -130,7 +129,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testBackedEnumStub(): void
     {
         require_once __DIR__ . '/../../Fixture/EnumBackedForSourceStubber.php';
@@ -160,7 +158,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testClassStubWithPHP81Syntax(): void
     {
         require_once __DIR__ . '/../../Fixture/PHP81ClassForSourceStubber.php';
@@ -196,7 +193,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpectedOnPhp80.php', $stubData->getStub());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP81(): void
     {
         require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';

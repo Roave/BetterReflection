@@ -1093,10 +1093,7 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflectionClassAdapter->hasConstant('ENUM_CASE'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @requires PHP >= 8.1
-     */
+    /** @runInSeparateProcess */
     public function testGetConstantWithEnumCase(): void
     {
         $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
