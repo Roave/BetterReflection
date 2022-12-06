@@ -543,7 +543,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($reflectionType->allowsNull());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testHasTentativeReturnType(): void
     {
         $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);
@@ -563,7 +562,6 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($functionInfo->hasReturnType());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testGetTentativeReturnType(): void
     {
         $classInfo  = (new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, new ReflectionSourceStubber())))->reflectClass(CoreReflectionClass::class);

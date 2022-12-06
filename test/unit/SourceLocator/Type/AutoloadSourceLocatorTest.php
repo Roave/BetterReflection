@@ -168,10 +168,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @requires PHP >= 8.1
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadableEnum(): void
     {
         self::assertFalse(enum_exists(AutoloadableEnum::class, false));
@@ -186,10 +183,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @requires PHP >= 8.1
-     */
+    /** @runInSeparateProcess */
     public function testCanLocateAutoloadedEnum(): void
     {
         self::assertTrue(enum_exists(AutoloadableEnum::class));

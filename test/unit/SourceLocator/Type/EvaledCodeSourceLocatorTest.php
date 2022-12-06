@@ -100,7 +100,6 @@ class EvaledCodeSourceLocatorTest extends TestCase
         self::assertStringMatchesFormat('%Atrait%A' . $traitName . '%A', $reflection->getLocatedSource()->getSource());
     }
 
-    /** @requires PHP >= 8.1 */
     public function testCanReflectEvaledEnum(): void
     {
         $enumName = uniqid('foo', false);
