@@ -187,30 +187,26 @@ class ReflectionMethod
     {
         $currentClass = $this->getImplementingClass();
 
-        while ($currentClass) {
-            foreach ($currentClass->getImmediateInterfaces() as $interface) {
-                $interfaceMethod = $interface->getMethod($this->getName());
+        foreach ($currentClass->getImmediateInterfaces() as $interface) {
+            $interfaceMethod = $interface->getMethod($this->getName());
 
-                if ($interfaceMethod !== null) {
-                    return $interfaceMethod;
-                }
+            if ($interfaceMethod !== null) {
+                return $interfaceMethod;
             }
+        }
 
-            $currentClass = $currentClass->getParentClass();
+        $currentClass = $currentClass->getParentClass();
 
-            if ($currentClass === null || ! $currentClass->hasMethod($this->getName())) {
-                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
-                break;
-            }
-
+        if ($currentClass !== null) {
             $prototype = $currentClass->getMethod($this->getName())?->findPrototype();
 
-            if ($prototype === null) {
-                // @infection-ignore-all Break_: There's no difference between break and continue - break is just optimization
-                break;
-            }
-
-            if (! $this->isConstructor() || $prototype->isAbstract()) {
+            if (
+                $prototype !== null
+                && (
+                    ! $this->isConstructor()
+                    || $prototype->isAbstract()
+                )
+            ) {
                 return $prototype;
             }
         }
