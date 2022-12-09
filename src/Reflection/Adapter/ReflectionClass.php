@@ -27,7 +27,10 @@ use function func_num_args;
 use function sprintf;
 use function strtolower;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
+/**
+ * @template-extends CoreReflectionClass<object>
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 final class ReflectionClass extends CoreReflectionClass
 {
     public const IS_READONLY = 65536;

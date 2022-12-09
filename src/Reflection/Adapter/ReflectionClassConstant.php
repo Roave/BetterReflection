@@ -15,6 +15,7 @@ use function array_map;
 use function constant;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
     public const IS_FINAL = 32;

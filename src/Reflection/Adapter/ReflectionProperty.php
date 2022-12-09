@@ -20,6 +20,7 @@ use function array_map;
 use function gettype;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionProperty extends CoreReflectionProperty
 {
     public const IS_READONLY = 128;
