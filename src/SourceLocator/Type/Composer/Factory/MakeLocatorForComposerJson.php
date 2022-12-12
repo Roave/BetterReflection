@@ -35,6 +35,14 @@ use function realpath;
  *  files?: list<string>,
  *  exclude-from-classmap?: list<string>
  * }
+ * @psalm-type ComposerPackage array{
+ *  name: string,
+ *  autoload: ComposerAutoload
+ * }
+ * @psalm-type Composer array{
+ *  autoload: ComposerAutoload,
+ *  config?: array{vendor-dir?: string}
+ * }
  */
 final class MakeLocatorForComposerJson
 {

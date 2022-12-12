@@ -1249,6 +1249,8 @@ class ReflectionClass implements Reflection
      * @param array<class-string, self> $interfaces
      *
      * @return array<class-string, self>
+     *
+     * @psalm-suppress MoreSpecificReturnType
      */
     private function addEnumInterfaces(array $interfaces): array
     {
@@ -1260,6 +1262,7 @@ class ReflectionClass implements Reflection
             $interfaces[BackedEnum::class] = $this->reflector->reflectClass(BackedEnum::class);
         }
 
+        /** @psalm-suppress LessSpecificReturnStatement */
         return $interfaces;
     }
 

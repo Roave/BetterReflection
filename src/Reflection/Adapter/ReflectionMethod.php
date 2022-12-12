@@ -25,6 +25,7 @@ use ValueError;
 use function array_map;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionMethod extends CoreReflectionMethod
 {
     public function __construct(private BetterReflectionMethod $betterReflectionMethod)

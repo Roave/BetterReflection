@@ -23,7 +23,7 @@ use function count;
 use function sprintf;
 use function strtolower;
 
-/** @psalm-suppress MissingImmutableAnnotation */
+/** @psalm-suppress MissingImmutableAnnotation, PropertyNotSetInConstructor */
 final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)

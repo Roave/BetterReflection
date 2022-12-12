@@ -30,7 +30,11 @@ use function json_decode;
 use function realpath;
 use function rtrim;
 
-/** @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson */
+/**
+ * @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson
+ * @psalm-import-type ComposerPackage from MakeLocatorForComposerJson
+ * @psalm-import-type Composer from MakeLocatorForComposerJson
+ */
 final class MakeLocatorForComposerJsonAndInstalledJson
 {
     public function __invoke(string $installationPath, Locator $astLocator): SourceLocator
@@ -47,7 +51,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
-        /** @psalm-var array{autoload: ComposerAutoload, config: array{vendor-dir?: string}}|null $composer */
+        /** @psalm-var Composer|null $composer */
         $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
         $vendorDir = rtrim($vendorDir, '/');
@@ -69,7 +73,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
             throw FailedToParseJson::inFile($installedJsonPath);
         }
 
-        /** @psalm-var list<array{name: string, autoload: ComposerAutoload}> $installed */
+        /** @psalm-var list<ComposerPackage> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
 
         $classMapPaths       = array_merge(
@@ -122,7 +126,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAutoload} $package
+     * @param ComposerPackage|Composer $package
      *
      * @return array<string, list<string>>
      */
@@ -132,7 +136,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAutoload} $package
+     * @param ComposerPackage|Composer $package
      *
      * @return array<string, list<string>>
      */
@@ -142,7 +146,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAutoload} $package
+     * @param ComposerPackage|Composer $package
      *
      * @return list<string>
      */
@@ -152,7 +156,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
     }
 
     /**
-     * @param array{autoload: ComposerAutoload} $package
+     * @param ComposerPackage|Composer $package
      *
      * @return list<string>
      */
@@ -161,7 +165,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         return $package['autoload']['files'] ?? [];
     }
 
-    /** @param array{name: string} $package */
+    /** @param ComposerPackage $package */
     private function packagePrefixPath(string $trimmedInstallationPath, array $package, string $vendorDir): string
     {
         return $trimmedInstallationPath . '/' . $vendorDir . '/' . $package['name'] . '/';
@@ -169,7 +173,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
     /**
      * @param array<string, list<string>> $paths
-     * @param array{name: string}         $package $package
+     * @param ComposerPackage             $package $package
      *
      * @return array<string, list<string>>
      */

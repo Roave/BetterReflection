@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use ReflectionAttribute as CoreReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 
+/** @template-extends CoreReflectionAttribute<object> */
 final class ReflectionAttribute extends CoreReflectionAttribute
 {
     public function __construct(private BetterReflectionAttribute $betterReflectionAttribute)
