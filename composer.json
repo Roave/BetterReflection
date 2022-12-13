@@ -33,7 +33,7 @@
 
     ],
     "require-dev": {
-        "doctrine/coding-standard": "^10.0.0",
+        "doctrine/coding-standard": "^11.0.0",
         "phpstan/phpstan": "^1.8.10",
         "phpstan/phpstan-phpunit": "^1.2.2",
         "phpunit/phpunit": "^9.5.25",
