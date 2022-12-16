@@ -1325,41 +1325,41 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.1.0",
+            "version": "8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "8c6e978c4b838330016598defc322622fc801158"
+                "reference": "4a98f2f339d7eadaf57a5e08f41c657245a8df12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/8c6e978c4b838330016598defc322622fc801158",
-                "reference": "8c6e978c4b838330016598defc322622fc801158",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/4a98f2f339d7eadaf57a5e08f41c657245a8df12",
+                "reference": "4a98f2f339d7eadaf57a5e08f41c657245a8df12",
                 "shasum": ""
             },
             "require": {
-                "azjezz/psl": "^2.1.0",
+                "azjezz/psl": "^2.3.0",
                 "composer/composer": "^2.4.4",
                 "ext-json": "*",
                 "nikolaposa/version": "^4.1.0",
                 "ocramius/package-versions": "^2.7.0",
                 "php": "~8.1.0 || ~8.2.0",
-                "roave/better-reflection": "^6.4.0",
-                "symfony/console": "^6.1.7"
+                "roave/better-reflection": "^6.5.0",
+                "symfony/console": "^6.2.1"
             },
             "conflict": {
                 "revolt/event-loop": "<0.2.5",
                 "symfony/process": "<5.3.7"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^10.0.0",
-                "php-standard-library/psalm-plugin": "^2.0.2",
-                "phpunit/phpunit": "^9.5.26",
-                "psalm/plugin-phpunit": "^0.18.3",
-                "roave/infection-static-analysis-plugin": "^1.25",
+                "doctrine/coding-standard": "^11.0.0",
+                "php-standard-library/psalm-plugin": "^2.2.1",
+                "phpunit/phpunit": "^9.5.27",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "roave/infection-static-analysis-plugin": "^1.26.0",
                 "roave/security-advisories": "dev-master",
                 "squizlabs/php_codesniffer": "^3.7.1",
-                "vimeo/psalm": "^4.30.0"
+                "vimeo/psalm": "^5.2.0"
             },
             "bin": [
                 "bin/roave-backward-compatibility-check"
@@ -1387,9 +1387,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.1.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.2.0"
             },
-            "time": "2022-11-23T09:08:44+00:00"
+            "time": "2022-12-15T23:38:26+00:00"
         },
         {
             "name": "roave/better-reflection",
