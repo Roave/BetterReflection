@@ -17,6 +17,11 @@ use function sprintf;
 /** @internal */
 final class ReflectionMethodStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionMethod $methodReflection): string
     {
         $parametersFormat = $methodReflection->getNumberOfParameters() > 0 || $methodReflection->hasReturnType()
@@ -27,7 +32,7 @@ final class ReflectionMethodStringCast
             ? "\n  - Return [ %s ]"
             : '';
 
-        return sprintf(
+        $string = sprintf(
             'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
@@ -45,8 +50,12 @@ final class ReflectionMethodStringCast
             self::parametersToString($methodReflection),
             self::returnTypeToString($methodReflection),
         );
+        assert($string !== '');
+
+        return $string;
     }
 
+    /** @psalm-pure */
     private static function sourceToString(ReflectionMethod $methodReflection): string
     {
         if ($methodReflection->isUserDefined()) {
@@ -59,6 +68,7 @@ final class ReflectionMethodStringCast
         return sprintf('internal:%s', $extensionName);
     }
 
+    /** @psalm-pure */
     private static function overwritesToString(ReflectionMethod $methodReflection): string
     {
         $parentClass = $methodReflection->getDeclaringClass()->getParentClass();
@@ -74,6 +84,7 @@ final class ReflectionMethodStringCast
         return sprintf(', overwrites %s', $parentClass->getName());
     }
 
+    /** @psalm-pure */
     private static function inheritsToString(ReflectionMethod $methodReflection): string
     {
         if ($methodReflection->getDeclaringClass() === $methodReflection->getCurrentClass()) {
@@ -83,6 +94,7 @@ final class ReflectionMethodStringCast
         return sprintf(', inherits %s', $methodReflection->getDeclaringClass()->getName());
     }
 
+    /** @psalm-pure */
     private static function prototypeToString(ReflectionMethod $methodReflection): string
     {
         try {
@@ -92,6 +104,7 @@ final class ReflectionMethodStringCast
         }
     }
 
+    /** @psalm-pure */
     private static function visibilityToString(ReflectionMethod $methodReflection): string
     {
         if ($methodReflection->isProtected()) {
@@ -105,6 +118,7 @@ final class ReflectionMethodStringCast
         return 'public';
     }
 
+    /** @psalm-pure */
     private static function fileAndLinesToString(ReflectionMethod $methodReflection): string
     {
         if ($methodReflection->isInternal()) {
@@ -117,11 +131,13 @@ final class ReflectionMethodStringCast
         return sprintf("\n  @@ %s %d - %d", $fileName, $methodReflection->getStartLine(), $methodReflection->getEndLine());
     }
 
+    /** @psalm-pure */
     private static function parametersToString(ReflectionMethod $methodReflection): string
     {
         return array_reduce($methodReflection->getParameters(), static fn (string $string, ReflectionParameter $parameterReflection): string => $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection), '');
     }
 
+    /** @psalm-pure */
     private static function returnTypeToString(ReflectionMethod $methodReflection): string
     {
         $type = $methodReflection->getReturnType();

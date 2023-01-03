@@ -9,7 +9,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 
 use function strtolower;
 
-/** @psalm-suppress MissingImmutableAnnotation */
+/** @psalm-immutable */
 final class ReflectionNamedType extends CoreReflectionNamedType
 {
     public function __construct(private BetterReflectionNamedType $betterReflectionType, private bool $allowsNull)
@@ -21,6 +21,7 @@ final class ReflectionNamedType extends CoreReflectionNamedType
         return $this->betterReflectionType->getName();
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         $type = strtolower($this->betterReflectionType->getName());

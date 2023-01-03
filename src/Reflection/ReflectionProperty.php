@@ -37,6 +37,7 @@ use function is_object;
 use function sprintf;
 use function str_contains;
 
+/** @psalm-immutable */
 class ReflectionProperty
 {
     /** @var non-empty-string */
@@ -49,6 +50,7 @@ class ReflectionProperty
 
     private Node\Expr|null $default;
 
+    /** @var non-empty-string|null */
     private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
@@ -66,6 +68,7 @@ class ReflectionProperty
     /** @var positive-int|null */
     private int|null $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
@@ -170,6 +173,7 @@ class ReflectionProperty
         return $clone;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionPropertyStringCast::toString($this);
@@ -306,6 +310,7 @@ class ReflectionProperty
         return $this->implementingClass;
     }
 
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;

@@ -12,6 +12,7 @@ use function array_map;
 use function assert;
 use function implode;
 
+/** @psalm-immutable */
 class ReflectionIntersectionType extends ReflectionType
 {
     /** @var non-empty-list<ReflectionNamedType> */
@@ -52,11 +53,13 @@ class ReflectionIntersectionType extends ReflectionType
         return $this->types;
     }
 
+    /** @return false */
     public function allowsNull(): bool
     {
         return false;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         // @infection-ignore-all UnwrapArrayMap: It works without array_map() as well but this is less magical

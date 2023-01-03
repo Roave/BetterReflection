@@ -30,6 +30,7 @@ use function is_object;
 use function is_string;
 use function sprintf;
 
+/** @psalm-immutable */
 class ReflectionParameter
 {
     /** @var non-empty-string */
@@ -60,6 +61,7 @@ class ReflectionParameter
     /** @var positive-int|null */
     private int|null $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledDefaultValue = null;
 
     private function __construct(
@@ -226,6 +228,7 @@ class ReflectionParameter
         throw new InvalidArgumentException('Could not create reflection from the spec given');
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionParameterStringCast::toString($this);

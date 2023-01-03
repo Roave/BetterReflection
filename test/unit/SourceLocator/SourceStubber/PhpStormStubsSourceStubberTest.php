@@ -39,7 +39,6 @@ use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\PhpInternalSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
-use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use SplFileObject;
 use Stringable;
@@ -58,7 +57,6 @@ use function get_declared_traits;
 use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
-use function realpath;
 use function sort;
 use function sprintf;
 
@@ -608,19 +606,19 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $stubDirectoryReflection = $stubberReflection->getProperty('stubsDirectory');
         $stubDirectoryReflection->setAccessible(true);
-        $stubDirectoryReflection->setValue($sourceStubber, FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture')));
+        $stubDirectoryReflection->setValue($sourceStubber, __DIR__ . '/../../Fixture');
 
         $classMapReflection = $stubberReflection->getProperty('classMap');
         $classMapReflection->setAccessible(true);
         $classMapValue                                                     = $classMapReflection->getValue();
-        $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = '/FakeConstantsStub.php';
+        $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = 'fakeconstants/FakeConstantsStub.php';
         $classMapReflection->setValue($classMapValue);
 
         $constantMapReflection = $stubberReflection->getProperty('constantMap');
         $constantMapReflection->setAccessible(true);
         $constantMapValue                                                      = $constantMapReflection->getValue();
-        $constantMapValue['define_constant']                                   = '/FakeConstantsStub.php';
-        $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = '/FakeConstantsStub.php';
+        $constantMapValue['define_constant']                                   = 'fakeconstants/FakeConstantsStub.php';
+        $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = 'fakeconstants/FakeConstantsStub.php';
         $constantMapReflection->setValue($constantMapValue);
 
         $classConstantStub = $sourceStubber->generateClassStub('Roave\BetterReflectionTest\Fixture\FakeConstants');

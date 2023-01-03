@@ -224,16 +224,16 @@ class ReflectionMethodTest extends TestCase
         self::assertSame('DeclaringClass', $reflectionMethodAdapter->getDeclaringClass()->getName());
     }
 
-    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
             ->method('getExtensionName')
-            ->willReturn('');
+            ->willReturn(null);
 
         $betterReflectionMethod = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        self::assertSame('', $betterReflectionMethod->getExtensionName());
+        self::assertFalse($betterReflectionMethod->getExtensionName());
     }
 
     public function testGetClosureReturnsNullWhenNoObject(): void

@@ -27,7 +27,10 @@ use function constant;
 use function sprintf;
 use function strtolower;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ * @psalm-immutable
+ */
 final class ReflectionEnum extends CoreReflectionEnum
 {
     public function __construct(private BetterReflectionEnum $betterReflectionEnum)
@@ -35,6 +38,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         unset($this->name);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionEnum->__toString();
@@ -79,6 +83,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->betterReflectionEnum->isCloneable();
     }
 
+    /** @return non-empty-string|false */
     public function getFileName(): string|false
     {
         $fileName = $this->betterReflectionEnum->getFileName();
@@ -136,11 +141,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      * @param int-mask-of<ReflectionMethod::IS_*>|null $filter
      *
      * @return list<ReflectionMethod>
-     *
-     * @psalm-suppress MethodSignatureMismatch
      */
     public function getMethods(int|null $filter = null): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_values(array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
             $this->betterReflectionEnum->getMethods($filter ?? 0),
@@ -171,11 +175,10 @@ final class ReflectionEnum extends CoreReflectionEnum
      * @param int-mask-of<ReflectionProperty::IS_*>|null $filter
      *
      * @return list<ReflectionProperty>
-     *
-     * @psalm-suppress MethodSignatureMismatch
      */
     public function getProperties(int|null $filter = null): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_values(array_map(
             static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
             $this->betterReflectionEnum->getProperties($filter ?? 0),
@@ -194,10 +197,11 @@ final class ReflectionEnum extends CoreReflectionEnum
     /**
      * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
      *
-     * @return array<string, mixed|null>
+     * @return array<non-empty-string, mixed>
      */
     public function getConstants(int|null $filter = null): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(
             fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
             $this->filterBetterReflectionClassConstants($filter),
@@ -263,7 +267,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /**
      * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
      *
-     * @return array<string, BetterReflectionClassConstant|BetterReflectionEnumCase>
+     * @return array<non-empty-string, BetterReflectionClassConstant|BetterReflectionEnumCase>
      */
     private function filterBetterReflectionClassConstants(int|null $filter): array
     {
@@ -282,6 +286,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return array<class-string, CoreReflectionClass> */
     public function getInterfaces(): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(
             static fn (BetterReflectionClass $interface): ReflectionClass => new ReflectionClass($interface),
             $this->betterReflectionEnum->getInterfaces(),
@@ -307,22 +312,20 @@ final class ReflectionEnum extends CoreReflectionEnum
         /** @var list<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_combine(
             $traitNames,
             array_map(static fn (BetterReflectionClass $trait): ReflectionClass => new ReflectionClass($trait), $traits),
         );
     }
 
-    /**
-     * @return list<trait-string>
-     * @phpstan-return list<class-string>
-     */
+    /** @return list<trait-string> */
     public function getTraitNames(): array
     {
         return $this->betterReflectionEnum->getTraitNames();
     }
 
-    /** @return array<string, string> */
+    /** @return array<non-empty-string, non-empty-string> */
     public function getTraitAliases(): array
     {
         return $this->betterReflectionEnum->getTraitAliases();
@@ -378,7 +381,6 @@ final class ReflectionEnum extends CoreReflectionEnum
         return false;
     }
 
-    /** @psalm-suppress MethodSignatureMismatch */
     public function isSubclassOf(CoreReflectionClass|string $class): bool
     {
         $realParentClassNames = $this->betterReflectionEnum->getParentClassNames();
@@ -413,7 +415,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         throw new CoreReflectionException(sprintf('Class %s does not have a property named %s', $this->betterReflectionEnum->getName(), $name));
     }
 
-    /** @return array<string, scalar|array<scalar>|null> */
+    /** @return array<non-empty-string, mixed> */
     public function getDefaultProperties(): array
     {
         return $this->betterReflectionEnum->getDefaultProperties();
@@ -429,7 +431,6 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->isIterateable();
     }
 
-    /** @psalm-suppress MethodSignatureMismatch */
     public function implementsInterface(CoreReflectionClass|string $interface): bool
     {
         $realInterfaceNames = $this->betterReflectionEnum->getInterfaceNames();
@@ -449,6 +450,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         throw new Exception\NotImplemented('Not implemented');
     }
 
+    /** @return non-empty-string|false */
     public function getExtensionName(): string|false
     {
         return $this->betterReflectionEnum->getExtensionName() ?? false;
@@ -488,6 +490,7 @@ final class ReflectionEnum extends CoreReflectionEnum
             $attributes = $this->betterReflectionEnum->getAttributes();
         }
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
@@ -523,6 +526,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return list<ReflectionEnumUnitCase|ReflectionEnumBackedCase> */
     public function getCases(): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(function (BetterReflectionEnumCase $case): ReflectionEnumUnitCase|ReflectionEnumBackedCase {
             if ($this->betterReflectionEnum->isBacked()) {
                 return new ReflectionEnumBackedCase($case);

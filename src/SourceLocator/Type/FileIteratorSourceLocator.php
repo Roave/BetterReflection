@@ -17,6 +17,8 @@ use SplFileInfo;
 use function array_filter;
 use function array_map;
 use function array_values;
+use function assert;
+use function is_string;
 use function iterator_to_array;
 use function pathinfo;
 
@@ -54,11 +56,14 @@ class FileIteratorSourceLocator implements SourceLocator
         return $this->aggregateSourceLocator
             ?? $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_filter(array_map(
                 function (SplFileInfo $item): SingleFileSourceLocator|null {
-                    if (! ($item->isFile() && pathinfo($item->getRealPath(), PATHINFO_EXTENSION) === 'php')) {
+                    $realPath = $item->getRealPath();
+                    assert(is_string($realPath) && $realPath !== '');
+
+                    if (! ($item->isFile() && pathinfo($realPath, PATHINFO_EXTENSION) === 'php')) {
                         return null;
                     }
 
-                    return new SingleFileSourceLocator($item->getRealPath(), $this->astLocator);
+                    return new SingleFileSourceLocator($realPath, $this->astLocator);
                 },
                 iterator_to_array($this->fileSystemIterator),
             ))));

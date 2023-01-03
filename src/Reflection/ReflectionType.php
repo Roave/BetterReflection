@@ -11,9 +11,14 @@ use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
+/** @psalm-immutable */
 abstract class ReflectionType
 {
-    /** @internal */
+    /**
+     * @internal
+     *
+     * @psalm-pure
+     */
     public static function createFromNode(
         Reflector $reflector,
         ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
@@ -71,6 +76,8 @@ abstract class ReflectionType
 
     /**
      * Convert this string type to a string
+     *
+     * @return non-empty-string
      */
     abstract public function __toString(): string;
 }

@@ -12,13 +12,13 @@ use function sprintf;
 
 class FileChecker
 {
-    /** @throws InvalidFileLocation */
+    /**
+     * @param non-empty-string $filename
+     *
+     * @throws InvalidFileLocation
+     */
     public static function assertReadableFile(string $filename): void
     {
-        if (empty($filename)) {
-            throw new InvalidFileLocation('Filename was empty');
-        }
-
         if (! is_file($filename)) {
             throw new InvalidFileLocation(sprintf('"%s" is not a file', $filename));
         }

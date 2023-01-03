@@ -19,6 +19,7 @@ use function array_key_exists;
 use function array_map;
 use function assert;
 
+/** @psalm-immutable */
 class ReflectionEnum extends ReflectionClass
 {
     private ReflectionNamedType|null $backingType;

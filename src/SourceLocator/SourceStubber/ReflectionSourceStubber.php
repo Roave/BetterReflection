@@ -49,7 +49,6 @@ use function function_exists;
 use function get_defined_constants;
 use function implode;
 use function in_array;
-use function is_array;
 use function is_resource;
 use function method_exists;
 use function preg_replace;
@@ -174,10 +173,10 @@ final class ReflectionSourceStubber implements SourceStubber
         return $this->createStubData($this->generateStub($constantNode), $extensionName);
     }
 
-    /** @return array{0: scalar|list<scalar>|resource|null, 1: string|null}|null */
+    /** @return array{0: scalar|list<scalar>|resource|null, 1: non-empty-string|null}|null */
     private function findConstantData(string $constantName): array|null
     {
-        /** @var array<string, array<string, scalar|list<scalar>|resource|null>> $constants */
+        /** @var array<non-empty-string, array<string, scalar|list<scalar>|resource|null>> $constants */
         $constants = get_defined_constants(true);
 
         foreach ($constants as $constantExtensionName => $extensionConstants) {
@@ -298,9 +297,8 @@ final class ReflectionSourceStubber implements SourceStubber
 
     private function addTraitUse(Class_|Trait_|Enum_ $classNode, CoreReflectionClass $classReflection): void
     {
-        $traitAliases = $classReflection->getTraitAliases();
-        assert(is_array($traitAliases));
-
+        /** @var array<string, string> $traitAliases */
+        $traitAliases        = $classReflection->getTraitAliases();
         $traitUseAdaptations = [];
 
         foreach ($traitAliases as $methodNameAlias => $methodInfo) {
@@ -637,6 +635,7 @@ final class ReflectionSourceStubber implements SourceStubber
         );
     }
 
+    /** @param non-empty-string|null $extensionName */
     private function createStubData(string $stub, string|null $extensionName): StubData
     {
         return new StubData($stub, $extensionName);

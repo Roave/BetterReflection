@@ -53,6 +53,6 @@ class LocatedSourceTest extends TestCase
     public function testThrowsExceptionIfFileIsNotReadable(): void
     {
         $this->expectException(InvalidFileLocation::class);
-        new LocatedSource('<?php echo "Hello world";', 'name', '');
+        new LocatedSource('<?php echo "Hello world";', 'name', 'not-readable.php');
     }
 }

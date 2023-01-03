@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionAttribute;
 
+use function assert;
 use function count;
 use function is_array;
 use function is_string;
@@ -17,21 +18,33 @@ use function var_export;
 /** @internal */
 final class ReflectionAttributeStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionAttribute $attributeReflection): string
     {
         $arguments = $attributeReflection->getArguments();
 
         $argumentsFormat = $arguments !== [] ? " {\n  - Arguments [%d] {%s\n  }\n}" : '';
 
-        return sprintf(
+        $string = sprintf(
             'Attribute [ %s ]' . $argumentsFormat . "\n",
             $attributeReflection->getName(),
             count($arguments),
             self::argumentsToString($arguments),
         );
+        assert($string !== '');
+
+        return $string;
     }
 
-    /** @param array<int|string, mixed> $arguments */
+    /**
+     * @param array<int|string, mixed> $arguments
+     *
+     * @psalm-pure
+     */
     private static function argumentsToString(array $arguments): string
     {
         if ($arguments === []) {
@@ -56,6 +69,7 @@ final class ReflectionAttributeStringCast
         return $string;
     }
 
+    /** @psalm-pure */
     private static function argumentValueToString(mixed $value): string
     {
         if (is_array($value)) {

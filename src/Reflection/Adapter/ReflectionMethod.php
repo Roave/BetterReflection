@@ -34,31 +34,37 @@ final class ReflectionMethod extends CoreReflectionMethod
         unset($this->class);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionMethod->__toString();
     }
 
+    /** @psalm-mutation-free */
     public function inNamespace(): bool
     {
         return $this->betterReflectionMethod->inNamespace();
     }
 
+    /** @psalm-mutation-free */
     public function isClosure(): bool
     {
         return $this->betterReflectionMethod->isClosure();
     }
 
+    /** @psalm-mutation-free */
     public function isDeprecated(): bool
     {
         return $this->betterReflectionMethod->isDeprecated();
     }
 
+    /** @psalm-mutation-free */
     public function isInternal(): bool
     {
         return $this->betterReflectionMethod->isInternal();
     }
 
+    /** @psalm-mutation-free */
     public function isUserDefined(): bool
     {
         return $this->betterReflectionMethod->isUserDefined();
@@ -69,21 +75,25 @@ final class ReflectionMethod extends CoreReflectionMethod
         throw new NotImplemented('Not implemented');
     }
 
+    /** @psalm-mutation-free */
     public function getClosureScopeClass(): CoreReflectionClass|null
     {
         throw new NotImplemented('Not implemented');
     }
 
+    /** @psalm-mutation-free */
     public function getClosureCalledClass(): CoreReflectionClass|null
     {
         throw new NotImplemented('Not implemented');
     }
 
+    /** @psalm-mutation-free */
     public function getDocComment(): string|false
     {
         return $this->betterReflectionMethod->getDocComment() ?? false;
     }
 
+    /** @psalm-mutation-free */
     public function getStartLine(): int|false
     {
         try {
@@ -93,6 +103,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
     }
 
+    /** @psalm-mutation-free */
     public function getEndLine(): int|false
     {
         try {
@@ -102,17 +113,27 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
     }
 
-    /** @psalm-suppress ImplementedReturnTypeMismatch */
+    /** @psalm-mutation-free */
     public function getExtension(): CoreReflectionExtension|null
     {
         throw new NotImplemented('Not implemented');
     }
 
-    public function getExtensionName(): string
+    /**
+     * @return non-empty-string|false
+     *
+     * @psalm-mutation-free
+     */
+    public function getExtensionName(): string|false
     {
-        return $this->betterReflectionMethod->getExtensionName() ?? '';
+        return $this->betterReflectionMethod->getExtensionName() ?? false;
     }
 
+    /**
+     * @return non-empty-string|false
+     *
+     * @psalm-mutation-free
+     */
     public function getFileName(): string|false
     {
         $fileName = $this->betterReflectionMethod->getFileName();
@@ -120,27 +141,35 @@ final class ReflectionMethod extends CoreReflectionMethod
         return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
+    /** @psalm-mutation-free */
     public function getName(): string
     {
         return $this->betterReflectionMethod->getName();
     }
 
+    /** @psalm-mutation-free */
     public function getNamespaceName(): string
     {
         return $this->betterReflectionMethod->getNamespaceName() ?? '';
     }
 
+    /** @psalm-mutation-free */
     public function getNumberOfParameters(): int
     {
         return $this->betterReflectionMethod->getNumberOfParameters();
     }
 
+    /** @psalm-mutation-free */
     public function getNumberOfRequiredParameters(): int
     {
         return $this->betterReflectionMethod->getNumberOfRequiredParameters();
     }
 
-    /** @return list<ReflectionParameter> */
+    /**
+     * @return list<ReflectionParameter>
+     *
+     * @psalm-mutation-free
+     */
     public function getParameters(): array
     {
         return array_map(
@@ -149,16 +178,19 @@ final class ReflectionMethod extends CoreReflectionMethod
         );
     }
 
+    /** @psalm-mutation-free */
     public function hasReturnType(): bool
     {
         return $this->betterReflectionMethod->hasReturnType();
     }
 
+    /** @psalm-mutation-free */
     public function getReturnType(): CoreReflectionType|null
     {
         return ReflectionType::fromTypeOrNull($this->betterReflectionMethod->getReturnType());
     }
 
+    /** @psalm-mutation-free */
     public function getShortName(): string
     {
         return $this->betterReflectionMethod->getShortName();
@@ -170,62 +202,73 @@ final class ReflectionMethod extends CoreReflectionMethod
         throw new NotImplemented('Not implemented');
     }
 
+    /** @psalm-mutation-free */
     public function returnsReference(): bool
     {
         return $this->betterReflectionMethod->returnsReference();
     }
 
+    /** @psalm-mutation-free */
     public function isGenerator(): bool
     {
         return $this->betterReflectionMethod->isGenerator();
     }
 
+    /** @psalm-mutation-free */
     public function isVariadic(): bool
     {
         return $this->betterReflectionMethod->isVariadic();
     }
 
+    /** @psalm-mutation-free */
     public function isPublic(): bool
     {
         return $this->betterReflectionMethod->isPublic();
     }
 
+    /** @psalm-mutation-free */
     public function isPrivate(): bool
     {
         return $this->betterReflectionMethod->isPrivate();
     }
 
+    /** @psalm-mutation-free */
     public function isProtected(): bool
     {
         return $this->betterReflectionMethod->isProtected();
     }
 
+    /** @psalm-mutation-free */
     public function isAbstract(): bool
     {
         return $this->betterReflectionMethod->isAbstract();
     }
 
+    /** @psalm-mutation-free */
     public function isFinal(): bool
     {
         return $this->betterReflectionMethod->isFinal();
     }
 
+    /** @psalm-mutation-free */
     public function isStatic(): bool
     {
         return $this->betterReflectionMethod->isStatic();
     }
 
+    /** @psalm-mutation-free */
     public function isConstructor(): bool
     {
         return $this->betterReflectionMethod->isConstructor();
     }
 
+    /** @psalm-mutation-free */
     public function isDestructor(): bool
     {
         return $this->betterReflectionMethod->isDestructor();
     }
 
-    /** @psalm-suppress MethodSignatureMismatch */
+    /** @psalm-mutation-free */
     public function getClosure(object|null $object = null): Closure
     {
         try {
@@ -237,6 +280,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
     }
 
+    /** @psalm-mutation-free */
     public function getModifiers(): int
     {
         return $this->betterReflectionMethod->getModifiers();
@@ -265,11 +309,13 @@ final class ReflectionMethod extends CoreReflectionMethod
         }
     }
 
+    /** @psalm-mutation-free */
     public function getDeclaringClass(): ReflectionClass
     {
         return new ReflectionClass($this->betterReflectionMethod->getImplementingClass());
     }
 
+    /** @psalm-mutation-free */
     public function getPrototype(): ReflectionMethod
     {
         return new self($this->betterReflectionMethod->getPrototype());
@@ -289,6 +335,7 @@ final class ReflectionMethod extends CoreReflectionMethod
     /**
      * @codeCoverageIgnore
      * @infection-ignore-all
+     * @psalm-pure
      */
     public function setAccessible(bool $accessible): void
     {

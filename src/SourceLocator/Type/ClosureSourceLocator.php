@@ -67,6 +67,7 @@ final class ClosureSourceLocator implements SourceLocator
             return null;
         }
 
+        /** @phpstan-var non-empty-string $fileName */
         $fileName = $this->coreFunctionReflection->getFileName();
 
         if (strpos($fileName, 'eval()\'d code') !== false) {

@@ -189,16 +189,16 @@ class ReflectionFunctionTest extends TestCase
         self::assertFalse($reflectionFunctionAdapter->getDocComment());
     }
 
-    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
         $betterReflectionFunction
             ->method('getExtensionName')
-            ->willReturn('');
+            ->willReturn(null);
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        self::assertSame('', $betterReflectionFunction->getExtensionName());
+        self::assertFalse($betterReflectionFunction->getExtensionName());
     }
 
     public function testGetClosureReturnsNullWhenError(): void

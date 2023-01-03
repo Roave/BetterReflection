@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUni
 use function array_map;
 use function assert;
 
+/** @psalm-immutable */
 final class ReflectionUnionType extends CoreReflectionUnionType
 {
     public function __construct(private BetterReflectionUnionType $betterReflectionType)
@@ -28,6 +29,7 @@ final class ReflectionUnionType extends CoreReflectionUnionType
         }, $this->betterReflectionType->getTypes());
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionType->__toString();

@@ -21,6 +21,7 @@ use function assert;
 use function is_int;
 use function is_string;
 
+/** @psalm-immutable */
 class ReflectionEnumCase
 {
     /** @var non-empty-string */
@@ -31,6 +32,7 @@ class ReflectionEnumCase
     /** @var list<ReflectionAttribute> */
     private array $attributes;
 
+    /** @var non-empty-string|null */
     private string|null $docComment;
 
     /** @var positive-int */
@@ -45,6 +47,7 @@ class ReflectionEnumCase
     /** @var positive-int */
     private int $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
@@ -163,6 +166,7 @@ class ReflectionEnumCase
         return $this->enum;
     }
 
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;
@@ -195,6 +199,7 @@ class ReflectionEnumCase
         return ReflectionAttributeHelper::filterAttributesByInstance($this->getAttributes(), $className);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionEnumCaseStringCast::toString($this);

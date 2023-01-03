@@ -72,6 +72,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
             return null;
         }
 
+        /** @phpstan-var non-empty-string $fileName */
         $fileName = $this->coreClassReflection->getFileName();
 
         if (strpos($fileName, 'eval()\'d code') !== false) {

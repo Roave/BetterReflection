@@ -14,6 +14,7 @@ use function assert;
 use function sprintf;
 use function strtolower;
 
+/** @psalm-immutable */
 class ReflectionNamedType extends ReflectionType
 {
     private const BUILT_IN_TYPES = [
@@ -36,6 +37,7 @@ class ReflectionNamedType extends ReflectionType
         'true'     => null,
     ];
 
+    /** @var non-empty-string */
     private string $name;
 
     /** @internal */
@@ -44,7 +46,10 @@ class ReflectionNamedType extends ReflectionType
         private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
         Identifier|Name $type,
     ) {
-        $this->name = $type->toString();
+        $name = $type->toString();
+        assert($name !== '');
+
+        $this->name = $name;
     }
 
     /** @internal */
@@ -56,6 +61,7 @@ class ReflectionNamedType extends ReflectionType
         return $clone;
     }
 
+    /** @return non-empty-string */
     public function getName(): string
     {
         return $this->name;
@@ -122,6 +128,7 @@ class ReflectionNamedType extends ReflectionType
         };
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->getName();

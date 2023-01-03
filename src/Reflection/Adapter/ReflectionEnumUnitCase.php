@@ -14,7 +14,10 @@ use ValueError;
 use function array_map;
 use function sprintf;
 
-/** @psalm-suppress MissingImmutableAnnotation, PropertyNotSetInConstructor */
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ * @psalm-immutable
+ */
 final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
 {
     public function __construct(private BetterReflectionEnumCase $betterReflectionEnumCase)
@@ -67,6 +70,7 @@ final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
         return $this->betterReflectionEnumCase->getDocComment() ?? false;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionEnumCase->__toString();
@@ -91,6 +95,7 @@ final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
             $attributes = $this->betterReflectionEnumCase->getAttributes();
         }
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 

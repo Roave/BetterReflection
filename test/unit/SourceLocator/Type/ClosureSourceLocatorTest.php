@@ -22,6 +22,8 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
+use function assert;
+use function is_string;
 use function realpath;
 use function sprintf;
 
@@ -40,13 +42,13 @@ class ClosureSourceLocatorTest extends TestCase
         $this->reflector = $this->createMock(Reflector::class);
     }
 
-    /** @return list<array{0: Closure, 1: string|null, 2: string, 3: int, 4: int}> */
+    /** @return list<array{0: Closure, 1: string|null, 2: non-empty-string, 3: int, 4: int}> */
     public function closuresProvider(): array
     {
-        $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
-        $fileWithClosureNoNamespace       = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
-        $fileWithArrowFunctionInNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ArrowFunctionInNamespace.php'));
-        $fileWithArrowFunctionNoNamespace = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ArrowFunctionNoNamespace.php'));
+        $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
+        $fileWithClosureNoNamespace       = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
+        $fileWithArrowFunctionInNamespace = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ArrowFunctionInNamespace.php'));
+        $fileWithArrowFunctionNoNamespace = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ArrowFunctionNoNamespace.php'));
 
         return [
             [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
@@ -56,7 +58,11 @@ class ClosureSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider closuresProvider */
+    /**
+     * @param non-empty-string $file
+     *
+     * @dataProvider closuresProvider
+     */
     public function testLocateIdentifier(Closure $closure, string|null $namespace, string $file, int $startLine, int $endLine): void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
@@ -161,7 +167,7 @@ class ClosureSourceLocatorTest extends TestCase
     /** @return list<array{0: string, 1: Closure}> */
     public function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
-        $file     = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+        $file     = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
         $closures = require $file;
 
         return [
@@ -221,5 +227,15 @@ class ClosureSourceLocatorTest extends TestCase
 
         $this->expectException(InvalidFileLocation::class);
         $sourceLocator->locateIdentifier($this->reflector, new Identifier('whatever', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION)));
+    }
+
+    /** @return non-empty-string */
+    private static function realPath(string|false $path): string
+    {
+        $realPath = realpath($path);
+
+        assert(is_string($realPath) && $realPath !== '');
+
+        return $realPath;
     }
 }

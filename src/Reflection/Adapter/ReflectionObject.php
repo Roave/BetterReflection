@@ -33,36 +33,47 @@ final class ReflectionObject extends CoreReflectionObject
         unset($this->name);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionObject->__toString();
     }
 
+    /** @psalm-mutation-free */
     public function getName(): string
     {
         return $this->betterReflectionObject->getName();
     }
 
+    /** @psalm-mutation-free */
     public function isInternal(): bool
     {
         return $this->betterReflectionObject->isInternal();
     }
 
+    /** @psalm-mutation-free */
     public function isUserDefined(): bool
     {
         return $this->betterReflectionObject->isUserDefined();
     }
 
+    /** @psalm-mutation-free */
     public function isInstantiable(): bool
     {
         return $this->betterReflectionObject->isInstantiable();
     }
 
+    /** @psalm-mutation-free */
     public function isCloneable(): bool
     {
         return $this->betterReflectionObject->isCloneable();
     }
 
+    /**
+     * @return non-empty-string|false
+     *
+     * @psalm-mutation-free
+     */
     public function getFileName(): string|false
     {
         $fileName = $this->betterReflectionObject->getFileName();
@@ -70,21 +81,25 @@ final class ReflectionObject extends CoreReflectionObject
         return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
+    /** @psalm-mutation-free */
     public function getStartLine(): int|false
     {
         return $this->betterReflectionObject->getStartLine();
     }
 
+    /** @psalm-mutation-free */
     public function getEndLine(): int|false
     {
         return $this->betterReflectionObject->getEndLine();
     }
 
+    /** @psalm-mutation-free */
     public function getDocComment(): string|false
     {
         return $this->betterReflectionObject->getDocComment() ?? false;
     }
 
+    /** @psalm-mutation-free */
     public function getConstructor(): ReflectionMethod|null
     {
         $constructor = $this->betterReflectionObject->getConstructor();
@@ -96,6 +111,7 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionMethod($constructor);
     }
 
+    /** @psalm-mutation-free */
     public function hasMethod(string $name): bool
     {
         if ($name === '') {
@@ -105,6 +121,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->hasMethod($this->getMethodRealName($name));
     }
 
+    /** @psalm-mutation-free */
     public function getMethod(string $name): ReflectionMethod
     {
         $method = $name !== '' ? $this->betterReflectionObject->getMethod($this->getMethodRealName($name)) : null;
@@ -120,6 +137,8 @@ final class ReflectionObject extends CoreReflectionObject
      * @param non-empty-string $name
      *
      * @return non-empty-string
+     *
+     * @psalm-mutation-free
      */
     private function getMethodRealName(string $name): string
     {
@@ -137,16 +156,18 @@ final class ReflectionObject extends CoreReflectionObject
      *
      * @return list<ReflectionMethod>
      *
-     * @psalm-suppress MethodSignatureMismatch
+     * @psalm-mutation-free
      */
     public function getMethods(int|null $filter = null): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_values(array_map(
             static fn (BetterReflectionMethod $method): ReflectionMethod => new ReflectionMethod($method),
             $this->betterReflectionObject->getMethods($filter ?? 0),
         ));
     }
 
+    /** @psalm-mutation-free */
     public function hasProperty(string $name): bool
     {
         if ($name === '') {
@@ -156,6 +177,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->hasProperty($name);
     }
 
+    /** @psalm-mutation-free */
     public function getProperty(string $name): ReflectionProperty
     {
         $property = $name !== '' ? $this->betterReflectionObject->getProperty($name) : null;
@@ -172,16 +194,18 @@ final class ReflectionObject extends CoreReflectionObject
      *
      * @return list<ReflectionProperty>
      *
-     * @psalm-suppress MethodSignatureMismatch
+     * @psalm-mutation-free
      */
     public function getProperties(int|null $filter = null): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_values(array_map(
             static fn (BetterReflectionProperty $property): ReflectionProperty => new ReflectionProperty($property),
             $this->betterReflectionObject->getProperties($filter ?? 0),
         ));
     }
 
+    /** @psalm-mutation-free */
     public function hasConstant(string $name): bool
     {
         if ($name === '') {
@@ -194,7 +218,9 @@ final class ReflectionObject extends CoreReflectionObject
     /**
      * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
      *
-     * @return array<string, mixed>
+     * @return array<non-empty-string, mixed>
+     *
+     * @psalm-mutation-free
      */
     public function getConstants(int|null $filter = null): array
     {
@@ -204,6 +230,7 @@ final class ReflectionObject extends CoreReflectionObject
         );
     }
 
+    /** @psalm-mutation-free */
     public function getConstant(string $name): mixed
     {
         if ($name === '') {
@@ -218,6 +245,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $betterReflectionConstant->getValue();
     }
 
+    /** @psalm-mutation-free */
     public function getReflectionConstant(string $name): ReflectionClassConstant|false
     {
         if ($name === '') {
@@ -237,6 +265,8 @@ final class ReflectionObject extends CoreReflectionObject
      * @param int-mask-of<ReflectionClassConstant::IS_*>|null $filter
      *
      * @return list<ReflectionClassConstant>
+     *
+     * @psalm-mutation-free
      */
     public function getReflectionConstants(int|null $filter = null): array
     {
@@ -246,27 +276,41 @@ final class ReflectionObject extends CoreReflectionObject
         ));
     }
 
-    /** @return array<class-string, CoreReflectionClass> */
+    /**
+     * @return array<class-string, CoreReflectionClass>
+     *
+     * @psalm-mutation-free
+     */
     public function getInterfaces(): array
     {
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(
             static fn (BetterReflectionClass $interface): ReflectionClass => new ReflectionClass($interface),
             $this->betterReflectionObject->getInterfaces(),
         );
     }
 
-    /** @return list<class-string> */
+    /**
+     * @return list<class-string>
+     *
+     * @psalm-mutation-free
+     */
     public function getInterfaceNames(): array
     {
         return $this->betterReflectionObject->getInterfaceNames();
     }
 
+    /** @psalm-mutation-free */
     public function isInterface(): bool
     {
         return $this->betterReflectionObject->isInterface();
     }
 
-    /** @return array<trait-string, ReflectionClass> */
+    /**
+     * @return array<trait-string, ReflectionClass>
+     *
+     * @psalm-mutation-free
+     */
     public function getTraits(): array
     {
         $traits = $this->betterReflectionObject->getTraits();
@@ -274,49 +318,64 @@ final class ReflectionObject extends CoreReflectionObject
         /** @var list<trait-string> $traitNames */
         $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_combine(
             $traitNames,
             array_map(static fn (BetterReflectionClass $trait): ReflectionClass => new ReflectionClass($trait), $traits),
         );
     }
 
-    /** @return list<trait-string> */
+    /**
+     * @return list<trait-string>
+     *
+     * @psalm-mutation-free
+     */
     public function getTraitNames(): array
     {
         return $this->betterReflectionObject->getTraitNames();
     }
 
-    /** @return array<string, string> */
+    /**
+     * @return array<non-empty-string, non-empty-string>
+     *
+     * @psalm-mutation-free
+     */
     public function getTraitAliases(): array
     {
         return $this->betterReflectionObject->getTraitAliases();
     }
 
+    /** @psalm-mutation-free */
     public function isTrait(): bool
     {
         return $this->betterReflectionObject->isTrait();
     }
 
+    /** @psalm-mutation-free */
     public function isAbstract(): bool
     {
         return $this->betterReflectionObject->isAbstract();
     }
 
+    /** @psalm-mutation-free */
     public function isFinal(): bool
     {
         return $this->betterReflectionObject->isFinal();
     }
 
+    /** @psalm-mutation-free */
     public function isReadOnly(): bool
     {
         return $this->betterReflectionObject->isReadOnly();
     }
 
+    /** @psalm-mutation-free */
     public function getModifiers(): int
     {
         return $this->betterReflectionObject->getModifiers();
     }
 
+    /** @psalm-mutation-free */
     public function isInstance(object $object): bool
     {
         return $this->betterReflectionObject->isInstance($object);
@@ -337,6 +396,7 @@ final class ReflectionObject extends CoreReflectionObject
         throw new Exception\NotImplemented('Not implemented');
     }
 
+    /** @psalm-mutation-free */
     public function getParentClass(): ReflectionClass|false
     {
         $parentClass = $this->betterReflectionObject->getParentClass();
@@ -348,7 +408,7 @@ final class ReflectionObject extends CoreReflectionObject
         return new ReflectionClass($parentClass);
     }
 
-    /** @psalm-suppress MethodSignatureMismatch */
+    /** @psalm-mutation-free */
     public function isSubclassOf(CoreReflectionClass|string $class): bool
     {
         $realParentClassNames = $this->betterReflectionObject->getParentClassNames();
@@ -411,23 +471,29 @@ final class ReflectionObject extends CoreReflectionObject
         $property->setValue($value);
     }
 
-    /** @return array<string, scalar|array<scalar>|null> */
+    /**
+     * @return array<non-empty-string, mixed>
+     *
+     * @psalm-mutation-free
+     */
     public function getDefaultProperties(): array
     {
         return $this->betterReflectionObject->getDefaultProperties();
     }
 
+    /** @psalm-mutation-free */
     public function isIterateable(): bool
     {
         return $this->betterReflectionObject->isIterateable();
     }
 
+    /** @psalm-mutation-free */
     public function isIterable(): bool
     {
         return $this->isIterateable();
     }
 
-    /** @psalm-suppress MethodSignatureMismatch */
+    /** @psalm-mutation-free */
     public function implementsInterface(CoreReflectionClass|string $interface): bool
     {
         $realInterfaceNames = $this->betterReflectionObject->getInterfaceNames();
@@ -442,31 +508,41 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->implementsInterface($realInterfaceName);
     }
 
+    /** @psalm-mutation-free */
     public function getExtension(): CoreReflectionExtension|null
     {
         throw new Exception\NotImplemented('Not implemented');
     }
 
+    /**
+     * @return non-empty-string|false
+     *
+     * @psalm-mutation-free
+     */
     public function getExtensionName(): string|false
     {
         return $this->betterReflectionObject->getExtensionName() ?? false;
     }
 
+    /** @psalm-mutation-free */
     public function inNamespace(): bool
     {
         return $this->betterReflectionObject->inNamespace();
     }
 
+    /** @psalm-mutation-free */
     public function getNamespaceName(): string
     {
         return $this->betterReflectionObject->getNamespaceName() ?? '';
     }
 
+    /** @psalm-mutation-free */
     public function getShortName(): string
     {
         return $this->betterReflectionObject->getShortName();
     }
 
+    /** @psalm-mutation-free */
     public function isAnonymous(): bool
     {
         return $this->betterReflectionObject->isAnonymous();
@@ -476,6 +552,8 @@ final class ReflectionObject extends CoreReflectionObject
      * @param class-string|null $name
      *
      * @return list<ReflectionAttribute>
+     *
+     * @psalm-mutation-free
      */
     public function getAttributes(string|null $name = null, int $flags = 0): array
     {
@@ -491,9 +569,11 @@ final class ReflectionObject extends CoreReflectionObject
             $attributes = $this->betterReflectionObject->getAttributes();
         }
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
+    /** @psalm-mutation-free */
     public function isEnum(): bool
     {
         return $this->betterReflectionObject->isEnum();

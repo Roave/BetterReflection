@@ -19,13 +19,6 @@ use const PHP_OS;
 /** @covers \Roave\BetterReflection\SourceLocator\FileChecker */
 class FileCheckerTest extends TestCase
 {
-    public function testCheckFileThrowsExceptionIfEmptyFileGiven(): void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        $this->expectExceptionMessage('Filename was empty');
-        FileChecker::assertReadableFile('');
-    }
-
     public function testCheckFileThrowsExceptionIfFileDoesNotExist(): void
     {
         $this->expectException(InvalidFileLocation::class);

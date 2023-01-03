@@ -22,6 +22,7 @@ use function array_map;
 use function array_merge;
 use function array_merge_recursive;
 use function array_values;
+use function assert;
 use function file_get_contents;
 use function is_array;
 use function is_dir;
@@ -117,7 +118,14 @@ final class MakeLocatorForInstalledJson
                 ),
                 new DirectoriesSourceLocator($classMapDirectories, $astLocator),
             ],
-            ...array_map(static fn (string $file): array => [new SingleFileSourceLocator($file, $astLocator)], array_merge($classMapFiles, $filePaths)),
+            ...array_map(
+                static function (string $file) use ($astLocator): array {
+                    assert($file !== '');
+
+                    return [new SingleFileSourceLocator($file, $astLocator)];
+                },
+                array_merge($classMapFiles, $filePaths),
+            ),
         ));
     }
 

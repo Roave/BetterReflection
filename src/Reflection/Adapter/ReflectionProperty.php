@@ -31,11 +31,13 @@ final class ReflectionProperty extends CoreReflectionProperty
         unset($this->class);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionProperty->__toString();
     }
 
+    /** @psalm-mutation-free */
     public function getName(): string
     {
         return $this->betterReflectionProperty->getName();
@@ -66,6 +68,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         }
     }
 
+    /** @psalm-mutation-free */
     public function hasType(): bool
     {
         return $this->betterReflectionProperty->hasType();
@@ -74,45 +77,52 @@ final class ReflectionProperty extends CoreReflectionProperty
     /** @psalm-mutation-free */
     public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
     {
-        /** @psalm-suppress ImpureMethodCall */
         return ReflectionType::fromTypeOrNull($this->betterReflectionProperty->getType());
     }
 
+    /** @psalm-mutation-free */
     public function isPublic(): bool
     {
         return $this->betterReflectionProperty->isPublic();
     }
 
+    /** @psalm-mutation-free */
     public function isPrivate(): bool
     {
         return $this->betterReflectionProperty->isPrivate();
     }
 
+    /** @psalm-mutation-free */
     public function isProtected(): bool
     {
         return $this->betterReflectionProperty->isProtected();
     }
 
+    /** @psalm-mutation-free */
     public function isStatic(): bool
     {
         return $this->betterReflectionProperty->isStatic();
     }
 
+    /** @psalm-mutation-free */
     public function isDefault(): bool
     {
         return $this->betterReflectionProperty->isDefault();
     }
 
+    /** @psalm-mutation-free */
     public function getModifiers(): int
     {
         return $this->betterReflectionProperty->getModifiers();
     }
 
+    /** @psalm-mutation-free */
     public function getDeclaringClass(): ReflectionClass
     {
         return new ReflectionClass($this->betterReflectionProperty->getImplementingClass());
     }
 
+    /** @psalm-mutation-free */
     public function getDocComment(): string|false
     {
         return $this->betterReflectionProperty->getDocComment() ?? false;
@@ -121,16 +131,19 @@ final class ReflectionProperty extends CoreReflectionProperty
     /**
      * @codeCoverageIgnore
      * @infection-ignore-all
+     * @psalm-mutation-free
      */
     public function setAccessible(bool $accessible): void
     {
     }
 
+    /** @psalm-mutation-free */
     public function hasDefaultValue(): bool
     {
         return $this->betterReflectionProperty->hasDefaultValue();
     }
 
+    /** @psalm-mutation-free */
     public function getDefaultValue(): mixed
     {
         return $this->betterReflectionProperty->getDefaultValue();
@@ -145,6 +158,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         }
     }
 
+    /** @psalm-mutation-free */
     public function isPromoted(): bool
     {
         return $this->betterReflectionProperty->isPromoted();
@@ -172,6 +186,7 @@ final class ReflectionProperty extends CoreReflectionProperty
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 
+    /** @psalm-mutation-free */
     public function isReadOnly(): bool
     {
         return $this->betterReflectionProperty->isReadOnly();

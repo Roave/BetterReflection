@@ -16,6 +16,11 @@ use function sprintf;
 /** @internal */
 final class ReflectionFunctionStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionFunction $functionReflection): string
     {
         $parametersFormat = $functionReflection->getNumberOfParameters() > 0 || $functionReflection->hasReturnType()
@@ -26,7 +31,7 @@ final class ReflectionFunctionStringCast
             ? "\n  - Return [ %s ]"
             : '';
 
-        return sprintf(
+        $string = sprintf(
             'Function [ <%s> function %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($functionReflection),
             $functionReflection->getName(),
@@ -35,8 +40,12 @@ final class ReflectionFunctionStringCast
             self::parametersToString($functionReflection),
             self::returnTypeToString($functionReflection),
         );
+        assert($string !== '');
+
+        return $string;
     }
 
+    /** @psalm-pure */
     private static function sourceToString(ReflectionFunction $functionReflection): string
     {
         if ($functionReflection->isUserDefined()) {
@@ -49,6 +58,7 @@ final class ReflectionFunctionStringCast
         return sprintf('internal:%s', $extensionName);
     }
 
+    /** @psalm-pure */
     private static function fileAndLinesToString(ReflectionFunction $functionReflection): string
     {
         if ($functionReflection->isInternal()) {
@@ -63,11 +73,13 @@ final class ReflectionFunctionStringCast
         return sprintf("\n  @@ %s %d - %d", $fileName, $functionReflection->getStartLine(), $functionReflection->getEndLine());
     }
 
+    /** @psalm-pure */
     private static function parametersToString(ReflectionFunction $functionReflection): string
     {
         return array_reduce($functionReflection->getParameters(), static fn (string $string, ReflectionParameter $parameterReflection): string => $string . "\n    " . ReflectionParameterStringCast::toString($parameterReflection), '');
     }
 
+    /** @psalm-pure */
     private static function returnTypeToString(ReflectionFunction $methodReflection): string
     {
         $type = $methodReflection->getReturnType();

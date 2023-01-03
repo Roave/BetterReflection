@@ -15,6 +15,7 @@ use function assert;
 use function implode;
 use function sprintf;
 
+/** @psalm-immutable */
 class ReflectionUnionType extends ReflectionType
 {
     /** @var non-empty-list<ReflectionNamedType|ReflectionIntersectionType> */
@@ -66,6 +67,7 @@ class ReflectionUnionType extends ReflectionType
         return false;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return implode('|', array_map(static function (ReflectionType $type): string {

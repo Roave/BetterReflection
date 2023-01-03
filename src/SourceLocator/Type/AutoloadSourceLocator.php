@@ -256,6 +256,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         //       defined a constant that is being looked up. Earlier files are possibly related
         //       to libraries/frameworks that we rely upon.
         // @infection-ignore-all UnwrapArrayReverse: Ignore because the result is some with or without array_reverse()
+        /** @phpstan-var non-empty-string $includedFileName */
         foreach (array_reverse(get_included_files()) as $includedFileName) {
             try {
                 FileChecker::assertReadableFile($includedFileName);

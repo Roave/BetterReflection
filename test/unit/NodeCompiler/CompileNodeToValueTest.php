@@ -35,6 +35,7 @@ use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
 
 use function assert;
 use function define;
+use function is_string;
 use function realpath;
 use function sprintf;
 use function uniqid;
@@ -741,7 +742,7 @@ PHP;
     /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsWithoutNamespaceProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['_DIR', $dir],
@@ -758,7 +759,7 @@ PHP;
     /** @dataProvider magicConstantsWithoutNamespaceProvider */
     public function testMagicConstantsWithoutNamespace(string $constantName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $constant  = $reflector->reflectConstant($constantName);
 
         self::assertSame($expectedValue, $constant->getValue());
@@ -767,7 +768,7 @@ PHP;
     /** @return list<array{0: string, 1: mixed}> */
     public function magicConstantsInNamespaceProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['_DIR', $dir],
@@ -881,7 +882,7 @@ PHP
     /** @dataProvider magicConstantsInNamespaceProvider */
     public function testMagicConstantsInNamespace(string $constantName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $constant  = $reflector->reflectConstant('Roave\BetterReflectionTest\Fixture\\' . $constantName);
 
         self::assertSame($expectedValue, $constant->getValue());
@@ -890,7 +891,7 @@ PHP
     /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInTraitProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['dir', $dir],
@@ -911,7 +912,7 @@ PHP
      */
     public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $class     = $reflector->reflectClass(MagicConstantsTrait::class);
         $property  = $class->getProperty($propertyName);
 
@@ -921,7 +922,7 @@ PHP
     /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInClassProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['dir', $dir],
@@ -942,7 +943,7 @@ PHP
      */
     public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $class     = $reflector->reflectClass(MagicConstantsClass::class);
         $property  = $class->getProperty($propertyName);
 
@@ -952,7 +953,7 @@ PHP
     /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInMethodProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['dir', $dir],
@@ -973,7 +974,7 @@ PHP
      */
     public function testMagicConstantsInMethod(string $parameterName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $class     = $reflector->reflectClass(MagicConstantsClass::class);
         $method    = $class->getMethod('magicConstantsMethod');
         $parameter = $method->getParameter($parameterName);
@@ -984,7 +985,7 @@ PHP
     /** @return list<array{0: non-empty-string, 1: mixed}> */
     public function magicConstantsInFunctionProvider(): array
     {
-        $dir = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture'));
+        $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
         return [
             ['dir', $dir],
@@ -1005,7 +1006,7 @@ PHP
      */
     public function testMagicConstantsInFunction(string $parameterName, mixed $expectedValue): void
     {
-        $reflector = new DefaultReflector(new SingleFileSourceLocator(realpath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
         $function  = $reflector->reflectFunction('Roave\BetterReflectionTest\Fixture\magicConstantsFunction');
         $parameter = $function->getParameter($parameterName);
 
@@ -1041,7 +1042,7 @@ PHP
 
     public function testThrowExceptionWhenValueContainsInitializer(): void
     {
-        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/NewInInitializers.php'));
+        $file = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture/NewInInitializers.php'));
 
         $reflector = new DefaultReflector(new SingleFileSourceLocator($file, $this->astLocator));
         $class     = $reflector->reflectClass(ClassWithNewInInitializers::class);
@@ -1056,5 +1057,15 @@ PHP
         ));
 
         $parameter->getDefaultValue();
+    }
+
+    /** @return non-empty-string */
+    private static function realPath(string|false $path): string
+    {
+        $realPath = realpath($path);
+
+        assert(is_string($realPath) && $realPath !== '');
+
+        return $realPath;
     }
 }

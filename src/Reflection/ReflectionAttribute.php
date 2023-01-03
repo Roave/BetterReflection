@@ -14,6 +14,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use function array_map;
 use function assert;
 
+/** @psalm-immutable */
 class ReflectionAttribute
 {
     /** @var non-empty-string */
@@ -73,6 +74,7 @@ class ReflectionAttribute
         return array_map(static fn (Node\Expr $value): mixed => $compiler->__invoke($value, $context)->value, $this->arguments);
     }
 
+    /** @return int-mask-of<Attribute::TARGET_*> */
     public function getTarget(): int
     {
         return match (true) {
@@ -92,6 +94,7 @@ class ReflectionAttribute
         return $this->isRepeated;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionAttributeStringCast::toString($this);
