@@ -27,6 +27,7 @@ use function file_get_contents;
 use function is_array;
 use function is_dir;
 use function is_file;
+use function is_string;
 use function json_decode;
 use function realpath;
 use function rtrim;
@@ -52,8 +53,11 @@ final class MakeLocatorForInstalledJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
+        $composerJsonContent = file_get_contents($composerJsonPath);
+        assert(is_string($composerJsonContent));
+
         /** @psalm-var Composer|null $composer */
-        $composer  = json_decode((string) file_get_contents($composerJsonPath), true);
+        $composer  = json_decode($composerJsonContent, true);
         $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
         $vendorDir = rtrim($vendorDir, '/');
 
@@ -63,8 +67,11 @@ final class MakeLocatorForInstalledJson
             throw MissingInstalledJson::inProjectPath($realInstallationPath . '/' . $vendorDir);
         }
 
+        $jsonContent = file_get_contents($installedJsonPath);
+        assert(is_string($jsonContent));
+
         /** @var array{packages: list<mixed[]>}|list<mixed[]>|null $installedJson */
-        $installedJson = json_decode((string) file_get_contents($installedJsonPath), true);
+        $installedJson = json_decode($jsonContent, true);
 
         if (! is_array($installedJson)) {
             throw FailedToParseJson::inFile($installedJsonPath);

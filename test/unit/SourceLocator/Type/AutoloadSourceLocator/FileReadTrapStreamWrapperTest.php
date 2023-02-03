@@ -13,8 +13,12 @@ use UnexpectedValueException;
 
 use function file_get_contents;
 use function is_file;
+use function restore_error_handler;
+use function set_error_handler;
 use function sprintf;
 use function uniqid;
+
+use const E_WARNING;
 
 /**
  * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper
@@ -177,28 +181,38 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
     public function testWillRaiseWarningWhenTryingToCheckFileExistenceForNonExistingFileWithoutSilencingModifier(): void
     {
+        set_error_handler(static function (int $errno, string $errstr): bool {
+            throw new Exception($errstr, $errno);
+        }, E_WARNING);
+
         $nonExistingFile = __DIR__ . uniqid('non-existing-file', true);
 
-        self::assertSame(
-            'another value produced by the function',
-            FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                static function () use ($nonExistingFile): string {
-                    if (is_file($nonExistingFile)) {
-                        throw new UnexpectedValueException('is_file() should report `false` for a non-existing file');
-                    }
+        self::expectExceptionMessageMatches('~stat\(\): stat failed for~');
 
-                    if (@file_get_contents($nonExistingFile) !== false) {
-                        throw new UnexpectedValueException('file_get_contents() should report `false` for a non-existing file');
-                    }
+        try {
+            self::assertSame(
+                'another value produced by the function',
+                FileReadTrapStreamWrapper::withStreamWrapperOverride(
+                    static function () use ($nonExistingFile): string {
+                        if (is_file($nonExistingFile)) {
+                            throw new UnexpectedValueException('is_file() should report `false` for a non-existing file');
+                        }
 
-                    return 'another value produced by the function';
-                },
-                ['file'],
-            ),
-        );
+                        if (file_get_contents($nonExistingFile) !== false) {
+                            throw new UnexpectedValueException('file_get_contents() should report `false` for a non-existing file');
+                        }
 
-        self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
-        self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
+                        return 'another value produced by the function';
+                    },
+                    ['file'],
+                ),
+            );
+        } finally {
+            self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
+            self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
+
+            restore_error_handler();
+        }
     }
 
     public function testUrlStatThrowsExceptionWhenCalledDirectly(): void
