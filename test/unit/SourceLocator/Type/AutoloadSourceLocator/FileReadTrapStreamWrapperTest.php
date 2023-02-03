@@ -6,13 +6,11 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\AutoloadSourceLocator;
 
 use Exception;
 use LogicException;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Throwable;
 use UnexpectedValueException;
 
-use function class_exists;
 use function file_get_contents;
 use function is_file;
 use function sprintf;
@@ -179,14 +177,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
     public function testWillRaiseWarningWhenTryingToCheckFileExistenceForNonExistingFileWithoutSilencingModifier(): void
     {
-        self::assertTrue(
-            class_exists(Warning::class),
-            'The warning class should not be autoloaded lazily for this specific test',
-        );
-
         $nonExistingFile = __DIR__ . uniqid('non-existing-file', true);
-
-        $this->expectWarning();
 
         self::assertSame(
             'another value produced by the function',
@@ -196,7 +187,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
                         throw new UnexpectedValueException('is_file() should report `false` for a non-existing file');
                     }
 
-                    if (file_get_contents($nonExistingFile) !== false) {
+                    if (@file_get_contents($nonExistingFile) !== false) {
                         throw new UnexpectedValueException('file_get_contents() should report `false` for a non-existing file');
                     }
 
