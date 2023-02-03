@@ -784,16 +784,16 @@ class ReflectionClassTest extends TestCase
         self::assertTrue($reflectionClassAdapter->isIterable());
     }
 
-    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
         $betterReflectionClass
             ->method('getExtensionName')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::assertSame('', $reflectionClassAdapter->getExtensionName());
+        self::assertFalse($reflectionClassAdapter->getExtensionName());
     }
 
     public function testGetConstructorReturnsNullWhenNoConstructorExists(): void

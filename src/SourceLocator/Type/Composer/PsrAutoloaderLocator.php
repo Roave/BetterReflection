@@ -27,6 +27,7 @@ final class PsrAutoloaderLocator implements SourceLocator
 
     public function locateIdentifier(Reflector $reflector, Identifier $identifier): Reflection|null
     {
+        /** @phpstan-var non-empty-string $file */
         foreach ($this->mapping->resolvePossibleFilePaths($identifier) as $file) {
             try {
                 FileChecker::assertReadableFile($file);

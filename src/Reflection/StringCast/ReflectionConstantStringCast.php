@@ -19,12 +19,17 @@ use function sprintf;
  */
 final class ReflectionConstantStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionConstant $constantReflection): string
     {
         /** @psalm-var scalar|array<scalar> $value */
         $value = $constantReflection->getValue();
 
-        return sprintf(
+        $string = sprintf(
             'Constant [ <%s> %s %s ] {%s %s }',
             self::sourceToString($constantReflection),
             gettype($value),
@@ -32,8 +37,12 @@ final class ReflectionConstantStringCast
             self::fileAndLinesToString($constantReflection),
             is_array($value) ? 'Array' : (string) $value,
         );
+        assert($string !== '');
+
+        return $string;
     }
 
+    /** @psalm-pure */
     private static function sourceToString(ReflectionConstant $constantReflection): string
     {
         if ($constantReflection->isUserDefined()) {
@@ -46,6 +55,7 @@ final class ReflectionConstantStringCast
         return sprintf('internal:%s', $extensionName);
     }
 
+    /** @psalm-pure */
     private static function fileAndLinesToString(ReflectionConstant $constantReflection): string
     {
         if ($constantReflection->isInternal()) {

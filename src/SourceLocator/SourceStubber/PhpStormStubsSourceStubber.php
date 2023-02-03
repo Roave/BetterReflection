@@ -425,14 +425,22 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         );
     }
 
+    /** @return non-empty-string */
     private function getExtensionFromFilePath(string $filePath): string
     {
-        return explode('/', $filePath)[0];
+        $extensionName = explode('/', $filePath)[0];
+        assert($extensionName !== '');
+
+        return $extensionName;
     }
 
+    /** @return non-empty-string */
     private function getAbsoluteFilePath(string $filePath): string
     {
-        return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
+        $absoluteFilePath = sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
+        assert($absoluteFilePath !== '');
+
+        return $absoluteFilePath;
     }
 
     /**

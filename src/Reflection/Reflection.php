@@ -9,6 +9,8 @@ namespace Roave\BetterReflection\Reflection;
  * ensure we are working with BetterReflection reflections.
  *
  * @internal
+ *
+ * @psalm-immutable
  */
 interface Reflection
 {

@@ -27,6 +27,11 @@ use function trim;
 /** @internal */
 final class ReflectionClassStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionClass $classReflection): string
     {
         $isObject = $classReflection instanceof ReflectionObject;
@@ -51,7 +56,7 @@ final class ReflectionClassStringCast
         $dynamicProperties = self::getDynamicProperties($classReflection);
         $methods           = self::getMethods($classReflection);
 
-        return sprintf(
+        $string = sprintf(
             $format,
             $isObject ? 'Object of class' : $type,
             self::sourceToString($classReflection),
@@ -75,8 +80,12 @@ final class ReflectionClassStringCast
             count($methods),
             self::methodsToString($methods, 2),
         );
+        assert($string !== '');
+
+        return $string;
     }
 
+    /** @psalm-pure */
     private static function typeToString(ReflectionClass $classReflection): string
     {
         if ($classReflection->isInterface()) {
@@ -90,6 +99,7 @@ final class ReflectionClassStringCast
         return 'Class';
     }
 
+    /** @psalm-pure */
     private static function sourceToString(ReflectionClass $classReflection): string
     {
         if ($classReflection->isUserDefined()) {
@@ -102,6 +112,7 @@ final class ReflectionClassStringCast
         return sprintf('internal:%s', $extensionName);
     }
 
+    /** @psalm-pure */
     private static function extendsToString(ReflectionClass $classReflection): string
     {
         $parentClass = $classReflection->getParentClass();
@@ -113,6 +124,7 @@ final class ReflectionClassStringCast
         return ' extends ' . $parentClass->getName();
     }
 
+    /** @psalm-pure */
     private static function implementsToString(ReflectionClass $classReflection): string
     {
         $interfaceNames = $classReflection->getInterfaceNames();
@@ -124,6 +136,7 @@ final class ReflectionClassStringCast
         return ' implements ' . implode(', ', $interfaceNames);
     }
 
+    /** @psalm-pure */
     private static function fileAndLinesToString(ReflectionClass $classReflection): string
     {
         if ($classReflection->isInternal()) {
@@ -141,6 +154,8 @@ final class ReflectionClassStringCast
     /**
      * @param array<ReflectionClassConstant> $constants
      * @param array<ReflectionEnumCase>      $enumCases
+     *
+     * @psalm-pure
      */
     private static function constantsToString(array $constants, array $enumCases): string
     {
@@ -154,7 +169,11 @@ final class ReflectionClassStringCast
         return self::itemsToString($items);
     }
 
-    /** @param array<ReflectionProperty> $properties */
+    /**
+     * @param array<ReflectionProperty> $properties
+     *
+     * @psalm-pure
+     */
     private static function propertiesToString(array $properties): string
     {
         if ($properties === []) {
@@ -164,7 +183,11 @@ final class ReflectionClassStringCast
         return self::itemsToString(array_map(static fn (ReflectionProperty $propertyReflection): string => ReflectionPropertyStringCast::toString($propertyReflection), $properties));
     }
 
-    /** @param array<ReflectionMethod> $methods */
+    /**
+     * @param array<ReflectionMethod> $methods
+     *
+     * @psalm-pure
+     */
     private static function methodsToString(array $methods, int $emptyLinesAmongItems = 1): string
     {
         if ($methods === []) {
@@ -174,7 +197,11 @@ final class ReflectionClassStringCast
         return self::itemsToString(array_map(static fn (ReflectionMethod $method): string => ReflectionMethodStringCast::toString($method), $methods), $emptyLinesAmongItems);
     }
 
-    /** @param array<string> $items */
+    /**
+     * @param array<string> $items
+     *
+     * @psalm-pure
+     */
     private static function itemsToString(array $items, int $emptyLinesAmongItems = 1): string
     {
         $string = implode(str_repeat("\n", $emptyLinesAmongItems), $items);
@@ -182,36 +209,57 @@ final class ReflectionClassStringCast
         return "\n" . preg_replace('/(^|\n)(?!\n)/', '\1' . self::indent(), $string);
     }
 
+    /** @psalm-pure */
     private static function indent(): string
     {
         return str_repeat(' ', 4);
     }
 
-    /** @return array<ReflectionProperty> */
+    /**
+     * @return array<ReflectionProperty>
+     *
+     * @psalm-pure
+     */
     private static function getStaticProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => $propertyReflection->isStatic());
     }
 
-    /** @return array<ReflectionMethod> */
+    /**
+     * @return array<ReflectionMethod>
+     *
+     * @psalm-pure
+     */
     private static function getStaticMethods(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getMethods(), static fn (ReflectionMethod $methodReflection): bool => $methodReflection->isStatic());
     }
 
-    /** @return array<ReflectionProperty> */
+    /**
+     * @return array<ReflectionProperty>
+     *
+     * @psalm-pure
+     */
     private static function getDefaultProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => ! $propertyReflection->isStatic() && $propertyReflection->isDefault());
     }
 
-    /** @return array<ReflectionProperty> */
+    /**
+     * @return array<ReflectionProperty>
+     *
+     * @psalm-pure
+     */
     private static function getDynamicProperties(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getProperties(), static fn (ReflectionProperty $propertyReflection): bool => ! $propertyReflection->isStatic() && ! $propertyReflection->isDefault());
     }
 
-    /** @return array<ReflectionMethod> */
+    /**
+     * @return array<ReflectionMethod>
+     *
+     * @psalm-pure
+     */
     private static function getMethods(ReflectionClass $classReflection): array
     {
         return array_filter($classReflection->getMethods(), static fn (ReflectionMethod $methodReflection): bool => ! $methodReflection->isStatic());

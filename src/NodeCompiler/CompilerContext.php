@@ -28,6 +28,7 @@ class CompilerContext
         return $this->reflector;
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         if ($this->contextReflection instanceof ReflectionConstant) {

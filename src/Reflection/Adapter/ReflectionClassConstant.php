@@ -15,7 +15,10 @@ use function array_map;
 use function constant;
 use function sprintf;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ * @psalm-immutable
+ */
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
     public const IS_FINAL = 32;
@@ -26,18 +29,11 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         unset($this->class);
     }
 
-    /**
-     * Get the name of the reflection (e.g. if this is a ReflectionClass this
-     * will be the class name).
-     */
     public function getName(): string
     {
         return $this->betterClassConstantOrEnumCase->getName();
     }
 
-    /**
-     * Returns constant value
-     */
     public function getValue(): mixed
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -47,9 +43,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->getValue();
     }
 
-    /**
-     * Constant is public
-     */
     public function isPublic(): bool
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -59,9 +52,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->isPublic();
     }
 
-    /**
-     * Constant is private
-     */
     public function isPrivate(): bool
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -71,9 +61,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->isPrivate();
     }
 
-    /**
-     * Constant is protected
-     */
     public function isProtected(): bool
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -83,9 +70,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->isProtected();
     }
 
-    /**
-     * Returns a bitfield of the access modifiers for this constant
-     */
     public function getModifiers(): int
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -95,9 +79,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->getModifiers();
     }
 
-    /**
-     * Get the declaring class
-     */
     public function getDeclaringClass(): ReflectionClass
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
@@ -107,9 +88,6 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return new ReflectionClass($this->betterClassConstantOrEnumCase->getImplementingClass());
     }
 
-    /**
-     * Returns the doc comment for this constant
-     */
     public function getDocComment(): string|false
     {
         return $this->betterClassConstantOrEnumCase->getDocComment() ?? false;
@@ -119,6 +97,8 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
      * To string
      *
      * @link https://php.net/manual/en/reflector.tostring.php
+     *
+     * @return non-empty-string
      */
     public function __toString(): string
     {
@@ -144,6 +124,7 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
             $attributes = $this->betterClassConstantOrEnumCase->getAttributes();
         }
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 

@@ -11,6 +11,7 @@ use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNam
 use function array_map;
 use function assert;
 
+/** @psalm-immutable */
 class ReflectionIntersectionType extends CoreReflectionIntersectionType
 {
     public function __construct(private BetterReflectionIntersectionType $betterReflectionType)
@@ -28,11 +29,13 @@ class ReflectionIntersectionType extends CoreReflectionIntersectionType
         }, $this->betterReflectionType->getTypes());
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionType->__toString();
     }
 
+    /** @return false */
     public function allowsNull(): bool
     {
         return $this->betterReflectionType->allowsNull();

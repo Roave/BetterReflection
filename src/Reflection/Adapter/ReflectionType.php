@@ -14,14 +14,20 @@ use function array_filter;
 use function array_values;
 use function count;
 
+/** @psalm-immutable */
 abstract class ReflectionType extends CoreReflectionType
 {
+    /** @psalm-pure */
     public static function fromTypeOrNull(BetterReflectionUnionType|BetterReflectionNamedType|BetterReflectionIntersectionType|null $betterReflectionType): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
     {
         return $betterReflectionType !== null ? self::fromType($betterReflectionType) : null;
     }
 
-    /** @internal */
+    /**
+     * @internal
+     *
+     * @psalm-pure
+     */
     public static function fromType(BetterReflectionNamedType|BetterReflectionUnionType|BetterReflectionIntersectionType $betterReflectionType): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType
     {
         if ($betterReflectionType instanceof BetterReflectionUnionType) {

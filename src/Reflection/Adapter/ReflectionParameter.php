@@ -23,7 +23,10 @@ use function count;
 use function sprintf;
 use function strtolower;
 
-/** @psalm-suppress MissingImmutableAnnotation, PropertyNotSetInConstructor */
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ * @psalm-immutable
+ */
 final class ReflectionParameter extends CoreReflectionParameter
 {
     public function __construct(private BetterReflectionParameter $betterReflectionParameter)
@@ -31,6 +34,7 @@ final class ReflectionParameter extends CoreReflectionParameter
         unset($this->name);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return $this->betterReflectionParameter->__toString();
@@ -242,6 +246,7 @@ final class ReflectionParameter extends CoreReflectionParameter
             $attributes = $this->betterReflectionParameter->getAttributes();
         }
 
+        /** @psalm-suppress ImpureFunctionCall */
         return array_map(static fn (BetterReflectionAttribute $betterReflectionAttribute): ReflectionAttribute => new ReflectionAttribute($betterReflectionAttribute), $attributes);
     }
 

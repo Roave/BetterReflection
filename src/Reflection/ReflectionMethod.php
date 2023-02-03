@@ -25,6 +25,7 @@ use function assert;
 use function sprintf;
 use function strtolower;
 
+/** @psalm-immutable */
 class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
@@ -258,6 +259,7 @@ class ReflectionMethod
         return $modifiers;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionMethodStringCast::toString($this);

@@ -25,45 +25,78 @@ use function assert;
 use function count;
 use function is_array;
 
+/** @psalm-immutable */
 trait ReflectionFunctionAbstract
 {
-    /** @var non-empty-string */
+    /**
+     * @var non-empty-string
+     * @psalm-allow-private-mutation
+     */
     private string $name;
 
-    /** @var array<non-empty-string, ReflectionParameter> */
+    /**
+     * @var array<non-empty-string, ReflectionParameter>
+     * @psalm-allow-private-mutation
+     */
     private array $parameters;
 
+    /** @psalm-allow-private-mutation */
     private bool $returnsReference;
 
+    /** @psalm-allow-private-mutation */
     private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $returnType;
 
-    /** @var list<ReflectionAttribute> */
+    /**
+     * @var list<ReflectionAttribute>
+     * @psalm-allow-private-mutation
+     */
     private array $attributes;
 
+    /**
+     * @var non-empty-string|null
+     * @psalm-allow-private-mutation
+     */
     private string|null $docComment;
 
-    /** @var positive-int|null */
+    /**
+     * @var positive-int|null
+     * @psalm-allow-private-mutation
+     */
     private int|null $startLine;
 
-    /** @var positive-int|null */
+    /**
+     * @var positive-int|null
+     * @psalm-allow-private-mutation
+     */
     private int|null $endLine;
 
-    /** @var positive-int|null */
+    /**
+     * @var positive-int|null
+     * @psalm-allow-private-mutation
+     */
     private int|null $startColumn;
 
-    /** @var positive-int|null */
+    /**
+     * @var positive-int|null
+     * @psalm-allow-private-mutation
+     */
     private int|null $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private bool $couldThrow = false;
 
-    private bool $isClosure   = false;
+    /** @psalm-allow-private-mutation */
+    private bool $isClosure = false;
+    /** @psalm-allow-private-mutation */
     private bool $isGenerator = false;
 
+    /** @return non-empty-string */
     abstract public function __toString(): string;
 
     /** @return non-empty-string */
     abstract public function getShortName(): string;
 
+    /** @psalm-external-mutation-free */
     private function fillFromNode(MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node): void
     {
         $this->parameters       = $this->createParameters($node);
@@ -160,6 +193,8 @@ trait ReflectionFunctionAbstract
 
     /**
      * Get the number of parameters for this class.
+     *
+     * @return positive-int|0
      */
     public function getNumberOfParameters(): int
     {
@@ -168,6 +203,8 @@ trait ReflectionFunctionAbstract
 
     /**
      * Get the number of required parameters for this method.
+     *
+     * @return positive-int|0
      */
     public function getNumberOfRequiredParameters(): int
     {
@@ -217,11 +254,13 @@ trait ReflectionFunctionAbstract
         return $this->parameters[$parameterName] ?? null;
     }
 
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         return $this->locatedSource->getFileName();
@@ -259,6 +298,7 @@ trait ReflectionFunctionAbstract
         return ! $this->isInternal();
     }
 
+    /** @return non-empty-string|null */
     public function getExtensionName(): string|null
     {
         return $this->locatedSource->getExtensionName();

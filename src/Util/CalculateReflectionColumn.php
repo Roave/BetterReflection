@@ -19,6 +19,8 @@ final class CalculateReflectionColumn
      *
      * @throws InvalidNodePosition
      * @throws NoNodePosition
+     *
+     * @psalm-pure
      */
     public static function getStartColumn(string $source, Node $node): int
     {
@@ -34,6 +36,8 @@ final class CalculateReflectionColumn
      *
      * @throws InvalidNodePosition
      * @throws NoNodePosition
+     *
+     * @psalm-pure
      */
     public static function getEndColumn(string $source, Node $node): int
     {
@@ -48,6 +52,8 @@ final class CalculateReflectionColumn
      * @return positive-int
      *
      * @throws InvalidNodePosition
+     *
+     * @psalm-pure
      */
     private static function calculateColumn(string $source, int $position): int
     {

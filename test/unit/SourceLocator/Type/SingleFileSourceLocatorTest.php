@@ -66,6 +66,6 @@ class SingleFileSourceLocatorTest extends TestCase
     public function testThrowsExceptionIfFileIsNotReadable(): void
     {
         $this->expectException(InvalidFileLocation::class);
-        new SingleFileSourceLocator('', $this->astLocator);
+        new SingleFileSourceLocator('not-readable', $this->astLocator);
     }
 }

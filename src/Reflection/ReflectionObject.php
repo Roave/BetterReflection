@@ -22,9 +22,9 @@ use Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator;
 use function array_filter;
 use function array_map;
 use function array_merge;
-use function assert;
 use function preg_match;
 
+/** @psalm-immutable */
 class ReflectionObject extends ReflectionClass
 {
     protected function __construct(private Reflector $reflector, private ReflectionClass $reflectionClass, private object $object)
@@ -87,7 +87,6 @@ class ReflectionObject extends ReflectionClass
 
         foreach ($reflectionProperties as $property) {
             $propertyName = $property->getName();
-            assert($propertyName !== '');
 
             if ($this->reflectionClass->hasProperty($propertyName)) {
                 continue;
@@ -143,6 +142,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->inNamespace();
     }
 
+    /** @return non-empty-string|null */
     public function getExtensionName(): string|null
     {
         return $this->reflectionClass->getExtensionName();
@@ -258,6 +258,7 @@ class ReflectionObject extends ReflectionClass
         );
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         return $this->reflectionClass->getFileName();
@@ -301,6 +302,7 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getParentClassNames();
     }
 
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->reflectionClass->getDocComment();

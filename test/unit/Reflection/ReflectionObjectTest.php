@@ -25,8 +25,10 @@ use Roave\BetterReflectionTest\Fixture\RuntimeProperties;
 use stdClass;
 
 use function array_map;
+use function assert;
 use function get_class_methods;
 use function in_array;
+use function is_string;
 use function random_int;
 use function realpath;
 use function uniqid;
@@ -43,7 +45,10 @@ class ReflectionObjectTest extends TestCase
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
     public function anonymousClassInstancesProvider(): array
     {
-        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php'));
+        $file = realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php');
+        assert(is_string($file) && $file !== '');
+
+        $file = FileHelper::normalizeWindowsPath($file);
 
         $anonymousClasses = require $file;
 
@@ -68,7 +73,10 @@ class ReflectionObjectTest extends TestCase
 
     public function testReflectionForAnonymousClassWithInterface(): void
     {
-        $file = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterfaceForRequire.php'));
+        $file = realpath(__DIR__ . '/../Fixture/AnonymousClassInstanceWithInterfaceForRequire.php');
+        assert(is_string($file) && $file !== '');
+
+        $file = FileHelper::normalizeWindowsPath($file);
 
         $anonymousClass = require $file;
 

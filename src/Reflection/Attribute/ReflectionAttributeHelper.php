@@ -26,6 +26,8 @@ class ReflectionAttributeHelper
      * @param Node\AttributeGroup[] $attrGroups
      *
      * @return list<ReflectionAttribute>
+     *
+     * @psalm-pure
      */
     public static function createAttributes(
         Reflector $reflector,
@@ -58,6 +60,8 @@ class ReflectionAttributeHelper
      * @param list<ReflectionAttribute> $attributes
      *
      * @return list<ReflectionAttribute>
+     *
+     * @psalm-pure
      */
     public static function filterAttributesByName(array $attributes, string $name): array
     {
@@ -69,6 +73,8 @@ class ReflectionAttributeHelper
      * @param class-string              $className
      *
      * @return list<ReflectionAttribute>
+     *
+     * @psalm-pure
      */
     public static function filterAttributesByInstance(array $attributes, string $className): array
     {

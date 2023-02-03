@@ -21,6 +21,7 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 use function array_map;
 use function assert;
 
+/** @psalm-immutable */
 class ReflectionClassConstant
 {
     /** @var non-empty-string */
@@ -31,6 +32,7 @@ class ReflectionClassConstant
 
     private Node\Expr $value;
 
+    /** @var non-empty-string|null */
     private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
@@ -48,6 +50,7 @@ class ReflectionClassConstant
     /** @var positive-int */
     private int $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
@@ -231,9 +234,7 @@ class ReflectionClassConstant
         return $this->implementingClass;
     }
 
-    /**
-     * Returns the doc comment for this constant
-     */
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;
@@ -244,6 +245,7 @@ class ReflectionClassConstant
         return AnnotationHelper::isDeprecated($this->getDocComment());
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionClassConstantStringCast::toString($this);

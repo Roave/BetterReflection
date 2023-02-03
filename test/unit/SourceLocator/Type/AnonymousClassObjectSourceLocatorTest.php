@@ -21,6 +21,8 @@ use Roave\BetterReflection\Util\FileHelper;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
+use function assert;
+use function is_string;
 use function realpath;
 use function sprintf;
 
@@ -42,8 +44,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
     public function anonymousClassInstancesProvider(): array
     {
-        $fileWithClasses                = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
-        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
+        $fileWithClasses                = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
+        $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
         $classes                = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
@@ -172,7 +174,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /** @return list<array{0: string, 1: object}> */
     public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
-        $file    = FileHelper::normalizeWindowsPath(realpath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file    = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
 
         return [
@@ -263,5 +265,15 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
         $this->expectException(InvalidFileLocation::class);
         $sourceLocator->locateIdentifier($this->reflector, new Identifier(stdClass::class, new IdentifierType(IdentifierType::IDENTIFIER_CLASS)));
+    }
+
+    /** @return non-empty-string */
+    private static function realPath(string|false $path): string
+    {
+        $realPath = realpath($path);
+
+        assert(is_string($realPath) && $realPath !== '');
+
+        return $realPath;
     }
 }

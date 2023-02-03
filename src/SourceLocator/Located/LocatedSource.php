@@ -9,13 +9,18 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\Util\FileHelper;
 
+use function assert;
+
 /**
  * Value object containing source code that has been located.
  *
  * @internal
+ *
+ * @psalm-immutable
  */
 class LocatedSource
 {
+    /** @var non-empty-string|null */
     private string|null $filename;
 
     /**
@@ -25,6 +30,8 @@ class LocatedSource
     public function __construct(private string $source, private string|null $name, string|null $filename = null)
     {
         if ($filename !== null) {
+            assert($filename !== '');
+
             FileChecker::assertReadableFile($filename);
 
             $filename = FileHelper::normalizeWindowsPath($filename);
@@ -43,6 +50,7 @@ class LocatedSource
         return $this->name;
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         return $this->filename;
@@ -56,6 +64,7 @@ class LocatedSource
         return false;
     }
 
+    /** @return non-empty-string|null */
     public function getExtensionName(): string|null
     {
         return null;

@@ -24,6 +24,8 @@ use const STREAM_URL_STAT_QUIET;
  * phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  * phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+ *
+ * @psalm-suppress MissingConstructor
  */
 final class FileReadTrapStreamWrapper
 {
@@ -43,6 +45,9 @@ final class FileReadTrapStreamWrapper
      */
     public static string|null $autoloadLocatedFile = null;
 
+    /** @var resource */
+    public $context;
+
     /**
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
      * @param list<string>                          $streamWrapperProtocols
@@ -60,7 +65,6 @@ final class FileReadTrapStreamWrapper
 
         try {
             foreach ($streamWrapperProtocols as $protocol) {
-                /** @psalm-suppress UnusedFunctionCall */
                 stream_wrapper_unregister($protocol);
                 stream_wrapper_register($protocol, self::class);
             }
@@ -68,7 +72,6 @@ final class FileReadTrapStreamWrapper
             $result = $executeMeWithinStreamWrapperOverride();
         } finally {
             foreach ($streamWrapperProtocols as $protocol) {
-                /** @psalm-suppress UnusedFunctionCall */
                 stream_wrapper_restore($protocol);
             }
 
@@ -124,7 +127,6 @@ final class FileReadTrapStreamWrapper
         }
 
         foreach (self::$registeredStreamWrapperProtocols as $protocol) {
-            /** @psalm-suppress UnusedFunctionCall */
             stream_wrapper_restore($protocol);
         }
 
@@ -135,7 +137,6 @@ final class FileReadTrapStreamWrapper
         }
 
         foreach (self::$registeredStreamWrapperProtocols as $protocol) {
-            /** @psalm-suppress UnusedFunctionCall */
             stream_wrapper_unregister($protocol);
             stream_wrapper_register($protocol, self::class);
         }

@@ -6,11 +6,17 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 
+use function assert;
 use function sprintf;
 
 /** @internal */
 final class ReflectionPropertyStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(ReflectionProperty $propertyReflection): string
     {
         $stateModifier = '';
@@ -21,7 +27,7 @@ final class ReflectionPropertyStringCast
 
         $type = $propertyReflection->getType();
 
-        return sprintf(
+        $string = sprintf(
             'Property [%s %s%s%s%s $%s ]',
             $stateModifier,
             self::visibilityToString($propertyReflection),
@@ -30,8 +36,12 @@ final class ReflectionPropertyStringCast
             $type !== null ? sprintf(' %s', ReflectionTypeStringCast::toString($type)) : '',
             $propertyReflection->getName(),
         );
+        assert($string !== '');
+
+        return $string;
     }
 
+    /** @psalm-pure */
     private static function visibilityToString(ReflectionProperty $propertyReflection): string
     {
         if ($propertyReflection->isProtected()) {

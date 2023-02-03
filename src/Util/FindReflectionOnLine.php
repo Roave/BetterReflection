@@ -32,6 +32,8 @@ final class FindReflectionOnLine
      *
      * Returns null if no reflections found on the line.
      *
+     * @param non-empty-string $filename
+     *
      * @throws InvalidFileLocation
      * @throws ParseToAstFailure
      * @throws InvalidArgumentException
@@ -65,6 +67,8 @@ final class FindReflectionOnLine
 
     /**
      * Find all class and function reflections in the specified file
+     *
+     * @param non-empty-string $filename
      *
      * @return list<Reflection>
      *

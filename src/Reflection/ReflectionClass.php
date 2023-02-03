@@ -61,6 +61,7 @@ use function sha1;
 use function sprintf;
 use function strtolower;
 
+/** @psalm-immutable */
 class ReflectionClass implements Reflection
 {
     public const ANONYMOUS_CLASS_NAME_PREFIX        = 'class@anonymous';
@@ -70,6 +71,7 @@ class ReflectionClass implements Reflection
     /** @var class-string|trait-string|null */
     private string|null $name;
 
+    /** @var non-empty-string|null */
     private string|null $shortName;
 
     private bool $isInterface;
@@ -80,6 +82,7 @@ class ReflectionClass implements Reflection
     /** @var int-mask-of<ReflectionClassAdapter::IS_*> */
     private int $modifiers;
 
+    /** @var non-empty-string|null */
     private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
@@ -118,16 +121,28 @@ class ReflectionClass implements Reflection
     /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
     private array $traitsData;
 
-    /** @var array<non-empty-string, ReflectionClassConstant>|null */
+    /**
+     * @var array<non-empty-string, ReflectionClassConstant>|null
+     * @psalm-allow-private-mutation
+     */
     private array|null $cachedConstants = null;
 
-    /** @var array<non-empty-string, ReflectionProperty>|null */
+    /**
+     * @var array<non-empty-string, ReflectionProperty>|null
+     * @psalm-allow-private-mutation
+     */
     private array|null $cachedProperties = null;
 
-    /** @var array<lowercase-string, ReflectionMethod>|null */
+    /**
+     * @var array<lowercase-string, ReflectionMethod>|null
+     * @psalm-allow-private-mutation
+     */
     private array|null $cachedMethods = null;
 
-    /** @var list<ReflectionClass>|null */
+    /**
+     * @var list<ReflectionClass>|null
+     * @psalm-allow-private-mutation
+     */
     private array|null $cachedParentClasses = null;
 
     /** @internal */
@@ -143,10 +158,12 @@ class ReflectionClass implements Reflection
             $namespacedName = $node->namespacedName;
             assert($namespacedName instanceof Node\Name);
             /** @psalm-var class-string|trait-string */
-            $name = $namespacedName->toString();
+            $name      = $namespacedName->toString();
+            $shortName = $node->name->name;
+            assert($shortName !== '');
 
             $this->name      = $name;
-            $this->shortName = $node->name->name;
+            $this->shortName = $shortName;
         }
 
         $this->isInterface  = $node instanceof InterfaceNode;
@@ -198,6 +215,7 @@ class ReflectionClass implements Reflection
         $this->traitsData = $this->computeTraitsData($node);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionClassStringCast::toString($this);
@@ -248,6 +266,8 @@ class ReflectionClass implements Reflection
     /**
      * Get the "short" name of the class (e.g. for A\B\Foo, this will return
      * "Foo").
+     *
+     * @return non-empty-string
      */
     public function getShortName(): string
     {
@@ -261,7 +281,10 @@ class ReflectionClass implements Reflection
             $fileName = sha1($this->locatedSource->getSource());
         }
 
-        return sprintf('%s%s%c%s(%d)', $this->getAnonymousClassNamePrefix(), self::ANONYMOUS_CLASS_NAME_SUFFIX, "\0", $fileName, $this->getStartLine());
+        $anonymousClassName = sprintf('%s%s%c%s(%d)', $this->getAnonymousClassNamePrefix(), self::ANONYMOUS_CLASS_NAME_SUFFIX, "\0", $fileName, $this->getStartLine());
+        assert($anonymousClassName !== '');
+
+        return $anonymousClassName;
     }
 
     /**
@@ -317,6 +340,7 @@ class ReflectionClass implements Reflection
         return $this->namespace !== null;
     }
 
+    /** @return non-empty-string|null */
     public function getExtensionName(): string|null
     {
         return $this->locatedSource->getExtensionName();
@@ -990,7 +1014,7 @@ class ReflectionClass implements Reflection
         return $this->getProperty($name) !== null;
     }
 
-    /** @return array<non-empty-string, scalar|array<scalar>|null> */
+    /** @return array<non-empty-string, mixed> */
     public function getDefaultProperties(): array
     {
         return array_map(
@@ -999,6 +1023,7 @@ class ReflectionClass implements Reflection
         );
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         return $this->locatedSource->getFileName();
@@ -1100,6 +1125,7 @@ class ReflectionClass implements Reflection
         return $this->cachedParentClasses;
     }
 
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;
@@ -1379,7 +1405,9 @@ class ReflectionClass implements Reflection
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias) {
                     if ($adaptation->newModifier) {
-                        $traitsData['modifiers'][$methodHash] = $adaptation->newModifier;
+                        /** @var int-mask-of<ReflectionMethodAdapter::IS_*> $modifier */
+                        $modifier                             = $adaptation->newModifier;
+                        $traitsData['modifiers'][$methodHash] = $modifier;
                     }
 
                     if ($adaptation->newName) {

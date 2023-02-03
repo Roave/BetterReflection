@@ -26,16 +26,24 @@ use function explode;
 use function implode;
 use function is_int;
 
+/** @psalm-immutable */
 class ReflectionConstant implements Reflection
 {
-    /** @var non-empty-string */
+    /**
+     * @var non-empty-string
+     * @psalm-allow-private-mutation
+     */
     private string $name;
 
-    /** @var non-empty-string */
+    /**
+     * @var non-empty-string
+     * @psalm-allow-private-mutation
+     */
     private string $shortName;
 
     private Node\Expr $value;
 
+    /** @var non-empty-string|null */
     private string|null $docComment;
 
     /** @var positive-int */
@@ -50,12 +58,14 @@ class ReflectionConstant implements Reflection
     /** @var positive-int */
     private int $endColumn;
 
+    /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledValue = null;
 
     private function __construct(
         private Reflector $reflector,
         Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
+        /** @psalm-allow-private-mutation */
         private string|null $namespace = null,
         int|null $positionInNode = null,
     ) {
@@ -187,6 +197,7 @@ class ReflectionConstant implements Reflection
         return $this->namespace !== null;
     }
 
+    /** @return non-empty-string|null */
     public function getExtensionName(): string|null
     {
         return $this->locatedSource->getExtensionName();
@@ -234,6 +245,7 @@ class ReflectionConstant implements Reflection
         return $this->compiledValue->value;
     }
 
+    /** @return non-empty-string|null */
     public function getFileName(): string|null
     {
         return $this->locatedSource->getFileName();
@@ -276,14 +288,13 @@ class ReflectionConstant implements Reflection
         return $this->endColumn;
     }
 
-    /**
-     * Returns the doc comment for this constant
-     */
+    /** @return non-empty-string|null */
     public function getDocComment(): string|null
     {
         return $this->docComment;
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionConstantStringCast::toString($this);

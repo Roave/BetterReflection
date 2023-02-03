@@ -16,6 +16,11 @@ use function count;
 /** @internal */
 final class ReflectionTypeStringCast
 {
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-pure
+     */
     public static function toString(
         ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type,
     ): string {

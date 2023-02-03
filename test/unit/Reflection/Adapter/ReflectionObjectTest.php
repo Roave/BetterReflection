@@ -575,16 +575,16 @@ class ReflectionObjectTest extends TestCase
         self::assertNull($reflectionObjectAdapter->getConstructor());
     }
 
-    public function testGetExtensionNameReturnsEmptyStringWhenNoExtensionName(): void
+    public function testGetExtensionNameReturnsFalseWhenNoExtensionName(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
             ->method('getExtensionName')
-            ->willReturn('');
+            ->willReturn(null);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertSame('', $reflectionObjectAdapter->getExtensionName());
+        self::assertFalse($reflectionObjectAdapter->getExtensionName());
     }
 
     public function testGetConstantsWithFilter(): void

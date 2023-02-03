@@ -20,6 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator;
 use function assert;
 use function function_exists;
 
+/** @psalm-immutable */
 class ReflectionFunction implements Reflection
 {
     use ReflectionFunctionAbstract;
@@ -69,6 +70,7 @@ class ReflectionFunction implements Reflection
         ])))->reflectFunction(self::CLOSURE_NAME);
     }
 
+    /** @return non-empty-string */
     public function __toString(): string
     {
         return ReflectionFunctionStringCast::toString($this);
