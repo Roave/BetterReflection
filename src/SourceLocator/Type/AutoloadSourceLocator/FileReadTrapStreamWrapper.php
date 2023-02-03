@@ -24,6 +24,8 @@ use const STREAM_URL_STAT_QUIET;
  * phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
  * phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+ *
+ * @psalm-suppress MissingConstructor
  */
 final class FileReadTrapStreamWrapper
 {
@@ -42,6 +44,9 @@ final class FileReadTrapStreamWrapper
      * @psalm-allow-private-mutation
      */
     public static string|null $autoloadLocatedFile = null;
+
+    /** @var resource */
+    public $context;
 
     /**
      * @param callable() : ExecutedMethodReturnType $executeMeWithinStreamWrapperOverride
