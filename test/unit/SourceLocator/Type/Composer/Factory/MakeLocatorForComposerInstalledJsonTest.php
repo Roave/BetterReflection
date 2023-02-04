@@ -268,6 +268,7 @@ class MakeLocatorForComposerInstalledJsonTest extends TestCase
     public function testWillFailToProduceLocatorForProjectWithoutInstalledJson(): void
     {
         $this->expectException(MissingInstalledJson::class);
+        $this->expectExceptionMessageMatches('~^Could not locate a "composer/installed.json" file in "[^"]+[\\\\/]Assets[\\\\/]ComposerLocators[\\\\/]project-without-installed.json/vendor"$~');
 
         (new MakeLocatorForInstalledJson())
             ->__invoke(

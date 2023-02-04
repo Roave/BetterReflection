@@ -7,10 +7,6 @@ namespace Roave\BetterReflectionTest\Util;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\FileHelper;
 
-use function strtr;
-
-use const DIRECTORY_SEPARATOR;
-
 /** @covers \Roave\BetterReflection\Util\FileHelper */
 class FileHelperTest extends TestCase
 {
@@ -20,19 +16,29 @@ class FileHelperTest extends TestCase
         self::assertSame('directory/foo/boo/file.php', FileHelper::normalizeWindowsPath('directory/foo/boo/file.php'));
     }
 
-    public function testSystemWindowsPath(): void
+    /** @return list<array{0: string, 1: string}> */
+    public function dataNormalizeSystemPath(): array
     {
-        $path = 'directory\\foo/boo\\foo/file.php';
-
-        self::assertSame(strtr($path, '\\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR), FileHelper::normalizeSystemPath($path));
+        return [
+            ['directory\\foo/boo\\foo/file.php', 'directory/foo/boo/foo/file.php'],
+            ['phar://C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php', 'phar://C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php'],
+            ['C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php', 'C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php'],
+            ['/directory/strange-path-c://file.php', '/directory/strange-path-c://file.php'],
+        ];
     }
 
-    public function testSystemWindowsPathWithProtocol(): void
+    /**
+     * @dataProvider dataNormalizeSystemPath
+     * @requires OS Linux
+     */
+    public function testSystemWindowsPath(string $path, string $expectedPath): void
     {
-        if (DIRECTORY_SEPARATOR !== '\\') {
-            $this->markTestSkipped('Test runs only on Windows');
-        }
+        self::assertSame($expectedPath, FileHelper::normalizeSystemPath($path));
+    }
 
+    /** @requires OSFAMILY Windows */
+    public function testSystemWindowsPathOnWindows(): void
+    {
         $path = 'phar://C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php';
         self::assertSame(
             'phar://C:\Users\ondrej\phpstan.phar\src\TrinaryLogic.php',

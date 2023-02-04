@@ -34,7 +34,7 @@ class FileIteratorSourceLocatorTest extends TestCase
             new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
                 __DIR__ . '/../../Assets/DirectoryScannerAssets',
                 RecursiveDirectoryIterator::SKIP_DOTS,
-            )),
+            ), RecursiveIteratorIterator::SELF_FIRST),
             BetterReflectionSingleton::instance()->astLocator(),
         );
     }

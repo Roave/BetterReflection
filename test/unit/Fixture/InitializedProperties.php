@@ -24,6 +24,6 @@ class InitializedProperties
 
     public function __get($property)
     {
-        throw new Error();
+        throw new Error('Removed property');
     }
 }

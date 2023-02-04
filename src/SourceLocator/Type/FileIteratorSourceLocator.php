@@ -53,6 +53,7 @@ class FileIteratorSourceLocator implements SourceLocator
     /** @throws InvalidFileLocation */
     private function getAggregatedSourceLocator(): AggregateSourceLocator
     {
+        // @infection-ignore-all Coalesce: There's no difference, it's just optimization
         return $this->aggregateSourceLocator
             ?? $this->aggregateSourceLocator = new AggregateSourceLocator(array_values(array_filter(array_map(
                 function (SplFileInfo $item): SingleFileSourceLocator|null {

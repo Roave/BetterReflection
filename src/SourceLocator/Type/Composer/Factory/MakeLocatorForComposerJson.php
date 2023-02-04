@@ -25,6 +25,7 @@ use function file_get_contents;
 use function is_array;
 use function is_dir;
 use function is_file;
+use function is_string;
 use function json_decode;
 use function realpath;
 
@@ -61,8 +62,11 @@ final class MakeLocatorForComposerJson
             throw MissingComposerJson::inProjectPath($installationPath);
         }
 
+        $composerJsonContent = file_get_contents($composerJsonPath);
+        assert(is_string($composerJsonContent));
+
         /** @psalm-var array{autoload: ComposerAutoload}|null $composer */
-        $composer = json_decode((string) file_get_contents($composerJsonPath), true);
+        $composer = json_decode($composerJsonContent, true);
 
         if (! is_array($composer)) {
             throw FailedToParseJson::inFile($composerJsonPath);

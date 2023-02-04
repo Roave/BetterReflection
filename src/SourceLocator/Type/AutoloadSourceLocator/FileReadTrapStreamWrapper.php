@@ -72,7 +72,7 @@ final class FileReadTrapStreamWrapper
             $result = $executeMeWithinStreamWrapperOverride();
         } finally {
             foreach ($streamWrapperProtocols as $protocol) {
-                stream_wrapper_restore($protocol);
+                @stream_wrapper_restore($protocol);
             }
 
             self::$registeredStreamWrapperProtocols = null;
@@ -101,6 +101,7 @@ final class FileReadTrapStreamWrapper
     {
         self::$autoloadLocatedFile = $path;
 
+        // @infection-ignore-all FalseValue
         return false;
     }
 
@@ -130,7 +131,7 @@ final class FileReadTrapStreamWrapper
             stream_wrapper_restore($protocol);
         }
 
-        if ($flags & STREAM_URL_STAT_QUIET) {
+        if (($flags & STREAM_URL_STAT_QUIET) === STREAM_URL_STAT_QUIET) {
             $result = @stat($path);
         } else {
             $result = stat($path);

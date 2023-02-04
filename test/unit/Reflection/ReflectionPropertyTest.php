@@ -778,6 +778,7 @@ PHP;
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
 
         self::expectException(Error::class);
+        self::expectExceptionMessage('Removed property');
         $classReflection->getProperty('toBeRemoved')->isInitialized($object);
     }
 
