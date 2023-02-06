@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -75,11 +76,8 @@ class DirectoriesSourceLocatorTest extends TestCase
         self::assertSame(DirectoryScannerAssets\Bar\FooBar::class, $class->getName());
     }
 
-    /**
-     * @param list<string> $directories
-     *
-     * @dataProvider invalidDirectoriesProvider
-     */
+    /** @param list<string> $directories */
+    #[DataProvider('invalidDirectoriesProvider')]
     public function testInvalidDirectory(array $directories): void
     {
         $this->expectException(InvalidDirectory::class);

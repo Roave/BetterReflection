@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\RequiresOperatingSystemFamily;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +31,7 @@ class FileHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataNormalizeSystemPath */
+    #[DataProvider('dataNormalizeSystemPath')]
     #[RequiresOperatingSystem('Linux')]
     public function testSystemWindowsPath(string $path, string $expectedPath): void
     {

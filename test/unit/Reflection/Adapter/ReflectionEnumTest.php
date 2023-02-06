@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -50,7 +51,7 @@ class ReflectionEnumTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionEnumAdapterReflection = new CoreReflectionClass(ReflectionEnumAdapter::class);
@@ -119,11 +120,8 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(
         string $methodName,
         array $args,

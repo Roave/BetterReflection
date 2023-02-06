@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -69,7 +70,7 @@ PHP
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    #[DataProvider('toStringProvider')]
     public function testToString(
         ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $type,
         string $expectedString,

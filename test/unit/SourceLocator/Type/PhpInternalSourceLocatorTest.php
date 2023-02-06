@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -57,7 +58,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         return $this->createMock(Reflector::class);
     }
 
-    /** @dataProvider internalClassesProvider */
+    #[DataProvider('internalClassesProvider')]
     public function testCanFetchInternalLocatedSourceForClasses(string $className): void
     {
         try {
@@ -103,7 +104,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    /** @dataProvider internalFunctionsProvider */
+    #[DataProvider('internalFunctionsProvider')]
     public function testCanFetchInternalLocatedSourceForFunctions(string $functionName): void
     {
         try {
@@ -139,7 +140,7 @@ class PhpInternalSourceLocatorTest extends TestCase
         );
     }
 
-    /** @dataProvider internalConstantsProvider */
+    #[DataProvider('internalConstantsProvider')]
     public function testCanFetchInternalLocatedSourceForConstants(string $constantName): void
     {
         $reflection = $this->phpInternalSourceLocator->locateIdentifier(

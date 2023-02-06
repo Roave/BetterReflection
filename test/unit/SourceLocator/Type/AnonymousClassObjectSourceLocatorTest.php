@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Parser;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -60,7 +61,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine): void
     {
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
@@ -110,7 +111,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertNull($reflection);
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionClass> $reflections */
@@ -184,7 +185,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider */
+    #[DataProvider('exceptionIfTwoAnonymousClassesOnSameLineProvider')]
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class): void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);

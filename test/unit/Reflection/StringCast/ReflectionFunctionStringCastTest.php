@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionFunctionStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -38,7 +39,7 @@ class ReflectionFunctionStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    #[DataProvider('toStringProvider')]
     public function testToString(string $functionName, string $expectedString): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastFunctions.php', $this->astLocator));

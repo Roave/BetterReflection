@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
@@ -38,7 +39,7 @@ class ReflectionUnionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function test(Node\UnionType $unionType, string $expectedString, bool $expectedNullable): void
     {
         $typeReflection = new ReflectionUnionType($this->reflector, $this->owner, $unionType);

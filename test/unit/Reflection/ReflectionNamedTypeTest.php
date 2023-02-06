@@ -8,6 +8,7 @@ use Generator;
 use LogicException;
 use PhpParser\Node\Identifier;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -61,7 +62,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAllowsNull */
+    #[DataProvider('dataAllowsNull')]
     public function testMixedAllowsNull(string $mixedType): void
     {
         $noNullType = $this->createType($mixedType);
@@ -92,7 +93,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['NULL'];
     }
 
-    /** @dataProvider isBuildinProvider */
+    #[DataProvider('isBuildinProvider')]
     public function testIsBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -107,7 +108,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['\foo'];
     }
 
-    /** @dataProvider isNotBuildinProvider */
+    #[DataProvider('isNotBuildinProvider')]
     public function testIsNotBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -274,7 +275,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetClassWithSelfOrStatic */
+    #[DataProvider('dataGetClassWithSelfOrStatic')]
     public function testGetClassWithSelfOrStatic(string $classNameToReflect, string $type, string $typeClassName): void
     {
         $php = sprintf('<?php
@@ -334,7 +335,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetClassWithParent */
+    #[DataProvider('dataGetClassWithParent')]
     public function testGetClassWithParent(string $parentType): void
     {
         $php = sprintf('<?php

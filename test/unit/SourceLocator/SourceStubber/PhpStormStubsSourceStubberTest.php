@@ -17,6 +17,7 @@ use PDO;
 use PDOException;
 use PhpParser\Parser;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
@@ -120,7 +121,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
     }
 
-    /** @dataProvider internalClassesProvider */
+    #[DataProvider('internalClassesProvider')]
     public function testInternalClasses(string $className): void
     {
         $class = $this->reflector->reflectClass($className);
@@ -273,7 +274,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         );
     }
 
-    /** @dataProvider internalFunctionsProvider */
+    #[DataProvider('internalFunctionsProvider')]
     public function testInternalFunctions(string $functionName): void
     {
         $stubbedReflection = $this->reflector->reflectFunction($functionName);
@@ -328,7 +329,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         return $provider;
     }
 
-    /** @dataProvider internalConstantsProvider */
+    #[DataProvider('internalConstantsProvider')]
     public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
     {
         $constantReflection = $this->reflector->reflectConstant($constantName);
@@ -361,7 +362,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassInNamespace */
+    #[DataProvider('dataClassInNamespace')]
     public function testClassInNamespace(string $className): void
     {
         $classReflection = $this->reflector->reflectClass($className);
@@ -378,7 +379,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFunctionInNamespace */
+    #[DataProvider('dataFunctionInNamespace')]
     public function testFunctionInNamespace(string $functionName): void
     {
         $functionReflection = $this->reflector->reflectFunction($functionName);
@@ -396,7 +397,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataConstantInNamespace */
+    #[DataProvider('dataConstantInNamespace')]
     public function testConstantInNamespace(string $constantName): void
     {
         $constantReflection = $this->reflector->reflectConstant($constantName);
@@ -494,7 +495,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCaseInsensitiveClass */
+    #[DataProvider('dataCaseInsensitiveClass')]
     public function testCaseInsensitiveClass(string $className, string $expectedClassName): void
     {
         $classReflection = $this->reflector->reflectClass($className);
@@ -517,7 +518,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCaseInsensitiveFunction */
+    #[DataProvider('dataCaseInsensitiveFunction')]
     public function testCaseInsensitiveFunction(string $functionName, string $expectedFunctionName): void
     {
         $functionReflection = $this->reflector->reflectFunction($functionName);
@@ -544,7 +545,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCaseInsensitiveConstant */
+    #[DataProvider('dataCaseInsensitiveConstant')]
     public function testCaseInsensitiveConstant(string $constantName, string $expectedConstantName): void
     {
         $reflector = $this->reflector->reflectConstant($constantName);
@@ -562,7 +563,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCaseSensitiveConstantSearchedByWrongCase */
+    #[DataProvider('dataCaseSensitiveConstantSearchedByWrongCase')]
     public function testCaseSensitiveConstantSearchedByWrongCase(string $constantName): void
     {
         $this->expectException(IdentifierNotFound::class);
@@ -580,7 +581,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCaseSensitiveConstantSearchedByRightCase */
+    #[DataProvider('dataCaseSensitiveConstantSearchedByRightCase')]
     public function testCaseSensitiveConstantSearchedByRightCase(string $constantName): void
     {
         self::assertInstanceOf(ReflectionConstant::class, $this->reflector->reflectConstant($constantName));
@@ -651,7 +652,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassInPhpVersion */
+    #[DataProvider('dataClassInPhpVersion')]
     public function testClassInPhpVersion(string $className, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -681,7 +682,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassConstantInPhpVersion */
+    #[DataProvider('dataClassConstantInPhpVersion')]
     public function testClassConstantInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -719,11 +720,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $methodName
-     *
-     * @dataProvider dataMethodInPhpVersion
-     */
+    /** @param non-empty-string $methodName */
+    #[DataProvider('dataMethodInPhpVersion')]
     public function testMethodInPhpVersion(
         string $className,
         string $methodName,
@@ -772,9 +770,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /**
      * @param non-empty-string $methodName
      * @param non-empty-string $parameterName
-     *
-     * @dataProvider dataMethodParameterInPhpVersion
      */
+    #[DataProvider('dataMethodParameterInPhpVersion')]
     public function testMethodParameterInPhpVersion(
         string $className,
         string $methodName,
@@ -819,11 +816,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider dataPropertyInPhpVersion
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('dataPropertyInPhpVersion')]
     public function testPropertyInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isSupported, string|null $type = null): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -869,7 +863,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFunctionInPhpVersion */
+    #[DataProvider('dataFunctionInPhpVersion')]
     public function testFunctionInPhpVersion(string $functionName, int $phpVersion, bool $isSupported, string|null $returnType = null): void
     {
         $sourceStubber            = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -907,11 +901,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider dataFunctionParameterInPhpVersion
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('dataFunctionParameterInPhpVersion')]
     public function testFunctionParameterInPhpVersion(
         string $functionName,
         string $parameterName,
@@ -955,7 +946,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataConstantInPhpVersion */
+    #[DataProvider('dataConstantInPhpVersion')]
     public function testConstantInPhpVersion(string $constantName, int $phpVersion, bool $isSupported): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -980,7 +971,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassIsDeprecatedInPhpVersion */
+    #[DataProvider('dataClassIsDeprecatedInPhpVersion')]
     public function testClassIsDeprecatedInPhpVersion(string $className, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1002,11 +993,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $constantName
-     *
-     * @dataProvider dataClassConstantIsDeprecatedInPhpVersion
-     */
+    /** @param non-empty-string $constantName */
+    #[DataProvider('dataClassConstantIsDeprecatedInPhpVersion')]
     public function testClassConstantIsDeprecatedInPhpVersion(string $className, string $constantName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1029,11 +1017,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $methodName
-     *
-     * @dataProvider dataMethodIsDeprecatedInPhpVersion
-     */
+    /** @param non-empty-string $methodName */
+    #[DataProvider('dataMethodIsDeprecatedInPhpVersion')]
     public function testMethodIsDeprecatedInPhpVersion(string $className, string $methodName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1061,11 +1046,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider dataPropertyIsDeprecatedInPhpVersion
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('dataPropertyIsDeprecatedInPhpVersion')]
     public function testPropertyIsDeprecatedInPhpVersion(string $className, string $propertyName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1092,7 +1074,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataFunctionIsDeprecatedInPhpVersion */
+    #[DataProvider('dataFunctionIsDeprecatedInPhpVersion')]
     public function testFunctionIsDeprecatedInPhpVersion(string $functionName, int $phpVersion, bool $isDeprecated): void
     {
         $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, $phpVersion);
@@ -1185,11 +1167,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /**
-     * @param string[] $interfaceNames
-     *
-     * @dataProvider dataImmediateInterfaces
-     */
+    /** @param string[] $interfaceNames */
+    #[DataProvider('dataImmediateInterfaces')]
     public function testImmediateInterfaces(
         string $className,
         array $interfaceNames,
@@ -1225,7 +1204,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataSubclass */
+    #[DataProvider('dataSubclass')]
     public function testSubclass(
         string $className,
         string $subclassName,

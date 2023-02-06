@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use InvalidArgumentException;
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType;
@@ -59,7 +60,7 @@ class ReflectionObjectTest extends TestCase
         ];
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine): void
     {
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);
@@ -252,9 +253,8 @@ class ReflectionObjectTest extends TestCase
      * methods from ReflectionClass), ensures the method exists in ReflectionObject
      * and that when the method is called on ReflectionObject, the method of the
      * same name on ReflectionClass is also called.
-     *
-     * @dataProvider reflectionClassMethodProvider
      */
+    #[DataProvider('reflectionClassMethodProvider')]
     public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName): void
     {
         // First, ensure the expected method even exists

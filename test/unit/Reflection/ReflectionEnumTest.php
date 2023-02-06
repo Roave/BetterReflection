@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
@@ -44,7 +45,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCanReflect */
+    #[DataProvider('dataCanReflect')]
     public function testCanReflect(string $enumName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -63,11 +64,8 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $caseName
-     *
-     * @dataProvider dataHasAndGetCase
-     */
+    /** @param non-empty-string $caseName */
+    #[DataProvider('dataHasAndGetCase')]
     public function testHasAndGetCase(string $caseName, bool $exists): void
     {
         $enumReflection = $this->reflector->reflectClass(PureEnum::class);
@@ -95,7 +93,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetCases */
+    #[DataProvider('dataGetCases')]
     public function testGetCases(string $enumName, int $casesCount): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -118,7 +116,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsBacked */
+    #[DataProvider('dataIsBacked')]
     public function testIsBacked(string $enumName, bool $isBacked): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -136,7 +134,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetBackingType */
+    #[DataProvider('dataGetBackingType')]
     public function testGetBackingType(string $enumName, string $expectedBackingType): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);

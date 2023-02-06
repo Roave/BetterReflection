@@ -14,6 +14,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use ReflectionClass as CoreReflectionClass;
@@ -259,9 +260,8 @@ class ReflectionClassTest extends TestCase
     /**
      * @param non-empty-string                                           $methodName
      * @param array<non-empty-string, array{0: class-string, 1: string}> $parameters
-     *
-     * @dataProvider dataMethodsOfBackedEnum
      */
+    #[DataProvider('dataMethodsOfBackedEnum')]
     public function testMethodsOfBackedEnum(string $methodName, array $parameters, string $returnTypeClass, string $returnType): void
     {
         $reflector = new DefaultReflector(new AggregateSourceLocator([
@@ -318,11 +318,8 @@ class ReflectionClassTest extends TestCase
         ];
     }
 
-    /**
-     * @param int-mask-of<CoreReflectionMethod::IS_*> $filter
-     *
-     * @dataProvider getMethodsWithFilterDataProvider
-     */
+    /** @param int-mask-of<CoreReflectionMethod::IS_*> $filter */
+    #[DataProvider('getMethodsWithFilterDataProvider')]
     public function testGetMethodsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -558,11 +555,8 @@ class ReflectionClassTest extends TestCase
         ];
     }
 
-    /**
-     * @param array<string, string> $propertiesData
-     *
-     * @dataProvider dataGetPropertiesForBackedEnum
-     */
+    /** @param array<string, string> $propertiesData */
+    #[DataProvider('dataGetPropertiesForBackedEnum')]
     public function testGetPropertiesForBackedEnum(string $className, array $propertiesData): void
     {
         $reflector = new DefaultReflector(new AggregateSourceLocator([
@@ -634,11 +628,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param int-mask-of<CoreReflectionProperty::IS_*> $filter
-
-     * @dataProvider getPropertiesWithFilterDataProvider
-     */
+    /** @param int-mask-of<CoreReflectionProperty::IS_*> $filter */
+    #[DataProvider('getPropertiesWithFilterDataProvider')]
     public function testGetPropertiesWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -676,11 +667,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider dataInheritedProperties
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('dataInheritedProperties')]
     public function testInheritedProperties(string $propertyName, string $expectedDeclaringClassName, string $expectedImplementingClassName): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
@@ -748,11 +736,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider promotedPropertisProvider
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('promotedPropertisProvider')]
     public function testPromotedProperties(string $propertyName, bool $isPromoted): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -830,7 +815,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider circularReferencesProvider */
+    #[DataProvider('circularReferencesProvider')]
     public function testGetParentClassNamesFailsWithCircularReferences(string $className): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
@@ -855,11 +840,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -879,11 +861,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -1218,7 +1197,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider modifierProvider */
+    #[DataProvider('modifierProvider')]
     public function testGetModifiers(string $className, int $expectedModifier): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
@@ -1343,11 +1322,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param non-empty-string $methodName
-     *
-     * @dataProvider declaringClassProvider
-     */
+    /** @param non-empty-string $methodName */
+    #[DataProvider('declaringClassProvider')]
     public function testGetDeclaringClassWithTraitAndParent(
         string $className,
         string $methodName,
@@ -1747,7 +1723,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider interfaceExtendsCircularReferencesProvider */
+    #[DataProvider('interfaceExtendsCircularReferencesProvider')]
     public function testGetInterfacesFailsWithCircularReferences(string $className): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
@@ -2192,11 +2168,8 @@ PHP;
         ];
     }
 
-    /**
-     * @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter
-     *
-     * @dataProvider getConstantsWithFilterDataProvider
-     */
+    /** @param int-mask-of<ReflectionClassConstantAdapter::IS_*> $filter */
+    #[DataProvider('getConstantsWithFilterDataProvider')]
     public function testGetConstantsWithFilter(int $filter, int $count): void
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
@@ -2585,7 +2558,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider deprecatedDocCommentProvider */
+    #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php
@@ -2724,11 +2697,9 @@ PHP;
         ];
     }
 
-    /**
-     * @dataProvider interfaceExtendsCircularReferencesProvider
-     * @dataProvider circularReferencesProvider
-     * @dataProvider traitUseCircularReferencesProvider
-     */
+    #[DataProvider('interfaceExtendsCircularReferencesProvider')]
+    #[DataProvider('circularReferencesProvider')]
+    #[DataProvider('traitUseCircularReferencesProvider')]
     public function testGetConstantsFailsWithCircularReference(string $className): void
     {
         $reflector = new DefaultReflector(new FileIteratorSourceLocator(
@@ -2747,11 +2718,9 @@ PHP;
         $class->getConstants();
     }
 
-    /**
-     * @dataProvider interfaceExtendsCircularReferencesProvider
-     * @dataProvider circularReferencesProvider
-     * @dataProvider traitUseCircularReferencesProvider
-     */
+    #[DataProvider('interfaceExtendsCircularReferencesProvider')]
+    #[DataProvider('circularReferencesProvider')]
+    #[DataProvider('traitUseCircularReferencesProvider')]
     public function testGetMethodsFailsWithCircularReference(string $className): void
     {
         $reflector = new DefaultReflector(new FileIteratorSourceLocator(
@@ -2770,11 +2739,9 @@ PHP;
         $class->getMethods();
     }
 
-    /**
-     * @dataProvider interfaceExtendsCircularReferencesProvider
-     * @dataProvider circularReferencesProvider
-     * @dataProvider traitUseCircularReferencesProvider
-     */
+    #[DataProvider('interfaceExtendsCircularReferencesProvider')]
+    #[DataProvider('circularReferencesProvider')]
+    #[DataProvider('traitUseCircularReferencesProvider')]
     public function testGetPropertiesFailsWithCircularReference(string $className): void
     {
         $reflector = new DefaultReflector(new FileIteratorSourceLocator(

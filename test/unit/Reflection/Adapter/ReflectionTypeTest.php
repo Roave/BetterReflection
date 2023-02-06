@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PhpParser\Node\Identifier;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
@@ -34,7 +35,7 @@ class ReflectionTypeTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
@@ -67,7 +68,7 @@ class ReflectionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType */
+    #[DataProvider('dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType')]
     public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(string $firstType, string $secondType): void
     {
         $unionType = $this->createMock(BetterReflectionUnionType::class);

@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
 use ClassWithoutNamespaceForSourceStubber;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
@@ -253,11 +254,8 @@ class ReflectionSourceStubberTest extends TestCase
         );
     }
 
-    /**
-     * @throws ReflectionException
-     *
-     * @dataProvider internalClassesProvider
-     */
+    /** @throws ReflectionException */
+    #[DataProvider('internalClassesProvider')]
     public function testInternalClasses(string $className): void
     {
         $class = $this->reflector->reflectClass($className);
@@ -404,7 +402,7 @@ class ReflectionSourceStubberTest extends TestCase
         );
     }
 
-    /** @dataProvider internalFunctionsProvider */
+    #[DataProvider('internalFunctionsProvider')]
     public function testInternalFunctionsReturnType(string $functionName): void
     {
         $stubbedReflection  = $this->reflector->reflectFunction($functionName);
@@ -461,7 +459,7 @@ class ReflectionSourceStubberTest extends TestCase
         ];
     }
 
-    /** @dataProvider variadicParametersProvider */
+    #[DataProvider('variadicParametersProvider')]
     public function testFunctionWithVariadicParameter(string $functionName, int $parameterPosition, bool $parameterIsVariadic, bool $parameterIsOptional): void
     {
         $functionReflection = $this->reflector->reflectFunction($functionName);
@@ -513,7 +511,7 @@ class ReflectionSourceStubberTest extends TestCase
         return $provider;
     }
 
-    /** @dataProvider internalConstantsProvider */
+    #[DataProvider('internalConstantsProvider')]
     public function testInternalConstants(string $constantName, mixed $constantValue, string $extensionName): void
     {
         $constantReflection = $this->reflector->reflectConstant($constantName);

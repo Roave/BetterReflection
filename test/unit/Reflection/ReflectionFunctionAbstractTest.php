@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
@@ -135,7 +136,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
-    /** @dataProvider nonDeprecatedProvider */
+    #[DataProvider('nonDeprecatedProvider')]
     public function testIsDeprecated(string $comment): void
     {
         $php = sprintf('<?php
@@ -183,11 +184,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider variadicProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('variadicProvider')]
     public function testIsVariadic(string $php, bool $expectingVariadic): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -227,11 +225,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider generatorProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('generatorProvider')]
     public function testIsGenerator(string $php, bool $expectingGenerator): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -250,11 +245,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -274,11 +266,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -353,11 +342,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider returnsReferenceProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('returnsReferenceProvider')]
     public function testReturnsReference(string $php, bool $expectingReturnsReference): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -483,7 +469,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider returnTypeFunctionProvider */
+    #[DataProvider('returnTypeFunctionProvider')]
     public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -532,7 +518,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider nullableReturnTypeFunctionProvider */
+    #[DataProvider('nullableReturnTypeFunctionProvider')]
     public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -586,7 +572,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNotNull($functionInfo->getReturnType());
     }
 
-    /** @dataProvider deprecatedDocCommentsProvider */
+    #[DataProvider('deprecatedDocCommentsProvider')]
     public function testFunctionsCanBeDeprecated(string $comment): void
     {
         $php = sprintf('<?php

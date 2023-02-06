@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
@@ -101,11 +102,8 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
-    /**
-     * @param non-empty-string $const
-     *
-     * @dataProvider getModifiersProvider
-     */
+    /** @param non-empty-string $const */
+    #[DataProvider('getModifiersProvider')]
     public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
@@ -153,11 +151,8 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -188,11 +183,8 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -216,11 +208,8 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $constantName
-     *
-     * @dataProvider declaringAndImplementingClassesProvider
-     */
+    /** @param non-empty-string $constantName */
+    #[DataProvider('declaringAndImplementingClassesProvider')]
     public function testGetDeclaringAndImplementingClass(string $constantName, string $currentClassName, string $declaringClassName, string $implementingClassName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesWithConstants.php', $this->astLocator));
@@ -254,7 +243,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider deprecatedDocCommentProvider */
+    #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php

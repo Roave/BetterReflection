@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -88,7 +89,7 @@ class ReflectionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function test(
         Node\Identifier|Node\Name|Node\NullableType|Node\UnionType|Node\IntersectionType $node,
         bool $forceAllowsNull,

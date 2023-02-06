@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Util;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
@@ -127,7 +128,7 @@ class ConstantNodeCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider validValuesProvider */
+    #[DataProvider('validValuesProvider')]
     public function testValidValues(Node\Expr $valueNode): void
     {
         self::expectNotToPerformAssertions();

@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 use Closure;
 use PhpParser\Parser;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
@@ -59,11 +60,8 @@ class ClosureSourceLocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $file
-     *
-     * @dataProvider closuresProvider
-     */
+    /** @param non-empty-string $file */
+    #[DataProvider('closuresProvider')]
     public function testLocateIdentifier(Closure $closure, string|null $namespace, string $file, int $startLine, int $endLine): void
     {
         $locator = new ClosureSourceLocator($closure, $this->parser);
@@ -104,7 +102,7 @@ class ClosureSourceLocatorTest extends TestCase
         );
     }
 
-    /** @dataProvider closuresProvider */
+    #[DataProvider('closuresProvider')]
     public function testLocateIdentifiersByType(Closure $closure, string|null $namespace, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionFunction> $reflections */
@@ -177,7 +175,7 @@ class ClosureSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider exceptionIfTwoClosuresOnSameLineProvider */
+    #[DataProvider('exceptionIfTwoClosuresOnSameLineProvider')]
     public function testTwoClosuresSameLineFails(string $file, Closure $closure): void
     {
         $this->expectException(TwoClosuresOnSameLine::class);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Annotation;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 
@@ -40,7 +41,7 @@ class AnnotationHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider deprecatedDocCommentProvider */
+    #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecated(string|null $docComment, bool $isDeprecated): void
     {
         self::assertSame($isDeprecated, AnnotationHelper::isDeprecated($docComment));
@@ -69,7 +70,7 @@ class AnnotationHelperTest extends TestCase
         ];
     }
 
-    /** @dataProvider tentativeReturnTypeDocCommentProvider */
+    #[DataProvider('tentativeReturnTypeDocCommentProvider')]
     public function testhasTentativeReturnType(string|null $docComment, bool $isDeprecated): void
     {
         self::assertSame($isDeprecated, AnnotationHelper::hasTentativeReturnType($docComment));

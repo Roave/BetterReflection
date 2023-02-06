@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Identifier;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -98,7 +99,7 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /** @dataProvider validNamesProvider */
+    #[DataProvider('validNamesProvider')]
     public function testValidName(string $name, string $expectedName): void
     {
         $identifier = new Identifier($name, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
@@ -116,7 +117,7 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /** @dataProvider invalidNamesProvider */
+    #[DataProvider('invalidNamesProvider')]
     public function testThrowExceptionForInvalidName(string $invalidName): void
     {
         $this->expectException(InvalidIdentifierName::class);

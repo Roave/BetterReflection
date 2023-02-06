@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileInfo;
 use stdClass;
@@ -12,7 +13,7 @@ use stdClass;
 #[CoversClass(InvalidFileInfo::class)]
 class InvalidFileInfoTest extends TestCase
 {
-    /** @dataProvider nonSplFileInfoProvider */
+    #[DataProvider('nonSplFileInfoProvider')]
     public function testFromNonSplFileInfo(string $expectedMessage, mixed $value): void
     {
         $exception = InvalidFileInfo::fromNonSplFileInfo($value);

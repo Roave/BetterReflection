@@ -9,6 +9,7 @@ use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -188,7 +189,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /** @dataProvider defaultParameterProvider */
+    #[DataProvider('defaultParameterProvider')]
     public function testDefaultParametersTypes(string $defaultExpression, mixed $expectedValue): void
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
@@ -256,11 +257,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterToTest
-     *
-     * @dataProvider typeProvider
-     */
+    /** @param non-empty-string $parameterToTest */
+    #[DataProvider('typeProvider')]
     public function testGetType(
         string $parameterToTest,
         string $expectedType,
@@ -318,11 +316,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider allowsNullProvider
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('allowsNullProvider')]
     public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
@@ -566,11 +561,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider linesAndColumnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('linesAndColumnsProvider')]
     public function testGetLinesAndColumns(string $php, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));

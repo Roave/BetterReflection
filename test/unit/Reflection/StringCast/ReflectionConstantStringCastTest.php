@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -45,7 +46,7 @@ class ReflectionConstantStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    #[DataProvider('toStringProvider')]
     public function testToString(string $constantName, string $expectedString): void
     {
         $sourceLocator = new AggregateSourceLocator([

@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Util;
 use Closure;
 use IteratorAggregate;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -54,7 +55,7 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassExists */
+    #[DataProvider('dataClassExists')]
     public function testClassExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::classExists($name));
@@ -76,7 +77,7 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataExists */
+    #[DataProvider('dataExists')]
     public function testExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::exists($name));
@@ -93,7 +94,7 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataInterfaceExists */
+    #[DataProvider('dataInterfaceExists')]
     public function testInterfaceExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::interfaceExists($name));
@@ -110,7 +111,7 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTraitExists */
+    #[DataProvider('dataTraitExists')]
     public function testTraitExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::traitExists($name));

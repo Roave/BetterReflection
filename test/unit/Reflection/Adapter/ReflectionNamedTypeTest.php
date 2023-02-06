@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType as CoreReflectionNamedType;
@@ -29,7 +30,7 @@ class ReflectionNamedTypeTest extends TestCase
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
@@ -59,7 +60,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataNoNullabilityMarkerForMixed */
+    #[DataProvider('dataNoNullabilityMarkerForMixed')]
     public function testNoNullabilityMarkerForMixed(string $mixedType): void
     {
         $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
@@ -88,11 +89,8 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
@@ -125,7 +123,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataNotBuildin */
+    #[DataProvider('dataNotBuildin')]
     public function testIsNotBuiltin(string $type): void
     {
         $reflector = $this->createMock(Reflector::class);

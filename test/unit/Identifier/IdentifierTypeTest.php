@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Identifier;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\IdentifierType;
 
@@ -22,7 +23,7 @@ class IdentifierTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider possibleIdentifierTypesProvider */
+    #[DataProvider('possibleIdentifierTypesProvider')]
     public function testPossibleIdentifierTypes(string $full): void
     {
         $type = new IdentifierType($full);

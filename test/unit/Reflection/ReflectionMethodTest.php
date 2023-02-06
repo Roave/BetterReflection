@@ -9,6 +9,7 @@ use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
 use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass as CoreReflectionClass;
@@ -122,11 +123,8 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $methodName
-     *
-     * @dataProvider visibilityProvider
-     */
+    /** @param non-empty-string $methodName */
+    #[DataProvider('visibilityProvider')]
     public function testVisibilityOfMethods(
         string $methodName,
         bool $shouldBePublic,
@@ -282,9 +280,8 @@ class ReflectionMethodTest extends TestCase
     /**
      * @param non-empty-string $methodName
      * @param list<string>     $expectedModifierNames
-     *
-     * @dataProvider modifierProvider
      */
+    #[DataProvider('modifierProvider')]
     public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames): void
     {
         $classInfo = $this->reflector->reflectClass(Methods::class);
@@ -315,11 +312,8 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $method
-     *
-     * @dataProvider prototypeProvider
-     */
+    /** @param non-empty-string $method */
+    #[DataProvider('prototypeProvider')]
     public function testGetPrototype(string $class, string $method, string|null $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
