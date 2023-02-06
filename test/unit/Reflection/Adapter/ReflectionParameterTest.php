@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
 use PhpParser\Node\Identifier;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionParameter as CoreReflectionParameter;
@@ -31,7 +32,7 @@ use function array_map;
 use function get_class_methods;
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionParameter */
+#[CoversClass(ReflectionParameterAdapter::class)]
 class ReflectionParameterTest extends TestCase
 {
     /** @return array<string, array{0: string}> */

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper;
 use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/** @covers \Roave\BetterReflection\Reflection\Attribute\ReflectionAttributeHelper */
+#[CoversClass(ReflectionAttributeHelper::class)]
 class ReflectionAttributeHelperTest extends TestCase
 {
     public function testCreateAttributes(): void

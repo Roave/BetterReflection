@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionEnumBackedCase as CoreReflectionEnumBackedCase;
@@ -22,7 +23,7 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnumBackedCase */
+#[CoversClass(ReflectionEnumBackedCaseAdapter::class)]
 class ReflectionEnumBackedCaseTest extends TestCase
 {
     /** @return array<string, array{0: string}> */

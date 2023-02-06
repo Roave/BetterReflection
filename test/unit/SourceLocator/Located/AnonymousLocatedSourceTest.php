@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Located\AnonymousLocatedSource */
+#[CoversClass(AnonymousLocatedSource::class)]
 class AnonymousLocatedSourceTest extends TestCase
 {
     public function testInternalsLocatedSource(): void

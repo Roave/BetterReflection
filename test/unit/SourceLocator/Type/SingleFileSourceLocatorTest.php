@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -14,7 +15,7 @@ use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator */
+#[CoversClass(SingleFileSourceLocator::class)]
 class SingleFileSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

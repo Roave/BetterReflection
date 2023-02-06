@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionUnionType */
+#[CoversClass(ReflectionUnionType::class)]
 class ReflectionUnionTypeTest extends TestCase
 {
     private Reflector $reflector;

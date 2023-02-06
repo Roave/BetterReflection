@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -26,7 +27,7 @@ use function is_string;
 use function realpath;
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator */
+#[CoversClass(AnonymousClassObjectSourceLocator::class)]
 class AnonymousClassObjectSourceLocatorTest extends TestCase
 {
     private Parser $parser;

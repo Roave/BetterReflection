@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Annotation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 
-/** @covers \Roave\BetterReflection\Reflection\Annotation\AnnotationHelper */
+#[CoversClass(AnnotationHelper::class)]
 class AnnotationHelperTest extends TestCase
 {
     /** @return list<array{0: string|null, 1: bool}> */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -19,7 +20,7 @@ use function array_map;
 use function sort;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator */
+#[CoversClass(DirectoriesSourceLocator::class)]
 class DirectoriesSourceLocatorTest extends TestCase
 {
     private DirectoriesSourceLocator $sourceLocator;

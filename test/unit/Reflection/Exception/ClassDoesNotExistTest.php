@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Reflection;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist */
+#[CoversClass(ClassDoesNotExist::class)]
 class ClassDoesNotExistTest extends TestCase
 {
     public function testForDifferentReflectionType(): void

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\FileHelper;
 
-/** @covers \Roave\BetterReflection\Util\FileHelper */
+#[CoversClass(FileHelper::class)]
 class FileHelperTest extends TestCase
 {
     public function testNormalizeWindowsPath(): void

@@ -6,10 +6,12 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -28,7 +30,7 @@ use stdClass;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract */
+#[CoversClass(ReflectionFunctionAbstract::class)]
 class ReflectionFunctionAbstractTest extends TestCase
 {
     private Parser $parser;

@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Lexer\Emulative;
 use PhpParser\ParserFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -15,7 +16,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 
 use function class_exists;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator */
+#[CoversClass(AutoloadSourceLocator::class)]
 class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
 {
     /**

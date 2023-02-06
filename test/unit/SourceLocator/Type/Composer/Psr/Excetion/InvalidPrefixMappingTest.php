@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Exception\InvalidPrefixMapping */
+#[CoversClass(InvalidPrefixMapping::class)]
 final class InvalidPrefixMappingTest extends TestCase
 {
     public function testEmptyPrefixGiven(): void

@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -24,7 +25,7 @@ use function sprintf;
 
 use const E_ALL;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionConstant */
+#[CoversClass(ReflectionConstant::class)]
 class ReflectionConstantTest extends TestCase
 {
     private Locator $astLocator;

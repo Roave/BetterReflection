@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -20,7 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree */
+#[CoversClass(FindReflectionsInTree::class)]
 class FindReflectionsInTreeTest extends TestCase
 {
     /** @return Node[] */

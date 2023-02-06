@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\PropertyIsNotStatic;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\PropertyIsNotStatic */
+#[CoversClass(PropertyIsNotStatic::class)]
 class PropertyIsNotStaticTest extends TestCase
 {
     public function testFromName(): void

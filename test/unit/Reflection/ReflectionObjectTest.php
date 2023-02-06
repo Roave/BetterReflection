@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType;
@@ -33,7 +34,7 @@ use function random_int;
 use function realpath;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionObject */
+#[CoversClass(ReflectionObject::class)]
 class ReflectionObjectTest extends TestCase
 {
     /** @return Node[] */

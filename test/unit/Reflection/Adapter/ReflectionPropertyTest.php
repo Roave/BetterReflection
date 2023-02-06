@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use ArgumentCountError;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -30,7 +31,7 @@ use function array_map;
 use function get_class_methods;
 use function is_array;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionProperty */
+#[CoversClass(ReflectionPropertyAdapter::class)]
 class ReflectionPropertyTest extends TestCase
 {
     /** @return array<string, array{0: string}> */

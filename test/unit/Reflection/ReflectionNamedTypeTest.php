@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Generator;
 use LogicException;
 use PhpParser\Node\Identifier;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -19,7 +20,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionNamedType */
+#[CoversClass(ReflectionNamedType::class)]
 class ReflectionNamedTypeTest extends TestCase
 {
     private Reflector $reflector;

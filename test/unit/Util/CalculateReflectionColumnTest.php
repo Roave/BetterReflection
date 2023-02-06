@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\InvalidNodePosition;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
 
-/** @covers \Roave\BetterReflection\Util\CalculateReflectionColumn */
+#[CoversClass(CalculateReflectionColumn::class)]
 class CalculateReflectionColumnTest extends TestCase
 {
     public function testGetStartColumn(): void

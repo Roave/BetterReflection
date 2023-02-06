@@ -6,10 +6,11 @@ namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Echo_;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\InvalidArrowFunctionBodyNode */
+#[CoversClass(InvalidArrowFunctionBodyNode::class)]
 class InvalidArrowFunctionBodyNodeTest extends TestCase
 {
     public function testCreate(): void

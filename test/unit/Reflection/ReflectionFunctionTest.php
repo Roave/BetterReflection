@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use Closure;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\FunctionDoesNotExist;
@@ -20,7 +21,7 @@ use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use stdClass;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionFunction */
+#[CoversClass(ReflectionFunction::class)]
 class ReflectionFunctionTest extends TestCase
 {
     private Locator $astLocator;

@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use Closure;
 use Exception;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
@@ -29,7 +30,7 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction */
+#[CoversClass(ReflectionFunctionAdapter::class)]
 class ReflectionFunctionTest extends TestCase
 {
     /** @return array<string, array{0: string}> */

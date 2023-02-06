@@ -6,7 +6,9 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use Attribute;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -23,7 +25,7 @@ use Roave\BetterReflectionTest\Fixture\EnumWithAttributes;
 
 use function count;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionAttribute */
+#[CoversClass(ReflectionAttribute::class)]
 class ReflectionAttributeTest extends TestCase
 {
     private Locator $astLocator;

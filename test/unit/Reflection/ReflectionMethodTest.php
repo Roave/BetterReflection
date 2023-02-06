@@ -8,6 +8,7 @@ use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass as CoreReflectionClass;
@@ -47,7 +48,7 @@ use TraitWithMethod;
 
 use function basename;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionMethod */
+#[CoversClass(ReflectionMethod::class)]
 class ReflectionMethodTest extends TestCase
 {
     private Reflector $reflector;

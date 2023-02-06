@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
 use ClassWithoutNamespaceForSourceStubber;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException;
@@ -46,7 +47,7 @@ use function in_array;
 use function method_exists;
 use function sort;
 
-/** @covers \Roave\BetterReflection\SourceLocator\SourceStubber\ReflectionSourceStubber */
+#[CoversClass(ReflectionSourceStubber::class)]
 class ReflectionSourceStubberTest extends TestCase
 {
     private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -21,7 +22,7 @@ use stdClass;
 use function array_map;
 use function sort;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\FileIteratorSourceLocator */
+#[CoversClass(FileIteratorSourceLocator::class)]
 class FileIteratorSourceLocatorTest extends TestCase
 {
     private FileIteratorSourceLocator $sourceLocator;

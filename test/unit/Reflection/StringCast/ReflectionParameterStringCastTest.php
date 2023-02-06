@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastParameters;
 
-/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast */
+#[CoversClass(ReflectionParameterStringCast::class)]
 class ReflectionParameterStringCastTest extends TestCase
 {
     private Locator $astLocator;

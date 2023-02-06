@@ -12,6 +12,8 @@ use E;
 use Iterator;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use ReflectionClass as CoreReflectionClass;
@@ -99,7 +101,7 @@ use function sort;
 use function sprintf;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionClass */
+#[CoversClass(ReflectionClass::class)]
 class ReflectionClassTest extends TestCase
 {
     private Locator $astLocator;
@@ -173,7 +175,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
-    /** @coversNothing */
+    #[CoversNothing]
     public function testReflectingAClassDoesNotLoadTheClass(): void
     {
         self::assertFalse(class_exists(ExampleClass::class, false));

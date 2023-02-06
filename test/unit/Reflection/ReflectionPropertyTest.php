@@ -12,6 +12,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
@@ -46,7 +47,7 @@ use TraitWithProperty;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionProperty */
+#[CoversClass(ReflectionProperty::class)]
 class ReflectionPropertyTest extends TestCase
 {
     private Reflector $reflector;

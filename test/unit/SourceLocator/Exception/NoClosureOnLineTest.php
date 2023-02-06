@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Exception\NoClosureOnLine */
+#[CoversClass(NoClosureOnLine::class)]
 class NoClosureOnLineTest extends TestCase
 {
     public function testCreate(): void

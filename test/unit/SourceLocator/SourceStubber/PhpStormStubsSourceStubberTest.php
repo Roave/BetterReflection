@@ -16,6 +16,7 @@ use ParseError;
 use PDO;
 use PDOException;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
@@ -34,6 +35,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
@@ -62,10 +64,8 @@ use function sprintf;
 
 use const PHP_VERSION_ID;
 
-/**
- * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubsSourceStubber
- * @covers \Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor
- */
+#[CoversClass(PhpStormStubsSourceStubber::class)]
+#[CoversClass(CachingVisitor::class)]
 class PhpStormStubsSourceStubberTest extends TestCase
 {
     private const EXTENSIONS = ['Core', 'standard', 'pcre', 'SPL'];

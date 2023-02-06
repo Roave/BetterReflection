@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -39,7 +40,7 @@ use function sprintf;
 
 use const SORT_ASC as SORT_ASC_TEST;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionParameter */
+#[CoversClass(ReflectionParameter::class)]
 class ReflectionParameterTest extends TestCase
 {
     private Reflector $reflector;

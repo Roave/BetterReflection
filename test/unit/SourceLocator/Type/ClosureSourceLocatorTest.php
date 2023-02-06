@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Closure;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
@@ -27,7 +28,7 @@ use function is_string;
 use function realpath;
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\ClosureSourceLocator */
+#[CoversClass(ClosureSourceLocator::class)]
 class ClosureSourceLocatorTest extends TestCase
 {
     private Parser $parser;

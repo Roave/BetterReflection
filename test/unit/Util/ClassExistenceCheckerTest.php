@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Util;
 
 use Closure;
 use IteratorAggregate;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -17,7 +18,7 @@ use TraitFixtureTraitA;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 
-/** @covers \Roave\BetterReflection\Util\ClassExistenceChecker */
+#[CoversClass(ClassExistenceChecker::class)]
 class ClassExistenceCheckerTest extends TestCase
 {
     private Closure|null $loader = null;

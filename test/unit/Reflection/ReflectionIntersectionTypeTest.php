@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType */
+#[CoversClass(ReflectionIntersectionType::class)]
 class ReflectionIntersectionTypeTest extends TestCase
 {
     private Reflector $reflector;

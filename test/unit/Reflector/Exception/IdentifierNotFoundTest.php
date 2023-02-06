@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 
-/** @covers \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound */
+#[CoversClass(IdentifierNotFound::class)]
 class IdentifierNotFoundTest extends TestCase
 {
     public function testFromNonObject(): void

@@ -10,6 +10,7 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Name;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -44,7 +45,7 @@ use const PHP_EOL;
 use const PHP_INT_MAX;
 use const PHP_VERSION_ID;
 
-/** @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue */
+#[CoversClass(CompileNodeToValue::class)]
 class CompileNodeToValueTest extends TestCase
 {
     private Parser $parser;

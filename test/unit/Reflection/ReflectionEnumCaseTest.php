@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use LogicException;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
@@ -21,7 +22,7 @@ use Roave\BetterReflectionTest\Fixture\IsDeprecated;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionEnumCase */
+#[CoversClass(ReflectionEnumCase::class)]
 class ReflectionEnumCaseTest extends TestCase
 {
     private Locator $astLocator;

@@ -7,10 +7,11 @@ namespace Roave\BetterReflectionTest\Util;
 use PhpParser\Comment;
 use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Function_;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\GetLastDocComment;
 
-/** @covers \Roave\BetterReflection\Util\GetLastDocComment */
+#[CoversClass(GetLastDocComment::class)]
 class GetLastDocCommentTest extends TestCase
 {
     public function testWithComment(): void

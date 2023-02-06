@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\NoObjectProvided */
+#[CoversClass(NoObjectProvided::class)]
 class NoObjectProvidedTest extends TestCase
 {
     public function testFromClassName(): void

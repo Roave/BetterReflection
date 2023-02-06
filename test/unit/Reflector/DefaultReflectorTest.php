@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflector;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -16,7 +17,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/** @covers \Roave\BetterReflection\Reflector\DefaultReflector */
+#[CoversClass(DefaultReflector::class)]
 class DefaultReflectorTest extends TestCase
 {
     private Reflector $reflector;

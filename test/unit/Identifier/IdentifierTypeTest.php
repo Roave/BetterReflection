@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Identifier;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\IdentifierType;
 
-/** @covers \Roave\BetterReflection\Identifier\IdentifierType */
+#[CoversClass(IdentifierType::class)]
 class IdentifierTypeTest extends TestCase
 {
     /** @return list<list<string>> */

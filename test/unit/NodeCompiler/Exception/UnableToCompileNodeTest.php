@@ -13,6 +13,7 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\MagicConst\File;
 use PhpParser\Node\Scalar\String_;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -25,7 +26,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode */
+#[CoversClass(UnableToCompileNode::class)]
 final class UnableToCompileNodeTest extends TestCase
 {
     public function testDefaults(): void

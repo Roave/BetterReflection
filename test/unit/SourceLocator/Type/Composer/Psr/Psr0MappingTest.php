@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -14,7 +15,7 @@ use function sys_get_temp_dir;
 use function tempnam;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping */
+#[CoversClass(Psr0Mapping::class)]
 class Psr0MappingTest extends TestCase
 {
     /**

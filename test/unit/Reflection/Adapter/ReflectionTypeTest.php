@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PhpParser\Node\Identifier;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
@@ -22,7 +23,7 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType */
+#[CoversClass(ReflectionTypeAdapter::class)]
 class ReflectionTypeTest extends TestCase
 {
     /** @return array<string, array{0: string}> */

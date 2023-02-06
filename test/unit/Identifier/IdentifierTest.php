@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -11,7 +12,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 
-/** @covers \Roave\BetterReflection\Identifier\Identifier */
+#[CoversClass(Identifier::class)]
 class IdentifierTest extends TestCase
 {
     public function testGetName(): void

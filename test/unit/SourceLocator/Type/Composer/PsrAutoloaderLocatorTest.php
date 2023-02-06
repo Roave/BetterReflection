@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -23,7 +24,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function array_map;
 use function sort;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\PsrAutoloaderLocator */
+#[CoversClass(PsrAutoloaderLocator::class)]
 class PsrAutoloaderLocatorTest extends TestCase
 {
     private PsrAutoloaderMapping&MockObject $psrMapping;
