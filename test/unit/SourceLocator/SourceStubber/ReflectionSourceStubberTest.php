@@ -180,8 +180,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    /** @requires PHP < 8.1 */
-    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP80(): void
+    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValue(): void
     {
         require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
 
@@ -190,19 +189,7 @@ class ReflectionSourceStubberTest extends TestCase
         $stubData = $this->stubber->generateClassStub(ClassForSourceStubberWithDefaultStaticProperty::class);
 
         self::assertNotNull($stubData);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpectedOnPhp80.php', $stubData->getStub());
-    }
-
-    public function testClassStubWithDefaultStaticPropertyWithUnsupportedValueOnPHP81(): void
-    {
-        require_once __DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticProperty.php';
-
-        ClassForSourceStubberWithDefaultStaticProperty::$publicStaticProperty = new stdClass();
-
-        $stubData = $this->stubber->generateClassStub(ClassForSourceStubberWithDefaultStaticProperty::class);
-
-        self::assertNotNull($stubData);
-        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpectedOnPhp81.php', $stubData->getStub());
+        self::assertStringEqualsFile(__DIR__ . '/../../Fixture/ClassForSourceStubberWithDefaultStaticPropertyExpected.php', $stubData->getStub());
     }
 
     public function testInterfaceStub(): void

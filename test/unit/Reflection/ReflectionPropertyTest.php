@@ -41,7 +41,6 @@ use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
-use Roave\BetterReflectionTest\Fixture\TraitStaticPropertyGetSet;
 use stdClass;
 use TraitWithProperty;
 
@@ -479,25 +478,6 @@ class ReflectionPropertyTest extends TestCase
         $propertyReflection->setValue('value');
 
         self::assertSame('value', StaticPropertyGetSet::$baz);
-        self::assertSame('value', $propertyReflection->getValue());
-    }
-
-    /**
-     * Accessing static trait property is deprecated in PHP 8.1, it should only be accessed on a class using the trait
-     *
-     * @requires PHP < 8.1
-     */
-    public function testSetAndGetValueOfStaticPropertyOnTrait(): void
-    {
-        $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/TraitStaticPropertyGetSet.php';
-        require_once $staticPropertyGetSetFixture;
-
-        $classReflection    = (new DefaultReflector(new SingleFileSourceLocator($staticPropertyGetSetFixture, $this->astLocator)))->reflectClass(TraitStaticPropertyGetSet::class);
-        $propertyReflection = $classReflection->getProperty('staticProperty');
-
-        $propertyReflection->setValue('value');
-
-        self::assertSame('value', TraitStaticPropertyGetSet::$staticProperty);
         self::assertSame('value', $propertyReflection->getValue());
     }
 

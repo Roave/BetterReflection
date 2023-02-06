@@ -39,8 +39,6 @@ use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethod;
-use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
@@ -526,39 +524,6 @@ PHP;
 
         self::assertSame(3, $methodReflection->invoke(null, 1, 2));
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
-    }
-
-    /**
-     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
-     *
-     * @requires PHP < 8.1
-     */
-    public function testInvokeOfStaticMethodOnTrait(): void
-    {
-        $traitWithStaticMethodFile = __DIR__ . '/../Fixture/TraitWithStaticMethod.php';
-        require_once $traitWithStaticMethodFile;
-
-        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        self::assertSame(3, $methodReflection->invoke(null, 1, 2));
-        self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
-    }
-
-    /**
-     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
-     *
-     * @requires PHP < 8.1
-     */
-    public function testInvokeOfStaticTraitMethodWithStaticClass(): void
-    {
-        $traitWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
-        require_once $traitWithUsedStaticMethodFile;
-
-        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithUsedStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethodToUse::class);
-        $methodReflection = $classReflection->getMethod('getClass');
-
-        self::assertSame(TraitWithStaticMethodToUse::class, $methodReflection->invoke());
     }
 
     public function testInvokeOfStaticUsedTraitMethodWithStaticClass(): void
