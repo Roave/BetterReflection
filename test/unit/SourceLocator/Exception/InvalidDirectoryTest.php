@@ -16,7 +16,7 @@ use function uniqid;
 class InvalidDirectoryTest extends TestCase
 {
     /** @return list<array{0: string, 1: mixed}> */
-    public function nonStringValuesProvider(): array
+    public static function nonStringValuesProvider(): array
     {
         return [
             ['Expected string, stdClass given', new stdClass()],

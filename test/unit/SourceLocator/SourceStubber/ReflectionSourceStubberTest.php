@@ -239,7 +239,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function internalClassesProvider(): array
+    public static function internalClassesProvider(): array
     {
         $allSymbols = array_merge(
             get_declared_classes(),
@@ -398,7 +398,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function internalFunctionsProvider(): array
+    public static function internalFunctionsProvider(): array
     {
         /** @var list<string> $functionNames */
         $functionNames = get_defined_functions()['internal'];
@@ -465,7 +465,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: int, 2: bool, 3: bool}> */
-    public function variadicParametersProvider(): array
+    public static function variadicParametersProvider(): array
     {
         return [
             ['sprintf', 1, true, true],
@@ -504,7 +504,7 @@ class ReflectionSourceStubberTest extends TestCase
     }
 
     /** @return list<list<mixed>> */
-    public function internalConstantsProvider(): array
+    public static function internalConstantsProvider(): array
     {
         $provider = [];
 

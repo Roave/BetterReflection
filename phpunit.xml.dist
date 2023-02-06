@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
     bootstrap="test/bootstrap.php"
     colors="true"
     executionOrder="random"
+    cacheDirectory=".phpunit.cache"
 >
-    <coverage processUncoveredFiles="true">
+    <coverage>
         <include>
             <directory suffix=".php">./src</directory>
         </include>
@@ -16,11 +17,11 @@
             <directory>./test/unit</directory>
         </testsuite>
     </testsuites>
-    <listeners>
-        <listener class="Roave\BetterReflectionTest\TestListener" file="test/unit/TestListener.php"/>
-    </listeners>
     <php>
         <ini name="error_reporting" value="E_ALL"/>
         <ini name="memory_limit" value="-1"/>
     </php>
+    <extensions>
+        <bootstrap class="Roave\BetterReflectionTest\CheckLoadedClassesExtension" />
+    </extensions>
 </phpunit>

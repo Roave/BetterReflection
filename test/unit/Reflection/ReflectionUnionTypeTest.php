@@ -26,7 +26,7 @@ class ReflectionUnionTypeTest extends TestCase
     }
 
     /** @return list<array{0: Node\UnionType, 1: string, 2: bool}> */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [new Node\UnionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo|Boo', false],

@@ -87,7 +87,7 @@ class DirectoriesSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: list<string>}> */
-    public function invalidDirectoriesProvider(): array
+    public static function invalidDirectoriesProvider(): array
     {
         $validDir = __DIR__ . '/../../Assets/DirectoryScannerAssets';
 

@@ -24,7 +24,7 @@ class ReflectionClassConstantStringCastTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['PUBLIC_CONSTANT', "Constant [ public boolean PUBLIC_CONSTANT ] { 1 }\n"],

@@ -50,7 +50,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataAllowsNull(): array
+    public static function dataAllowsNull(): array
     {
         return [
             ['mixed'],
@@ -67,7 +67,7 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertTrue($noNullType->allowsNull());
     }
 
-    public function isBuildinProvider(): Generator
+    public static function isBuildinProvider(): Generator
     {
         yield ['string'];
         yield ['StRiNg'];
@@ -100,7 +100,7 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertTrue($reflectionType->isBuiltin());
     }
 
-    public function isNotBuildinProvider(): Generator
+    public static function isNotBuildinProvider(): Generator
     {
         yield ['foo'];
         yield ['\foo'];
@@ -259,7 +259,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string, 2: string}> */
-    public function dataGetClassWithSelfOrStatic(): array
+    public static function dataGetClassWithSelfOrStatic(): array
     {
         return [
             ['ParentClass', 'self', 'ParentClass'],
@@ -325,7 +325,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataGetClassWithParent(): array
+    public static function dataGetClassWithParent(): array
     {
         return [
             ['parent'],

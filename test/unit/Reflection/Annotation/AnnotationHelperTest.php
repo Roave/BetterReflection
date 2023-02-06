@@ -11,7 +11,7 @@ use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 class AnnotationHelperTest extends TestCase
 {
     /** @return list<array{0: string|null, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [null, false],
@@ -46,7 +46,7 @@ class AnnotationHelperTest extends TestCase
     }
 
     /** @return list<array{0: string|null, 1: bool}> */
-    public function tentativeReturnTypeDocCommentProvider(): array
+    public static function tentativeReturnTypeDocCommentProvider(): array
     {
         return [
             [null, false],

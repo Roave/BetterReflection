@@ -112,7 +112,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int}> */
-    public function getModifiersProvider(): array
+    public static function getModifiersProvider(): array
     {
         return [
             ['MY_CONST_1', CoreReflectionClassConstant::IS_PUBLIC],
@@ -168,7 +168,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\nclass T {\nconst TEST = 1; }", 3, 3],
@@ -179,7 +179,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
@@ -204,7 +204,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string, 2: string, 3: string}> */
-    public function declaringAndImplementingClassesProvider(): array
+    public static function declaringAndImplementingClassesProvider(): array
     {
         return [
             ['CLASS_WINS', ClassWithConstants::class, ClassWithConstants::class, ClassWithConstants::class],
@@ -232,7 +232,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [

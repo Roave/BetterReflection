@@ -26,7 +26,7 @@ class ReflectionIntersectionTypeTest extends TestCase
     }
 
     /** @return list<array{0: Node\IntersectionType, 1: string}> */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [new Node\IntersectionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo&Boo'],

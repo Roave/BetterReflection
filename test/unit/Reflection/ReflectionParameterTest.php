@@ -174,7 +174,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function defaultParameterProvider(): array
+    public static function defaultParameterProvider(): array
     {
         return [
             ['1', 1],
@@ -244,7 +244,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function typeProvider(): array
+    public static function typeProvider(): array
     {
         return [
             ['stdClassParameter', 'stdClass'],
@@ -304,7 +304,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function allowsNullProvider(): array
+    public static function allowsNullProvider(): array
     {
         return [
             ['classParam', false],
@@ -555,7 +555,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */
-    public function linesAndColumnsProvider(): array
+    public static function linesAndColumnsProvider(): array
     {
         return [
             ["<?php\n\nfunction foo(\n\$test\n) {}", 4, 4, 1, 5],

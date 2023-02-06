@@ -42,7 +42,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
-    public function anonymousClassInstancesProvider(): array
+    public static function anonymousClassInstancesProvider(): array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
@@ -172,7 +172,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: object}> */
-    public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
+    public static function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
         $file    = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
@@ -199,7 +199,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: int, 2: int}> */
-    public function nestedAnonymousClassInstancesProvider(): array
+    public static function nestedAnonymousClassInstancesProvider(): array
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';
 

@@ -43,7 +43,7 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: Closure, 1: string|null, 2: non-empty-string, 3: int, 4: int}> */
-    public function closuresProvider(): array
+    public static function closuresProvider(): array
     {
         $fileWithClosureInNamespace       = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosureInNamespace.php'));
         $fileWithClosureNoNamespace       = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosureNoNamespace.php'));
@@ -165,7 +165,7 @@ class ClosureSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: Closure}> */
-    public function exceptionIfTwoClosuresOnSameLineProvider(): array
+    public static function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
         $file     = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
         $closures = require $file;

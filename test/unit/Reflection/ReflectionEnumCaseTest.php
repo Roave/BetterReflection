@@ -37,7 +37,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string}> */
-    public function data(): array
+    public static function data(): array
     {
         return [
             [PureEnum::class, 'ONE'],
@@ -64,7 +64,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: int|string}> */
-    public function dataGetValue(): array
+    public static function dataGetValue(): array
     {
         return [
             [IntEnum::class, 'TWO', 2],
@@ -115,7 +115,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}> */
-    public function dataLinesAndColums(): array
+    public static function dataLinesAndColums(): array
     {
         return [
             [PureEnum::class, 'ONE', 7, 7, 5, 13],
@@ -161,7 +161,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string|null}> */
-    public function dataGetDocComment(): array
+    public static function dataGetDocComment(): array
     {
         return [
             ['WITH_DOCCOMMENT', '/** With doccomment */'],
@@ -186,7 +186,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function dataIsDeprecated(): array
+    public static function dataIsDeprecated(): array
     {
         return [
             ['IS_DEPRECATED', true],

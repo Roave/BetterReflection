@@ -28,13 +28,12 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
-use function is_array;
 
 /** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionFunction */
 class ReflectionFunctionTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionFunction::class);
 
@@ -50,58 +49,48 @@ class ReflectionFunctionTest extends TestCase
         self::assertSame(ReflectionFunctionAdapter::class, $reflectionFunctionAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
-    public function methodExpectationProvider(): array
+    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed}> */
+    public static function methodExpectationProvider(): array
     {
-        $mockParameter = $this->createMock(BetterReflectionParameter::class);
-
-        $mockType = $this->createMock(BetterReflectionNamedType::class);
-
-        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
-
-        $closure = static function (): void {
-        };
-
         return [
             // Inherited
-            ['__toString', [], 'string', null, 'string', null],
-            ['inNamespace', [], true, null, true, null],
-            ['isClosure', [], true, null, true, null],
-            ['isDeprecated', [], true, null, true, null],
-            ['isInternal', [], true, null, true, null],
-            ['isUserDefined', [], true, null, true, null],
-            ['getClosureThis', [], null, NotImplemented::class, null, null],
-            ['getClosureScopeClass', [], null, NotImplemented::class, null, null],
-            ['getClosureCalledClass', [], null, NotImplemented::class, null, null],
-            ['getDocComment', [], null, null, false, null],
-            ['getStartLine', [], 123, null, 123, null],
-            ['getEndLine', [], 123, null, 123, null],
-            ['getExtension', [], null, NotImplemented::class, null, null],
-            ['getExtensionName', [], null, null, null, null],
-            ['getFileName', [], 'filename', null, 'filename', null],
-            ['getName', [], 'name', null, 'name', null],
-            ['getNamespaceName', [], 'namespaceName', null, 'namespaceName', null],
-            ['getNumberOfParameters', [], 123, null, 123, null],
-            ['getNumberOfRequiredParameters', [], 123, null, 123, null],
-            ['getParameters', [], [$mockParameter], null, null, ReflectionParameterAdapter::class],
-            ['hasReturnType', [], true, null, true, null],
-            ['getReturnType', [], $mockType, null, null, ReflectionNamedTypeAdapter::class],
-            ['getShortName', [], 'shortName', null, 'shortName', null],
-            ['getStaticVariables', [], null, NotImplemented::class, null, null],
-            ['returnsReference', [], true, null, true, null],
-            ['isGenerator', [], true, null, true, null],
-            ['isVariadic', [], true, null, true, null],
-            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
-            ['hasTentativeReturnType', [], false, null, false, null],
-            ['getTentativeReturnType', [], null, null, null, null],
-            ['getClosureUsedVariables', [], null, NotImplemented::class, null, null],
+            ['__toString', [], 'string', null, 'string'],
+            ['inNamespace', [], true, null, true],
+            ['isClosure', [], true, null, true],
+            ['isDeprecated', [], true, null, true],
+            ['isInternal', [], true, null, true],
+            ['isUserDefined', [], true, null, true],
+            ['getClosureThis', [], null, NotImplemented::class, null],
+            ['getClosureScopeClass', [], null, NotImplemented::class, null],
+            ['getClosureCalledClass', [], null, NotImplemented::class, null],
+            ['getDocComment', [], null, null, false],
+            ['getStartLine', [], 123, null, 123],
+            ['getEndLine', [], 123, null, 123],
+            ['getExtension', [], null, NotImplemented::class, null],
+            ['getExtensionName', [], null, null, null],
+            ['getFileName', [], 'filename', null, 'filename'],
+            ['getName', [], 'name', null, 'name'],
+            ['getNamespaceName', [], 'namespaceName', null, 'namespaceName'],
+            ['getNumberOfParameters', [], 123, null, 123],
+            ['getNumberOfRequiredParameters', [], 123, null, 123],
+            ['getParameters', [], [], null, null],
+            ['hasReturnType', [], true, null, true],
+            ['getReturnType', [], null, null, null],
+            ['getShortName', [], 'shortName', null, 'shortName'],
+            ['getStaticVariables', [], null, NotImplemented::class, null],
+            ['returnsReference', [], true, null, true],
+            ['isGenerator', [], true, null, true],
+            ['isVariadic', [], true, null, true],
+            ['getAttributes', [], [], null, null],
+            ['hasTentativeReturnType', [], false, null, false],
+            ['getTentativeReturnType', [], null, null, null],
+            ['getClosureUsedVariables', [], null, NotImplemented::class, null],
 
             // ReflectionFunction
-            ['isDisabled', [], false, null, false, null],
-            ['invoke', [], null, null, null, null],
-            ['invokeArgs', [[]], null, null, null, null],
-            ['getClosure', [], $closure, null, $closure, Closure::class],
-            ['isStatic', [], true, null, true, null],
+            ['isDisabled', [], false, null, false],
+            ['invoke', [], null, null, null],
+            ['invokeArgs', [[]], null, null, null],
+            ['isStatic', [], true, null, true],
         ];
     }
 
@@ -116,7 +105,6 @@ class ReflectionFunctionTest extends TestCase
         mixed $returnValue,
         string|null $expectedException,
         mixed $expectedReturnValue,
-        string|null $expectedReturnValueInstance,
     ): void {
         $reflectionStub = $this->createMock(BetterReflectionFunction::class);
 
@@ -135,20 +123,11 @@ class ReflectionFunctionTest extends TestCase
 
         $actualReturnValue = $adapter->{$methodName}(...$args);
 
-        if ($expectedReturnValue !== null) {
-            self::assertSame($expectedReturnValue, $actualReturnValue);
-        }
-
-        if ($expectedReturnValueInstance === null) {
+        if ($expectedReturnValue === null) {
             return;
         }
 
-        if (is_array($actualReturnValue)) {
-            self::assertNotEmpty($actualReturnValue);
-            self::assertContainsOnlyInstancesOf($expectedReturnValueInstance, $actualReturnValue);
-        } else {
-            self::assertInstanceOf($expectedReturnValueInstance, $actualReturnValue);
-        }
+        self::assertSame($expectedReturnValue, $actualReturnValue);
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName(): void
@@ -199,6 +178,33 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertFalse($betterReflectionFunction->getExtensionName());
+    }
+
+    public function testGetReturnType(): void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getReturnType')
+            ->willReturn($this->createMock(BetterReflectionNamedType::class));
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $betterReflectionFunction->getReturnType());
+    }
+
+    public function testGetClosure(): void
+    {
+        $closure = static function (): void {
+        };
+
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getClosure')
+            ->willReturn($closure);
+
+        $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertInstanceOf(Closure::class, $betterReflectionFunction->getClosure());
     }
 
     public function testGetClosureReturnsNullWhenError(): void
@@ -287,7 +293,7 @@ class ReflectionFunctionTest extends TestCase
 
         $betterReflectionFunction = $this->getMockBuilder(BetterReflectionFunction::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionFunction
@@ -388,7 +394,7 @@ class ReflectionFunctionTest extends TestCase
 
         $betterReflectionFunction = $this->getMockBuilder(BetterReflectionFunction::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionFunction
@@ -442,5 +448,18 @@ class ReflectionFunctionTest extends TestCase
         $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
 
         self::assertTrue($reflectionFunctionAdapter->isAnonymous());
+    }
+
+    public function testGetParameters(): void
+    {
+        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
+        $betterReflectionFunction
+            ->method('getParameters')
+            ->willReturn([$this->createMock(BetterReflectionParameter::class)]);
+
+        $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
+
+        self::assertCount(1, $reflectionFunctionAdapter->getParameters());
+        self::assertContainsOnlyInstancesOf(ReflectionParameterAdapter::class, $reflectionFunctionAdapter->getParameters());
     }
 }

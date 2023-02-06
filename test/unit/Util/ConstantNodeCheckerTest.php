@@ -108,7 +108,7 @@ class ConstantNodeCheckerTest extends TestCase
     }
 
     /** @return list<array{0: Node\Expr}> */
-    public function validValuesProvider(): array
+    public static function validValuesProvider(): array
     {
         return [
             [new Node\Scalar\String_('foo')],

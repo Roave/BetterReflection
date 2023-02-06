@@ -34,7 +34,7 @@ use function is_array;
 class ReflectionPropertyTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionProperty::class);
 
@@ -51,12 +51,8 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
-        $mockType = $this->createMock(BetterReflectionNamedType::class);
-
-        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
-
         return [
             ['__toString', [], 'string', null, 'string', null],
             ['getName', [], 'name', null, 'name', null],
@@ -68,11 +64,9 @@ class ReflectionPropertyTest extends TestCase
             ['getModifiers', [], 123, null, 123, null],
             ['getDocComment', [], null, null, false, null],
             ['hasType', [], true, null, true, null],
-            ['getType', [], $mockType, null, null, ReflectionNamedTypeAdapter::class],
             ['hasDefaultValue', [], true, null, true, null],
             ['getDefaultValue', [], null, null, null, null],
             ['isPromoted', [], true, null, true, null],
-            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
             ['isReadOnly', [], true, null, true, null],
         ];
     }
@@ -151,6 +145,18 @@ class ReflectionPropertyTest extends TestCase
 
         self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionPropertyAdapter->getDeclaringClass());
         self::assertSame('DeclaringClass', $reflectionPropertyAdapter->getDeclaringClass()->getName());
+    }
+
+    public function testGetType(): void
+    {
+        $betterReflectionProperty = $this->createMock(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('getType')
+            ->willReturn($this->createMock(BetterReflectionNamedType::class));
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, $reflectionPropertyAdapter->getType());
     }
 
     public function testGetValueReturnsNullWhenNoObject(): void
@@ -295,7 +301,7 @@ class ReflectionPropertyTest extends TestCase
 
         $betterReflectionProperty = $this->getMockBuilder(BetterReflectionProperty::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionProperty
@@ -396,7 +402,7 @@ class ReflectionPropertyTest extends TestCase
 
         $betterReflectionProperty = $this->getMockBuilder(BetterReflectionProperty::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionProperty

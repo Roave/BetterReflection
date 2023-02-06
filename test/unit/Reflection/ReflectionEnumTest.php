@@ -34,7 +34,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string}> */
-    public function dataCanReflect(): array
+    public static function dataCanReflect(): array
     {
         return [
             [PureEnum::class],
@@ -52,7 +52,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function dataHasAndGetCase(): array
+    public static function dataHasAndGetCase(): array
     {
         return [
             ['ONE', true],
@@ -85,7 +85,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: int}> */
-    public function dataGetCases(): array
+    public static function dataGetCases(): array
     {
         return [
             [PureEnum::class, 3],
@@ -108,7 +108,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: bool}> */
-    public function dataIsBacked(): array
+    public static function dataIsBacked(): array
     {
         return [
             [PureEnum::class, false],
@@ -127,7 +127,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: string}> */
-    public function dataGetBackingType(): array
+    public static function dataGetBackingType(): array
     {
         return [
             [IntEnum::class, 'int'],

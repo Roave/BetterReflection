@@ -36,7 +36,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
-            ->setMethods(['createLocatedSource'])
+            ->onlyMethods(['createLocatedSource'])
             ->getMock();
 
         $sourceLocator->expects($this->once())
@@ -60,7 +60,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
-            ->setMethods(['createLocatedSource'])
+            ->onlyMethods(['createLocatedSource'])
             ->getMock();
 
         $sourceLocator->expects($this->once())
@@ -88,7 +88,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
-            ->setMethods(['createLocatedSource'])
+            ->onlyMethods(['createLocatedSource'])
             ->getMock();
 
         $sourceLocator->expects($this->once())
@@ -118,7 +118,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
-            ->setMethods(['createLocatedSource'])
+            ->onlyMethods(['createLocatedSource'])
             ->getMock();
 
         $sourceLocator->expects($this->once())
@@ -141,7 +141,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
-            ->setMethods(['createLocatedSource'])
+            ->onlyMethods(['createLocatedSource'])
             ->getMock();
 
         $sourceLocator->expects($this->once())

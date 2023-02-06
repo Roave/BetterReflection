@@ -43,7 +43,7 @@ class ClassExistenceCheckerTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataClassExists(): array
+    public static function dataClassExists(): array
     {
         return [
             [stdClass::class, true],
@@ -60,7 +60,7 @@ class ClassExistenceCheckerTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataExists(): array
+    public static function dataExists(): array
     {
         return [
             [stdClass::class, true],
@@ -82,7 +82,7 @@ class ClassExistenceCheckerTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataInterfaceExists(): array
+    public static function dataInterfaceExists(): array
     {
         return [
             [IteratorAggregate::class, true],
@@ -99,7 +99,7 @@ class ClassExistenceCheckerTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataTraitExists(): array
+    public static function dataTraitExists(): array
     {
         return [
             [stdClass::class, false],

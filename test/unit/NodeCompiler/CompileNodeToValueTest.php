@@ -96,7 +96,7 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function nodeProvider(): array
+    public static function nodeProvider(): array
     {
         return [
             ['1', 1],
@@ -225,7 +225,7 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataTrueFalseNullShouldNotHaveConstantName(): array
+    public static function dataTrueFalseNullShouldNotHaveConstantName(): array
     {
         return [
             ['true'],
@@ -640,7 +640,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: string|int}> */
-    public function enumCasePropertyProvider(): array
+    public static function enumCasePropertyProvider(): array
     {
         return [
             ['name', 'ONE'],
@@ -740,7 +740,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function magicConstantsWithoutNamespaceProvider(): array
+    public static function magicConstantsWithoutNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -766,7 +766,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function magicConstantsInNamespaceProvider(): array
+    public static function magicConstantsInNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -889,7 +889,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInTraitProvider(): array
+    public static function magicConstantsInTraitProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -920,7 +920,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInClassProvider(): array
+    public static function magicConstantsInClassProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -951,7 +951,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInMethodProvider(): array
+    public static function magicConstantsInMethodProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -983,7 +983,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInFunctionProvider(): array
+    public static function magicConstantsInFunctionProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -1014,7 +1014,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string}> */
-    public function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
+    public static function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
     {
         return [
             ['file'],

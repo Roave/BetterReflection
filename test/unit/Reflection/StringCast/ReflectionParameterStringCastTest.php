@@ -24,7 +24,7 @@ class ReflectionParameterStringCastTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: non-empty-string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['parametersWithBuiltInTypes', 'string', 'Parameter #0 [ <required> string $string ]'],

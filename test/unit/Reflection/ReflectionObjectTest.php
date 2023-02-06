@@ -43,7 +43,7 @@ class ReflectionObjectTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
-    public function anonymousClassInstancesProvider(): array
+    public static function anonymousClassInstancesProvider(): array
     {
         $file = realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php');
         assert(is_string($file) && $file !== '');
@@ -221,7 +221,7 @@ class ReflectionObjectTest extends TestCase
      *
      * @return array<string, array{0: string}>
      */
-    public function reflectionClassMethodProvider(): array
+    public static function reflectionClassMethodProvider(): array
     {
         $publicClassMethods = get_class_methods(ReflectionClass::class);
 
@@ -264,7 +264,7 @@ class ReflectionObjectTest extends TestCase
         // be called when we call the same method on ReflectionObject
         $mockReflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods([$methodName])
+            ->onlyMethods([$methodName])
             ->getMock();
 
         $mockReflectionClass

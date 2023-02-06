@@ -12,7 +12,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 class IdentifierTypeTest extends TestCase
 {
     /** @return list<list<string>> */
-    public function possibleIdentifierTypesProvider(): array
+    public static function possibleIdentifierTypesProvider(): array
     {
         return [
             [IdentifierType::IDENTIFIER_CLASS],

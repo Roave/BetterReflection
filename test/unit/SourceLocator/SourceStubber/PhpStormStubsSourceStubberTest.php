@@ -94,7 +94,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function internalClassesProvider(): array
+    public static function internalClassesProvider(): array
     {
         $classNames = array_merge(
             get_declared_classes(),
@@ -254,7 +254,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function internalFunctionsProvider(): array
+    public static function internalFunctionsProvider(): array
     {
         /** @var list<string> $functionNames */
         $functionNames = get_defined_functions()['internal'];
@@ -307,7 +307,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<list<mixed>> */
-    public function internalConstantsProvider(): array
+    public static function internalConstantsProvider(): array
     {
         $provider = [];
 
@@ -352,7 +352,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string}> */
-    public function dataClassInNamespace(): array
+    public static function dataClassInNamespace(): array
     {
         return [
             ['http\\Client'],
@@ -370,7 +370,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataFunctionInNamespace(): array
+    public static function dataFunctionInNamespace(): array
     {
         return [
             ['MongoDB\\BSON\\fromJSON'],
@@ -387,7 +387,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataConstantInNamespace(): array
+    public static function dataConstantInNamespace(): array
     {
         return [
             ['http\\Client\\Curl\\AUTH_ANY'],
@@ -480,7 +480,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: class-string}> */
-    public function dataCaseInsensitiveClass(): array
+    public static function dataCaseInsensitiveClass(): array
     {
         return [
             [
@@ -503,7 +503,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function dataCaseInsensitiveFunction(): array
+    public static function dataCaseInsensitiveFunction(): array
     {
         return [
             [
@@ -526,7 +526,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function dataCaseInsensitiveConstant(): array
+    public static function dataCaseInsensitiveConstant(): array
     {
         return [
             [
@@ -553,7 +553,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataCaseSensitiveConstantSearchedByWrongCase(): array
+    public static function dataCaseSensitiveConstantSearchedByWrongCase(): array
     {
         return [
             ['date_atom'],
@@ -571,7 +571,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataCaseSensitiveConstantSearchedByRightCase(): array
+    public static function dataCaseSensitiveConstantSearchedByRightCase(): array
     {
         return [
             ['DATE_ATOM'],
@@ -635,7 +635,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string|string, 1: int, 2: bool}> */
-    public function dataClassInPhpVersion(): array
+    public static function dataClassInPhpVersion(): array
     {
         return [
             [CoreReflectionNamedType::class, 70000, false],
@@ -666,7 +666,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: string, 2: int, 3: bool}> */
-    public function dataClassConstantInPhpVersion(): array
+    public static function dataClassConstantInPhpVersion(): array
     {
         return [
             [DateTimeInterface::class, 'ATOM', 70200, true],
@@ -694,7 +694,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: string}> */
-    public function dataMethodInPhpVersion(): array
+    public static function dataMethodInPhpVersion(): array
     {
         return [
             [CoreReflectionProperty::class, 'hasType', 70300, false],
@@ -757,7 +757,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: non-empty-string, 3: int, 4: bool, 5?: string|null, 6?: bool}> */
-    public function dataMethodParameterInPhpVersion(): array
+    public static function dataMethodParameterInPhpVersion(): array
     {
         return [
             ['mysqli_stmt', 'execute', 'params', 80099, false],
@@ -804,7 +804,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool, 4?: string}> */
-    public function dataPropertyInPhpVersion(): array
+    public static function dataPropertyInPhpVersion(): array
     {
         return [
             [DateInterval::class, 'f', 70000, false],
@@ -844,7 +844,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: int, 2: bool, 3?: string}> */
-    public function dataFunctionInPhpVersion(): array
+    public static function dataFunctionInPhpVersion(): array
     {
         return [
             ['password_algos', 70300, false],
@@ -889,7 +889,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool, 4?: string|null, 5?: bool}> */
-    public function dataFunctionParameterInPhpVersion(): array
+    public static function dataFunctionParameterInPhpVersion(): array
     {
         return [
             ['bcscale', 'scale', 70200, true, 'int', false],
@@ -939,7 +939,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: int, 2: bool}> */
-    public function dataConstantInPhpVersion(): array
+    public static function dataConstantInPhpVersion(): array
     {
         return [
             ['PHP_OS_FAMILY', 70200, true],
@@ -970,7 +970,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: int, 2: bool}> */
-    public function dataClassIsDeprecatedInPhpVersion(): array
+    public static function dataClassIsDeprecatedInPhpVersion(): array
     {
         return [
             ['Mongo', 70000, true],
@@ -992,7 +992,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
-    public function dataClassConstantIsDeprecatedInPhpVersion(): array
+    public static function dataClassConstantIsDeprecatedInPhpVersion(): array
     {
         return [
             [PDO::class, 'PARAM_BOOL', 70000, false],
@@ -1019,7 +1019,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: int, 3: bool}> */
-    public function dataMethodIsDeprecatedInPhpVersion(): array
+    public static function dataMethodIsDeprecatedInPhpVersion(): array
     {
         return [
             [CoreReflectionClass::class, 'getName', 70400, false],
@@ -1051,7 +1051,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: non-empty-string, 2: int, 3: bool}> */
-    public function dataPropertyIsDeprecatedInPhpVersion(): array
+    public static function dataPropertyIsDeprecatedInPhpVersion(): array
     {
         return [
             ['DateInterval', 'y', 70000, false],
@@ -1078,7 +1078,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: int, 2: bool}> */
-    public function dataFunctionIsDeprecatedInPhpVersion(): array
+    public static function dataFunctionIsDeprecatedInPhpVersion(): array
     {
         return [
             ['strpos', 70000, false],
@@ -1119,7 +1119,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: list<class-string>, 2: int}> */
-    public function dataImmediateInterfaces(): array
+    public static function dataImmediateInterfaces(): array
     {
         return [
             [
@@ -1204,7 +1204,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: class-string, 2: int}> */
-    public function dataSubclass(): array
+    public static function dataSubclass(): array
     {
         return [
             [

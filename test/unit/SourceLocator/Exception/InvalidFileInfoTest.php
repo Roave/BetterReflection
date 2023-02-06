@@ -21,7 +21,7 @@ class InvalidFileInfoTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function nonSplFileInfoProvider(): array
+    public static function nonSplFileInfoProvider(): array
     {
         return [
             ['Expected an iterator of SplFileInfo instances, stdClass given instead', new stdClass()],

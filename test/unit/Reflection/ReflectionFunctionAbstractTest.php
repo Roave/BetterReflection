@@ -147,7 +147,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function nonDeprecatedProvider(): array
+    public static function nonDeprecatedProvider(): array
     {
         return [
             [''],
@@ -172,7 +172,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function variadicProvider(): array
+    public static function variadicProvider(): array
     {
         return [
             ['<?php function foo($notVariadic) {}', false],
@@ -202,7 +202,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      *
      * @return list<array{0: non-empty-string, 1: bool}>
      */
-    public function generatorProvider(): array
+    public static function generatorProvider(): array
     {
         return [
             ['<?php function foo() { return [1, 2, 3]; }', false],
@@ -239,7 +239,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nfunction foo() {\n}\n", 3, 4],
@@ -263,7 +263,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nfunction foo() {\n}\n", 1, 1],
@@ -343,7 +343,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function returnsReferenceProvider(): array
+    public static function returnsReferenceProvider(): array
     {
         return [
             ['<?php function foo() {}', false],
@@ -470,7 +470,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string|class-string}> */
-    public function returnTypeFunctionProvider(): array
+    public static function returnTypeFunctionProvider(): array
     {
         return [
             ['returnsInt', 'int'],
@@ -521,7 +521,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function nullableReturnTypeFunctionProvider(): array
+    public static function nullableReturnTypeFunctionProvider(): array
     {
         return [
             ['returnsNullableInt', 'int|null'],
@@ -598,7 +598,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function deprecatedDocCommentsProvider(): array
+    public static function deprecatedDocCommentsProvider(): array
     {
         return [
             [

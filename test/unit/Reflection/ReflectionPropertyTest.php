@@ -220,7 +220,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int}> */
-    public function modifierProvider(): array
+    public static function modifierProvider(): array
     {
         return [
             ['publicProperty', CoreReflectionProperty::IS_PUBLIC],
@@ -295,7 +295,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool, 2: mixed, 3: class-string|null}> */
-    public function propertyDefaultValueProvider(): array
+    public static function propertyDefaultValueProvider(): array
     {
         return [
             ['hasDefault', true, 'const', Node\Expr::class],
@@ -343,7 +343,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\nclass T {\npublic \$test = 1; }", 3, 3],
@@ -354,7 +354,7 @@ class ReflectionPropertyTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nclass T {\npublic \$test = 1;\n}", 1, 17],
@@ -677,7 +677,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function hasTypeProvider(): array
+    public static function hasTypeProvider(): array
     {
         return [
             ['integerProperty', true],
@@ -704,7 +704,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function getTypeProvider(): array
+    public static function getTypeProvider(): array
     {
         return [
             ['integerProperty', 'int'],
@@ -733,7 +733,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: object|null, 2: bool}> */
-    public function isInitializedProvider(): array
+    public static function isInitializedProvider(): array
     {
         $object                  = new InitializedProperties();
         $object::$staticWithType = 0;
@@ -783,7 +783,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [
@@ -832,7 +832,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string}> */
-    public function dataGetAttributes(): array
+    public static function dataGetAttributes(): array
     {
         return [
             ['propertyWithAttributes'],

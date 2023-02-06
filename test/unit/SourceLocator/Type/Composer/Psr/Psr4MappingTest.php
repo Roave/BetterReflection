@@ -39,7 +39,7 @@ class Psr4MappingTest extends TestCase
     }
 
     /** @return array<string, array{0: array<string, list<string>>, 1: list<string>}> */
-    public function mappings(): array
+    public static function mappings(): array
     {
         return [
             'one directory, one prefix'                  => [
@@ -83,7 +83,7 @@ class Psr4MappingTest extends TestCase
     }
 
     /** @return array<string, array{0: array<string, list<string>>, 1: Identifier, 2: list<string>}> */
-    public function classLookupMappings(): array
+    public static function classLookupMappings(): array
     {
         return [
             'empty mappings, no match'                         => [
@@ -144,7 +144,7 @@ class Psr4MappingTest extends TestCase
     }
 
     /** @return array<string, list<array<string, list<string>|mixed>>> */
-    public function invalidMappings(): array
+    public static function invalidMappings(): array
     {
         return [
             'array contains empty prefixes'                            => [['' => 'bar']],

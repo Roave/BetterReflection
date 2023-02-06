@@ -77,7 +77,7 @@ class IdentifierTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function validNamesProvider(): array
+    public static function validNamesProvider(): array
     {
         return [
             ['Foo', 'Foo'],
@@ -105,7 +105,7 @@ class IdentifierTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function invalidNamesProvider(): array
+    public static function invalidNamesProvider(): array
     {
         return [
             [''],

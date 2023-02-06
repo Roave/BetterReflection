@@ -26,7 +26,7 @@ use function get_class_methods;
 class ReflectionEnumUnitCaseTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionEnumUnitCase::class);
 
@@ -43,14 +43,13 @@ class ReflectionEnumUnitCaseTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
         return [
             // Inherited
             ['__toString', null, '', []],
             ['getName', null, '', []],
             ['getValue', NotImplemented::class, null, []],
-            ['getDeclaringClass', null, $this->createMock(BetterReflectionClass::class), []],
             ['getDocComment', null, null, []],
             ['getAttributes', null, [], []],
         ];
@@ -158,7 +157,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
 
         $betterReflectionEnumCase = $this->getMockBuilder(BetterReflectionEnumCase::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionEnumCase
@@ -259,7 +258,7 @@ class ReflectionEnumUnitCaseTest extends TestCase
 
         $betterReflectionEnumCase = $this->getMockBuilder(BetterReflectionEnumCase::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionEnumCase
@@ -298,7 +297,21 @@ class ReflectionEnumUnitCaseTest extends TestCase
         self::assertTrue($reflectionEnumUnitCaseAdapter->isEnumCase());
     }
 
-    public function testGetEnum(): void
+    public function testGetDeclaringClass(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+
+        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase
+            ->method('getDeclaringClass')
+            ->willReturn($betterReflectionEnum);
+
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+
+        self::assertInstanceOf(ReflectionEnumAdapter::class, $reflectionEnumUnitCaseAdapter->getEnum());
+    }
+
+    public function testGetDeclaringEnum(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
 

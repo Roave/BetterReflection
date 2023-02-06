@@ -17,7 +17,7 @@ class FileHelperTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function dataNormalizeSystemPath(): array
+    public static function dataNormalizeSystemPath(): array
     {
         return [
             ['directory\\foo/boo\\foo/file.php', 'directory/foo/boo/foo/file.php'],

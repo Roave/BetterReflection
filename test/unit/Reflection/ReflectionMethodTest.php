@@ -108,7 +108,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return array<non-empty-string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
-    public function visibilityProvider(): array
+    public static function visibilityProvider(): array
     {
         return [
             'publicMethod' => ['publicMethod', true, false, false, false, false, false],
@@ -267,7 +267,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: list<string>}> */
-    public function modifierProvider(): array
+    public static function modifierProvider(): array
     {
         return [
             ['publicMethod', CoreReflectionMethod::IS_PUBLIC, ['public']],
@@ -299,7 +299,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: non-empty-string, 2: string|null}> */
-    public function prototypeProvider(): array
+    public static function prototypeProvider(): array
     {
         return [
             ['Zoom\B', 'foo', 'Zoom\FooInterface'],
@@ -336,7 +336,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string, 2: string|null}> */
-    public function overwrittenMethodProvider(): array
+    public static function overwrittenMethodProvider(): array
     {
         return [
             ['FooInterface', 'foo', null],

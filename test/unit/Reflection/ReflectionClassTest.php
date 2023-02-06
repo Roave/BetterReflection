@@ -230,7 +230,7 @@ class ReflectionClassTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: array<non-empty-string, array{0: class-string, 1: string}>, 2: class-string, 3: string}> */
-    public function dataMethodsOfBackedEnum(): array
+    public static function dataMethodsOfBackedEnum(): array
     {
         return [
             [
@@ -295,7 +295,7 @@ class ReflectionClassTest extends TestCase
     }
 
     /** @return list<array{0: int-mask-of<CoreReflectionMethod::IS_*>, 1: int}> */
-    public function getMethodsWithFilterDataProvider(): array
+    public static function getMethodsWithFilterDataProvider(): array
     {
         return [
             [CoreReflectionMethod::IS_STATIC, 3],
@@ -530,7 +530,7 @@ class ReflectionClassTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: array<string, string>}> */
-    public function dataGetPropertiesForBackedEnum(): array
+    public static function dataGetPropertiesForBackedEnum(): array
     {
         return [
             [
@@ -615,7 +615,7 @@ PHP;
     }
 
     /** @return list<array{0: int-mask-of<CoreReflectionProperty::IS_*>, 1: int}> */
-    public function getPropertiesWithFilterDataProvider(): array
+    public static function getPropertiesWithFilterDataProvider(): array
     {
         return [
             [CoreReflectionProperty::IS_STATIC, 3],
@@ -659,7 +659,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: class-string, 2: class-string}> */
-    public function dataInheritedProperties(): array
+    public static function dataInheritedProperties(): array
     {
         return [
             ['a', Bar::class, Qux::class],
@@ -737,7 +737,7 @@ PHP;
     }
 
     /** @return array<array{0: non-empty-string, 1: bool}> */
-    public function promotedPropertisProvider(): array
+    public static function promotedPropertisProvider(): array
     {
         return [
             ['promotedProperty', true],
@@ -818,7 +818,7 @@ PHP;
     }
 
     /** @return list<array{0: string}> */
-    public function circularReferencesProvider(): array
+    public static function circularReferencesProvider(): array
     {
         return [
             ['Roave\\BetterReflectionTest\\Fixture\\InvalidParents\\ClassExtendsSelf'],
@@ -844,7 +844,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nclass Foo {\n}\n", 3, 4],
@@ -868,7 +868,7 @@ PHP;
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nclass Foo {\n}\n", 1, 1],
@@ -1205,7 +1205,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: int}> */
-    public function modifierProvider(): array
+    public static function modifierProvider(): array
     {
         return [
             ['ExampleClass', 0],
@@ -1286,7 +1286,7 @@ PHP;
     }
 
     /** @return list<array{0: class-string, 1: non-empty-string, 2: string, 3: string, 4: string}> */
-    public function declaringClassProvider(): array
+    public static function declaringClassProvider(): array
     {
         return [
             [
@@ -1735,7 +1735,7 @@ PHP;
     }
 
     /** @return list<array{0: string}> */
-    public function interfaceExtendsCircularReferencesProvider(): array
+    public static function interfaceExtendsCircularReferencesProvider(): array
     {
         return [
             ['Roave\\BetterReflectionTest\\Fixture\\InvalidInterfaceParents\\InterfaceExtendsSelf'],
@@ -2173,7 +2173,7 @@ PHP;
     }
 
     /** @return list<array{0: int-mask-of<ReflectionClassConstantAdapter::IS_*>, 1: int}> */
-    public function getConstantsWithFilterDataProvider(): array
+    public static function getConstantsWithFilterDataProvider(): array
     {
         return [
             [ReflectionClassConstantAdapter::IS_FINAL, 2],
@@ -2561,7 +2561,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [
@@ -2710,7 +2710,7 @@ PHP;
     }
 
     /** @return list<array{0: string}> */
-    public function traitUseCircularReferencesProvider(): array
+    public static function traitUseCircularReferencesProvider(): array
     {
         return [
             ['Roave\\BetterReflectionTest\\Fixture\\InvalidTraitUses\\TraitUsesSelf'],

@@ -72,7 +72,7 @@ class FindReflectionsInTreeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataClassTypes(): array
+    public static function dataClassTypes(): array
     {
         return [
             ['class'],
@@ -348,7 +348,7 @@ PHP;
     }
 
     /** @return array<array{0: string, 1: string}> */
-    public function dataIdentifierDoesNotMatchTypeProvider(): array
+    public static function dataIdentifierDoesNotMatchTypeProvider(): array
     {
         return [
             ['<?php class Foo {}', IdentifierType::IDENTIFIER_FUNCTION],

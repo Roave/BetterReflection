@@ -24,7 +24,7 @@ class ReflectionPropertyStringCastTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['publicProperty', 'Property [ <default> public $publicProperty ]'],

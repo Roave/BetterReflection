@@ -26,7 +26,7 @@ class ReflectionAttributeStringCastTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\NoArguments', "Attribute [ Roave\BetterReflectionTest\Fixture\NoArguments ]\n"],

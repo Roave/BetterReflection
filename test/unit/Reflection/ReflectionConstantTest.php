@@ -261,7 +261,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 3, 4],
@@ -285,7 +285,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 1, 2],
@@ -308,7 +308,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [

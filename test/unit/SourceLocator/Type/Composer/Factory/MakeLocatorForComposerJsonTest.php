@@ -36,7 +36,7 @@ class MakeLocatorForComposerJsonTest extends TestCase
     }
 
     /** @return array<string, array{0: string, 1: SourceLocator}> */
-    public function expectedLocators(): array
+    public static function expectedLocators(): array
     {
         $astLocator = BetterReflectionSingleton::instance()->astLocator();
 

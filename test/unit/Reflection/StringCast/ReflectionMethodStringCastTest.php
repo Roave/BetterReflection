@@ -32,7 +32,7 @@ class ReflectionMethodStringCastTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['__construct', "Method [ <user, ctor> public method __construct ] {\n  @@ %s/Fixture/StringCastMethods.php 23 - 25\n}"],

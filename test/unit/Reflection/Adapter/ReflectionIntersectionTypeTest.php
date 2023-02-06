@@ -20,7 +20,7 @@ use function get_class_methods;
 class ReflectionIntersectionTypeTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionIntersectionType::class);
 
@@ -37,7 +37,7 @@ class ReflectionIntersectionTypeTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
         return [
             ['__toString', null, 'int|string', []],
