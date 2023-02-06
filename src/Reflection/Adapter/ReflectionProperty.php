@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ArgumentCountError;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -129,10 +130,10 @@ final class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
-     * @codeCoverageIgnore
      * @infection-ignore-all
      * @psalm-mutation-free
      */
+    #[CodeCoverageIgnore]
     public function setAccessible(bool $accessible): void
     {
     }

@@ -6,6 +6,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CodeCoverageIgnore;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -333,10 +334,10 @@ final class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
-     * @codeCoverageIgnore
      * @infection-ignore-all
      * @psalm-pure
      */
+    #[CodeCoverageIgnore]
     public function setAccessible(bool $accessible): void
     {
     }
