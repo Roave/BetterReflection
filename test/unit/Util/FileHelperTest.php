@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Util;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystemFamily;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -28,16 +30,14 @@ class FileHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataNormalizeSystemPath
-     * @requires OS Linux
-     */
+    /** @dataProvider dataNormalizeSystemPath */
+    #[RequiresOperatingSystem('Linux')]
     public function testSystemWindowsPath(string $path, string $expectedPath): void
     {
         self::assertSame($expectedPath, FileHelper::normalizeSystemPath($path));
     }
 
-    /** @requires OSFAMILY Windows */
+    #[RequiresOperatingSystemFamily('Windows')]
     public function testSystemWindowsPathOnWindows(): void
     {
         $path = 'phar://C:/Users/ondrej/phpstan.phar/src/TrinaryLogic.php';
