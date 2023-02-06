@@ -66,7 +66,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClassNameAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionParameter::createFromClassNameAndMethod(SplDoublyLinkedList::class, 'add', 'notExist');
     }
 
@@ -80,7 +80,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClassInstanceAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'notExist');
     }
 
@@ -113,8 +113,8 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClosureThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find parameter: notExist');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find parameter: notExist');
         ReflectionParameter::createFromClosure(static function ($a): void {
         }, 'notExist');
     }
@@ -169,7 +169,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromSpecWithInvalidSpecThrowsException(): void
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         ReflectionParameter::createFromSpec([], 'index');
     }
 
@@ -596,7 +596,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -614,7 +614,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -632,7 +632,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -650,7 +650,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 
@@ -665,7 +665,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -680,7 +680,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -695,7 +695,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -710,7 +710,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 

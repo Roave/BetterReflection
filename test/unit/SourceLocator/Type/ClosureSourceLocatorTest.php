@@ -145,7 +145,7 @@ class ClosureSourceLocatorTest extends TestCase
         $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
         $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
 
-        self::expectException(NoClosureOnLine::class);
+        $this->expectException(NoClosureOnLine::class);
 
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION));
     }

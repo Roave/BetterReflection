@@ -277,7 +277,7 @@ class ReflectionEnumBackedCaseTest extends TestCase
         $betterReflectionEnumCase        = $this->createMock(BetterReflectionEnumCase::class);
         $reflectionEnumBackedCaseAdapter = new ReflectionEnumBackedCaseAdapter($betterReflectionEnumCase);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionEnumBackedCaseAdapter->getAttributes(null, 123);
     }
 

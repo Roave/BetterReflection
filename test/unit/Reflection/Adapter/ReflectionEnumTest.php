@@ -620,7 +620,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionEnumAdapter->getAttributes(null, 123);
     }
 
@@ -654,8 +654,8 @@ class ReflectionEnumTest extends TestCase
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Case SomeEnum:: does not exist');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Case SomeEnum:: does not exist');
         $reflectionEnumAdapter->getCase('');
     }
 
@@ -668,7 +668,7 @@ class ReflectionEnumTest extends TestCase
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(CoreReflectionException::class);
+        $this->expectException(CoreReflectionException::class);
         $reflectionEnumAdapter->getCase('case');
     }
 

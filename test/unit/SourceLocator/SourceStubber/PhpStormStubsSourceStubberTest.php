@@ -565,7 +565,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
     /** @dataProvider dataCaseSensitiveConstantSearchedByWrongCase */
     public function testCaseSensitiveConstantSearchedByWrongCase(string $constantName): void
     {
-        self::expectException(IdentifierNotFound::class);
+        $this->expectException(IdentifierNotFound::class);
 
         $this->reflector->reflectConstant($constantName);
     }
@@ -882,8 +882,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
             self::assertInstanceOf(ReflectionFunction::class, $function, $functionName);
             self::assertSame($returnType, $function->getReturnType()?->__toString());
         } else {
-            self::expectException(IdentifierNotFound::class);
-            self::expectExceptionMessage(sprintf('Function "%s" could not be found in the located source', $functionName));
+            $this->expectException(IdentifierNotFound::class);
+            $this->expectExceptionMessage(sprintf('Function "%s" could not be found in the located source', $functionName));
             $reflector->reflectFunction($functionName);
         }
     }

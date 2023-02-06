@@ -326,7 +326,7 @@ class ReflectionParameterTest extends TestCase
         $betterReflectionParameter  = $this->createMock(BetterReflectionParameter::class);
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionParameterAdapter->getAttributes(null, 123);
     }
 

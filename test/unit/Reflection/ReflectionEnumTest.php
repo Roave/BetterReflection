@@ -154,7 +154,7 @@ class ReflectionEnumTest extends TestCase
 
         self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $enumReflection->getBackingType();
     }
 }

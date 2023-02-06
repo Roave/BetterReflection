@@ -187,7 +187,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
         $nonExistingFile = __DIR__ . uniqid('non-existing-file', true);
 
-        self::expectExceptionMessageMatches('~stat\(\): stat failed for~');
+        $this->expectExceptionMessageMatches('~stat\(\): stat failed for~');
 
         try {
             self::assertSame(
@@ -219,8 +219,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
     {
         $fileReadTrapStreamWrapper = new FileReadTrapStreamWrapper();
 
-        self::expectException(LogicException::class);
-        self::expectExceptionMessage(sprintf('%s not registered: cannot operate. Do not call this method directly.', FileReadTrapStreamWrapper::class));
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(sprintf('%s not registered: cannot operate. Do not call this method directly.', FileReadTrapStreamWrapper::class));
         $fileReadTrapStreamWrapper->url_stat('some-file.php', 0);
     }
 }

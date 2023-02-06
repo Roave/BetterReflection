@@ -236,7 +236,7 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetClosureReturnsNullWhenNoObject(): void
     {
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
 
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
         $betterReflectionMethod
@@ -521,7 +521,7 @@ class ReflectionMethodTest extends TestCase
         $betterReflectionMethod  = $this->createMock(BetterReflectionMethod::class);
         $reflectionMethodAdapter = new ReflectionMethodAdapter($betterReflectionMethod);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionMethodAdapter->getAttributes(null, 123);
     }
 

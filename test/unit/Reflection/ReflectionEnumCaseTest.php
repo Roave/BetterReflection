@@ -98,7 +98,7 @@ class ReflectionEnumCaseTest extends TestCase
 
         $caseReflection = $enumReflection->getCase('ONE');
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $caseReflection->getValueExpression();
     }
 
@@ -110,7 +110,7 @@ class ReflectionEnumCaseTest extends TestCase
 
         $caseReflection = $enumReflection->getCase('ONE');
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $caseReflection->getValue();
     }
 

@@ -689,7 +689,7 @@ PHP;
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
@@ -712,7 +712,7 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('TWO_VALUE')->getValue();
     }
 
@@ -735,7 +735,7 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
@@ -1035,8 +1035,8 @@ PHP
         $function  = $reflector->reflectFunction('functionWithMagicConstants');
         $parameter = $function->getParameter($parameterName);
 
-        self::expectException(UnableToCompileNode::class);
-        self::expectExceptionMessage('No file name for function functionWithMagicConstants() (line 1)');
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('No file name for function functionWithMagicConstants() (line 1)');
         $parameter->getDefaultValue();
     }
 

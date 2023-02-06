@@ -72,7 +72,7 @@ class ReflectionPropertyTest extends TestCase
 
     public function testCreateFromNameThrowsExceptionWhenPropertyDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionProperty::createFromName(ReflectionProperty::class, 'notExist');
     }
 
@@ -86,7 +86,7 @@ class ReflectionPropertyTest extends TestCase
 
     public function testCreateFromInstanceThrowsExceptionWhenPropertyDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionProperty::createFromInstance(new ClassForHinting(), 'notExist');
     }
 
@@ -388,7 +388,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $propertyReflection->getStartLine();
     }
 
@@ -402,7 +402,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $propertyReflection->getEndLine();
     }
 
@@ -416,7 +416,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $propertyReflection->getStartColumn();
     }
 
@@ -430,7 +430,7 @@ class ReflectionPropertyTest extends TestCase
         $classReflection    = $reflector->reflectClass(StringEnum::class);
         $propertyReflection = $classReflection->getProperty('name');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $propertyReflection->getEndColumn();
     }
 
@@ -765,7 +765,7 @@ PHP;
     {
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
 
-        self::expectException(ObjectNotInstanceOfClass::class);
+        $this->expectException(ObjectNotInstanceOfClass::class);
 
         $classReflection->getProperty('withoutType')->isInitialized(new stdClass());
     }
@@ -777,8 +777,8 @@ PHP;
 
         $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
 
-        self::expectException(Error::class);
-        self::expectExceptionMessage('Removed property');
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage('Removed property');
         $classReflection->getProperty('toBeRemoved')->isInitialized($object);
     }
 

@@ -79,8 +79,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testCreateFromNameThrowsExceptionWhenMethodNotFound(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find method: notFound');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find method: notFound');
         ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'notFound');
     }
 
@@ -94,8 +94,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testCreateFromInstanceThrowsExceptionWhenMethodNotFound(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find method: notFound');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find method: notFound');
         ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'notFound');
     }
 

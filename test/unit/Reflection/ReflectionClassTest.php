@@ -398,7 +398,7 @@ class ReflectionClassTest extends TestCase
             // Ignore error for the first time
         }
 
-        self::expectException(IdentifierNotFound::class);
+        $this->expectException(IdentifierNotFound::class);
 
         $classInfo->getMethods();
     }

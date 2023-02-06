@@ -296,7 +296,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getStartLine();
     }
 
@@ -310,7 +310,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getEndLine();
     }
 
@@ -324,7 +324,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getStartColumn();
     }
 
@@ -338,7 +338,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getEndColumn();
     }
 

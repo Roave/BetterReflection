@@ -304,7 +304,7 @@ class ReflectionClassConstantTest extends TestCase
         $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionClassConstantAdapter->getAttributes(null, 123);
     }
 

@@ -186,7 +186,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::expectException(ArgumentCountError::class);
+        $this->expectException(ArgumentCountError::class);
         $reflectionPropertyAdapter->setValue(null);
     }
 
@@ -202,7 +202,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::expectException(TypeError::class);
+        $this->expectException(TypeError::class);
         $reflectionPropertyAdapter->setValue('string');
     }
 
@@ -250,7 +250,7 @@ class ReflectionPropertyTest extends TestCase
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::expectException(CoreReflectionException::class);
+        $this->expectException(CoreReflectionException::class);
 
         $reflectionPropertyAdapter->isInitialized(new stdClass());
     }
@@ -421,7 +421,7 @@ class ReflectionPropertyTest extends TestCase
         $betterReflectionProperty  = $this->createMock(BetterReflectionProperty::class);
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionPropertyAdapter->getAttributes(null, 123);
     }
 

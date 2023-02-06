@@ -216,7 +216,7 @@ class ReflectionFunctionTest extends TestCase
 
         $betterReflectionFunction = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        self::expectException(Throwable::class);
+        $this->expectException(Throwable::class);
 
         $betterReflectionFunction->getClosure();
     }
@@ -413,7 +413,7 @@ class ReflectionFunctionTest extends TestCase
         $betterReflectionFunction  = $this->createMock(BetterReflectionFunction::class);
         $reflectionFunctionAdapter = new ReflectionFunctionAdapter($betterReflectionFunction);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionFunctionAdapter->getAttributes(null, 123);
     }
 

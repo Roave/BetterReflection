@@ -76,7 +76,7 @@ class FileIteratorSourceLocatorTest extends TestCase
 
     public function testIteratorWithoutSplFileInfo(): void
     {
-        self::expectException(InvalidFileInfo::class);
+        $this->expectException(InvalidFileInfo::class);
 
         /** @phpstan-ignore-next-line */
         new FileIteratorSourceLocator(new ArrayIterator([new stdClass()]), BetterReflectionSingleton::instance()->astLocator());

@@ -696,8 +696,8 @@ class ReflectionClassTest extends TestCase
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Property SomeClass::$ does not exist');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property SomeClass::$ does not exist');
         $reflectionClassAdapter->getStaticPropertyValue('');
     }
 
@@ -735,8 +735,8 @@ class ReflectionClassTest extends TestCase
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Class SomeClass does not have a property named ');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Class SomeClass does not have a property named ');
         $reflectionClassAdapter->setStaticPropertyValue('', '');
     }
 
@@ -1145,7 +1145,7 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass  = $this->createMock(BetterReflectionClass::class);
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionClassAdapter->getAttributes(null, 123);
     }
 

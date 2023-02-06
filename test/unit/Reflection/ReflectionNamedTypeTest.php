@@ -223,7 +223,7 @@ class ReflectionNamedTypeTest extends TestCase
 
         $typeReflection = $enumReflection->getBackingType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
@@ -238,7 +238,7 @@ class ReflectionNamedTypeTest extends TestCase
         $functionReflection = $reflector->reflectFunction('getSelf');
         $typeReflection     = $functionReflection->getReturnType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
@@ -254,7 +254,7 @@ class ReflectionNamedTypeTest extends TestCase
         $parameterReflection = $functionReflection->getParameter('parameter');
         $typeReflection      = $parameterReflection->getType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
@@ -369,7 +369,7 @@ class ReflectionNamedTypeTest extends TestCase
         $methodReflection = $classReflection->getMethod('method');
         $typeReflection   = $methodReflection->getReturnType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
