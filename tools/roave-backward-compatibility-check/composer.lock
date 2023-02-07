@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "488fc199a915b83b6f2556b05209b101",
+    "content-hash": "69ad7ca6e6887bcae7f5e13047e19a2b",
     "packages": [
         {
             "name": "azjezz/psl",
