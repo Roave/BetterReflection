@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType as CoreReflectionNamedType;
@@ -17,18 +19,18 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType */
+#[CoversClass(ReflectionNamedTypeAdapter::class)]
 class ReflectionNamedTypeTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionNamedType::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
@@ -48,7 +50,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataNoNullabilityMarkerForMixed(): array
+    public static function dataNoNullabilityMarkerForMixed(): array
     {
         return [
             ['mixed'],
@@ -58,7 +60,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataNoNullabilityMarkerForMixed */
+    #[DataProvider('dataNoNullabilityMarkerForMixed')]
     public function testNoNullabilityMarkerForMixed(string $mixedType): void
     {
         $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
@@ -79,7 +81,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
         return [
             ['isBuiltin', null, true, []],
@@ -87,11 +89,8 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
@@ -112,7 +111,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataNotBuildin(): array
+    public static function dataNotBuildin(): array
     {
         return [
             ['self'],
@@ -124,7 +123,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataNotBuildin */
+    #[DataProvider('dataNotBuildin')]
     public function testIsNotBuiltin(string $type): void
     {
         $reflector = $this->createMock(Reflector::class);

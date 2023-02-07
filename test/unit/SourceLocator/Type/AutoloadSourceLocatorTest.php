@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Foo\Bar\AutoloadableClassWithTwoDirectories;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -48,7 +49,7 @@ use function trait_exists;
 use function uniqid;
 use function unlink;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator */
+#[CoversClass(AutoloadSourceLocator::class)]
 class AutoloadSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

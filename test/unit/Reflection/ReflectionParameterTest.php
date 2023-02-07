@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -39,7 +41,7 @@ use function sprintf;
 
 use const SORT_ASC as SORT_ASC_TEST;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionParameter */
+#[CoversClass(ReflectionParameter::class)]
 class ReflectionParameterTest extends TestCase
 {
     private Reflector $reflector;
@@ -66,7 +68,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClassNameAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionParameter::createFromClassNameAndMethod(SplDoublyLinkedList::class, 'add', 'notExist');
     }
 
@@ -80,7 +82,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClassInstanceAndMethodThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
+        $this->expectException(OutOfBoundsException::class);
         ReflectionParameter::createFromClassInstanceAndMethod(new SplDoublyLinkedList(), 'add', 'notExist');
     }
 
@@ -113,8 +115,8 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromClosureThrowsExceptionWhenParameterDoesNotExist(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find parameter: notExist');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find parameter: notExist');
         ReflectionParameter::createFromClosure(static function ($a): void {
         }, 'notExist');
     }
@@ -169,12 +171,12 @@ class ReflectionParameterTest extends TestCase
 
     public function testCreateFromSpecWithInvalidSpecThrowsException(): void
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         ReflectionParameter::createFromSpec([], 'index');
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function defaultParameterProvider(): array
+    public static function defaultParameterProvider(): array
     {
         return [
             ['1', 1],
@@ -187,7 +189,7 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /** @dataProvider defaultParameterProvider */
+    #[DataProvider('defaultParameterProvider')]
     public function testDefaultParametersTypes(string $defaultExpression, mixed $expectedValue): void
     {
         $content = sprintf('<?php class Foo { public function myMethod($var = %s) {} }', $defaultExpression);
@@ -244,7 +246,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string}> */
-    public function typeProvider(): array
+    public static function typeProvider(): array
     {
         return [
             ['stdClassParameter', 'stdClass'],
@@ -255,11 +257,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterToTest
-     *
-     * @dataProvider typeProvider
-     */
+    /** @param non-empty-string $parameterToTest */
+    #[DataProvider('typeProvider')]
     public function testGetType(
         string $parameterToTest,
         string $expectedType,
@@ -304,7 +303,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function allowsNullProvider(): array
+    public static function allowsNullProvider(): array
     {
         return [
             ['classParam', false],
@@ -317,11 +316,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider allowsNullProvider
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('allowsNullProvider')]
     public function testAllowsNull(string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
@@ -555,7 +551,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int, 3: int, 4: int}> */
-    public function linesAndColumnsProvider(): array
+    public static function linesAndColumnsProvider(): array
     {
         return [
             ["<?php\n\nfunction foo(\n\$test\n) {}", 4, 4, 1, 5],
@@ -565,11 +561,8 @@ class ReflectionParameterTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider linesAndColumnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('linesAndColumnsProvider')]
     public function testGetLinesAndColumns(string $php, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -596,7 +589,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -614,7 +607,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -632,7 +625,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -650,7 +643,7 @@ class ReflectionParameterTest extends TestCase
             false,
         );
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 
@@ -665,7 +658,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartLine();
     }
 
@@ -680,7 +673,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndLine();
     }
 
@@ -695,7 +688,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getStartColumn();
     }
 
@@ -710,7 +703,7 @@ class ReflectionParameterTest extends TestCase
         $methodReflection    = $classReflection->getMethod('tryFrom');
         $parameterReflection = $methodReflection->getParameter('value');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $parameterReflection->getEndColumn();
     }
 

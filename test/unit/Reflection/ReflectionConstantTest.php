@@ -6,6 +6,8 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\BuilderHelpers;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -24,7 +26,7 @@ use function sprintf;
 
 use const E_ALL;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionConstant */
+#[CoversClass(ReflectionConstant::class)]
 class ReflectionConstantTest extends TestCase
 {
     private Locator $astLocator;
@@ -157,7 +159,7 @@ class ReflectionConstantTest extends TestCase
 
     public function testCreateFromNodeWithInvalidDefine(): void
     {
-        self::expectException(InvalidConstantNode::class);
+        $this->expectException(InvalidConstantNode::class);
         ReflectionConstant::createFromNode(
             $this->createMock(Reflector::class),
             new Node\Expr\FuncCall(new Node\Expr\Variable('foo')),
@@ -261,7 +263,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 3, 4],
@@ -270,11 +272,8 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -285,7 +284,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nconst FOO = [\n];\n", 1, 2],
@@ -293,11 +292,8 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector  = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -308,7 +304,7 @@ class ReflectionConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [
@@ -330,7 +326,7 @@ class ReflectionConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider deprecatedDocCommentProvider */
+    #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php

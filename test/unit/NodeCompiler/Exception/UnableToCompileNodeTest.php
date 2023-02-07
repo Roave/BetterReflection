@@ -13,6 +13,8 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\MagicConst\File;
 use PhpParser\Node\Scalar\String_;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\NodeCompiler\CompilerContext;
 use Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode;
@@ -25,7 +27,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\NodeCompiler\Exception\UnableToCompileNode */
+#[CoversClass(UnableToCompileNode::class)]
 final class UnableToCompileNodeTest extends TestCase
 {
     public function testDefaults(): void
@@ -35,7 +37,7 @@ final class UnableToCompileNodeTest extends TestCase
         self::assertNull($exception->constantName());
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testBecauseOfInitializer(CompilerContext $context, string $contextName): void
     {
         $exception = UnableToCompileNode::becauseOfInitializer(
@@ -52,7 +54,7 @@ final class UnableToCompileNodeTest extends TestCase
         );
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testBecauseOfNotFoundConstantReference(CompilerContext $context, string $contextName): void
     {
         $constantName = 'FOO';
@@ -75,7 +77,7 @@ final class UnableToCompileNodeTest extends TestCase
         self::assertSame($constantName, $exception->constantName());
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context, string $contextName): void
     {
         $targetClass = $this->createMock(ReflectionClass::class);
@@ -101,7 +103,7 @@ final class UnableToCompileNodeTest extends TestCase
         );
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testBecauseOfOfInvalidEnumCasePropertyFetch(CompilerContext $context, string $contextName): void
     {
         $targetClass = $this->createMock(ReflectionClass::class);
@@ -130,7 +132,7 @@ final class UnableToCompileNodeTest extends TestCase
         );
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testForUnRecognizedExpressionInContext(CompilerContext $context, string $contextName): void
     {
         self::assertSame(
@@ -146,7 +148,7 @@ final class UnableToCompileNodeTest extends TestCase
         );
     }
 
-    /** @dataProvider supportedContextTypes */
+    #[DataProvider('supportedContextTypes')]
     public function testBecauseOfMissingFileName(CompilerContext $context, string $contextName): void
     {
         $exception = UnableToCompileNode::becauseOfMissingFileName(
@@ -164,7 +166,7 @@ final class UnableToCompileNodeTest extends TestCase
     }
 
     /** @return list<array{0: CompilerContext, 1: string}> */
-    public function supportedContextTypes(): array
+    public static function supportedContextTypes(): array
     {
         $php = <<<'PHP'
 <?php

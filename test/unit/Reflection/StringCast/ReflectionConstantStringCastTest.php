@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
@@ -14,7 +17,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionConstantStringCast */
+#[CoversClass(ReflectionConstantStringCast::class)]
 class ReflectionConstantStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -32,7 +35,7 @@ class ReflectionConstantStringCastTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\BY_CONST', "Constant [ <user> boolean Roave\BetterReflectionTest\Fixture\BY_CONST ] {\n  @@ %s/Fixture/StringCastConstants.php 5 - 5\n 1 }"],
@@ -43,7 +46,7 @@ class ReflectionConstantStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    #[DataProvider('toStringProvider')]
     public function testToString(string $constantName, string $expectedString): void
     {
         $sourceLocator = new AggregateSourceLocator([

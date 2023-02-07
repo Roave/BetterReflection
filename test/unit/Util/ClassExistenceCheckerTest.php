@@ -6,6 +6,8 @@ namespace Roave\BetterReflectionTest\Util;
 
 use Closure;
 use IteratorAggregate;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
@@ -17,7 +19,7 @@ use TraitFixtureTraitA;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
 
-/** @covers \Roave\BetterReflection\Util\ClassExistenceChecker */
+#[CoversClass(ClassExistenceChecker::class)]
 class ClassExistenceCheckerTest extends TestCase
 {
     private Closure|null $loader = null;
@@ -43,7 +45,7 @@ class ClassExistenceCheckerTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataClassExists(): array
+    public static function dataClassExists(): array
     {
         return [
             [stdClass::class, true],
@@ -53,14 +55,14 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassExists */
+    #[DataProvider('dataClassExists')]
     public function testClassExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::classExists($name));
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataExists(): array
+    public static function dataExists(): array
     {
         return [
             [stdClass::class, true],
@@ -75,14 +77,14 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataExists */
+    #[DataProvider('dataExists')]
     public function testExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::exists($name));
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataInterfaceExists(): array
+    public static function dataInterfaceExists(): array
     {
         return [
             [IteratorAggregate::class, true],
@@ -92,14 +94,14 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataInterfaceExists */
+    #[DataProvider('dataInterfaceExists')]
     public function testInterfaceExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::interfaceExists($name));
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function dataTraitExists(): array
+    public static function dataTraitExists(): array
     {
         return [
             [stdClass::class, false],
@@ -109,7 +111,7 @@ class ClassExistenceCheckerTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTraitExists */
+    #[DataProvider('dataTraitExists')]
     public function testTraitExists(string $name, bool $exists): void
     {
         self::assertSame($exists, ClassExistenceChecker::traitExists($name));

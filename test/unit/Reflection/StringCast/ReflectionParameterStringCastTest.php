@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\StringCastParameters;
 
-/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast */
+#[CoversClass(ReflectionParameterStringCast::class)]
 class ReflectionParameterStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -24,7 +27,7 @@ class ReflectionParameterStringCastTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: non-empty-string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['parametersWithBuiltInTypes', 'string', 'Parameter #0 [ <required> string $string ]'],
@@ -79,9 +82,8 @@ class ReflectionParameterStringCastTest extends TestCase
     /**
      * @param non-empty-string $methodName
      * @param non-empty-string $parameterName
-     *
-     * @dataProvider toStringProvider
      */
+    #[DataProvider('toStringProvider')]
     public function testToString(string $methodName, string $parameterName, string $expectedString): void
     {
         $reflector        = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastParameters.php', $this->astLocator));

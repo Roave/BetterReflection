@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Identifier;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Exception\InvalidIdentifierName;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -11,7 +13,7 @@ use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
 
-/** @covers \Roave\BetterReflection\Identifier\Identifier */
+#[CoversClass(Identifier::class)]
 class IdentifierTest extends TestCase
 {
     public function testGetName(): void
@@ -77,7 +79,7 @@ class IdentifierTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function validNamesProvider(): array
+    public static function validNamesProvider(): array
     {
         return [
             ['Foo', 'Foo'],
@@ -97,7 +99,7 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /** @dataProvider validNamesProvider */
+    #[DataProvider('validNamesProvider')]
     public function testValidName(string $name, string $expectedName): void
     {
         $identifier = new Identifier($name, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
@@ -105,7 +107,7 @@ class IdentifierTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function invalidNamesProvider(): array
+    public static function invalidNamesProvider(): array
     {
         return [
             [''],
@@ -115,7 +117,7 @@ class IdentifierTest extends TestCase
         ];
     }
 
-    /** @dataProvider invalidNamesProvider */
+    #[DataProvider('invalidNamesProvider')]
     public function testThrowExceptionForInvalidName(string $invalidName): void
     {
         $this->expectException(InvalidIdentifierName::class);

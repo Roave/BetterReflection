@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -37,20 +39,19 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
-use function is_array;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionEnum */
+#[CoversClass(ReflectionEnumAdapter::class)]
 class ReflectionEnumTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionEnum::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionEnumAdapterReflection = new CoreReflectionClass(ReflectionEnumAdapter::class);
@@ -59,88 +60,74 @@ class ReflectionEnumTest extends TestCase
         self::assertSame(ReflectionEnumAdapter::class, $reflectionEnumAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
-    public function methodExpectationProvider(): array
+    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed}> */
+    public static function methodExpectationProvider(): array
     {
-        $mockClassLike = $this->createMock(BetterReflectionClass::class);
-
-        $mockMethod = $this->createMock(BetterReflectionMethod::class);
-
-        $mockProperty = $this->createMock(BetterReflectionProperty::class);
-
-        $mockEnumCase = $this->createMock(BetterReflectionEnumCase::class);
-
-        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
-
         return [
             // Inherited
-            ['__toString', [], 'string', null, 'string', null],
-            ['getName', [], 'name', null, 'name', null],
-            ['isAnonymous', [], true, null, true, null],
-            ['isInternal', [], true, null, true, null],
-            ['isUserDefined', [], true, null, true, null],
-            ['isInstantiable', [], true, null, true, null],
-            ['isCloneable', [], true, null, true, null],
-            ['getFileName', [], 'filename', null, 'filename', null],
-            ['getStartLine', [], 123, null, 123, null],
-            ['getEndLine', [], 123, null, 123, null],
-            ['getDocComment', [], null, null, false, null],
-            ['getConstructor', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
-            ['hasMethod', ['foo'], true, null, true, null],
-            ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],
-            ['getMethods', [], [$mockMethod], null, null, ReflectionMethodAdapter::class],
-            ['hasProperty', ['foo'], true, null, true, null],
-            ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
-            ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
-            ['hasConstant', ['foo'], true, null, true, null],
-            ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
-            ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['isInterface', [], true, null, true, null],
-            ['getTraits', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
-            ['getTraitNames', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['getTraitAliases', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['isTrait', [], true, null, true, null],
-            ['isAbstract', [], true, null, true, null],
-            ['isFinal', [], true, null, true, null],
-            ['isReadOnly', [], true, null, true, null],
-            ['getModifiers', [], 123, null, 123, null],
-            ['isInstance', [new stdClass()], true, null, true, null],
-            ['newInstance', [], null, NotImplemented::class, null, null],
-            ['newInstanceWithoutConstructor', [], null, NotImplemented::class, null, null],
-            ['newInstanceArgs', [], null, NotImplemented::class, null, null],
-            ['isSubclassOf', ['\stdClass'], true, null, true, null],
-            ['getStaticProperties', [], [], null, [], null],
-            ['getDefaultProperties', [], ['foo' => 'bar'], null, null, null],
-            ['isIterateable', [], true, null, true, null],
-            ['implementsInterface', ['\Traversable'], true, null, true, null],
-            ['getExtension', [], null, NotImplemented::class, null, null],
-            ['getExtensionName', [], null, null, false, null],
-            ['inNamespace', [], true, null, true, null],
-            ['getNamespaceName', [], '', null, '', null],
-            ['getShortName', [], 'shortName', null, 'shortName', null],
-            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
-            ['isEnum', [], true, null, true, null],
+            ['__toString', [], 'string', null, 'string'],
+            ['getName', [], 'name', null, 'name'],
+            ['isAnonymous', [], true, null, true],
+            ['isInternal', [], true, null, true],
+            ['isUserDefined', [], true, null, true],
+            ['isInstantiable', [], true, null, true],
+            ['isCloneable', [], true, null, true],
+            ['getFileName', [], 'filename', null, 'filename'],
+            ['getStartLine', [], 123, null, 123],
+            ['getEndLine', [], 123, null, 123],
+            ['getDocComment', [], null, null, false],
+            ['getConstructor', [], null, null, null],
+            ['hasMethod', ['foo'], true, null, true],
+            ['getMethod', ['foo'], null, CoreReflectionException::class, null],
+            ['getMethods', [], [], null, null],
+            ['hasProperty', ['foo'], true, null, true],
+            ['getProperty', ['foo'], null, CoreReflectionException::class, null],
+            ['getProperties', [], [], null, null],
+            ['hasConstant', ['foo'], true, null, true],
+            ['getInterfaces', [], [], null, null],
+            ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b']],
+            ['isInterface', [], true, null, true],
+            ['getTraits', [], [], null, null],
+            ['getTraitNames', [], ['a', 'b'], null, ['a', 'b']],
+            ['getTraitAliases', [], ['a', 'b'], null, ['a', 'b']],
+            ['isTrait', [], true, null, true],
+            ['isAbstract', [], true, null, true],
+            ['isFinal', [], true, null, true],
+            ['isReadOnly', [], true, null, true],
+            ['getModifiers', [], 123, null, 123],
+            ['isInstance', [new stdClass()], true, null, true],
+            ['newInstance', [], null, NotImplemented::class, null],
+            ['newInstanceWithoutConstructor', [], null, NotImplemented::class, null],
+            ['newInstanceArgs', [], null, NotImplemented::class, null],
+            ['isSubclassOf', ['\stdClass'], true, null, true],
+            ['getStaticProperties', [], [], null, []],
+            ['getDefaultProperties', [], ['foo' => 'bar'], null, null],
+            ['isIterateable', [], true, null, true],
+            ['implementsInterface', ['\Traversable'], true, null, true],
+            ['getExtension', [], null, NotImplemented::class, null],
+            ['getExtensionName', [], null, null, false],
+            ['inNamespace', [], true, null, true],
+            ['getNamespaceName', [], '', null, ''],
+            ['getShortName', [], 'shortName', null, 'shortName'],
+            ['getAttributes', [], [], null, null],
+            ['isEnum', [], true, null, true],
 
             // ReflectionEnum
-            ['hasCase', ['case'], false, null, false, null],
-            ['getCase', ['case'], $mockEnumCase, null, null, ReflectionEnumUnitCaseAdapter::class],
-            ['getCases', [], [], null, [], null],
-            ['isBacked', [], false, null, false, null],
+            ['hasCase', ['case'], false, null, false],
+            ['getCase', ['case'], null, CoreReflectionException::class, null],
+            ['getCases', [], [], null, []],
+            ['isBacked', [], false, null, false],
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(
         string $methodName,
         array $args,
         mixed $returnValue,
         string|null $expectedException,
         mixed $expectedReturnValue,
-        string|null $expectedReturnValueInstance,
     ): void {
         $reflectionStub = $this->createMock(BetterReflectionEnum::class);
 
@@ -159,56 +146,72 @@ class ReflectionEnumTest extends TestCase
 
         $actualReturnValue = $adapter->{$methodName}(...$args);
 
-        if ($expectedReturnValue !== null) {
-            self::assertSame($expectedReturnValue, $actualReturnValue);
-        }
-
-        if ($expectedReturnValueInstance === null) {
+        if ($expectedReturnValue === null) {
             return;
         }
 
-        if (is_array($actualReturnValue)) {
-            self::assertNotEmpty($actualReturnValue);
-            self::assertContainsOnlyInstancesOf($expectedReturnValueInstance, $actualReturnValue);
-        } else {
-            self::assertInstanceOf($expectedReturnValueInstance, $actualReturnValue);
-        }
+        self::assertSame($expectedReturnValue, $actualReturnValue);
+    }
+
+    public function testGetConstructor(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getConstructor')
+            ->willReturn($this->createMock(BetterReflectionMethod::class));
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertInstanceOf(ReflectionMethodAdapter::class, $reflectionEnumAdapter->getConstructor());
+    }
+
+    public function testGetInterfaces(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getInterfaces')
+            ->willReturn([$this->createMock(BetterReflectionClass::class)]);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertCount(1, $reflectionEnumAdapter->getInterfaces());
+        self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $reflectionEnumAdapter->getInterfaces());
     }
 
     public function testIsSubclassOfIsCaseInsensitive(): void
     {
-        $betterReflectionClass = $this->createMock(BetterReflectionEnum::class);
-        $betterReflectionClass
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
             ->method('getParentClassNames')
             ->willReturn(['Foo']);
-        $betterReflectionClass
+        $betterReflectionEnum
             ->method('isSubclassOf')
             ->with('Foo')
             ->willReturn(true);
 
-        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionClass);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::assertTrue($reflectionClassAdapter->isSubclassOf('Foo'));
-        self::assertTrue($reflectionClassAdapter->isSubclassOf('foo'));
-        self::assertTrue($reflectionClassAdapter->isSubclassOf('FoO'));
+        self::assertTrue($reflectionEnumAdapter->isSubclassOf('Foo'));
+        self::assertTrue($reflectionEnumAdapter->isSubclassOf('foo'));
+        self::assertTrue($reflectionEnumAdapter->isSubclassOf('FoO'));
     }
 
     public function testImplementsInterfaceIsCaseInsensitive(): void
     {
-        $betterReflectionClass = $this->createMock(BetterReflectionEnum::class);
-        $betterReflectionClass
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
             ->method('getInterfaceNames')
             ->willReturn(['Foo']);
-        $betterReflectionClass
+        $betterReflectionEnum
             ->method('implementsInterface')
             ->with('Foo')
             ->willReturn(true);
 
-        $reflectionClassAdapter = new ReflectionEnumAdapter($betterReflectionClass);
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::assertTrue($reflectionClassAdapter->implementsInterface('Foo'));
-        self::assertTrue($reflectionClassAdapter->implementsInterface('foo'));
-        self::assertTrue($reflectionClassAdapter->implementsInterface('FoO'));
+        self::assertTrue($reflectionEnumAdapter->implementsInterface('Foo'));
+        self::assertTrue($reflectionEnumAdapter->implementsInterface('foo'));
+        self::assertTrue($reflectionEnumAdapter->implementsInterface('FoO'));
     }
 
     public function testPropertyName(): void
@@ -254,6 +257,19 @@ class ReflectionEnumTest extends TestCase
         self::assertFalse($reflectionEnumAdapter->hasProperty(''));
     }
 
+    public function testGetProperty(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getProperty')
+            ->with('something')
+            ->willReturn($this->createMock(BetterReflectionProperty::class));
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertInstanceOf(ReflectionPropertyAdapter::class, $reflectionEnumAdapter->getProperty('something'));
+    }
+
     public function testGetPropertyThrowsExceptionWhenPropertyNameIsEmpty(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
@@ -284,6 +300,19 @@ class ReflectionEnumTest extends TestCase
         $this->expectException(CoreReflectionException::class);
         $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionEnumAdapter->getProperty('foo');
+    }
+
+    public function testGetProperties(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getProperties')
+            ->willReturn([$this->createMock(BetterReflectionProperty::class)]);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertCount(1, $reflectionEnumAdapter->getProperties());
+        self::assertContainsOnlyInstancesOf(ReflectionPropertyAdapter::class, $reflectionEnumAdapter->getProperties());
     }
 
     public function testGetConstantsWithFilter(): void
@@ -470,7 +499,7 @@ class ReflectionEnumTest extends TestCase
 
         $betterReflectionEnum = $this->getMockBuilder(BetterReflectionEnum::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionEnum
@@ -571,7 +600,7 @@ class ReflectionEnumTest extends TestCase
 
         $betterReflectionEnum = $this->getMockBuilder(BetterReflectionEnum::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionEnum
@@ -590,7 +619,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum  = $this->createMock(BetterReflectionEnum::class);
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionEnumAdapter->getAttributes(null, 123);
     }
 
@@ -602,6 +631,19 @@ class ReflectionEnumTest extends TestCase
         self::assertFalse($reflectionEnumAdapter->hasCase(''));
     }
 
+    public function testGetCase(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getCase')
+            ->with('SOMETHING')
+            ->willReturn($this->createMock(BetterReflectionEnumCase::class));
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertInstanceOf(ReflectionEnumUnitCaseAdapter::class, $reflectionEnumAdapter->getCase('SOMETHING'));
+    }
+
     public function testGetCaseThrowsExceptionWhenCaseNameIsEmpty(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
@@ -611,8 +653,8 @@ class ReflectionEnumTest extends TestCase
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Case SomeEnum:: does not exist');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Case SomeEnum:: does not exist');
         $reflectionEnumAdapter->getCase('');
     }
 
@@ -625,7 +667,7 @@ class ReflectionEnumTest extends TestCase
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::expectException(CoreReflectionException::class);
+        $this->expectException(CoreReflectionException::class);
         $reflectionEnumAdapter->getCase('case');
     }
 
@@ -932,6 +974,19 @@ class ReflectionEnumTest extends TestCase
         self::assertFalse($reflectionEnumAdapter->hasMethod(''));
     }
 
+    public function testGetMethod(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getMethod')
+            ->with('doSomething')
+            ->willReturn($this->createMock(BetterReflectionMethod::class));
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertInstanceOf(ReflectionMethodAdapter::class, $reflectionEnumAdapter->getMethod('doSomething'));
+    }
+
     public function testGetMethodThrowsExceptionWhenMethodNameIsEmpty(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
@@ -958,6 +1013,19 @@ class ReflectionEnumTest extends TestCase
         $this->expectException(CoreReflectionException::class);
         $this->expectExceptionMessage('Method SomeClass::doesNotExist() does not exist');
         $reflectionEnumAdapter->getMethod('doesNotExist');
+    }
+
+    public function testGetMethods(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getMethods')
+            ->willReturn([$this->createMock(BetterReflectionMethod::class)]);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertCount(1, $reflectionEnumAdapter->getMethods());
+        self::assertContainsOnlyInstancesOf(ReflectionMethodAdapter::class, $reflectionEnumAdapter->getMethods());
     }
 
     public function testGetMethodsWithFilter(): void

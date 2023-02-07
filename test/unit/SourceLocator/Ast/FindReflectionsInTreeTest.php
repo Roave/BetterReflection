@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflector;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -20,7 +22,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Ast\FindReflectionsInTree */
+#[CoversClass(FindReflectionsInTree::class)]
 class FindReflectionsInTreeTest extends TestCase
 {
     /** @return Node[] */
@@ -72,7 +74,7 @@ class FindReflectionsInTreeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataClassTypes(): array
+    public static function dataClassTypes(): array
     {
         return [
             ['class'],
@@ -82,7 +84,7 @@ class FindReflectionsInTreeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataClassTypes */
+    #[DataProvider('dataClassTypes')]
     public function testInvokeCallsReflectNodesForClassTypeWithoutNamespace(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
@@ -107,7 +109,7 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    /** @dataProvider dataClassTypes */
+    #[DataProvider('dataClassTypes')]
     public function testInvokeCallsReflectNodesForNamespacedClassType(string $classType): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
@@ -348,7 +350,7 @@ PHP;
     }
 
     /** @return array<array{0: string, 1: string}> */
-    public function dataIdentifierDoesNotMatchTypeProvider(): array
+    public static function dataIdentifierDoesNotMatchTypeProvider(): array
     {
         return [
             ['<?php class Foo {}', IdentifierType::IDENTIFIER_FUNCTION],
@@ -357,7 +359,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider dataIdentifierDoesNotMatchTypeProvider */
+    #[DataProvider('dataIdentifierDoesNotMatchTypeProvider')]
     public function testNoNodesWhenIdentifierDoesNotMatchType(string $code, string $identifierType): void
     {
         $strategy      = $this->createMock(NodeToReflection::class);

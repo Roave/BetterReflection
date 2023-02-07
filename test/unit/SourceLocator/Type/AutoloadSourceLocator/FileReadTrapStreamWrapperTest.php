@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type\AutoloadSourceLocator;
 
 use Exception;
 use LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper;
 use Throwable;
@@ -21,12 +22,11 @@ use function uniqid;
 use const E_WARNING;
 
 /**
- * @covers \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator\FileReadTrapStreamWrapper
- *
  * Note: stream wrappers interfere **HEAVILY** with autoloaders, therefore we need to operate with raw
  *       assertions rather than with PHPUnit's assertion utilities, which lead to autoloading in case
  *       of lazy assertions or assertion failures.
  */
+#[CoversClass(FileReadTrapStreamWrapper::class)]
 class FileReadTrapStreamWrapperTest extends TestCase
 {
     public function testWillFindFileLocationOfExistingFileWhenFileIsRead(): void
@@ -187,7 +187,7 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
         $nonExistingFile = __DIR__ . uniqid('non-existing-file', true);
 
-        self::expectExceptionMessageMatches('~stat\(\): stat failed for~');
+        $this->expectExceptionMessageMatches('~stat\(\): stat failed for~');
 
         try {
             self::assertSame(
@@ -219,8 +219,8 @@ class FileReadTrapStreamWrapperTest extends TestCase
     {
         $fileReadTrapStreamWrapper = new FileReadTrapStreamWrapper();
 
-        self::expectException(LogicException::class);
-        self::expectExceptionMessage(sprintf('%s not registered: cannot operate. Do not call this method directly.', FileReadTrapStreamWrapper::class));
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(sprintf('%s not registered: cannot operate. Do not call this method directly.', FileReadTrapStreamWrapper::class));
         $fileReadTrapStreamWrapper->url_stat('some-file.php', 0);
     }
 }

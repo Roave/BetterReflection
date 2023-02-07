@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\NotAClassReflection;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -12,7 +13,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\NotAClassReflection */
+#[CoversClass(NotAClassReflection::class)]
 class NotAClassReflectionTest extends TestCase
 {
     private Locator $astLocator;

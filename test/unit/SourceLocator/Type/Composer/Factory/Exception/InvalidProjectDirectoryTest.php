@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory */
+#[CoversClass(InvalidProjectDirectory::class)]
 class InvalidProjectDirectoryTest extends TestCase
 {
     public function testAtPath(): void

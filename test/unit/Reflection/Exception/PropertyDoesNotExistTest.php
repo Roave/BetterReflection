@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\PropertyDoesNotExist */
+#[CoversClass(PropertyDoesNotExist::class)]
 class PropertyDoesNotExistTest extends TestCase
 {
     public function testFromName(): void

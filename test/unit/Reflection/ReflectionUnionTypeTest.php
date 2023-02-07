@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionUnionType */
+#[CoversClass(ReflectionUnionType::class)]
 class ReflectionUnionTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -26,7 +28,7 @@ class ReflectionUnionTypeTest extends TestCase
     }
 
     /** @return list<array{0: Node\UnionType, 1: string, 2: bool}> */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [new Node\UnionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo|Boo', false],
@@ -37,7 +39,7 @@ class ReflectionUnionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function test(Node\UnionType $unionType, string $expectedString, bool $expectedNullable): void
     {
         $typeReflection = new ReflectionUnionType($this->reflector, $this->owner, $unionType);

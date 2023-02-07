@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
@@ -23,10 +25,10 @@ use function array_column;
 use function array_combine;
 use function realpath;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Factory\MakeLocatorForComposerJsonAndInstalledJson */
+#[CoversClass(MakeLocatorForComposerJsonAndInstalledJson::class)]
 class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
 {
-    /** @dataProvider expectedLocators */
+    #[DataProvider('expectedLocators')]
     public function testLocatorEquality(string $projectDirectory, SourceLocator $expectedLocatorStructure): void
     {
         self::assertEquals(
@@ -37,7 +39,7 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
     }
 
     /** @return array<string, array{0: string, 1: SourceLocator}> */
-    public function expectedLocators(): array
+    public static function expectedLocators(): array
     {
         $astLocator = BetterReflectionSingleton::instance()->astLocator();
 

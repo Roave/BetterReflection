@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -23,18 +25,18 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant */
+#[CoversClass(ReflectionClassConstantAdapter::class)]
 class ReflectionClassConstantTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionClassConstant::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionClassConstantAdapterReflection = new CoreReflectionClass(ReflectionClassConstantAdapter::class);
@@ -44,7 +46,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
         return [
             ['__toString', null, '', []],
@@ -60,11 +62,8 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionClassConstant::class);
@@ -85,7 +84,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function dataAdapterMethodsForEnumCase(): array
+    public static function dataAdapterMethodsForEnumCase(): array
     {
         return [
             ['isPublic', true],
@@ -96,7 +95,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAdapterMethodsForEnumCase */
+    #[DataProvider('dataAdapterMethodsForEnumCase')]
     public function testAdapterMethodsForEnumCase(string $methodName, mixed $expectedValue): void
     {
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
@@ -184,7 +183,7 @@ class ReflectionClassConstantTest extends TestCase
 
         $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionClassConstant
@@ -285,7 +284,7 @@ class ReflectionClassConstantTest extends TestCase
 
         $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionClassConstant
@@ -304,25 +303,22 @@ class ReflectionClassConstantTest extends TestCase
         $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionClassConstantAdapter->getAttributes(null, 123);
     }
 
-    /** @return list<array{0: BetterReflectionClassConstant|BetterReflectionEnumCase, 1: bool}> */
-    public function dataIsEnumCase(): array
+    public function testIsEnumCaseWithClassConstant(): void
     {
-        return [
-            [$this->createMock(BetterReflectionClassConstant::class), false],
-            [$this->createMock(BetterReflectionEnumCase::class), true],
-        ];
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionClassConstant::class));
+
+        self::assertFalse($reflectionClassConstantAdapter->isEnumCase());
     }
 
-    /** @dataProvider dataIsEnumCase */
-    public function testIsEnumCase(BetterReflectionClassConstant|BetterReflectionEnumCase $classConstantOrEnum, bool $isEnumCase): void
+    public function testIsEnumCaseWithEnumCase(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($classConstantOrEnum);
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
 
-        self::assertSame($isEnumCase, $reflectionClassConstantAdapter->isEnumCase());
+        self::assertTrue($reflectionClassConstantAdapter->isEnumCase());
     }
 
     public function testPropertyName(): void

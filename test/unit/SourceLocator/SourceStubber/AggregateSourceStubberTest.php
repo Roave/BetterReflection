@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\SourceStubber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
 use Roave\BetterReflection\SourceLocator\SourceStubber\StubData;
 
-/** @covers \Roave\BetterReflection\SourceLocator\SourceStubber\AggregateSourceStubber */
+#[CoversClass(AggregateSourceStubber::class)]
 class AggregateSourceStubberTest extends TestCase
 {
     public function testTraverseAllGivenSourceStubbersAndFailToGenerateClassStub(): void

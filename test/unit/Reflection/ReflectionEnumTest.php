@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use LogicException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
@@ -18,7 +20,7 @@ use Roave\BetterReflectionTest\Fixture\IntEnum;
 use Roave\BetterReflectionTest\Fixture\PureEnum;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionEnum */
+#[CoversClass(ReflectionEnum::class)]
 class ReflectionEnumTest extends TestCase
 {
     private Locator $astLocator;
@@ -34,7 +36,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string}> */
-    public function dataCanReflect(): array
+    public static function dataCanReflect(): array
     {
         return [
             [PureEnum::class],
@@ -43,7 +45,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataCanReflect */
+    #[DataProvider('dataCanReflect')]
     public function testCanReflect(string $enumName): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -52,7 +54,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function dataHasAndGetCase(): array
+    public static function dataHasAndGetCase(): array
     {
         return [
             ['ONE', true],
@@ -62,11 +64,8 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $caseName
-     *
-     * @dataProvider dataHasAndGetCase
-     */
+    /** @param non-empty-string $caseName */
+    #[DataProvider('dataHasAndGetCase')]
     public function testHasAndGetCase(string $caseName, bool $exists): void
     {
         $enumReflection = $this->reflector->reflectClass(PureEnum::class);
@@ -85,7 +84,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: int}> */
-    public function dataGetCases(): array
+    public static function dataGetCases(): array
     {
         return [
             [PureEnum::class, 3],
@@ -94,7 +93,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetCases */
+    #[DataProvider('dataGetCases')]
     public function testGetCases(string $enumName, int $casesCount): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -108,7 +107,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: bool}> */
-    public function dataIsBacked(): array
+    public static function dataIsBacked(): array
     {
         return [
             [PureEnum::class, false],
@@ -117,7 +116,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataIsBacked */
+    #[DataProvider('dataIsBacked')]
     public function testIsBacked(string $enumName, bool $isBacked): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -127,7 +126,7 @@ class ReflectionEnumTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: string}> */
-    public function dataGetBackingType(): array
+    public static function dataGetBackingType(): array
     {
         return [
             [IntEnum::class, 'int'],
@@ -135,7 +134,7 @@ class ReflectionEnumTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetBackingType */
+    #[DataProvider('dataGetBackingType')]
     public function testGetBackingType(string $enumName, string $expectedBackingType): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
@@ -154,7 +153,7 @@ class ReflectionEnumTest extends TestCase
 
         self::assertInstanceOf(ReflectionEnum::class, $enumReflection);
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $enumReflection->getBackingType();
     }
 }

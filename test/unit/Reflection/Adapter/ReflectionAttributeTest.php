@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionAttribute as CoreReflectionAttribute;
 use ReflectionClass as CoreReflectionClass;
@@ -15,18 +17,18 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute */
+#[CoversClass(ReflectionAttributeAdapter::class)]
 class ReflectionAttributeTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionAttribute::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionAttributeAdapter::class);
@@ -36,7 +38,7 @@ class ReflectionAttributeTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
-    public function methodExpectationProvider(): array
+    public static function methodExpectationProvider(): array
     {
         return [
             ['__toString', null, '', []],
@@ -48,11 +50,8 @@ class ReflectionAttributeTest extends TestCase
         ];
     }
 
-    /**
-     * @param mixed[] $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
         $reflectionStub = $this->createMock(BetterReflectionAttribute::class);

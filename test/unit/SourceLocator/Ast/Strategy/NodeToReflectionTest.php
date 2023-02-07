@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -20,7 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function reset;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Ast\Strategy\NodeToReflection */
+#[CoversClass(NodeToReflection::class)]
 class NodeToReflectionTest extends TestCase
 {
     private Parser $phpParser;

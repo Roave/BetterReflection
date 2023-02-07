@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionObject;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\SourceStubber\SourceStubber;
@@ -23,7 +25,7 @@ use Roave\BetterReflectionTest\Fixture\StringCastPureEnum;
 
 use function file_get_contents;
 
-/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionClassStringCast */
+#[CoversClass(ReflectionClassStringCast::class)]
 class ReflectionClassStringCastTest extends TestCase
 {
     private Locator $astLocator;

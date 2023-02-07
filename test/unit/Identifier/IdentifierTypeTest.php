@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Identifier;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\IdentifierType;
 
-/** @covers \Roave\BetterReflection\Identifier\IdentifierType */
+#[CoversClass(IdentifierType::class)]
 class IdentifierTypeTest extends TestCase
 {
     /** @return list<list<string>> */
-    public function possibleIdentifierTypesProvider(): array
+    public static function possibleIdentifierTypesProvider(): array
     {
         return [
             [IdentifierType::IDENTIFIER_CLASS],
@@ -21,7 +23,7 @@ class IdentifierTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider possibleIdentifierTypesProvider */
+    #[DataProvider('possibleIdentifierTypesProvider')]
     public function testPossibleIdentifierTypes(string $full): void
     {
         $type = new IdentifierType($full);

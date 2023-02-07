@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
 
@@ -18,7 +19,7 @@ use function range;
 use function spl_object_hash;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser */
+#[CoversClass(MemoizingParser::class)]
 class MemoizingParserTest extends TestCase
 {
     public function testParse(): void

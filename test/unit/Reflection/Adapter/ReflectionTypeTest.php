@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use PhpParser\Node\Identifier;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionType as CoreReflectionType;
@@ -22,18 +24,18 @@ use function array_combine;
 use function array_map;
 use function get_class_methods;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionType */
+#[CoversClass(ReflectionTypeAdapter::class)]
 class ReflectionTypeTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionType::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionTypeAdapterReflection = new CoreReflectionClass(ReflectionNamedTypeAdapter::class);
@@ -58,7 +60,7 @@ class ReflectionTypeTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): array
+    public static function dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(): array
     {
         return [
             ['foo', 'null'],
@@ -66,7 +68,7 @@ class ReflectionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType */
+    #[DataProvider('dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType')]
     public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(string $firstType, string $secondType): void
     {
         $unionType = $this->createMock(BetterReflectionUnionType::class);

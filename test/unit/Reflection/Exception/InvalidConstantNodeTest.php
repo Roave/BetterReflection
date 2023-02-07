@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Exception;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 
-/** @covers \Roave\BetterReflection\Reflection\Exception\InvalidConstantNode */
+#[CoversClass(InvalidConstantNode::class)]
 class InvalidConstantNodeTest extends TestCase
 {
     public function testCreate(): void

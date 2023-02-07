@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -32,20 +34,19 @@ use ValueError;
 use function array_combine;
 use function array_map;
 use function get_class_methods;
-use function is_array;
 
-/** @covers \Roave\BetterReflection\Reflection\Adapter\ReflectionObject */
+#[CoversClass(ReflectionObjectAdapter::class)]
 class ReflectionObjectTest extends TestCase
 {
     /** @return array<string, array{0: string}> */
-    public function coreReflectionMethodNamesProvider(): array
+    public static function coreReflectionMethodNamesProvider(): array
     {
         $methods = get_class_methods(CoreReflectionObject::class);
 
         return array_combine($methods, array_map(static fn (string $i): array => [$i], $methods));
     }
 
-    /** @dataProvider coreReflectionMethodNamesProvider */
+    #[DataProvider('coreReflectionMethodNamesProvider')]
     public function testCoreReflectionMethods(string $methodName): void
     {
         $reflectionObjectAdapterReflection = new CoreReflectionClass(ReflectionObjectAdapter::class);
@@ -54,80 +55,68 @@ class ReflectionObjectTest extends TestCase
         self::assertSame(ReflectionObjectAdapter::class, $reflectionObjectAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed, 5: string|null}> */
-    public function methodExpectationProvider(): array
+    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed}> */
+    public static function methodExpectationProvider(): array
     {
-        $mockMethod = $this->createMock(BetterReflectionMethod::class);
-
-        $mockProperty = $this->createMock(BetterReflectionProperty::class);
-
-        $mockClassLike = $this->createMock(BetterReflectionClass::class);
-
-        $mockAttribute = $this->createMock(BetterReflectionAttribute::class);
-
         return [
-            ['__toString', [], 'string', null, 'string', null],
-            ['getName', [], 'name', null, 'name', null],
-            ['isAnonymous', [], true, null, true, null],
-            ['isInternal', [], true, null, true, null],
-            ['isUserDefined', [], true, null, true, null],
-            ['isInstantiable', [], true, null, true, null],
-            ['isCloneable', [], true, null, true, null],
-            ['getFileName', [], 'filename', null, 'filename', null],
-            ['getStartLine', [], 123, null, 123, null],
-            ['getEndLine', [], 123, null, 123, null],
-            ['getDocComment', [], null, null, false, null],
-            ['getConstructor', [], $mockMethod, null, null, ReflectionMethodAdapter::class],
-            ['hasMethod', ['foo'], true, null, true, null],
-            ['getMethod', ['foo'], $mockMethod, null, null, ReflectionMethodAdapter::class],
-            ['getMethods', [], [$mockMethod], null, null, ReflectionMethodAdapter::class],
-            ['hasProperty', ['foo'], true, null, true, null],
-            ['getProperty', ['foo'], $mockProperty, null, null, ReflectionPropertyAdapter::class],
-            ['getProperties', [], [$mockProperty], null, null, ReflectionPropertyAdapter::class],
-            ['hasConstant', ['foo'], true, null, true, null],
-            ['getInterfaces', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
-            ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['isInterface', [], true, null, true, null],
-            ['getTraits', [], [$mockClassLike], null, null, ReflectionClassAdapter::class],
-            ['getTraitNames', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['getTraitAliases', [], ['a', 'b'], null, ['a', 'b'], null],
-            ['isTrait', [], true, null, true, null],
-            ['isAbstract', [], true, null, true, null],
-            ['isFinal', [], true, null, true, null],
-            ['isReadOnly', [], true, null, true, null],
-            ['getModifiers', [], 123, null, 123, null],
-            ['isInstance', [new stdClass()], true, null, true, null],
-            ['newInstance', [], null, NotImplemented::class, null, null],
-            ['newInstanceWithoutConstructor', [], null, NotImplemented::class, null, null],
-            ['newInstanceArgs', [], null, NotImplemented::class, null, null],
-            ['getParentClass', [], $mockClassLike, null, null, ReflectionClassAdapter::class],
-            ['isSubclassOf', ['\stdClass'], true, null, true, null],
-            ['getStaticProperties', [], [], null, [], null],
-            ['getDefaultProperties', [], ['foo' => 'bar'], null, null, null],
-            ['isIterateable', [], true, null, true, null],
-            ['implementsInterface', ['\Traversable'], true, null, true, null],
-            ['getExtension', [], null, NotImplemented::class, null, null],
-            ['getExtensionName', [], null, null, false, null],
-            ['inNamespace', [], true, null, true, null],
-            ['getNamespaceName', [], '', null, '', null],
-            ['getShortName', [], 'shortName', null, 'shortName', null],
-            ['getAttributes', [], [$mockAttribute], null, null, ReflectionAttributeAdapter::class],
-            ['isEnum', [], true, null, true, null],
+            ['__toString', [], 'string', null, 'string'],
+            ['getName', [], 'name', null, 'name'],
+            ['isAnonymous', [], true, null, true],
+            ['isInternal', [], true, null, true],
+            ['isUserDefined', [], true, null, true],
+            ['isInstantiable', [], true, null, true],
+            ['isCloneable', [], true, null, true],
+            ['getFileName', [], 'filename', null, 'filename'],
+            ['getStartLine', [], 123, null, 123],
+            ['getEndLine', [], 123, null, 123],
+            ['getDocComment', [], null, null, false],
+            ['getConstructor', [], null, null, null],
+            ['hasMethod', ['foo'], true, null, true],
+            ['getMethod', ['foo'], null, CoreReflectionException::class, null],
+            ['getMethods', [], [], null, null],
+            ['hasProperty', ['foo'], true, null, true],
+            ['getProperty', ['foo'], null, CoreReflectionException::class, null],
+            ['getProperties', [], [], null, null],
+            ['hasConstant', ['foo'], true, null, true],
+            ['getInterfaces', [], [], null, null],
+            ['getInterfaceNames', [], ['a', 'b'], null, ['a', 'b']],
+            ['isInterface', [], true, null, true],
+            ['getTraits', [], [], null, null],
+            ['getTraitNames', [], ['a', 'b'], null, ['a', 'b']],
+            ['getTraitAliases', [], ['a', 'b'], null, ['a', 'b']],
+            ['isTrait', [], true, null, true],
+            ['isAbstract', [], true, null, true],
+            ['isFinal', [], true, null, true],
+            ['isReadOnly', [], true, null, true],
+            ['getModifiers', [], 123, null, 123],
+            ['isInstance', [new stdClass()], true, null, true],
+            ['newInstance', [], null, NotImplemented::class, null],
+            ['newInstanceWithoutConstructor', [], null, NotImplemented::class, null],
+            ['newInstanceArgs', [], null, NotImplemented::class, null],
+            ['getParentClass', [], null, null, null],
+            ['isSubclassOf', ['\stdClass'], true, null, true],
+            ['getStaticProperties', [], [], null, []],
+            ['getDefaultProperties', [], ['foo' => 'bar'], null, null],
+            ['isIterateable', [], true, null, true],
+            ['implementsInterface', ['\Traversable'], true, null, true],
+            ['getExtension', [], null, NotImplemented::class, null],
+            ['getExtensionName', [], null, null, false],
+            ['inNamespace', [], true, null, true],
+            ['getNamespaceName', [], '', null, ''],
+            ['getShortName', [], 'shortName', null, 'shortName'],
+            ['getAttributes', [], [], null, null],
+            ['isEnum', [], true, null, true],
         ];
     }
 
-    /**
-     * @param list<mixed> $args
-     *
-     * @dataProvider methodExpectationProvider
-     */
+    /** @param list<mixed> $args */
+    #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(
         string $methodName,
         array $args,
         mixed $returnValue,
         string|null $expectedException,
         mixed $expectedReturnValue,
-        string|null $expectedReturnValueInstance,
     ): void {
         $reflectionStub = $this->createMock(BetterReflectionObject::class);
 
@@ -146,20 +135,36 @@ class ReflectionObjectTest extends TestCase
 
         $actualReturnValue = $adapter->{$methodName}(...$args);
 
-        if ($expectedReturnValue !== null) {
-            self::assertSame($expectedReturnValue, $actualReturnValue);
-        }
-
-        if ($expectedReturnValueInstance === null) {
+        if ($expectedReturnValue === null) {
             return;
         }
 
-        if (is_array($actualReturnValue)) {
-            self::assertNotEmpty($actualReturnValue);
-            self::assertContainsOnlyInstancesOf($expectedReturnValueInstance, $actualReturnValue);
-        } else {
-            self::assertInstanceOf($expectedReturnValueInstance, $actualReturnValue);
-        }
+        self::assertSame($expectedReturnValue, $actualReturnValue);
+    }
+
+    public function testGetConstructor(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getConstructor')
+            ->willReturn($this->createMock(BetterReflectionMethod::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionMethodAdapter::class, $reflectionObjectAdapter->getConstructor());
+    }
+
+    public function testGetInterfaces(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getInterfaces')
+            ->willReturn([$this->createMock(BetterReflectionClass::class)]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(1, $reflectionObjectAdapter->getInterfaces());
+        self::assertContainsOnlyInstancesOf(ReflectionClassAdapter::class, $reflectionObjectAdapter->getInterfaces());
     }
 
     public function testGetFileNameReturnsFalseWhenNoFileName(): void
@@ -169,9 +174,9 @@ class ReflectionObjectTest extends TestCase
             ->method('getFileName')
             ->willReturn(null);
 
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertFalse($betterReflectionObject->getFileName());
+        self::assertFalse($reflectionObjectAdapter->getFileName());
     }
 
     public function testGetFileNameReturnsPathWithSystemDirectorySeparator(): void
@@ -183,9 +188,9 @@ class ReflectionObjectTest extends TestCase
             ->method('getFileName')
             ->willReturn($fileName);
 
-        $betterReflectionObject = new ReflectionObjectAdapter($betterReflectionObject);
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::assertSame(FileHelper::normalizeSystemPath($fileName), $betterReflectionObject->getFileName());
+        self::assertSame(FileHelper::normalizeSystemPath($fileName), $reflectionObjectAdapter->getFileName());
     }
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
@@ -200,7 +205,19 @@ class ReflectionObjectTest extends TestCase
         self::assertFalse($reflectionObjectAdapter->getDocComment());
     }
 
-    public function testGetParentObjectReturnsFalseWhenNoParent(): void
+    public function testGetParentClass(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getParentClass')
+            ->willReturn($this->createMock(BetterReflectionClass::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionClassAdapter::class, $reflectionObjectAdapter->getParentClass());
+    }
+
+    public function testGetParentClassReturnsFalseWhenNoParent(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
         $betterReflectionObject
@@ -235,6 +252,19 @@ class ReflectionObjectTest extends TestCase
         self::assertTrue($reflectionObjectAdapter->hasMethod('fOObOO'));
     }
 
+    public function testGetMethod(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getMethod')
+            ->with('doSomething')
+            ->willReturn($this->createMock(BetterReflectionMethod::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionMethodAdapter::class, $reflectionObjectAdapter->getMethod('doSomething'));
+    }
+
     public function testGetMethodIsCaseInsensitive(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
@@ -256,6 +286,19 @@ class ReflectionObjectTest extends TestCase
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooBoo')->getName());
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fooboo')->getName());
         self::assertSame('fooBoo', $reflectionObjectAdapter->getMethod('fOObOO')->getName());
+    }
+
+    public function testGetMethods(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getMethods')
+            ->willReturn([$this->createMock(BetterReflectionMethod::class)]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(1, $reflectionObjectAdapter->getMethods());
+        self::assertContainsOnlyInstancesOf(ReflectionMethodAdapter::class, $reflectionObjectAdapter->getMethods());
     }
 
     public function testIsSubclassOfWithObject(): void
@@ -344,6 +387,19 @@ class ReflectionObjectTest extends TestCase
         self::assertFalse($reflectionObjectAdapter->hasProperty(''));
     }
 
+    public function testGetProperty(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperty')
+            ->with('something')
+            ->willReturn($this->createMock(BetterReflectionProperty::class));
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertInstanceOf(ReflectionPropertyAdapter::class, $reflectionObjectAdapter->getProperty('something'));
+    }
+
     public function testGetPropertyThrowsExceptionWhenPropertyNameIsEmpty(): void
     {
         $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
@@ -374,6 +430,19 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(CoreReflectionException::class);
         $this->expectExceptionMessage('Property Boo::$foo does not exist');
         $reflectionObjectAdapter->getProperty('foo');
+    }
+
+    public function testGetProperties(): void
+    {
+        $betterReflectionObject = $this->createMock(BetterReflectionObject::class);
+        $betterReflectionObject
+            ->method('getProperties')
+            ->willReturn([$this->createMock(BetterReflectionProperty::class)]);
+
+        $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
+
+        self::assertCount(1, $reflectionObjectAdapter->getProperties());
+        self::assertContainsOnlyInstancesOf(ReflectionPropertyAdapter::class, $reflectionObjectAdapter->getProperties());
     }
 
     public function testGetStaticPropertyValue(): void
@@ -409,8 +478,8 @@ class ReflectionObjectTest extends TestCase
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Property SomeClass::$ does not exist');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Property SomeClass::$ does not exist');
         $reflectionObjectAdapter->getStaticPropertyValue('');
     }
 
@@ -448,8 +517,8 @@ class ReflectionObjectTest extends TestCase
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::expectException(CoreReflectionException::class);
-        self::expectExceptionMessage('Class SomeClass does not have a property named ');
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('Class SomeClass does not have a property named ');
         $reflectionObjectAdapter->setStaticPropertyValue('', '');
     }
 
@@ -858,7 +927,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionClass = $this->getMockBuilder(BetterReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionClass
@@ -967,7 +1036,7 @@ class ReflectionObjectTest extends TestCase
 
         $betterReflectionClass = $this->getMockBuilder(BetterReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAttributes'])
+            ->onlyMethods(['getAttributes'])
             ->getMock();
 
         $betterReflectionClass
@@ -993,7 +1062,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject  = $this->createMock(BetterReflectionObject::class);
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
-        self::expectException(ValueError::class);
+        $this->expectException(ValueError::class);
         $reflectionObjectAdapter->getAttributes(null, 123);
     }
 

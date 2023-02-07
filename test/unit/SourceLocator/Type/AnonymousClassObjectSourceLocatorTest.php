@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -26,7 +28,7 @@ use function is_string;
 use function realpath;
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\AnonymousClassObjectSourceLocator */
+#[CoversClass(AnonymousClassObjectSourceLocator::class)]
 class AnonymousClassObjectSourceLocatorTest extends TestCase
 {
     private Parser $parser;
@@ -42,7 +44,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
-    public function anonymousClassInstancesProvider(): array
+    public static function anonymousClassInstancesProvider(): array
     {
         $fileWithClasses                = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
@@ -59,7 +61,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testLocateIdentifier(object $class, string $file, int $startLine, int $endLine): void
     {
         $reflection = (new AnonymousClassObjectSourceLocator($class, $this->parser))->locateIdentifier(
@@ -109,7 +111,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         self::assertNull($reflection);
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testLocateIdentifiersByType(object $class, string $file, int $startLine, int $endLine): void
     {
         /** @var list<ReflectionClass> $reflections */
@@ -166,13 +168,13 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $coreReflectionPropertyInSourceLocatatorReflection->setAccessible(true);
         $coreReflectionPropertyInSourceLocatatorReflection->setValue($sourceLocator, $coreReflectionPropertyMock);
 
-        self::expectException(NoAnonymousClassOnLine::class);
+        $this->expectException(NoAnonymousClassOnLine::class);
 
         $sourceLocator->locateIdentifiersByType($this->reflector, new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
     }
 
     /** @return list<array{0: string, 1: object}> */
-    public function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
+    public static function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
         $file    = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
         $classes = require $file;
@@ -183,7 +185,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider exceptionIfTwoAnonymousClassesOnSameLineProvider */
+    #[DataProvider('exceptionIfTwoAnonymousClassesOnSameLineProvider')]
     public function testExceptionIfTwoAnonymousClassesOnSameLine(string $file, object $class): void
     {
         $this->expectException(TwoAnonymousClassesOnSameLine::class);
@@ -199,7 +201,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: int, 2: int}> */
-    public function nestedAnonymousClassInstancesProvider(): array
+    public static function nestedAnonymousClassInstancesProvider(): array
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';
 

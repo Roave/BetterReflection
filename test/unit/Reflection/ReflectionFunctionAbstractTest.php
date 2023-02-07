@@ -6,10 +6,13 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
+use Roave\BetterReflection\Reflection\ReflectionFunctionAbstract;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -28,7 +31,7 @@ use stdClass;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionFunctionAbstract */
+#[CoversClass(ReflectionFunctionAbstract::class)]
 class ReflectionFunctionAbstractTest extends TestCase
 {
     private Parser $parser;
@@ -133,7 +136,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertTrue($function->isClosure());
     }
 
-    /** @dataProvider nonDeprecatedProvider */
+    #[DataProvider('nonDeprecatedProvider')]
     public function testIsDeprecated(string $comment): void
     {
         $php = sprintf('<?php
@@ -147,7 +150,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function nonDeprecatedProvider(): array
+    public static function nonDeprecatedProvider(): array
     {
         return [
             [''],
@@ -172,7 +175,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function variadicProvider(): array
+    public static function variadicProvider(): array
     {
         return [
             ['<?php function foo($notVariadic) {}', false],
@@ -181,11 +184,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider variadicProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('variadicProvider')]
     public function testIsVariadic(string $php, bool $expectingVariadic): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -202,7 +202,7 @@ class ReflectionFunctionAbstractTest extends TestCase
      *
      * @return list<array{0: non-empty-string, 1: bool}>
      */
-    public function generatorProvider(): array
+    public static function generatorProvider(): array
     {
         return [
             ['<?php function foo() { return [1, 2, 3]; }', false],
@@ -225,11 +225,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider generatorProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('generatorProvider')]
     public function testIsGenerator(string $php, bool $expectingGenerator): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -239,7 +236,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\n\nfunction foo() {\n}\n", 3, 4],
@@ -248,11 +245,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $expectedStart, int $expectedEnd): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -263,7 +257,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nfunction foo() {\n}\n", 1, 1],
@@ -272,11 +266,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -296,7 +287,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getStartLine();
     }
 
@@ -310,7 +301,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getEndLine();
     }
 
@@ -324,7 +315,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getStartColumn();
     }
 
@@ -338,12 +329,12 @@ class ReflectionFunctionAbstractTest extends TestCase
         $classReflection  = $reflector->reflectClass(StringEnum::class);
         $methodReflection = $classReflection->getMethod('tryFrom');
 
-        self::expectException(CodeLocationMissing::class);
+        $this->expectException(CodeLocationMissing::class);
         $methodReflection->getEndColumn();
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
-    public function returnsReferenceProvider(): array
+    public static function returnsReferenceProvider(): array
     {
         return [
             ['<?php function foo() {}', false],
@@ -351,11 +342,8 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider returnsReferenceProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('returnsReferenceProvider')]
     public function testReturnsReference(string $php, bool $expectingReturnsReference): void
     {
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -470,7 +458,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string|class-string}> */
-    public function returnTypeFunctionProvider(): array
+    public static function returnTypeFunctionProvider(): array
     {
         return [
             ['returnsInt', 'int'],
@@ -481,7 +469,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider returnTypeFunctionProvider */
+    #[DataProvider('returnTypeFunctionProvider')]
     public function testGetReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -521,7 +509,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function nullableReturnTypeFunctionProvider(): array
+    public static function nullableReturnTypeFunctionProvider(): array
     {
         return [
             ['returnsNullableInt', 'int|null'],
@@ -530,7 +518,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         ];
     }
 
-    /** @dataProvider nullableReturnTypeFunctionProvider */
+    #[DataProvider('nullableReturnTypeFunctionProvider')]
     public function testGetNullableReturnTypeWithDeclaredType(string $functionToReflect, string $expectedType): void
     {
         $functionInfo = (new DefaultReflector(
@@ -584,7 +572,7 @@ class ReflectionFunctionAbstractTest extends TestCase
         self::assertNotNull($functionInfo->getReturnType());
     }
 
-    /** @dataProvider deprecatedDocCommentsProvider */
+    #[DataProvider('deprecatedDocCommentsProvider')]
     public function testFunctionsCanBeDeprecated(string $comment): void
     {
         $php = sprintf('<?php
@@ -598,7 +586,7 @@ class ReflectionFunctionAbstractTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function deprecatedDocCommentsProvider(): array
+    public static function deprecatedDocCommentsProvider(): array
     {
         return [
             [

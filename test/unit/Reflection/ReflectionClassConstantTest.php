@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
@@ -101,18 +102,15 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame("Constant [ public integer MY_CONST_1 ] { 123 }\n", (string) $this->getExampleConstant('MY_CONST_1'));
     }
 
-    /**
-     * @param non-empty-string $const
-     *
-     * @dataProvider getModifiersProvider
-     */
+    /** @param non-empty-string $const */
+    #[DataProvider('getModifiersProvider')]
     public function testGetModifiers(string $const, int $expected): void
     {
         self::assertSame($expected, $this->getExampleConstant($const)->getModifiers());
     }
 
     /** @return list<array{0: non-empty-string, 1: int}> */
-    public function getModifiersProvider(): array
+    public static function getModifiersProvider(): array
     {
         return [
             ['MY_CONST_1', CoreReflectionClassConstant::IS_PUBLIC],
@@ -153,11 +151,8 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame($classInfo, $const->getDeclaringClass());
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider startEndLineProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('startEndLineProvider')]
     public function testStartEndLine(string $php, int $startLine, int $endLine): void
     {
         $reflector       = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -168,7 +163,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function startEndLineProvider(): array
+    public static function startEndLineProvider(): array
     {
         return [
             ["<?php\nclass T {\nconst TEST = 1; }", 3, 3],
@@ -179,7 +174,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: int}> */
-    public function columnsProvider(): array
+    public static function columnsProvider(): array
     {
         return [
             ["<?php\n\nclass T {\nconst TEST = 1;}", 1, 15],
@@ -188,11 +183,8 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $php
-     *
-     * @dataProvider columnsProvider
-     */
+    /** @param non-empty-string $php */
+    #[DataProvider('columnsProvider')]
     public function testGetStartColumnAndEndColumn(string $php, int $startColumn, int $endColumn): void
     {
         $reflector          = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
@@ -204,7 +196,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: string, 2: string, 3: string}> */
-    public function declaringAndImplementingClassesProvider(): array
+    public static function declaringAndImplementingClassesProvider(): array
     {
         return [
             ['CLASS_WINS', ClassWithConstants::class, ClassWithConstants::class, ClassWithConstants::class],
@@ -216,11 +208,8 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $constantName
-     *
-     * @dataProvider declaringAndImplementingClassesProvider
-     */
+    /** @param non-empty-string $constantName */
+    #[DataProvider('declaringAndImplementingClassesProvider')]
     public function testGetDeclaringAndImplementingClass(string $constantName, string $currentClassName, string $declaringClassName, string $implementingClassName): void
     {
         $reflector          = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ClassesWithConstants.php', $this->astLocator));
@@ -232,7 +221,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: bool}> */
-    public function deprecatedDocCommentProvider(): array
+    public static function deprecatedDocCommentProvider(): array
     {
         return [
             [
@@ -254,7 +243,7 @@ class ReflectionClassConstantTest extends TestCase
         ];
     }
 
-    /** @dataProvider deprecatedDocCommentProvider */
+    #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecated(string $docComment, bool $isDeprecated): void
     {
         $php = sprintf('<?php

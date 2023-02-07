@@ -184,7 +184,7 @@ class CachingVisitor extends NodeVisitorAbstract
     }
 
     /**
-     * Some constants has different values on different systems, some are not actual in stubs.
+     * Some constants have different values on different systems, some are not actual in stubs.
      */
     private function updateConstantValue(Node\Expr\FuncCall|Node\Const_ $node, string $constantName): void
     {

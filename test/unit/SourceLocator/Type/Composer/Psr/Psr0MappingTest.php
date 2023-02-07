@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -14,32 +16,28 @@ use function sys_get_temp_dir;
 use function tempnam;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping */
+#[CoversClass(Psr0Mapping::class)]
 class Psr0MappingTest extends TestCase
 {
     /**
      * @param array<string, list<string>> $mappings
      * @param list<string>                $expectedDirectories
-     *
-     * @dataProvider mappings
      */
+    #[DataProvider('mappings')]
     public function testExpectedDirectories(array $mappings, array $expectedDirectories): void
     {
         self::assertEquals($expectedDirectories, Psr0Mapping::fromArrayMappings($mappings)->directories());
     }
 
-    /**
-     * @param array<string, list<string>> $mappings
-     *
-     * @dataProvider mappings
-     */
+    /** @param array<string, list<string>> $mappings */
+    #[DataProvider('mappings')]
     public function testIdempotentConstructor(array $mappings): void
     {
         self::assertEquals(Psr0Mapping::fromArrayMappings($mappings), Psr0Mapping::fromArrayMappings($mappings));
     }
 
     /** @return array<string, array{0: array<string, list<string>>, 1: list<string>}> */
-    public function mappings(): array
+    public static function mappings(): array
     {
         return [
             'one directory, one prefix'                  => [
@@ -71,9 +69,8 @@ class Psr0MappingTest extends TestCase
     /**
      * @param array<string, list<string>> $mappings
      * @param list<string>                $expectedFiles
-     *
-     * @dataProvider classLookupMappings
      */
+    #[DataProvider('classLookupMappings')]
     public function testClassLookups(array $mappings, Identifier $identifier, array $expectedFiles): void
     {
         self::assertEquals(
@@ -83,7 +80,7 @@ class Psr0MappingTest extends TestCase
     }
 
     /** @return array<string, array{0: array<string, list<string>>, 1: Identifier, 2: list<string>}> */
-    public function classLookupMappings(): array
+    public static function classLookupMappings(): array
     {
         return [
             'empty mappings, no match'                                          => [
@@ -132,11 +129,8 @@ class Psr0MappingTest extends TestCase
         ];
     }
 
-    /**
-     * @param array<string, list<string>> $invalidMappings
-     *
-     * @dataProvider invalidMappings
-     */
+    /** @param array<string, list<string>> $invalidMappings */
+    #[DataProvider('invalidMappings')]
     public function testRejectsInvalidMappings(array $invalidMappings): void
     {
         $this->expectException(InvalidPrefixMapping::class);
@@ -145,7 +139,7 @@ class Psr0MappingTest extends TestCase
     }
 
     /** @return array<string, list<array<string, list<string>|mixed>>> */
-    public function invalidMappings(): array
+    public static function invalidMappings(): array
     {
         return [
             'array contains empty prefixes'                            => [['' => 'bar']],

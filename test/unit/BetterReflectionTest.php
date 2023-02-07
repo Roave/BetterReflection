@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest;
 
 use PhpParser\Node;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -20,7 +21,7 @@ use Roave\BetterReflection\Util\FindReflectionOnLine;
 
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\BetterReflection */
+#[CoversClass(BetterReflection::class)]
 final class BetterReflectionTest extends TestCase
 {
     public function testAccessorsReturnTypes(): void

@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType */
+#[CoversClass(ReflectionIntersectionType::class)]
 class ReflectionIntersectionTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -26,7 +28,7 @@ class ReflectionIntersectionTypeTest extends TestCase
     }
 
     /** @return list<array{0: Node\IntersectionType, 1: string}> */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [new Node\IntersectionType([new Node\Name('\A\Foo'), new Node\Name('Boo')]), '\A\Foo&Boo'],
@@ -34,7 +36,7 @@ class ReflectionIntersectionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function test(Node\IntersectionType $intersectionType, string $expectedString): void
     {
         $typeReflection = new ReflectionIntersectionType($this->reflector, $this->owner, $intersectionType);

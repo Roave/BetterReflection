@@ -10,6 +10,8 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
 use PhpParser\Node\Name;
 use PhpParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -44,7 +46,7 @@ use const PHP_EOL;
 use const PHP_INT_MAX;
 use const PHP_VERSION_ID;
 
-/** @covers \Roave\BetterReflection\NodeCompiler\CompileNodeToValue */
+#[CoversClass(CompileNodeToValue::class)]
 class CompileNodeToValueTest extends TestCase
 {
     private Parser $parser;
@@ -96,7 +98,7 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function nodeProvider(): array
+    public static function nodeProvider(): array
     {
         return [
             ['1', 1],
@@ -196,7 +198,7 @@ class CompileNodeToValueTest extends TestCase
         ];
     }
 
-    /** @dataProvider nodeProvider */
+    #[DataProvider('nodeProvider')]
     public function testVariousNodeCompilations(string $phpCode, mixed $expectedValue): void
     {
         $node = $this->parseCode($phpCode);
@@ -225,7 +227,7 @@ class CompileNodeToValueTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataTrueFalseNullShouldNotHaveConstantName(): array
+    public static function dataTrueFalseNullShouldNotHaveConstantName(): array
     {
         return [
             ['true'],
@@ -237,7 +239,7 @@ class CompileNodeToValueTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataTrueFalseNullShouldNotHaveConstantName */
+    #[DataProvider('dataTrueFalseNullShouldNotHaveConstantName')]
     public function testTrueFalseNullShouldNotHaveConstantName(string $value): void
     {
         $node = $this->parseCode($value);
@@ -640,7 +642,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: string|int}> */
-    public function enumCasePropertyProvider(): array
+    public static function enumCasePropertyProvider(): array
     {
         return [
             ['name', 'ONE'],
@@ -648,7 +650,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider enumCasePropertyProvider */
+    #[DataProvider('enumCasePropertyProvider')]
     public function testEnumPropertyValue(string $propertyName, string|int $expectedPropertyValue): void
     {
         $phpCode = sprintf(
@@ -689,7 +691,7 @@ PHP;
         $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
@@ -712,7 +714,7 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('TWO_VALUE')->getValue();
     }
 
@@ -735,12 +737,12 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        self::expectException(UnableToCompileNode::class);
+        $this->expectException(UnableToCompileNode::class);
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function magicConstantsWithoutNamespaceProvider(): array
+    public static function magicConstantsWithoutNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -756,7 +758,7 @@ PHP;
         ];
     }
 
-    /** @dataProvider magicConstantsWithoutNamespaceProvider */
+    #[DataProvider('magicConstantsWithoutNamespaceProvider')]
     public function testMagicConstantsWithoutNamespace(string $constantName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -766,7 +768,7 @@ PHP;
     }
 
     /** @return list<array{0: string, 1: mixed}> */
-    public function magicConstantsInNamespaceProvider(): array
+    public static function magicConstantsInNamespaceProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -879,7 +881,7 @@ PHP
         );
     }
 
-    /** @dataProvider magicConstantsInNamespaceProvider */
+    #[DataProvider('magicConstantsInNamespaceProvider')]
     public function testMagicConstantsInNamespace(string $constantName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -889,7 +891,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInTraitProvider(): array
+    public static function magicConstantsInTraitProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -905,11 +907,8 @@ PHP
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider magicConstantsInTraitProvider
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('magicConstantsInTraitProvider')]
     public function testMagicConstantsInTrait(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -920,7 +919,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInClassProvider(): array
+    public static function magicConstantsInClassProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -936,11 +935,8 @@ PHP
         ];
     }
 
-    /**
-     * @param non-empty-string $propertyName
-     *
-     * @dataProvider magicConstantsInClassProvider
-     */
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('magicConstantsInClassProvider')]
     public function testMagicConstantsInClass(string $propertyName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -951,7 +947,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInMethodProvider(): array
+    public static function magicConstantsInMethodProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -967,11 +963,8 @@ PHP
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider magicConstantsInMethodProvider
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('magicConstantsInMethodProvider')]
     public function testMagicConstantsInMethod(string $parameterName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -983,7 +976,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string, 1: mixed}> */
-    public function magicConstantsInFunctionProvider(): array
+    public static function magicConstantsInFunctionProvider(): array
     {
         $dir = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../Fixture'));
 
@@ -999,11 +992,8 @@ PHP
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider magicConstantsInFunctionProvider
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('magicConstantsInFunctionProvider')]
     public function testMagicConstantsInFunction(string $parameterName, mixed $expectedValue): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/MagicConstants.php'), $this->astLocator));
@@ -1014,7 +1004,7 @@ PHP
     }
 
     /** @return list<array{0: non-empty-string}> */
-    public function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
+    public static function fileAndDirectoryMagicConstantsWithoutFileNameProvider(): array
     {
         return [
             ['file'],
@@ -1022,11 +1012,8 @@ PHP
         ];
     }
 
-    /**
-     * @param non-empty-string $parameterName
-     *
-     * @dataProvider fileAndDirectoryMagicConstantsWithoutFileNameProvider
-     */
+    /** @param non-empty-string $parameterName */
+    #[DataProvider('fileAndDirectoryMagicConstantsWithoutFileNameProvider')]
     public function testFileAndDirectoryMagicConstantsWithoutFileName(string $parameterName): void
     {
         $php = '<?php function functionWithMagicConstants($file = __FILE__, $dir = __DIR__) {}';
@@ -1035,8 +1022,8 @@ PHP
         $function  = $reflector->reflectFunction('functionWithMagicConstants');
         $parameter = $function->getParameter($parameterName);
 
-        self::expectException(UnableToCompileNode::class);
-        self::expectExceptionMessage('No file name for function functionWithMagicConstants() (line 1)');
+        $this->expectException(UnableToCompileNode::class);
+        $this->expectExceptionMessage('No file name for function functionWithMagicConstants() (line 1)');
         $parameter->getDefaultValue();
     }
 

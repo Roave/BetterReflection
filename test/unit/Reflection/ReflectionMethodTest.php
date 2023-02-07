@@ -8,6 +8,8 @@ use ClassWithMethodsAndTraitMethods;
 use Closure;
 use ExtendedClassWithMethodsAndTraitMethods;
 use OutOfBoundsException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Reflection;
 use ReflectionClass as CoreReflectionClass;
@@ -39,8 +41,6 @@ use Roave\BetterReflectionTest\Fixture\ClassWithStaticMethod;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InterfaceWithMethod;
 use Roave\BetterReflectionTest\Fixture\Methods;
-use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethod;
-use Roave\BetterReflectionTest\Fixture\TraitWithStaticMethodToUse;
 use Roave\BetterReflectionTest\Fixture\UpperCaseConstructDestruct;
 use SplDoublyLinkedList;
 use stdClass;
@@ -49,7 +49,7 @@ use TraitWithMethod;
 
 use function basename;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionMethod */
+#[CoversClass(ReflectionMethod::class)]
 class ReflectionMethodTest extends TestCase
 {
     private Reflector $reflector;
@@ -79,8 +79,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testCreateFromNameThrowsExceptionWhenMethodNotFound(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find method: notFound');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find method: notFound');
         ReflectionMethod::createFromName(SplDoublyLinkedList::class, 'notFound');
     }
 
@@ -94,8 +94,8 @@ class ReflectionMethodTest extends TestCase
 
     public function testCreateFromInstanceThrowsExceptionWhenMethodNotFound(): void
     {
-        self::expectException(OutOfBoundsException::class);
-        self::expectExceptionMessage('Could not find method: notFound');
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Could not find method: notFound');
         ReflectionMethod::createFromInstance(new SplDoublyLinkedList(), 'notFound');
     }
 
@@ -108,7 +108,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return array<non-empty-string, array{0: string, 1: bool, 2: bool, 3: bool, 4: bool, 5: bool, 6: bool}> */
-    public function visibilityProvider(): array
+    public static function visibilityProvider(): array
     {
         return [
             'publicMethod' => ['publicMethod', true, false, false, false, false, false],
@@ -123,11 +123,8 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $methodName
-     *
-     * @dataProvider visibilityProvider
-     */
+    /** @param non-empty-string $methodName */
+    #[DataProvider('visibilityProvider')]
     public function testVisibilityOfMethods(
         string $methodName,
         bool $shouldBePublic,
@@ -267,7 +264,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: non-empty-string, 1: int, 2: list<string>}> */
-    public function modifierProvider(): array
+    public static function modifierProvider(): array
     {
         return [
             ['publicMethod', CoreReflectionMethod::IS_PUBLIC, ['public']],
@@ -283,9 +280,8 @@ class ReflectionMethodTest extends TestCase
     /**
      * @param non-empty-string $methodName
      * @param list<string>     $expectedModifierNames
-     *
-     * @dataProvider modifierProvider
      */
+    #[DataProvider('modifierProvider')]
     public function testGetModifiers(string $methodName, int $expectedModifier, array $expectedModifierNames): void
     {
         $classInfo = $this->reflector->reflectClass(Methods::class);
@@ -299,7 +295,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: non-empty-string, 2: string|null}> */
-    public function prototypeProvider(): array
+    public static function prototypeProvider(): array
     {
         return [
             ['Zoom\B', 'foo', 'Zoom\FooInterface'],
@@ -316,11 +312,8 @@ class ReflectionMethodTest extends TestCase
         ];
     }
 
-    /**
-     * @param non-empty-string $method
-     *
-     * @dataProvider prototypeProvider
-     */
+    /** @param non-empty-string $method */
+    #[DataProvider('prototypeProvider')]
     public function testGetPrototype(string $class, string $method, string|null $expectedPrototype): void
     {
         $fixture   = __DIR__ . '/../Fixture/PrototypeTree.php';
@@ -336,7 +329,7 @@ class ReflectionMethodTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string, 2: string|null}> */
-    public function overwrittenMethodProvider(): array
+    public static function overwrittenMethodProvider(): array
     {
         return [
             ['FooInterface', 'foo', null],
@@ -526,39 +519,6 @@ PHP;
 
         self::assertSame(3, $methodReflection->invoke(null, 1, 2));
         self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
-    }
-
-    /**
-     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
-     *
-     * @requires PHP < 8.1
-     */
-    public function testInvokeOfStaticMethodOnTrait(): void
-    {
-        $traitWithStaticMethodFile = __DIR__ . '/../Fixture/TraitWithStaticMethod.php';
-        require_once $traitWithStaticMethodFile;
-
-        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethod::class);
-        $methodReflection = $classReflection->getMethod('sum');
-
-        self::assertSame(3, $methodReflection->invoke(null, 1, 2));
-        self::assertSame(7, $methodReflection->invokeArgs(null, [3, 4]));
-    }
-
-    /**
-     * Calling static trait method is deprecated in PHP 8.1, it should only be called on a class using the trait
-     *
-     * @requires PHP < 8.1
-     */
-    public function testInvokeOfStaticTraitMethodWithStaticClass(): void
-    {
-        $traitWithUsedStaticMethodFile = __DIR__ . '/../Fixture/ClassUsesTraitWithStaticMethod.php';
-        require_once $traitWithUsedStaticMethodFile;
-
-        $classReflection  = (new DefaultReflector(new SingleFileSourceLocator($traitWithUsedStaticMethodFile, $this->astLocator)))->reflectClass(TraitWithStaticMethodToUse::class);
-        $methodReflection = $classReflection->getMethod('getClass');
-
-        self::assertSame(TraitWithStaticMethodToUse::class, $methodReflection->invoke());
     }
 
     public function testInvokeOfStaticUsedTraitMethodWithStaticClass(): void

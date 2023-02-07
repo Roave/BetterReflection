@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use ClassWithNoNamespace;
 use Composer\Autoload\ClassLoader;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -15,7 +16,7 @@ use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator */
+#[CoversClass(ComposerSourceLocator::class)]
 class ComposerSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

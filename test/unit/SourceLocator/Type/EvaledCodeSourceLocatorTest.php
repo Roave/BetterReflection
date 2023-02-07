@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -21,7 +22,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use function sprintf;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Type\EvaledCodeSourceLocator */
+#[CoversClass(EvaledCodeSourceLocator::class)]
 class EvaledCodeSourceLocatorTest extends TestCase
 {
     private Locator $astLocator;

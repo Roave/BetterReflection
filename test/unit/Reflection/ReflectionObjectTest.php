@@ -6,6 +6,8 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use InvalidArgumentException;
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionNamedType;
@@ -33,7 +35,7 @@ use function random_int;
 use function realpath;
 use function uniqid;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionObject */
+#[CoversClass(ReflectionObject::class)]
 class ReflectionObjectTest extends TestCase
 {
     /** @return Node[] */
@@ -43,7 +45,7 @@ class ReflectionObjectTest extends TestCase
     }
 
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
-    public function anonymousClassInstancesProvider(): array
+    public static function anonymousClassInstancesProvider(): array
     {
         $file = realpath(__DIR__ . '/../Fixture/AnonymousClassInstances.php');
         assert(is_string($file) && $file !== '');
@@ -58,7 +60,7 @@ class ReflectionObjectTest extends TestCase
         ];
     }
 
-    /** @dataProvider anonymousClassInstancesProvider */
+    #[DataProvider('anonymousClassInstancesProvider')]
     public function testReflectionForAnonymousClass(object $anonymousClass, string $file, int $startLine, int $endLine): void
     {
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);
@@ -221,7 +223,7 @@ class ReflectionObjectTest extends TestCase
      *
      * @return array<string, array{0: string}>
      */
-    public function reflectionClassMethodProvider(): array
+    public static function reflectionClassMethodProvider(): array
     {
         $publicClassMethods = get_class_methods(ReflectionClass::class);
 
@@ -251,9 +253,8 @@ class ReflectionObjectTest extends TestCase
      * methods from ReflectionClass), ensures the method exists in ReflectionObject
      * and that when the method is called on ReflectionObject, the method of the
      * same name on ReflectionClass is also called.
-     *
-     * @dataProvider reflectionClassMethodProvider
      */
+    #[DataProvider('reflectionClassMethodProvider')]
     public function testReflectionObjectOverridesAllMethodsInReflectionClass(string $methodName): void
     {
         // First, ensure the expected method even exists
@@ -264,7 +265,7 @@ class ReflectionObjectTest extends TestCase
         // be called when we call the same method on ReflectionObject
         $mockReflectionClass = $this->getMockBuilder(ReflectionClass::class)
             ->disableOriginalConstructor()
-            ->setMethods([$methodName])
+            ->onlyMethods([$methodName])
             ->getMock();
 
         $mockReflectionClass

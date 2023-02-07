@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -13,12 +15,10 @@ use Roave\BetterReflection\Reflection\ReflectionType;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
 use Roave\BetterReflection\Reflector\Reflector;
 
-/**
- * @covers \Roave\BetterReflection\Reflection\ReflectionType
- * @covers \Roave\BetterReflection\Reflection\ReflectionNamedType
- * @covers \Roave\BetterReflection\Reflection\ReflectionIntersectionType
- * @covers \Roave\BetterReflection\Reflection\ReflectionUnionType
- */
+#[CoversClass(ReflectionType::class)]
+#[CoversClass(ReflectionNamedType::class)]
+#[CoversClass(ReflectionIntersectionType::class)]
+#[CoversClass(ReflectionUnionType::class)]
 class ReflectionTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -33,7 +33,7 @@ class ReflectionTypeTest extends TestCase
     }
 
     /** @return array<int|string, array{0: Node\Identifier|Node\Name|Node\NullableType|Node\UnionType|Node\IntersectionType, 1: bool, 2: string, 3: string, 4: bool}> */
-    public function dataProvider(): array
+    public static function dataProvider(): array
     {
         return [
             [new Node\Name('A'), false, ReflectionNamedType::class, 'A', false],
@@ -89,7 +89,7 @@ class ReflectionTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataProvider */
+    #[DataProvider('dataProvider')]
     public function test(
         Node\Identifier|Node\Name|Node\NullableType|Node\UnionType|Node\IntersectionType $node,
         bool $forceAllowsNull,

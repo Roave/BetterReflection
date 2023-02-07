@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection\StringCast;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributesForStringCast;
 
-/** @covers \Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast */
+#[CoversClass(ReflectionAttributeStringCast::class)]
 class ReflectionAttributeStringCastTest extends TestCase
 {
     private Locator $astLocator;
@@ -26,7 +29,7 @@ class ReflectionAttributeStringCastTest extends TestCase
     }
 
     /** @return list<array{0: string, 1: string}> */
-    public function toStringProvider(): array
+    public static function toStringProvider(): array
     {
         return [
             ['Roave\BetterReflectionTest\Fixture\NoArguments', "Attribute [ Roave\BetterReflectionTest\Fixture\NoArguments ]\n"],
@@ -34,7 +37,7 @@ class ReflectionAttributeStringCastTest extends TestCase
         ];
     }
 
-    /** @dataProvider toStringProvider */
+    #[DataProvider('toStringProvider')]
     public function testToString(string $attributeName, string $expectedString): void
     {
         $reflector           = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../../Fixture/StringCastAttributes.php', $this->astLocator));

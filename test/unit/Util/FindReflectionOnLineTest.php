@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Util;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -12,7 +13,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Util\FindReflectionOnLine;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
-/** @covers \Roave\BetterReflection\Util\FindReflectionOnLine */
+#[CoversClass(FindReflectionOnLine::class)]
 class FindReflectionOnLineTest extends TestCase
 {
     private FindReflectionOnLine $finder;

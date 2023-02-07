@@ -7,6 +7,8 @@ namespace Roave\BetterReflectionTest\Reflection;
 use Generator;
 use LogicException;
 use PhpParser\Node\Identifier;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
@@ -19,7 +21,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 
 use function sprintf;
 
-/** @covers \Roave\BetterReflection\Reflection\ReflectionNamedType */
+#[CoversClass(ReflectionNamedType::class)]
 class ReflectionNamedTypeTest extends TestCase
 {
     private Reflector $reflector;
@@ -50,7 +52,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataAllowsNull(): array
+    public static function dataAllowsNull(): array
     {
         return [
             ['mixed'],
@@ -60,14 +62,14 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataAllowsNull */
+    #[DataProvider('dataAllowsNull')]
     public function testMixedAllowsNull(string $mixedType): void
     {
         $noNullType = $this->createType($mixedType);
         self::assertTrue($noNullType->allowsNull());
     }
 
-    public function isBuildinProvider(): Generator
+    public static function isBuildinProvider(): Generator
     {
         yield ['string'];
         yield ['StRiNg'];
@@ -91,7 +93,7 @@ class ReflectionNamedTypeTest extends TestCase
         yield ['NULL'];
     }
 
-    /** @dataProvider isBuildinProvider */
+    #[DataProvider('isBuildinProvider')]
     public function testIsBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -100,13 +102,13 @@ class ReflectionNamedTypeTest extends TestCase
         self::assertTrue($reflectionType->isBuiltin());
     }
 
-    public function isNotBuildinProvider(): Generator
+    public static function isNotBuildinProvider(): Generator
     {
         yield ['foo'];
         yield ['\foo'];
     }
 
-    /** @dataProvider isNotBuildinProvider */
+    #[DataProvider('isNotBuildinProvider')]
     public function testIsNotBuiltin(string $type): void
     {
         $reflectionType = $this->createType($type);
@@ -223,7 +225,7 @@ class ReflectionNamedTypeTest extends TestCase
 
         $typeReflection = $enumReflection->getBackingType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
@@ -238,7 +240,7 @@ class ReflectionNamedTypeTest extends TestCase
         $functionReflection = $reflector->reflectFunction('getSelf');
         $typeReflection     = $functionReflection->getReturnType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
@@ -254,12 +256,12 @@ class ReflectionNamedTypeTest extends TestCase
         $parameterReflection = $functionReflection->getParameter('parameter');
         $typeReflection      = $parameterReflection->getType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 
     /** @return list<array{0: string, 1: string, 2: string}> */
-    public function dataGetClassWithSelfOrStatic(): array
+    public static function dataGetClassWithSelfOrStatic(): array
     {
         return [
             ['ParentClass', 'self', 'ParentClass'],
@@ -273,7 +275,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetClassWithSelfOrStatic */
+    #[DataProvider('dataGetClassWithSelfOrStatic')]
     public function testGetClassWithSelfOrStatic(string $classNameToReflect, string $type, string $typeClassName): void
     {
         $php = sprintf('<?php
@@ -325,7 +327,7 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /** @return list<array{0: string}> */
-    public function dataGetClassWithParent(): array
+    public static function dataGetClassWithParent(): array
     {
         return [
             ['parent'],
@@ -333,7 +335,7 @@ class ReflectionNamedTypeTest extends TestCase
         ];
     }
 
-    /** @dataProvider dataGetClassWithParent */
+    #[DataProvider('dataGetClassWithParent')]
     public function testGetClassWithParent(string $parentType): void
     {
         $php = sprintf('<?php
@@ -369,7 +371,7 @@ class ReflectionNamedTypeTest extends TestCase
         $methodReflection = $classReflection->getMethod('method');
         $typeReflection   = $methodReflection->getReturnType();
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $typeReflection->getClass();
     }
 

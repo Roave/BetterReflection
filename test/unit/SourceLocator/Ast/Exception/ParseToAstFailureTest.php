@@ -6,11 +6,12 @@ namespace Roave\BetterReflection\SourceLocator\Ast\Exception;
 
 use Exception;
 use PhpParser\Error;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
-/** @covers \Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure */
+#[CoversClass(ParseToAstFailure::class)]
 class ParseToAstFailureTest extends TestCase
 {
     public function testErrorInTheMiddleOfSource(): void
