@@ -39,7 +39,7 @@ class ReflectionAttribute
         }
     }
 
-    /** @interal */
+    /** @internal */
     public function withOwner(ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner): self
     {
         $clone        = clone $this;
