@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91fef8396b09c9d0405772d620f586ca",
+    "content-hash": "d7f7e90f6acb28f79c12a44029526845",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -2337,16 +2337,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.0.5",
+            "version": "10.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "5f4a775285c6401693cee39876f3ba764d42cb24"
+                "reference": "45ffd21476bd7b65a055d504f1cce287d3cd0a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5f4a775285c6401693cee39876f3ba764d42cb24",
-                "reference": "5f4a775285c6401693cee39876f3ba764d42cb24",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/45ffd21476bd7b65a055d504f1cce287d3cd0a3a",
+                "reference": "45ffd21476bd7b65a055d504f1cce287d3cd0a3a",
                 "shasum": ""
             },
             "require": {
@@ -2417,7 +2417,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.0.5"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.0.6"
             },
             "funding": [
                 {
@@ -2433,7 +2433,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-07T06:06:01+00:00"
+            "time": "2023-02-08T07:00:51+00:00"
         },
         {
             "name": "psr/container",
