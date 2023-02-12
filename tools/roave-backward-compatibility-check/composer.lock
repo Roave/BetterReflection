@@ -298,16 +298,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "c76c013c555160410af47c03a0e173518e3f5796"
+                "reference": "607a4c04006ce1d2b6fdfd5467bae3d7ad9ce5ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/c76c013c555160410af47c03a0e173518e3f5796",
-                "reference": "c76c013c555160410af47c03a0e173518e3f5796",
+                "url": "https://api.github.com/repos/composer/composer/zipball/607a4c04006ce1d2b6fdfd5467bae3d7ad9ce5ab",
+                "reference": "607a4c04006ce1d2b6fdfd5467bae3d7ad9ce5ab",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.5.2"
+                "source": "https://github.com/composer/composer/tree/2.5.3"
             },
             "funding": [
                 {
@@ -407,7 +407,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-04T13:33:22+00:00"
+            "time": "2023-02-10T12:23:52+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -1326,27 +1326,28 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.2.1",
+            "version": "8.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "9deff3cb411062a56e07dfa8c8f214c09cf9a55d"
+                "reference": "40956d53832b80dd4025c87b4cf5e1756f42f43d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/9deff3cb411062a56e07dfa8c8f214c09cf9a55d",
-                "reference": "9deff3cb411062a56e07dfa8c8f214c09cf9a55d",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/40956d53832b80dd4025c87b4cf5e1756f42f43d",
+                "reference": "40956d53832b80dd4025c87b4cf5e1756f42f43d",
                 "shasum": ""
             },
             "require": {
-                "azjezz/psl": "^2.3.0",
-                "composer/composer": "^2.4.4",
+                "azjezz/psl": "^2.3.1",
+                "composer/composer": "^2.5.1",
                 "ext-json": "*",
+                "nikic/php-parser": "^4.15.3",
                 "nikolaposa/version": "^4.1.0",
                 "ocramius/package-versions": "^2.7.0",
                 "php": "~8.1.0 || ~8.2.0",
                 "roave/better-reflection": "^6.5.0",
-                "symfony/console": "^6.2.1"
+                "symfony/console": "^6.2.3"
             },
             "conflict": {
                 "revolt/event-loop": "<0.2.5",
@@ -1357,10 +1358,10 @@
                 "php-standard-library/psalm-plugin": "^2.2.1",
                 "phpunit/phpunit": "^9.5.27",
                 "psalm/plugin-phpunit": "^0.18.4",
-                "roave/infection-static-analysis-plugin": "^1.26.0",
+                "roave/infection-static-analysis-plugin": "^1.27.0",
                 "roave/security-advisories": "dev-master",
                 "squizlabs/php_codesniffer": "^3.7.1",
-                "vimeo/psalm": "^5.2.0"
+                "vimeo/psalm": "^5.4.0"
             },
             "bin": [
                 "bin/roave-backward-compatibility-check"
@@ -1388,9 +1389,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.2.1"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.3.0"
             },
-            "time": "2022-12-21T01:16:55+00:00"
+            "time": "2023-02-11T17:26:11+00:00"
         },
         {
             "name": "roave/better-reflection",
