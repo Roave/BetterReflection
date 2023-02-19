@@ -360,10 +360,7 @@ class ReflectionClass implements Reflection
         $createMethod = function (string|null $aliasMethodName) use ($method, $methodModifiers): ReflectionMethod {
             assert($aliasMethodName === null || $aliasMethodName !== '');
 
-            /**
-             * @psalm-suppress ArgumentTypeCoercion
-             * @phpstan-ignore-next-line
-             */
+            /** @phpstan-ignore-next-line */
             return $method->withImplementingClass($this, $aliasMethodName, $methodModifiers);
         };
 
