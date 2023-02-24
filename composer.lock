@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11ada432bf667cf3ee5e3d6c5ea91107",
+    "content-hash": "9f704f272f181df1a06eef5c785c2d6c",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -4847,16 +4847,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "5.7.5",
+            "version": "5.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "5390c212bab06ee230c8720c2e9c54b823db00c8"
+                "reference": "ae4ec68e00e4880e3f00b1edd2da891236d749ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/5390c212bab06ee230c8720c2e9c54b823db00c8",
-                "reference": "5390c212bab06ee230c8720c2e9c54b823db00c8",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/ae4ec68e00e4880e3f00b1edd2da891236d749ab",
+                "reference": "ae4ec68e00e4880e3f00b1edd2da891236d749ab",
                 "shasum": ""
             },
             "require": {
@@ -4946,9 +4946,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/5.7.5"
+                "source": "https://github.com/vimeo/psalm/tree/5.7.6"
             },
-            "time": "2023-02-21T16:02:51+00:00"
+            "time": "2023-02-24T19:45:16+00:00"
         },
         {
             "name": "webmozart/assert",
