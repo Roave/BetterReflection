@@ -24,27 +24,44 @@ use PhpParser\PrettyPrinterAbstract;
 
 
 final class AstHelper {
-    public function __construct(protected ?BetterReflection $betterReflection = null ) {
+    private BetterReflection $betterReflection;
+
+    public function __construct( ?BetterReflection $betterReflection = null ) {
         if ( !$betterReflection  ) {
             $this->betterReflection = new BetterReflection();
+        } else {
+            $this->betterReflection = $betterReflection;
         }
     }
-    protected function getBetterReflection(): BetterReflection {
+    protected function getBetterReflection(): BetterReflection|null {
         return $this->betterReflection;
     }
-    public function forReflection(Reflection $reflection): Node\Stmt|Array {
+    /**
+     * 
+     * @return Node[]|null $nodes
+     * 
+     */
+    public function getAstForReflection(ReflectionClass|ReflectionFunction $reflection): array|null {
         $parser = $this->getBetterReflection()->phpParser();
         $source = $reflection->getLocatedSource();
         return $parser->parse($source->getSource());
     }
-    public function forClass(ReflectionClass $function): Node\Stmt|array {
-        return $this->forReflection($function);
+    /**
+     * @return Node[]|null $nodes
+     */
+    public function getAstForClass(ReflectionClass $function): array|null {
+        return $this->getAstForReflection($function);
     }
-    public function forFunction(ReflectionFunction $function): Node\Stmt|array {
-        return $this->forReflection($function);
+    /**
+     * @return Node[]|null $nodes
+     */
+    public function getAstForFunction(ReflectionFunction $function): array|null {
+        return $this->getAstForReflection($function);
     }
-    // should return the body.
-    public function forClosure(ReflectionFunction $reflection): Node\Stmt|array {
+     /**
+     * @return Node[]|null $nodes
+     */
+    public function getAstForClosure(ReflectionFunction $reflection): array|null {
         $parser = $this->getBetterReflection()->phpParser();
         
         // can this be done better/more efficient using the parser itself?
@@ -71,19 +88,27 @@ final class AstHelper {
 
         return $nodes;
     }
-
-    public function getBodyCode(Node\Stmt|array $node, PrettyPrinterAbstract|null $printer = null) {
+    /**
+     * @param Node[] $node
+     */
+    public function getBodyCode(array $node, PrettyPrinterAbstract|null $printer = null): String|null {
         if ( $printer == null ) {
             $printer = new StandardPrettyPrinter();
         }
 
        
         if ( $node[0] instanceof ArrowFunctionNode ) {       
-            /** @var non-empty-list<Node\Stmt\Return_> $ast **/
+            /** @var non-empty-list<Node\Stmt\Return_> $node **/
             $expr = $node[0]->expr;
             assert($expr instanceof Node\Expr);
             return $printer->prettyPrintExpr($expr);
         }
-        return $printer->prettyPrint($node[0]->stmts);
+        if ( property_exists($node[0], 'stmts') ){ 
+            
+            $stmts = $node[0]->stmts;
+            /** @var array<array-key, Node> $stmts */
+            return $printer->prettyPrint($stmts);
+        }
+        return null;
     }
 }

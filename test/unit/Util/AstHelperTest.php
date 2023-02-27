@@ -22,7 +22,7 @@ final class AstHelperTest extends TestCase
 
     private Locator $astLocator;
 
-    private $astHelper;
+    private AstHelper $astHelper;
 
     protected function setUp(): void
     {
@@ -45,7 +45,7 @@ final class AstHelperTest extends TestCase
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $function  = $reflector->reflectClass('Foo');
         
-        $ast = $this->astHelper->forClass($function);
+        $ast = $this->astHelper->getAstForClass($function);
 
         self::assertInstanceOf(Class_::class, $ast[0]);
         self::assertSame('Foo', $ast[0]->name->name);
@@ -62,7 +62,7 @@ final class AstHelperTest extends TestCase
         $reflector = new DefaultReflector(new StringSourceLocator($php, $this->astLocator));
         $function  = $reflector->reflectFunction('foo');
         
-        $ast = $this->astHelper->forFunction($function);
+        $ast = $this->astHelper->getAstForFunction($function);
 
         self::assertInstanceOf(Function_::class, $ast[0]);
         self::assertSame('foo', $ast[0]->name->name);
@@ -77,7 +77,7 @@ final class AstHelperTest extends TestCase
         
         $reflection = ReflectionFunction::createFromClosure($foo);
         
-        $test = $this->astHelper->forClosure($reflection);
+        $test = $this->astHelper->getAstForClosure($reflection);
         
         $test = $this->astHelper->getBodyCode($test);
         self::assertSame('in', $reflection->getParameters()[0]->getName());
@@ -92,7 +92,7 @@ final class AstHelperTest extends TestCase
 
         $reflection = ReflectionFunction::createFromClosure($foo);
        
-        $test = $this->astHelper->forClosure($reflection);
+        $test = $this->astHelper->getAstForClosure($reflection);
         $test = $this->astHelper->getBodyCode($test);
 
         self::assertSame('in', $reflection->getParameters()[0]->getName());
