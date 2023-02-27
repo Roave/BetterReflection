@@ -20,8 +20,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\PrettyPrinterAbstract;
-
-
+use RuntimeException;
 
 final class AstHelper {
     private BetterReflection $betterReflection;
@@ -33,7 +32,7 @@ final class AstHelper {
             $this->betterReflection = $betterReflection;
         }
     }
-    protected function getBetterReflection(): BetterReflection|null {
+    protected function getBetterReflection(): BetterReflection {
         return $this->betterReflection;
     }
     /**
@@ -75,12 +74,15 @@ final class AstHelper {
         $source = implode('', $source);
         
         $ast = $parser->parse('<?php '.trim($source));
-        
+        if ( $ast == null) {
+            return null;
+        }
         $visitor   = new FindingVisitor(
             static function (Node $node): bool {
                 return $node instanceof ClosureNode || $node instanceof ClosureUseNode || $node instanceof ArrowFunctionNode ;
             }
         );
+
         $traverser = new NodeTraverser();
         $traverser->addVisitor($visitor);
         $traverser->traverse($ast);
@@ -90,6 +92,7 @@ final class AstHelper {
     }
     /**
      * @param Node[] $node
+     * @psalm-suppress MixedArgument,NoInterfaceProperties
      */
     public function getBodyCode(array $node, PrettyPrinterAbstract|null $printer = null): String|null {
         if ( $printer == null ) {
@@ -100,14 +103,10 @@ final class AstHelper {
         if ( $node[0] instanceof ArrowFunctionNode ) {       
             /** @var non-empty-list<Node\Stmt\Return_> $node **/
             $expr = $node[0]->expr;
-            assert($expr instanceof Node\Expr);
             return $printer->prettyPrintExpr($expr);
         }
         if ( property_exists($node[0], 'stmts') ){ 
-            
-            $stmts = $node[0]->stmts;
-            /** @var array<array-key, Node> $stmts */
-            return $printer->prettyPrint($stmts);
+            return $printer->prettyPrint($node[0]->stmts);
         }
         return null;
     }
