@@ -1217,4 +1217,22 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         self::assertTrue($class->isSubclassOf($subclassName));
     }
+
+    /** @return list<array{0: class-string}> */
+    public static function dataIterable(): array
+    {
+        return [
+            ['iterable'],
+            ['Iterable'],
+            ['ItErAbLe'],
+        ];
+    }
+
+    #[DataProvider('dataIterable')]
+    public function testIterableInterfaceDoesNotExist(string $className): void
+    {
+        $stub = $this->sourceStubber->generateClassStub($className);
+
+        self::assertNull($stub);
+    }
 }
