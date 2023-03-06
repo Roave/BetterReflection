@@ -4,6 +4,7 @@
             "src"
         ]
     },
+    "timeout": 60,
     "logs": {
         "text": "php:\/\/stderr",
         "stryker": {
