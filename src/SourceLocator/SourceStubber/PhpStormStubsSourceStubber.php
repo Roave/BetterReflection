@@ -206,6 +206,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @param class-string|trait-string $className */
     public function generateClassStub(string $className): StubData|null
     {
+        if (strtolower($className) === 'iterable') {
+            return null;
+        }
+
         $classNodeData = $this->getClassNodeData($className);
 
         if ($classNodeData === null) {
