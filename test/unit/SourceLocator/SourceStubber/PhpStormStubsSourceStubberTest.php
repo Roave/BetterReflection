@@ -1218,7 +1218,7 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertTrue($class->isSubclassOf($subclassName));
     }
 
-    /** @return list<array{0: class-string}> */
+    /** @return list<array{0: string}> */
     public static function dataIterable(): array
     {
         return [
