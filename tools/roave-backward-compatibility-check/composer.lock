@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "azjezz/psl",
-            "version": "2.4.1",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "eacc90cfdfd7eafffd630e81ab69b113309e594b"
+                "reference": "0b1eac31dfb86209043397d6f86271faa3db87ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/eacc90cfdfd7eafffd630e81ab69b113309e594b",
-                "reference": "eacc90cfdfd7eafffd630e81ab69b113309e594b",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/0b1eac31dfb86209043397d6f86271faa3db87ee",
+                "reference": "0b1eac31dfb86209043397d6f86271faa3db87ee",
                 "shasum": ""
             },
             "require": {
@@ -70,7 +70,7 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.4.1"
+                "source": "https://github.com/azjezz/psl/tree/2.5.0"
             },
             "funding": [
                 {
@@ -78,7 +78,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-01-26T12:53:04+00:00"
+            "time": "2023-03-17T11:52:46+00:00"
         },
         {
             "name": "beberlei/assert",
