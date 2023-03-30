@@ -21,10 +21,10 @@ class PhpUnitTestCaseBench
     private Reflector $reflector;
 
     /** @var list<ReflectionMethod> */
-    private $methods;
+    private array $methods;
 
     /** @var list<ReflectionParameter> */
-    private $parameters = [];
+    private array $parameters;
 
     public function __construct()
     {

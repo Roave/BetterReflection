@@ -33,7 +33,7 @@ class ReflectionAttributeHelper
         Reflector $reflector,
         ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $reflection,
         array $attrGroups,
-    ) {
+    ): array {
         $repeated = [];
         foreach ($attrGroups as $attributesGroupNode) {
             foreach ($attributesGroupNode->attrs as $attributeNode) {
