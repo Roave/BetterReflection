@@ -1254,16 +1254,16 @@
         },
         {
             "name": "revolt/event-loop",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/revoltphp/event-loop.git",
-                "reference": "81dd825a0a7fa7a39cae25ef731bb944f3e18295"
+                "reference": "9ac31d36635c60a9b28bb2a476384c5ec55c95cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/revoltphp/event-loop/zipball/81dd825a0a7fa7a39cae25ef731bb944f3e18295",
-                "reference": "81dd825a0a7fa7a39cae25ef731bb944f3e18295",
+                "url": "https://api.github.com/repos/revoltphp/event-loop/zipball/9ac31d36635c60a9b28bb2a476384c5ec55c95cc",
+                "reference": "9ac31d36635c60a9b28bb2a476384c5ec55c95cc",
                 "shasum": ""
             },
             "require": {
@@ -1320,9 +1320,9 @@
             ],
             "support": {
                 "issues": "https://github.com/revoltphp/event-loop/issues",
-                "source": "https://github.com/revoltphp/event-loop/tree/v1.0.0"
+                "source": "https://github.com/revoltphp/event-loop/tree/v1.0.1"
             },
-            "time": "2022-11-02T21:46:22+00:00"
+            "time": "2023-04-02T16:25:26+00:00"
         },
         {
             "name": "roave/backward-compatibility-check",
