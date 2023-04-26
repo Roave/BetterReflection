@@ -149,7 +149,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getMethods(int $filter = 0): array
     {
@@ -157,7 +157,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getImmediateMethods(int $filter = 0): array
     {
@@ -177,7 +177,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getImmediateConstants(int $filter = 0): array
     {
@@ -185,7 +185,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getConstants(int $filter = 0): array
     {
@@ -208,7 +208,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getProperties(int $filter = 0): array
     {
@@ -219,7 +219,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getImmediateProperties(int $filter = 0): array
     {
@@ -248,7 +248,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getDefaultProperties(): array
     {
@@ -295,7 +295,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getParentClassNames(): array
     {
@@ -359,7 +359,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTraits(): array
     {
@@ -367,7 +367,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTraitNames(): array
     {
@@ -375,7 +375,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTraitAliases(): array
     {
@@ -383,7 +383,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getInterfaces(): array
     {
@@ -391,7 +391,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getImmediateInterfaces(): array
     {
@@ -399,7 +399,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getInterfaceNames(): array
     {
@@ -442,7 +442,7 @@ class ReflectionObject extends ReflectionClass
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getStaticProperties(): array
     {
