@@ -1911,16 +1911,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.20.2",
+            "version": "1.20.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81"
+                "reference": "6c04009f6cae6eda2f040745b6b846080ef069c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/90490bd8fd8530a272043c4950c180b6d0cf5f81",
-                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6c04009f6cae6eda2f040745b6b846080ef069c2",
+                "reference": "6c04009f6cae6eda2f040745b6b846080ef069c2",
                 "shasum": ""
             },
             "require": {
@@ -1950,9 +1950,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.2"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.3"
             },
-            "time": "2023-04-22T12:59:35+00:00"
+            "time": "2023-04-25T09:01:03+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -2702,16 +2702,16 @@
         },
         {
             "name": "sanmai/pipeline",
-            "version": "v6.5",
+            "version": "v6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/pipeline.git",
-                "reference": "dd7c3c890b6d2d40a2ea1cf0d49281c17832de2d"
+                "reference": "12289ac9c50819d28bf8171ea6ec9579de3325aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/dd7c3c890b6d2d40a2ea1cf0d49281c17832de2d",
-                "reference": "dd7c3c890b6d2d40a2ea1cf0d49281c17832de2d",
+                "url": "https://api.github.com/repos/sanmai/pipeline/zipball/12289ac9c50819d28bf8171ea6ec9579de3325aa",
+                "reference": "12289ac9c50819d28bf8171ea6ec9579de3325aa",
                 "shasum": ""
             },
             "require": {
@@ -2725,7 +2725,7 @@
                 "phan/phan": ">=1.1",
                 "php-coveralls/php-coveralls": "^2.4.1",
                 "phpstan/phpstan": ">=0.10",
-                "phpunit/phpunit": "^7.4 || ^8.1 || ^9.4",
+                "phpunit/phpunit": ">=9.4",
                 "vimeo/psalm": ">=2"
             },
             "type": "library",
@@ -2755,7 +2755,7 @@
             "description": "General-purpose collections pipeline",
             "support": {
                 "issues": "https://github.com/sanmai/pipeline/issues",
-                "source": "https://github.com/sanmai/pipeline/tree/v6.5"
+                "source": "https://github.com/sanmai/pipeline/tree/v6.6"
             },
             "funding": [
                 {
@@ -2763,7 +2763,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-15T00:28:41+00:00"
+            "time": "2023-04-21T23:30:37+00:00"
         },
         {
             "name": "sebastian/cli-parser",
