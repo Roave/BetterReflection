@@ -37,7 +37,7 @@
         "phpstan/phpstan": "^1.10.14",
         "phpstan/phpstan-phpunit": "^1.3.11",
         "phpunit/phpunit": "^10.1.2",
-        "vimeo/psalm": "5.9.0",
+        "vimeo/psalm": "5.10.0",
         "roave/infection-static-analysis-plugin": "^1.30.0"
     },
     "autoload": {
