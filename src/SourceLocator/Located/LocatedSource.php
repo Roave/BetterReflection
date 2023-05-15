@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Located;
 
 use InvalidArgumentException;
 use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
-use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function assert;
@@ -31,8 +30,6 @@ class LocatedSource
     {
         if ($filename !== null) {
             assert($filename !== '');
-
-            FileChecker::assertReadableFile($filename);
 
             $filename = FileHelper::normalizeWindowsPath($filename);
         }
