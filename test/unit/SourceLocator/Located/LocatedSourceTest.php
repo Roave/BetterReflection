@@ -6,7 +6,6 @@ namespace Roave\BetterReflectionTest\SourceLocator\Located;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\SourceLocator\Exception\InvalidFileLocation;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\Util\FileHelper;
 
@@ -49,11 +48,5 @@ class LocatedSourceTest extends TestCase
         $file          = null;
         $locatedSource = new LocatedSource($source, 'name', $file);
         self::assertSame('', $locatedSource->getSource());
-    }
-
-    public function testThrowsExceptionIfFileIsNotReadable(): void
-    {
-        $this->expectException(InvalidFileLocation::class);
-        new LocatedSource('<?php echo "Hello world";', 'name', 'not-readable.php');
     }
 }
