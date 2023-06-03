@@ -476,7 +476,11 @@ final class ReflectionClass extends CoreReflectionClass
 
         $realParentClassName = $parentClassNames[$lowercasedClassName] ?? $className;
 
-        return $this->betterReflectionClass->isSubclassOf($realParentClassName) || $this->implementsInterface($className);
+        if ($this->betterReflectionClass->isSubclassOf($realParentClassName)) {
+            return true;
+        }
+
+        return $this->implementsInterface($className);
     }
 
     /**
