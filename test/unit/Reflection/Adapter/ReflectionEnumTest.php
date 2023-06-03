@@ -196,6 +196,29 @@ class ReflectionEnumTest extends TestCase
         self::assertTrue($reflectionEnumAdapter->isSubclassOf('FoO'));
     }
 
+    public function testIsSubclassOfChecksAlsoImplementedInterfaces(): void
+    {
+        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum
+            ->method('getParentClassNames')
+            ->willReturn([]);
+        $betterReflectionEnum
+            ->method('isSubclassOf')
+            ->with('Foo')
+            ->willReturn(false);
+        $betterReflectionEnum
+            ->method('getInterfaceNames')
+            ->willReturn(['Foo']);
+        $betterReflectionEnum
+            ->method('implementsInterface')
+            ->with('Foo')
+            ->willReturn(true);
+
+        $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
+
+        self::assertTrue($reflectionEnumAdapter->isSubclassOf('Foo'));
+    }
+
     public function testImplementsInterfaceIsCaseInsensitive(): void
     {
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);

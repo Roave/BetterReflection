@@ -392,7 +392,11 @@ final class ReflectionEnum extends CoreReflectionEnum
 
         $realParentClassName = $parentClassNames[$lowercasedClassName] ?? $className;
 
-        return $this->betterReflectionEnum->isSubclassOf($realParentClassName) || $this->implementsInterface($className);
+        if ($this->betterReflectionEnum->isSubclassOf($realParentClassName)) {
+            return true;
+        }
+
+        return $this->implementsInterface($className);
     }
 
     /**
