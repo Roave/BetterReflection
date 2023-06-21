@@ -34,7 +34,7 @@
     ],
     "require-dev": {
         "doctrine/coding-standard": "^12.0.0",
-        "phpstan/phpstan": "^1.10.20",
+        "phpstan/phpstan": "^1.10.21",
         "phpstan/phpstan-phpunit": "^1.3.13",
         "phpunit/phpunit": "^10.2.2",
         "vimeo/psalm": "5.12.0",
