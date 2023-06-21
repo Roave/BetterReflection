@@ -403,6 +403,43 @@ PHP;
         self::assertSame('baz', $paramInfo->getDefaultValue());
     }
 
+    public function testNewInInitializers(): void
+    {
+        $phpCode = '<?php
+        class Bar {
+            public function method($param = new stdClass()) {}
+        }
+        ';
+
+        $reflector = new DefaultReflector(new StringSourceLocator($phpCode, $this->astLocator));
+
+        $reflector->reflectClass('Bar')->getMethod('method')->getParameter('param')->getDefaultValue(); // should be stdClass
+    }
+
+    public function testEnumCaseResolution(): void
+    {
+        $phpCode = '<?php
+        enum BackedFoo: string {
+            case Bar = \'baz\';
+
+            public function method($param = self::Bar) {}
+        }
+        enum Foo {
+            case Bar;
+
+            public function method($param = self::Bar) {}
+        }
+        ';
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+
+        $reflector->reflectClass('BackedFoo')->getMethod('method')->getParameter('param')->getDefaultValue(); // should be BackedFoo::Bar
+        $reflector->reflectClass('Foo')->getMethod('method')->getParameter('param')->getDefaultValue(); // should be Foo::Bar
+    }
+
     public function testClassConstantResolutionWithAnotherClassConstant(): void
     {
         $phpCode = <<<'PHP'
