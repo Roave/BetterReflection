@@ -181,4 +181,4 @@ Implemented as a wrapper around [`ReflectionClass`](#reflectionclass), so the AP
 | getName | :heavy_check_mark: Yes |
 | getTarget | :heavy_check_mark: Yes |
 | isRepeated | :heavy_check_mark: Yes |
-| newInstance | :x: No - see ([#1353](https://github.com/Roave/BetterReflection/pulls/1353)) |
+| newInstance | :x: No - see ([#1353](https://github.com/Roave/BetterReflection/pull/1353)) |
