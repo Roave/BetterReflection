@@ -172,3 +172,13 @@ Implemented as a wrapper around [`ReflectionClass`](#reflectionclass), so the AP
 | __toString | :heavy_check_mark: Yes |
 | allowsNull | :heavy_check_mark: Yes |
 | isBuiltin | :heavy_check_mark: Yes |
+
+## ReflectionAttribute
+
+| Method | Supported |
+|--------|-----------|
+| getArguments | :heavy_check_mark: Yes |
+| getName | :heavy_check_mark: Yes |
+| getTarget | :heavy_check_mark: Yes |
+| isRepeated | :heavy_check_mark: Yes |
+| newInstance | :x: No - see ([#1353](https://github.com/Roave/BetterReflection/pulls/1353)) |
