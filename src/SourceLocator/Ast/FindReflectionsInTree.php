@@ -114,7 +114,7 @@ final class FindReflectionsInTree
                         if ($node->name->hasAttribute('namespacedName')) {
                             $namespacedName = $node->name->getAttribute('namespacedName');
                             assert($namespacedName instanceof Name);
-                            if (count($namespacedName->parts) > 1) {
+                            if (count($namespacedName->getParts()) > 1) {
                                 try {
                                     $this->reflector->reflectFunction($namespacedName->toString());
 
