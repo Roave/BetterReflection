@@ -21,9 +21,9 @@ use const STREAM_URL_STAT_QUIET;
  * @internal DO NOT USE: this is an implementation detail of
  *           the {@see \Roave\BetterReflection\SourceLocator\Type\AutoloadSourceLocator}
  *
- * phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
- * phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
- * phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
+ * @phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ * @phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+ * @phpcs:disable Squiz.NamingConventions.ValidVariableName.NotCamelCaps
  *
  * @psalm-suppress MissingConstructor
  */
