@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 
-use function assert;
 use function sprintf;
 
 /** @internal */
@@ -27,7 +26,7 @@ final class ReflectionPropertyStringCast
 
         $type = $propertyReflection->getType();
 
-        $string = sprintf(
+        return sprintf(
             'Property [%s %s%s%s%s $%s ]',
             $stateModifier,
             self::visibilityToString($propertyReflection),
@@ -36,9 +35,6 @@ final class ReflectionPropertyStringCast
             $type !== null ? sprintf(' %s', ReflectionTypeStringCast::toString($type)) : '',
             $propertyReflection->getName(),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

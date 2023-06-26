@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 
-use function assert;
 use function is_array;
 use function is_string;
 use function sprintf;
@@ -24,7 +23,7 @@ final class ReflectionParameterStringCast
      */
     public static function toString(ReflectionParameter $parameterReflection): string
     {
-        $string = sprintf(
+        return sprintf(
             'Parameter #%d [ %s %s%s%s$%s%s ]',
             $parameterReflection->getPosition(),
             $parameterReflection->isOptional() ? '<optional>' : '<required>',
@@ -34,9 +33,6 @@ final class ReflectionParameterStringCast
             $parameterReflection->getName(),
             self::valueToString($parameterReflection),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

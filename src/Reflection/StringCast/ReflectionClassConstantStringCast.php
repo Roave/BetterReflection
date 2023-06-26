@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 
-use function assert;
 use function gettype;
 use function is_array;
 use function sprintf;
@@ -24,7 +23,7 @@ final class ReflectionClassConstantStringCast
         /** @psalm-var scalar|array<scalar> $value */
         $value = $constantReflection->getValue();
 
-        $string = sprintf(
+        return sprintf(
             "Constant [ %s%s %s %s ] { %s }\n",
             $constantReflection->isFinal() ? 'final ' : '',
             self::visibilityToString($constantReflection),
@@ -32,9 +31,6 @@ final class ReflectionClassConstantStringCast
             $constantReflection->getName(),
             is_array($value) ? 'Array' : (string) $value,
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

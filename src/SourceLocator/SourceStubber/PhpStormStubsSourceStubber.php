@@ -441,10 +441,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     /** @return non-empty-string */
     private function getAbsoluteFilePath(string $filePath): string
     {
-        $absoluteFilePath = sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
-        assert($absoluteFilePath !== '');
-
-        return $absoluteFilePath;
+        return sprintf('%s/%s', $this->getStubsDirectory(), $filePath);
     }
 
     /**

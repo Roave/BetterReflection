@@ -29,7 +29,7 @@ final class ReflectionConstantStringCast
         /** @psalm-var scalar|array<scalar> $value */
         $value = $constantReflection->getValue();
 
-        $string = sprintf(
+        return sprintf(
             'Constant [ <%s> %s %s ] {%s %s }',
             self::sourceToString($constantReflection),
             gettype($value),
@@ -37,9 +37,6 @@ final class ReflectionConstantStringCast
             self::fileAndLinesToString($constantReflection),
             is_array($value) ? 'Array' : (string) $value,
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

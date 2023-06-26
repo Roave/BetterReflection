@@ -31,7 +31,7 @@ final class ReflectionFunctionStringCast
             ? "\n  - Return [ %s ]"
             : '';
 
-        $string = sprintf(
+        return sprintf(
             'Function [ <%s> function %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($functionReflection),
             $functionReflection->getName(),
@@ -40,9 +40,6 @@ final class ReflectionFunctionStringCast
             self::parametersToString($functionReflection),
             self::returnTypeToString($functionReflection),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

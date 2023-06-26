@@ -32,7 +32,7 @@ final class ReflectionMethodStringCast
             ? "\n  - Return [ %s ]"
             : '';
 
-        $string = sprintf(
+        return sprintf(
             'Method [ <%s%s%s%s%s%s>%s%s%s %s method %s ] {%s' . $parametersFormat . $returnTypeFormat . "\n}",
             self::sourceToString($methodReflection),
             $methodReflection->isConstructor() ? ', ctor' : '',
@@ -50,9 +50,6 @@ final class ReflectionMethodStringCast
             self::parametersToString($methodReflection),
             self::returnTypeToString($methodReflection),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */

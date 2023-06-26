@@ -281,10 +281,7 @@ class ReflectionClass implements Reflection
             $fileName = sha1($this->locatedSource->getSource());
         }
 
-        $anonymousClassName = sprintf('%s%s%c%s(%d)', $this->getAnonymousClassNamePrefix(), self::ANONYMOUS_CLASS_NAME_SUFFIX, "\0", $fileName, $this->getStartLine());
-        assert($anonymousClassName !== '');
-
-        return $anonymousClassName;
+        return sprintf('%s%s%c%s(%d)', $this->getAnonymousClassNamePrefix(), self::ANONYMOUS_CLASS_NAME_SUFFIX, "\0", $fileName, $this->getStartLine());
     }
 
     /**
@@ -1438,14 +1435,11 @@ class ReflectionClass implements Reflection
      */
     private function methodHash(string $className, string $methodName): string
     {
-        $hash = sprintf(
+        return sprintf(
             '%s::%s',
             $className,
             strtolower($methodName),
         );
-        assert($hash !== '');
-
-        return $hash;
     }
 
     /**
