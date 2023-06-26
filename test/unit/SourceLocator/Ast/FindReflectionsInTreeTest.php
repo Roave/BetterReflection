@@ -220,6 +220,38 @@ class FindReflectionsInTreeTest extends TestCase
         $reflector = $this->createMock(Reflector::class);
         $reflector
             ->method('reflectFunction')
+            ->willReturn($this->createMock(ReflectionFunction::class));
+
+        $source        = <<<'PHP'
+<?php
+define("FOO", 1);
+PHP;
+        $locatedSource = new LocatedSource($source, 'FOO');
+
+        self::assertSame(
+            [$mockReflection],
+            (new FindReflectionsInTree($strategy))->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                $locatedSource,
+            ),
+        );
+    }
+
+    public function testInvokeCallsReflectNodesForConstantByDefineInNamespace(): void
+    {
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $mockReflection = $this->createMock(ReflectionConstant::class);
+
+        $strategy->expects($this->once())
+            ->method('__invoke')
+            ->will($this->returnValue($mockReflection));
+
+        $reflector = $this->createMock(Reflector::class);
+        $reflector
+            ->method('reflectFunction')
             ->willThrowException(IdentifierNotFound::fromIdentifier(new Identifier('Foo\define', new IdentifierType(IdentifierType::IDENTIFIER_FUNCTION))));
 
         $source        = <<<'PHP'
@@ -227,6 +259,40 @@ class FindReflectionsInTreeTest extends TestCase
 namespace Foo;
 
 define("FOO", 1);
+PHP;
+        $locatedSource = new LocatedSource($source, 'FOO');
+
+        self::assertSame(
+            [$mockReflection],
+            (new FindReflectionsInTree($strategy))->__invoke(
+                $reflector,
+                $this->getAstForSource($locatedSource),
+                new IdentifierType(IdentifierType::IDENTIFIER_CONSTANT),
+                $locatedSource,
+            ),
+        );
+    }
+
+    public function testInvokeCallsReflectNodesForConstantByFullyQualifiedDefine(): void
+    {
+        $strategy = $this->createMock(NodeToReflection::class);
+
+        $mockReflection = $this->createMock(ReflectionConstant::class);
+
+        $strategy->expects($this->once())
+            ->method('__invoke')
+            ->will($this->returnValue($mockReflection));
+
+        $reflector = $this->createMock(Reflector::class);
+        $reflector
+            ->method('reflectFunction')
+            ->willReturn($this->createMock(ReflectionFunction::class));
+
+        $source        = <<<'PHP'
+<?php
+namespace Foo;
+
+\define("FOO", 1);
 PHP;
         $locatedSource = new LocatedSource($source, 'FOO');
 
