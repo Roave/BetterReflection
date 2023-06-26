@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionEnumCase;
 
-use function assert;
 use function gettype;
 use function sprintf;
 
@@ -25,14 +24,11 @@ final class ReflectionEnumCaseStringCast
         $value = $enumReflection->isBacked() ? $enumCaseReflection->getValue() : 'Object';
         $type  = $enumReflection->isBacked() ? gettype($value) : $enumReflection->getName();
 
-        $string = sprintf(
+        return sprintf(
             "Constant [ public %s %s ] { %s }\n",
             $type,
             $enumCaseReflection->getName(),
             $value,
         );
-        assert($string !== '');
-
-        return $string;
     }
 }

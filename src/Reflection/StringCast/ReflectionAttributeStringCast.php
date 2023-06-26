@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\StringCast;
 
 use Roave\BetterReflection\Reflection\ReflectionAttribute;
 
-use function assert;
 use function count;
 use function is_array;
 use function is_string;
@@ -29,15 +28,12 @@ final class ReflectionAttributeStringCast
 
         $argumentsFormat = $arguments !== [] ? " {\n  - Arguments [%d] {%s\n  }\n}" : '';
 
-        $string = sprintf(
+        return sprintf(
             'Attribute [ %s ]' . $argumentsFormat . "\n",
             $attributeReflection->getName(),
             count($arguments),
             self::argumentsToString($arguments),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /**

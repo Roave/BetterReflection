@@ -56,7 +56,7 @@ final class ReflectionClassStringCast
         $dynamicProperties = self::getDynamicProperties($classReflection);
         $methods           = self::getMethods($classReflection);
 
-        $string = sprintf(
+        return sprintf(
             $format,
             $isObject ? 'Object of class' : $type,
             self::sourceToString($classReflection),
@@ -80,9 +80,6 @@ final class ReflectionClassStringCast
             count($methods),
             self::methodsToString($methods, 2),
         );
-        assert($string !== '');
-
-        return $string;
     }
 
     /** @psalm-pure */
