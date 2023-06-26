@@ -114,14 +114,13 @@ final class FindReflectionsInTree
                         if ($node->name->hasAttribute('namespacedName')) {
                             $namespacedName = $node->name->getAttribute('namespacedName');
                             assert($namespacedName instanceof Name);
-                            if (count($namespacedName->getParts()) > 1) {
-                                try {
-                                    $this->reflector->reflectFunction($namespacedName->toString());
 
-                                    return null;
-                                } catch (IdentifierNotFound) {
-                                    // Global define()
-                                }
+                            try {
+                                $this->reflector->reflectFunction($namespacedName->toString());
+
+                                return null;
+                            } catch (IdentifierNotFound) {
+                                // Global define()
                             }
                         }
 
