@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "azjezz/psl",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "97341582b555c18ac9f46f7958fda47358f2190a"
+                "reference": "cd599829541caf1bc87fa0b2a3367e050ff1f837"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/97341582b555c18ac9f46f7958fda47358f2190a",
-                "reference": "97341582b555c18ac9f46f7958fda47358f2190a",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/cd599829541caf1bc87fa0b2a3367e050ff1f837",
+                "reference": "cd599829541caf1bc87fa0b2a3367e050ff1f837",
                 "shasum": ""
             },
             "require": {
@@ -27,17 +27,17 @@
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
                 "php": "~8.1.0 || ~8.2.0",
-                "revolt/event-loop": "^1.0.0"
+                "revolt/event-loop": "^1.0.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.4.0",
-                "php-coveralls/php-coveralls": "^2.5.2",
-                "php-standard-library/psalm-plugin": "^2.2",
-                "phpbench/phpbench": "^1.2.3",
-                "phpunit/phpunit": "^9.5.16",
-                "roave/infection-static-analysis-plugin": "^1.26.0",
-                "squizlabs/php_codesniffer": "^3.6.2",
-                "vimeo/psalm": "^5.0.0"
+                "friendsofphp/php-cs-fixer": "^3.22.0",
+                "php-coveralls/php-coveralls": "^2.6.0",
+                "php-standard-library/psalm-plugin": "^2.2.1",
+                "phpbench/phpbench": "^1.2.14",
+                "phpunit/phpunit": "^9.6.10",
+                "roave/infection-static-analysis-plugin": "^1.32.0",
+                "squizlabs/php_codesniffer": "^3.7.2",
+                "vimeo/psalm": "^5.13.1"
             },
             "suggest": {
                 "php-standard-library/psalm-plugin": "Psalm integration"
@@ -70,7 +70,7 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.6.0"
+                "source": "https://github.com/azjezz/psl/tree/2.7.0"
             },
             "funding": [
                 {
@@ -78,7 +78,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-05-18T10:12:44+00:00"
+            "time": "2023-07-19T20:13:26+00:00"
         },
         {
             "name": "beberlei/assert",
