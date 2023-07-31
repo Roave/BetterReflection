@@ -101,7 +101,7 @@ class ReflectionClass implements Reflection
     private int $endColumn;
 
     /** @var class-string|null */
-    private string|null $parentClassName;
+    private string|null $parentClassName = null;
 
     /** @var list<class-string> */
     private array $implementsClassNames;
@@ -325,7 +325,7 @@ class ReflectionClass implements Reflection
 	public function getParentClassName(): ?string
 	{
 		return $this->parentClassName;
-	}    
+	}
 
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
