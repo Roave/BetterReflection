@@ -294,6 +294,12 @@ class ReflectionObject extends ReflectionClass
         return $this->reflectionClass->getParentClass();
     }
 
+    /** @return class-string|null */
+    public function getParentClassName(): string|null
+    {
+        return $this->reflectionClass->getParentClassName();
+    }
+
     /**
      * {@inheritDoc}
      */
