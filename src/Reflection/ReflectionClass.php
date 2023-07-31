@@ -101,7 +101,7 @@ class ReflectionClass implements Reflection
     private int $endColumn;
 
     /** @var class-string|null */
-    private string|null $parentClassName = null;
+    private string|null $parentClassName;
 
     /** @var list<class-string> */
     private array $implementsClassNames;
