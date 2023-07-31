@@ -319,6 +319,12 @@ class ReflectionClass implements Reflection
         return $this->name;
     }
 
+    /** @return class-string|null */
+    public function getParentClassName(): string|null
+    {
+        return $this->parentClassName;
+    }
+
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").

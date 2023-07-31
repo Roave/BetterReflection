@@ -402,6 +402,29 @@ class ReflectionClassTest extends TestCase
         $classInfo->getMethods();
     }
 
+    public function testGetParentClassNameWithMissingParent(): void
+    {
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithMissingParent.php',
+            $this->astLocator,
+        )))->reflectClass(ClassWithMissingParent::class);
+
+        self::assertNotNull($classInfo->getParentClassName());
+        self::assertSame('Roave\BetterReflectionTest\Fixture\ParentThatDoesNotExist', $classInfo->getParentClassName());
+    }
+
+    public function testGetParentClassWithMissingParent(): void
+    {
+        $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassWithMissingParent.php',
+            $this->astLocator,
+        )))->reflectClass(ClassWithMissingParent::class);
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $classInfo->getParentClass();
+    }
+
     public function testGetMethodsOrder(): void
     {
         $classInfo = (new DefaultReflector(new SingleFileSourceLocator(
