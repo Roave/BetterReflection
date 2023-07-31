@@ -452,14 +452,6 @@ final class ReflectionClass extends CoreReflectionClass
         throw new Exception\NotImplemented('Not implemented');
     }
 
-    /**
-     * @return class-string|null
-     */
-    public function getParentClassName(): ?string
-    {
-        return $this->betterReflectionClass->getParentClassName();
-    }
-
     /** @psalm-mutation-free */
     public function getParentClass(): ReflectionClass|false
     {
