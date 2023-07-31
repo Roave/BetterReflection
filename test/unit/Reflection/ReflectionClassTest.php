@@ -409,6 +409,7 @@ class ReflectionClassTest extends TestCase
             $this->astLocator,
         )))->reflectClass(ClassWithMissingParent::class);
 
+        self::assertNotNull($classInfo->getParentClassName());
         self::assertSame('Roave\BetterReflectionTest\Fixture\ParentThatDoesNotExist', $classInfo->getParentClassName());
     }
 
@@ -420,7 +421,8 @@ class ReflectionClassTest extends TestCase
         )))->reflectClass(ClassWithMissingParent::class);
 
         $this->expectException(IdentifierNotFound::class);
-        self::assertNull($classInfo->getParentClass());
+
+        $classInfo->getParentClass();
     }
 
     public function testGetMethodsOrder(): void
