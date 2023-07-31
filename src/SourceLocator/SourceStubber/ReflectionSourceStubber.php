@@ -604,10 +604,10 @@ final class ReflectionSourceStubber implements SourceStubber
     private function formatTypes(array $types): array
     {
         return array_map(function (CoreReflectionType $type): Name|UnionType|IntersectionType {
-            $formatedType = $this->formatType($type);
-            assert($formatedType instanceof Name || $formatedType instanceof UnionType || $formatedType instanceof IntersectionType);
+            $formattedType = $this->formatType($type);
+            assert($formattedType instanceof Name || $formattedType instanceof UnionType || $formattedType instanceof IntersectionType);
 
-            return $formatedType;
+            return $formattedType;
         }, $types);
     }
 

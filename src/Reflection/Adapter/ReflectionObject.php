@@ -500,10 +500,10 @@ final class ReflectionObject extends CoreReflectionObject
 
         $interfaceNames = array_combine(array_map(static fn (string $interfaceName): string => strtolower($interfaceName), $realInterfaceNames), $realInterfaceNames);
 
-        $interfaceName          = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
-        $lowercasedIntefaceName = strtolower($interfaceName);
+        $interfaceName           = $interface instanceof CoreReflectionClass ? $interface->getName() : $interface;
+        $lowercasedInterfaceName = strtolower($interfaceName);
 
-        $realInterfaceName = $interfaceNames[$lowercasedIntefaceName] ?? $interfaceName;
+        $realInterfaceName = $interfaceNames[$lowercasedInterfaceName] ?? $interfaceName;
 
         return $this->betterReflectionObject->implementsInterface($realInterfaceName);
     }

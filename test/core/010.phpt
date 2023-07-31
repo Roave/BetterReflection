@@ -1,5 +1,5 @@
 --TEST--
-ReflectionMethod::__toString() tests (overriden method)
+ReflectionMethod::__toString() tests (overridden method)
 --SKIPIF--
 <?php extension_loaded('reflection') or die('skip'); ?>
 --FILE--

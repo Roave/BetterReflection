@@ -2,15 +2,15 @@
 Reflection Bug #36434 (Properties from parent class fail to indetify their true origin)
 --FILE--
 <?php
-class ancester
+class ancestor
 {
-    public $ancester = 0;
+    public $ancestor = 0;
 	function __construct()
 	{
-		return $this->ancester;
+		return $this->ancestor;
 	}
 }
-class foo extends ancester
+class foo extends ancestor
 {
     public $bar = "1";
 	function __construct()
@@ -28,4 +28,4 @@ foreach ($r->GetProperties() as $p)
 ?>
 --EXPECT--	
 bar foo
-ancester ancester
+ancestor ancestor
