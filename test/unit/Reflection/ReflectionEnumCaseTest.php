@@ -111,7 +111,7 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @return list<array{0: class-string, 1: string, 2: int, 3: int, 4: int, 5: int}> */
-    public static function dataLinesAndColums(): array
+    public static function dataLinesAndColumns(): array
     {
         return [
             [PureEnum::class, 'ONE', 7, 7, 5, 13],
@@ -121,8 +121,8 @@ class ReflectionEnumCaseTest extends TestCase
     }
 
     /** @param non-empty-string $caseName */
-    #[DataProvider('dataLinesAndColums')]
-    public function testLinesAndColums(string $enumName, string $caseName, int $startLine, int $endLine, int $startColumn, int $endColumn): void
+    #[DataProvider('dataLinesAndColumns')]
+    public function testLinesAndColumns(string $enumName, string $caseName, int $startLine, int $endLine, int $startColumn, int $endColumn): void
     {
         $enumReflection = $this->reflector->reflectClass($enumName);
 
