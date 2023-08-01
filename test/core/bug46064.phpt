@@ -1,5 +1,5 @@
 --TEST--
-Bug #46064 (Exception when creating ReflectionProperty object on dynamically created property)
+Bug #46064 (Exception when creating ReflectionProperty object on dynamicly created property)
 --FILE--
 <?php
 
