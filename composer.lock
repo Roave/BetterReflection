@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa14e59f08c7f9c0da09dfabf6459f32",
+    "content-hash": "81212d7dceec6a1350d27324021aff69",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2023.1",
+            "version": "v2023.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "de53302780aee15d724360f2ee728946a4527659"
+                "reference": "3bb9c8a1050ad324c2dca7964487fa9f081f1005"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/de53302780aee15d724360f2ee728946a4527659",
-                "reference": "de53302780aee15d724360f2ee728946a4527659",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/3bb9c8a1050ad324c2dca7964487fa9f081f1005",
+                "reference": "3bb9c8a1050ad324c2dca7964487fa9f081f1005",
                 "shasum": ""
             },
             "require-dev": {
@@ -50,9 +50,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2023.1"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2023.2"
             },
-            "time": "2023-02-11T17:45:35+00:00"
+            "time": "2023-07-14T12:50:15+00:00"
         },
         {
             "name": "nikic/php-parser",
