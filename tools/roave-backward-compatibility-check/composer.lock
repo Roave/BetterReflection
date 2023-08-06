@@ -952,16 +952,16 @@
         },
         {
             "name": "nikolaposa/version",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikolaposa/version.git",
-                "reference": "0aada6b801962c084ae465f7569397dc2186b6a7"
+                "reference": "f6bdd64be914940529b843a67335d6386d980cec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikolaposa/version/zipball/0aada6b801962c084ae465f7569397dc2186b6a7",
-                "reference": "0aada6b801962c084ae465f7569397dc2186b6a7",
+                "url": "https://api.github.com/repos/nikolaposa/version/zipball/f6bdd64be914940529b843a67335d6386d980cec",
+                "reference": "f6bdd64be914940529b843a67335d6386d980cec",
                 "shasum": ""
             },
             "require": {
@@ -978,7 +978,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0.x-dev"
+                    "dev-master": "4.1.x-dev"
                 }
             },
             "autoload": {
@@ -1007,9 +1007,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikolaposa/version/issues",
-                "source": "https://github.com/nikolaposa/version/tree/4.1.0"
+                "source": "https://github.com/nikolaposa/version/tree/4.1.1"
             },
-            "time": "2020-12-12T10:47:10+00:00"
+            "time": "2023-08-04T17:13:40+00:00"
         },
         {
             "name": "ocramius/package-versions",
