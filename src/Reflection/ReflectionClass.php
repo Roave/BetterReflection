@@ -1292,6 +1292,12 @@ class ReflectionClass implements Reflection
         return $interfaces;
     }
 
+    /** @return list<trait-string> */
+    public function getTraitClassNames(): array
+    {
+        return $this->traitClassNames;
+    }
+
     /**
      * Get the names of the traits used as an array of strings, if any are
      * defined. If this class does not have any defined traits, this will

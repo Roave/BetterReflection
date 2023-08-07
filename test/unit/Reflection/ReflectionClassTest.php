@@ -88,6 +88,8 @@ use Roave\BetterReflectionTest\FixtureOther\AnotherClass;
 use SplFileInfo;
 use stdClass;
 use Stringable;
+use TraitFixtureA;
+use TraitFixtureC;
 use TypeError;
 use UnitEnum;
 
@@ -1498,6 +1500,83 @@ PHP;
             'b_renamed' => 'TraitFixtureTraitC::b',
             'd_renamed' => 'TraitFixtureTraitC3::d',
         ], $classInfo->getTraitAliases());
+    }
+
+    public function testGetTraitNamesWithMissingTraitDefinitions(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassUsesUnknownTrait.php',
+            $this->astLocator,
+        ));
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $reflector->reflectClass(Fixture\ClassUsesUnknownTrait::class)->getTraitNames();
+    }
+
+    public function testGetTraitsWithMissingTraitDefinitions(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassUsesUnknownTrait.php',
+            $this->astLocator,
+        ));
+
+        $this->expectException(IdentifierNotFound::class);
+
+        $reflector->reflectClass(Fixture\ClassUsesUnknownTrait::class)->getTraits();
+    }
+
+    public function testGetTraitAliasesWithMissingTraitDefinitions(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/ClassUsesUnknownTrait.php',
+            $this->astLocator,
+        ));
+
+        self::assertSame(
+            [],
+            $reflector->reflectClass(Fixture\ClassUsesUnknownTrait::class)->getTraitAliases(),
+        );
+    }
+
+    /** @param list<class-string> $expectedTraits */
+    #[DataProvider('getTraitClassNamesDataProvider')]
+    public function testGetTraitClassNames(string $sourcePath, string $className, array $expectedTraits): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            $sourcePath,
+            $this->astLocator,
+        ));
+
+        self::assertSame(
+            $expectedTraits,
+            $reflector->reflectClass($className)->getTraitClassNames(),
+        );
+    }
+
+    /** @return list<array{string, class-string, list<class-string>}> */
+    public static function getTraitClassNamesDataProvider(): array
+    {
+        return [
+            [
+                __DIR__ . '/../Fixture/ClassUsesUnknownTrait.php',
+                Fixture\ClassUsesUnknownTrait::class,
+                ['Roave\BetterReflectionTest\Fixture\UnknownTrait'],
+            ],
+            [
+                __DIR__ . '/../Fixture/TraitFixture.php',
+                TraitFixtureA::class,
+                ['TraitFixtureTraitA'],
+            ],
+            [
+                __DIR__ . '/../Fixture/TraitFixture.php',
+                TraitFixtureC::class,
+                [
+                    'TraitFixtureTraitC',
+                    'TraitFixtureTraitC3',
+                ],
+            ],
+        ];
     }
 
     public function testMethodsFromTraits(): void

@@ -367,6 +367,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritDoc}
      */
+    public function getTraitClassNames(): array
+    {
+        return $this->reflectionClass->getTraitClassNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTraits(): array
     {
         return $this->reflectionClass->getTraits();
