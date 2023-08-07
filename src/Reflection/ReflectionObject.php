@@ -391,6 +391,14 @@ class ReflectionObject extends ReflectionClass
     /**
      * {@inheritDoc}
      */
+    public function getInterfaceClassNames(): array
+    {
+        return $this->reflectionClass->getInterfaceClassNames();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getInterfaces(): array
     {
         return $this->reflectionClass->getInterfaces();
