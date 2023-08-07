@@ -1448,6 +1448,12 @@ class ReflectionClass implements Reflection
         );
     }
 
+    /** @return list<class-string> */
+    public function getInterfaceClassNames(): array
+    {
+        return $this->implementsClassNames;
+    }
+
     /**
      * Gets the interfaces.
      *
