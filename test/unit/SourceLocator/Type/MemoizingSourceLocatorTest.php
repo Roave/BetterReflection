@@ -22,7 +22,7 @@ use function count;
 use function in_array;
 use function random_int;
 use function range;
-use function spl_object_hash;
+use function spl_object_id;
 use function uniqid;
 
 #[CoversClass(MemoizingSourceLocator::class)]
@@ -189,8 +189,8 @@ class MemoizingSourceLocatorTest extends TestCase
             ) use (
                 &$fetchedSymbolsCount,
             ): Reflection|null {
-                $identifierId = spl_object_hash($identifier);
-                $reflectorId  = spl_object_hash($reflector);
+                $identifierId = spl_object_id($identifier);
+                $reflectorId  = spl_object_id($reflector);
                 $hash         = $reflectorId . $identifierId;
 
                 $fetchedSymbolsCount[$hash] = ($fetchedSymbolsCount[$hash] ?? 0) + 1;
@@ -212,7 +212,7 @@ class MemoizingSourceLocatorTest extends TestCase
 
         self::assertSame($memoizedSymbols, $cachedSymbols);
 
-        $memoizedSymbolsIds = array_map('spl_object_hash', array_filter($memoizedSymbols));
+        $memoizedSymbolsIds = array_map('spl_object_id', array_filter($memoizedSymbols));
         self::assertCount(count($memoizedSymbolsIds), array_unique($memoizedSymbolsIds), 'No duplicate symbols');
     }
 

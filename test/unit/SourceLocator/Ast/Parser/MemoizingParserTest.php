@@ -16,7 +16,7 @@ use function array_map;
 use function array_unique;
 use function count;
 use function range;
-use function spl_object_hash;
+use function spl_object_id;
 use function uniqid;
 
 #[CoversClass(MemoizingParser::class)]
@@ -50,7 +50,7 @@ class MemoizingParserTest extends TestCase
         }
 
         $nodeIdentifiers = array_map(
-            static fn (array $nodes): string => spl_object_hash($nodes[0]),
+            static fn (array $nodes): int => spl_object_id($nodes[0]),
             $producedNodes,
         );
 
