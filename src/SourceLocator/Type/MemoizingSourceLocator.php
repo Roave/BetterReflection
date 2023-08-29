@@ -52,7 +52,7 @@ final class MemoizingSourceLocator implements SourceLocator
 
     private function reflectorCacheKey(Reflector $reflector): string
     {
-        return sprintf('type:%s#oid:%s', $reflector::class, spl_object_id($reflector));
+        return sprintf('type:%s#oid:%d', $reflector::class, spl_object_id($reflector));
     }
 
     private function identifierToCacheKey(Identifier $identifier): string
