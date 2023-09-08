@@ -34,6 +34,26 @@ final class ReflectionClassConstant extends CoreReflectionClassConstant
         return $this->betterClassConstantOrEnumCase->getName();
     }
 
+    /** @psalm-mutation-free */
+    public function hasType(): bool
+    {
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return false;
+        }
+
+        return $this->betterClassConstantOrEnumCase->hasType();
+    }
+
+    /** @psalm-mutation-free */
+    public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
+    {
+        if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {
+            return null;
+        }
+
+        return ReflectionType::fromTypeOrNull($this->betterClassConstantOrEnumCase->getType());
+    }
+
     public function getValue(): mixed
     {
         if ($this->betterClassConstantOrEnumCase instanceof BetterReflectionEnumCase) {

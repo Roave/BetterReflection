@@ -21,7 +21,7 @@ abstract class ReflectionType
      */
     public static function createFromNode(
         Reflector $reflector,
-        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner,
         Identifier|Name|NullableType|UnionType|IntersectionType $type,
         bool $allowsNull = false,
     ): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType {

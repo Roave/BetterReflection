@@ -30,6 +30,8 @@ class ReflectionClassConstant
     /** @var int-mask-of<ReflectionClassConstantAdapter::IS_*> */
     private int $modifiers;
 
+    private ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null $type;
+
     private Node\Expr $value;
 
     /** @var non-empty-string|null */
@@ -65,6 +67,7 @@ class ReflectionClassConstant
 
         $this->name      = $name;
         $this->modifiers = $this->computeModifiers($node);
+        $this->type      = $this->createType($node);
         $this->value     = $node->consts[$positionInNode]->value;
 
         $this->docComment = GetLastDocComment::forNode($node);
@@ -124,6 +127,29 @@ class ReflectionClassConstant
     public function getName(): string
     {
         return $this->name;
+    }
+
+    private function createType(ClassConst $node): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    {
+        $type = $node->type;
+
+        if ($type === null) {
+            return null;
+        }
+
+        assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
+
+        return ReflectionType::createFromNode($this->reflector, $this, $type);
+    }
+
+    public function getType(): ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType|null
+    {
+        return $this->type;
+    }
+
+    public function hasType(): bool
+    {
+        return $this->type !== null;
     }
 
     public function getValueExpression(): Node\Expr

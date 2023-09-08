@@ -43,7 +43,7 @@ class ReflectionNamedType extends ReflectionType
     /** @internal */
     public function __construct(
         private Reflector $reflector,
-        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner,
         Identifier|Name $type,
     ) {
         $name = $type->toString();
@@ -53,7 +53,7 @@ class ReflectionNamedType extends ReflectionType
     }
 
     /** @internal */
-    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner): static
     {
         $clone        = clone $this;
         $clone->owner = $owner;

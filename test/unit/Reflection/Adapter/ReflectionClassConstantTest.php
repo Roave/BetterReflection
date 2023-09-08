@@ -51,6 +51,8 @@ class ReflectionClassConstantTest extends TestCase
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
+            ['hasType', null, false, []],
+            ['getType', null, null, []],
             ['getValue', null, null, []],
             ['isPublic', null, true, []],
             ['isPrivate', null, true, []],
@@ -101,6 +103,20 @@ class ReflectionClassConstantTest extends TestCase
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
 
         self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
+    }
+
+    public function testHasTypeForEnumCase(): void
+    {
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+
+        self::assertFalse($reflectionClassConstantAdapter->hasType());
+    }
+
+    public function testGetTypeForEnumCase(): void
+    {
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+
+        self::assertNull($reflectionClassConstantAdapter->getType());
     }
 
     public function testGetValueForEnumCase(): void
