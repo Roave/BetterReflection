@@ -21,7 +21,7 @@ class ReflectionIntersectionType extends ReflectionType
     /** @internal */
     public function __construct(
         Reflector $reflector,
-        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner,
+        ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner,
         IntersectionType $type,
     ) {
         /** @var non-empty-list<ReflectionNamedType> $types */
@@ -36,7 +36,7 @@ class ReflectionIntersectionType extends ReflectionType
     }
 
     /** @internal */
-    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty $owner): static
+    public function withOwner(ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner): static
     {
         $clone = clone $this;
 

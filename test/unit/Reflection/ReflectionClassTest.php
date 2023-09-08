@@ -556,7 +556,7 @@ class ReflectionClassTest extends TestCase
     {
         $reflector = new DefaultReflector($this->getComposerLocator());
         $classInfo = $reflector->reflectClass(ExampleClass::class);
-        self::assertCount(7, $classInfo->getConstants());
+        self::assertCount(8, $classInfo->getConstants());
     }
 
     public function testGetConstant(): void
@@ -570,6 +570,7 @@ class ReflectionClassTest extends TestCase
         self::assertSame(567, $classInfo->getConstant('MY_CONST_5')->getValue());
         self::assertSame(678, $classInfo->getConstant('MY_CONST_6')->getValue());
         self::assertSame(789, $classInfo->getConstant('MY_CONST_7')->getValue());
+        self::assertSame(888, $classInfo->getConstant('MY_CONST_8')->getValue());
         self::assertNull($classInfo->getConstant('NON_EXISTENT_CONSTANT'));
     }
 
@@ -2344,16 +2345,16 @@ PHP;
     public static function getConstantsWithFilterDataProvider(): array
     {
         return [
-            [ReflectionClassConstantAdapter::IS_FINAL, 2],
+            [ReflectionClassConstantAdapter::IS_FINAL, 3],
             [CoreReflectionClassConstant::IS_PUBLIC, 4],
-            [CoreReflectionClassConstant::IS_PROTECTED, 2],
+            [CoreReflectionClassConstant::IS_PROTECTED, 3],
             [CoreReflectionClassConstant::IS_PRIVATE, 1],
             [
                 ReflectionClassConstantAdapter::IS_FINAL |
                 CoreReflectionClassConstant::IS_PUBLIC |
                 CoreReflectionClassConstant::IS_PROTECTED |
                 CoreReflectionClassConstant::IS_PRIVATE,
-                7,
+                8,
             ],
         ];
     }

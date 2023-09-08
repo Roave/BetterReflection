@@ -11,6 +11,7 @@ use ReflectionClassConstant as CoreReflectionClassConstant;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant as ReflectionClassConstantAdapter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
+use Roave\BetterReflection\Reflection\ReflectionNamedType;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
@@ -121,6 +122,20 @@ class ReflectionClassConstantTest extends TestCase
             ['MY_CONST_6', CoreReflectionClassConstant::IS_PUBLIC | ReflectionClassConstantAdapter::IS_FINAL],
             ['MY_CONST_7', CoreReflectionClassConstant::IS_PROTECTED | ReflectionClassConstantAdapter::IS_FINAL],
         ];
+    }
+
+    public function testWithoutType(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_1');
+        self::assertFalse($const->hasType());
+        self::assertNull($const->getType());
+    }
+
+    public function testWithType(): void
+    {
+        $const = $this->getExampleConstant('MY_CONST_8');
+        self::assertTrue($const->hasType());
+        self::assertInstanceOf(ReflectionNamedType::class, $const->getType());
     }
 
     public function testGetValue(): void
