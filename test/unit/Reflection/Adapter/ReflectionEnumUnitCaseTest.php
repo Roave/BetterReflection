@@ -78,6 +78,22 @@ class ReflectionEnumUnitCaseTest extends TestCase
         $adapter->{$methodName}(...$args);
     }
 
+    public function testHasType(): void
+    {
+        $betterReflectionEnumCase      = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+
+        self::assertFalse($reflectionEnumUnitCaseAdapter->hasType());
+    }
+
+    public function testGetType(): void
+    {
+        $betterReflectionEnumCase      = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumUnitCaseAdapter = new ReflectionEnumUnitCaseAdapter($betterReflectionEnumCase);
+
+        self::assertNull($reflectionEnumUnitCaseAdapter->getType());
+    }
+
     public function testIsPublic(): void
     {
         $betterReflectionEnumCase      = $this->createMock(BetterReflectionEnumCase::class);
