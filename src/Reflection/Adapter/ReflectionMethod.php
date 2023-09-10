@@ -18,12 +18,15 @@ use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
 use ValueError;
 
 use function array_map;
+use function explode;
 use function sprintf;
+use function str_contains;
 
 /** @psalm-suppress PropertyNotSetInConstructor */
 final class ReflectionMethod extends CoreReflectionMethod
@@ -32,6 +35,29 @@ final class ReflectionMethod extends CoreReflectionMethod
     {
         unset($this->name);
         unset($this->class);
+    }
+
+    public static function createFromMethodName(string $method): static
+    {
+        if (! str_contains($method, '::')) {
+            throw new CoreReflectionException('Argument #1 ($method) must be a valid method name');
+        }
+
+        $methodNameParts = explode('::', $method, 2);
+        /** @psalm-suppress PossiblyUndefinedArrayOffset */
+        [$className, $methodName] = $methodNameParts;
+
+        if ($methodName === '') {
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $className, $methodName));
+        }
+
+        try {
+            return new self(BetterReflectionMethod::createFromName($className, $methodName));
+        } catch (IdentifierNotFound) {
+            throw new CoreReflectionException(sprintf('Class "%s" does not exist', $className));
+        } catch (OutOfBoundsException) {
+            throw new CoreReflectionException(sprintf('Method %s::%s() does not exist', $className, $methodName));
+        }
     }
 
     /** @return non-empty-string */

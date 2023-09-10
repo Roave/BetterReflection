@@ -138,6 +138,53 @@ class ReflectionMethodTest extends TestCase
         self::assertSame($expectedReturnValue, $actualReturnValue);
     }
 
+    public function testCreateFromMethodName(): void
+    {
+        $reflectionMethodAdapter = ReflectionMethodAdapter::createFromMethodName('ReflectionMethod::getName');
+
+        self::assertInstanceOf(ReflectionMethodAdapter::class, $reflectionMethodAdapter);
+    }
+
+    public function testCreateFromMethodNameWithInvalidArgument(): void
+    {
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Argument #1 ($method) must be a valid method name');
+
+        ReflectionMethodAdapter::createFromMethodName('InvalidName');
+    }
+
+    public function testCreateFromMethodNameWithEmptyMethodName(): void
+    {
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Method SomeClass::() does not exist');
+
+        ReflectionMethodAdapter::createFromMethodName('SomeClass::');
+    }
+
+    public function testCreateFromMethodNameWhenClassDoesNotExist(): void
+    {
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Class "ClassDoesNotExist" does not exist');
+
+        ReflectionMethodAdapter::createFromMethodName('ClassDoesNotExist::method');
+    }
+
+    public function testCreateFromMethodNameWhenMethodDoesNotExist(): void
+    {
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Method ReflectionMethod::doesNotExist() does not exist');
+
+        ReflectionMethodAdapter::createFromMethodName('ReflectionMethod::doesNotExist');
+    }
+
+    public function testCreateFromMethodNameWithInvalidMethodName(): void
+    {
+        self::expectException(CoreReflectionException::class);
+        self::expectExceptionMessage('Method ReflectionMethod::invalid::name() does not exist');
+
+        ReflectionMethodAdapter::createFromMethodName('ReflectionMethod::invalid::name');
+    }
+
     public function testGetFileNameReturnsFalseWhenNoFileName(): void
     {
         $betterReflectionMethod = $this->createMock(BetterReflectionMethod::class);
