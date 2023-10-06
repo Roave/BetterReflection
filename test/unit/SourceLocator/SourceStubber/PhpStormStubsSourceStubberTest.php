@@ -108,6 +108,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
             array_filter(
                 $classNames,
                 static function (string $className): bool {
+                    // Missing in JetBrains/phpstorm-stubs
+                    // @phpstan-ignore-next-line
+                    if ($className === 'Override') {
+                        return false;
+                    }
+
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -265,6 +271,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
             array_filter(
                 $functionNames,
                 static function (string $functionName): bool {
+                    if (
+                        in_array($functionName, [
+                        // Missing in JetBrains/phpstorm-stubs
+                            'str_decrement',
+                            'str_increment',
+                            'stream_context_set_options',
+                        ], true)
+                    ) {
+                        return false;
+                    }
+
                     $reflection = new CoreReflectionFunction($functionName);
 
                     // Check only always enabled extensions
@@ -287,7 +304,12 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $stubbedReflectionParameters = $stubbedReflection->getParameters();
 
-        self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters());
+        if ($functionName === 'strrchr' && PHP_VERSION_ID >= 80300) {
+            // New parameter in PHP 8.3.0
+            return;
+        }
+
+        self::assertSame($originalReflection->getNumberOfParameters(), $stubbedReflection->getNumberOfParameters(), $functionName);
 
         foreach ($originalReflection->getParameters() as $parameterNo => $originalReflectionParameter) {
             $parameterName = sprintf('%s.%s', $functionName, $originalReflectionParameter->getName());
@@ -613,14 +635,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
         $classMapReflection->setAccessible(true);
         $classMapValue                                                     = $classMapReflection->getValue();
         $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = 'fakeconstants/FakeConstantsStub.php';
-        $classMapReflection->setValue($classMapValue);
+        $classMapReflection->setValue($classMapReflection, $classMapValue);
 
         $constantMapReflection = $stubberReflection->getProperty('constantMap');
         $constantMapReflection->setAccessible(true);
         $constantMapValue                                                      = $constantMapReflection->getValue();
         $constantMapValue['define_constant']                                   = 'fakeconstants/FakeConstantsStub.php';
         $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = 'fakeconstants/FakeConstantsStub.php';
-        $constantMapReflection->setValue($constantMapValue);
+        $constantMapReflection->setValue($constantMapReflection, $constantMapValue);
 
         $classConstantStub = $sourceStubber->generateClassStub('Roave\BetterReflectionTest\Fixture\FakeConstants');
         self::assertNotNull($classConstantStub);

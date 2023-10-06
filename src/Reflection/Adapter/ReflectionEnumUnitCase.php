@@ -35,6 +35,16 @@ final class ReflectionEnumUnitCase extends CoreReflectionEnumUnitCase
         return $this->betterReflectionEnumCase->getName();
     }
 
+    public function hasType(): bool
+    {
+        return false;
+    }
+
+    public function getType(): ReflectionUnionType|ReflectionNamedType|ReflectionIntersectionType|null
+    {
+        return null;
+    }
+
     public function getValue(): UnitEnum
     {
         throw new Exception\NotImplemented('Not implemented');
