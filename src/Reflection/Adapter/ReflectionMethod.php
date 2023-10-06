@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use Closure;
 use OutOfBoundsException;
-use PHPUnit\Framework\Attributes\IgnoreMethodForCodeCoverage;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionExtension as CoreReflectionExtension;
@@ -27,7 +26,6 @@ use function array_map;
 use function sprintf;
 
 /** @psalm-suppress PropertyNotSetInConstructor */
-#[IgnoreMethodForCodeCoverage(ReflectionMethod::class, 'setAccessible')]
 final class ReflectionMethod extends CoreReflectionMethod
 {
     public function __construct(private BetterReflectionMethod $betterReflectionMethod)
@@ -335,6 +333,7 @@ final class ReflectionMethod extends CoreReflectionMethod
     }
 
     /**
+     * @codeCoverageIgnore
      * @infection-ignore-all
      * @psalm-pure
      */

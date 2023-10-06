@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 
 use ArgumentCountError;
 use OutOfBoundsException;
-use PHPUnit\Framework\Attributes\IgnoreMethodForCodeCoverage;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
@@ -22,7 +21,6 @@ use function gettype;
 use function sprintf;
 
 /** @psalm-suppress PropertyNotSetInConstructor */
-#[IgnoreMethodForCodeCoverage(ReflectionMethod::class, 'setAccessible')]
 final class ReflectionProperty extends CoreReflectionProperty
 {
     public const IS_READONLY = 128;
@@ -131,6 +129,7 @@ final class ReflectionProperty extends CoreReflectionProperty
     }
 
     /**
+     * @codeCoverageIgnore
      * @infection-ignore-all
      * @psalm-mutation-free
      */
