@@ -1393,16 +1393,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.14.0",
+            "version": "6.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "d7353d1cf1db906a0456b0740f6092447bd86b7b"
+                "reference": "19b15d504ca61c5b5f10f5aafb329234c8eeaed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/d7353d1cf1db906a0456b0740f6092447bd86b7b",
-                "reference": "d7353d1cf1db906a0456b0740f6092447bd86b7b",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/19b15d504ca61c5b5f10f5aafb329234c8eeaed2",
+                "reference": "19b15d504ca61c5b5f10f5aafb329234c8eeaed2",
                 "shasum": ""
             },
             "require": {
@@ -1417,10 +1417,10 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0.0",
-                "phpstan/phpstan": "^1.10.33",
+                "phpstan/phpstan": "^1.10.37",
                 "phpstan/phpstan-phpunit": "^1.3.14",
-                "phpunit/phpunit": "^10.3.3",
-                "roave/infection-static-analysis-plugin": "^1.32.0",
+                "phpunit/phpunit": "^10.4.0",
+                "roave/infection-static-analysis-plugin": "^1.33.0",
                 "vimeo/psalm": "5.15.0"
             },
             "suggest": {
@@ -1461,9 +1461,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.14.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.15.0"
             },
-            "time": "2023-09-09T00:30:33+00:00"
+            "time": "2023-10-06T14:31:35+00:00"
         },
         {
             "name": "roave/signature",
