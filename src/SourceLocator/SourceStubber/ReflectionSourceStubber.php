@@ -412,6 +412,15 @@ final class ReflectionSourceStubber implements SourceStubber
 
             $classConstantNode = $this->builderFactory->classConst($constantReflection->getName(), $constantReflection->getValue());
 
+            if (method_exists($constantReflection, 'getType')) {
+                $constantType = $constantReflection->getType();
+
+                if ($constantType !== null) {
+                    assert($constantType instanceof CoreReflectionNamedType || $constantType instanceof CoreReflectionUnionType || $constantType instanceof CoreReflectionIntersectionType);
+                    $classConstantNode->setType($this->formatType($constantType));
+                }
+            }
+
             if ($constantReflection->getDocComment() !== false) {
                 $classConstantNode->setDocComment(new Doc($constantReflection->getDocComment()));
             }
