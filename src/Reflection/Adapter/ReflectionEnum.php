@@ -361,7 +361,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->betterReflectionEnum->isInstance($object);
     }
 
-    public function newInstance(mixed ...$args): self
+    public function newInstance(mixed ...$args): object
     {
         throw new Exception\NotImplemented('Not implemented');
     }
