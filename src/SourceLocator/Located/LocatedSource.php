@@ -13,8 +13,6 @@ use function assert;
 /**
  * Value object containing source code that has been located.
  *
- * @internal
- *
  * @psalm-immutable
  */
 class LocatedSource
