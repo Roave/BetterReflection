@@ -741,6 +741,29 @@ PHP;
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
+    public function testEnumValueThrowsException(): void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+
+        enum Foo: int {
+            case ONE = 1;
+        }
+        class Bat {
+            const ONE_VALUE = Foo::ONE;
+        }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classInfo = $reflector->reflectClass('Bat');
+
+        $this->expectException(UnableToCompileNode::class);
+        $classInfo->getConstant('ONE_VALUE')->getValue();
+    }
+
     /** @return list<array{0: string, 1: mixed}> */
     public static function magicConstantsWithoutNamespaceProvider(): array
     {
