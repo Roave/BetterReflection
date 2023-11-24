@@ -239,14 +239,17 @@ class ReflectionEnumTest extends TestCase
 
     public function testPropertyName(): void
     {
+        /** @phpstan-var class-string $className */
+        $className = 'Foo';
+
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
             ->method('getName')
-            ->willReturn('Foo');
+            ->willReturn($className);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
-        self::assertSame('Foo', $reflectionEnumAdapter->name);
+        self::assertSame($className, $reflectionEnumAdapter->name);
     }
 
     public function testUnknownProperty(): void
