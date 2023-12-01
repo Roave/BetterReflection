@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4712556ed9ada9292a1d8f0483e7b08f",
+    "content-hash": "a50fb77a6964bb7fa87d737e94201b6f",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1186,16 +1186,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.27.0",
+            "version": "0.27.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "a9ff8171577d98b887d7f16428edd81ff69ce887"
+                "reference": "673ce762abf3355fcdc186ca17eb89edf86993bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/a9ff8171577d98b887d7f16428edd81ff69ce887",
-                "reference": "a9ff8171577d98b887d7f16428edd81ff69ce887",
+                "url": "https://api.github.com/repos/infection/infection/zipball/673ce762abf3355fcdc186ca17eb89edf86993bf",
+                "reference": "673ce762abf3355fcdc186ca17eb89edf86993bf",
                 "shasum": ""
             },
             "require": {
@@ -1206,7 +1206,7 @@
                 "ext-json": "*",
                 "ext-libxml": "*",
                 "ext-mbstring": "*",
-                "fidry/cpu-core-counter": "^0.4.0 || ^0.5.0",
+                "fidry/cpu-core-counter": "^0.4.0 || ^0.5.0 || ^1.0",
                 "infection/abstract-testframework-adapter": "^0.5.0",
                 "infection/extension-installer": "^0.1.0",
                 "infection/include-interceptor": "^0.2.5",
@@ -1217,10 +1217,10 @@
                 "sanmai/later": "^0.1.1",
                 "sanmai/pipeline": "^5.1 || ^6",
                 "sebastian/diff": "^3.0.2 || ^4.0 || ^5.0",
-                "symfony/console": "^5.4 || ^6.0",
-                "symfony/filesystem": "^5.4 || ^6.0",
-                "symfony/finder": "^5.4 || ^6.0",
-                "symfony/process": "^5.4 || ^6.0",
+                "symfony/console": "^5.4 || ^6.0 || ^7.0",
+                "symfony/filesystem": "^5.4 || ^6.0 || ^7.0",
+                "symfony/finder": "^5.4 || ^6.0 || ^7.0",
+                "symfony/process": "^5.4 || ^6.0 || ^7.0",
                 "thecodingmachine/safe": "^2.1.2",
                 "webmozart/assert": "^1.11"
             },
@@ -1230,7 +1230,7 @@
                 "phpunit/php-code-coverage": ">9,<9.1.4 || >9.2.17,<9.2.21"
             },
             "require-dev": {
-                "brianium/paratest": "^6.3",
+                "brianium/paratest": "^6.11",
                 "ext-simplexml": "*",
                 "fidry/makefile": "^0.2.0",
                 "helmich/phpunit-json-assert": "^3.0",
@@ -1241,11 +1241,11 @@
                 "phpstan/phpstan-phpunit": "^1.0.0",
                 "phpstan/phpstan-strict-rules": "^1.1.0",
                 "phpstan/phpstan-webmozart-assert": "^1.0.2",
-                "phpunit/phpunit": "^9.5.5",
+                "phpunit/phpunit": "^9.6",
                 "rector/rector": "^0.16.0",
-                "sidz/phpstan-rules": "^0.2.1",
-                "symfony/phpunit-bridge": "^5.4 || ^6.0",
-                "symfony/yaml": "^5.4 || ^6.0",
+                "sidz/phpstan-rules": "^0.4.0",
+                "symfony/phpunit-bridge": "^5.4 || ^6.0 || ^7.0",
+                "symfony/yaml": "^5.4 || ^6.0 || ^7.0",
                 "thecodingmachine/phpstan-safe-rule": "^1.2.0"
             },
             "bin": [
@@ -1302,7 +1302,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.27.0"
+                "source": "https://github.com/infection/infection/tree/0.27.8"
             },
             "funding": [
                 {
@@ -1314,7 +1314,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-05-16T05:28:04+00:00"
+            "time": "2023-11-08T14:29:03+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1902,16 +1902,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.46",
+            "version": "1.10.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "90d3d25c5b98b8068916bbf08ce42d5cb6c54e70"
+                "reference": "84dbb33b520ea28b6cf5676a3941f4bae1c1ff39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/90d3d25c5b98b8068916bbf08ce42d5cb6c54e70",
-                "reference": "90d3d25c5b98b8068916bbf08ce42d5cb6c54e70",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/84dbb33b520ea28b6cf5676a3941f4bae1c1ff39",
+                "reference": "84dbb33b520ea28b6cf5676a3941f4bae1c1ff39",
                 "shasum": ""
             },
             "require": {
@@ -1960,7 +1960,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-28T14:57:26+00:00"
+            "time": "2023-12-01T15:19:17+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -2337,16 +2337,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.0",
+            "version": "10.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "80cab181aebc2efac422940443e28db556137637"
+                "reference": "d5d9dca6a902d05b34c4bcbc7c1636ce1dc25408"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/80cab181aebc2efac422940443e28db556137637",
-                "reference": "80cab181aebc2efac422940443e28db556137637",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d5d9dca6a902d05b34c4bcbc7c1636ce1dc25408",
+                "reference": "d5d9dca6a902d05b34c4bcbc7c1636ce1dc25408",
                 "shasum": ""
             },
             "require": {
@@ -2418,7 +2418,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.1"
             },
             "funding": [
                 {
@@ -2434,7 +2434,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-01T06:12:50+00:00"
+            "time": "2023-12-01T16:57:05+00:00"
         },
         {
             "name": "psr/container",
@@ -2541,28 +2541,28 @@
         },
         {
             "name": "roave/infection-static-analysis-plugin",
-            "version": "1.33.0",
+            "version": "1.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "3dd4ea3d5c4b380bb426c8b943328796a5664587"
+                "reference": "7b045a2e342ef86d8fc8f2b08f364cb99677a59d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/3dd4ea3d5c4b380bb426c8b943328796a5664587",
-                "reference": "3dd4ea3d5c4b380bb426c8b943328796a5664587",
+                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/7b045a2e342ef86d8fc8f2b08f364cb99677a59d",
+                "reference": "7b045a2e342ef86d8fc8f2b08f364cb99677a59d",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
-                "infection/infection": "0.27.0",
+                "infection/infection": "0.27.8",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "sanmai/later": "^0.1.2",
+                "sanmai/later": "^0.1.4",
                 "vimeo/psalm": "^4.30.0 || ^5.15"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0.0",
-                "phpunit/phpunit": "^10.3.4"
+                "phpunit/phpunit": "^10.5.0"
             },
             "bin": [
                 "bin/roave-infection-static-analysis-plugin"
@@ -2586,9 +2586,9 @@
             "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
             "support": {
                 "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.33.0"
+                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.34.0"
             },
-            "time": "2023-09-15T10:43:53+00:00"
+            "time": "2023-12-01T11:52:19+00:00"
         },
         {
             "name": "sanmai/later",
@@ -3821,16 +3821,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v6.4.0",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "cd9864b47c367450e14ab32f78fdbf98c44c26b6"
+                "reference": "a550a7c99daeedef3f9d23fb82e3531525ff11fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/cd9864b47c367450e14ab32f78fdbf98c44c26b6",
-                "reference": "cd9864b47c367450e14ab32f78fdbf98c44c26b6",
+                "url": "https://api.github.com/repos/symfony/console/zipball/a550a7c99daeedef3f9d23fb82e3531525ff11fd",
+                "reference": "a550a7c99daeedef3f9d23fb82e3531525ff11fd",
                 "shasum": ""
             },
             "require": {
@@ -3895,7 +3895,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v6.4.0"
+                "source": "https://github.com/symfony/console/tree/v6.4.1"
             },
             "funding": [
                 {
@@ -3911,7 +3911,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-20T16:41:16+00:00"
+            "time": "2023-11-30T10:54:28+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -4045,23 +4045,23 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v6.3.5",
+            "version": "v6.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "a1b31d88c0e998168ca7792f222cbecee47428c4"
+                "reference": "11d736e97f116ac375a81f96e662911a34cd50ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/a1b31d88c0e998168ca7792f222cbecee47428c4",
-                "reference": "a1b31d88c0e998168ca7792f222cbecee47428c4",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/11d736e97f116ac375a81f96e662911a34cd50ce",
+                "reference": "11d736e97f116ac375a81f96e662911a34cd50ce",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
             "require-dev": {
-                "symfony/filesystem": "^6.0"
+                "symfony/filesystem": "^6.0|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -4089,7 +4089,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v6.3.5"
+                "source": "https://github.com/symfony/finder/tree/v6.4.0"
             },
             "funding": [
                 {
@@ -4105,7 +4105,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-26T12:56:25+00:00"
+            "time": "2023-10-31T17:30:12+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4439,16 +4439,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v6.3.4",
+            "version": "v6.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54"
+                "reference": "191703b1566d97a5425dc969e4350d32b8ef17aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/0b5c29118f2e980d455d2e34a5659f4579847c54",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54",
+                "url": "https://api.github.com/repos/symfony/process/zipball/191703b1566d97a5425dc969e4350d32b8ef17aa",
+                "reference": "191703b1566d97a5425dc969e4350d32b8ef17aa",
                 "shasum": ""
             },
             "require": {
@@ -4480,7 +4480,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v6.3.4"
+                "source": "https://github.com/symfony/process/tree/v6.4.0"
             },
             "funding": [
                 {
@@ -4496,7 +4496,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-07T10:39:22+00:00"
+            "time": "2023-11-17T21:06:49+00:00"
         },
         {
             "name": "symfony/service-contracts",
