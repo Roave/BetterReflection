@@ -15,6 +15,7 @@ use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use ReflectionClass as CoreReflectionClass;
@@ -1615,6 +1616,31 @@ PHP;
 
         self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d')->getDeclaringClass()->getName());
         self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
+    }
+
+    #[RequiresPhp('8.3')]
+    public function testMethodsFromTraitsWithFinal(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixtureWithFinal.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass('TraitFixtureWithFinal');
+
+        self::assertTrue($classInfo->hasMethod('foo'));
+        self::assertTrue($classInfo->getMethod('foo')->isFinal());
+        self::assertFalse($classInfo->getMethod('foo')->isPrivate());
+        self::assertTrue($classInfo->getMethod('foo')->isProtected());
+        self::assertFalse($classInfo->getMethod('foo')->isPublic());
+
+        $classInfo = $reflector->reflectClass('TraitFixtureWithPublic');
+
+        self::assertTrue($classInfo->hasMethod('boo'));
+        self::assertTrue($classInfo->getMethod('boo')->isFinal());
+        self::assertFalse($classInfo->getMethod('boo')->isPrivate());
+        self::assertFalse($classInfo->getMethod('boo')->isProtected());
+        self::assertTrue($classInfo->getMethod('boo')->isPublic());
     }
 
     public function testMethodsFromTraitsWithConflicts(): void
