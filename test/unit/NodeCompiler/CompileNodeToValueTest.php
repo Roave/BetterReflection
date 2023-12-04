@@ -34,6 +34,7 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassWithNewInInitializers;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsClass;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
+use Throwable;
 
 use function assert;
 use function define;
@@ -760,8 +761,13 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        $this->expectException(UnableToCompileNode::class);
-        $classInfo->getConstant('ONE_VALUE')->getValue();
+        try {
+            $classInfo->getConstant('ONE_VALUE')->getValue();
+        } catch (Throwable $e) {
+            self::assertInstanceOf(UnableToCompileNode::class, $e);
+            self::assertStringContainsString('An enum expression Foo::ONE is not supported in class Bat in file ', $e->getMessage());
+        }
+
     }
 
     /** @return list<array{0: string, 1: mixed}> */
