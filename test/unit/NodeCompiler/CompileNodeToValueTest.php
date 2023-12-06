@@ -34,7 +34,6 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\ClassWithNewInInitializers;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsClass;
 use Roave\BetterReflectionTest\Fixture\MagicConstantsTrait;
-use Throwable;
 
 use function assert;
 use function define;
