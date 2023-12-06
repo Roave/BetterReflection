@@ -761,13 +761,8 @@ PHP;
         ]));
         $classInfo = $reflector->reflectClass('Bat');
 
-        try {
-            $classInfo->getConstant('ONE_VALUE')->getValue();
-        } catch (Throwable $e) {
-            self::assertInstanceOf(UnableToCompileNode::class, $e);
-            self::assertStringContainsString('An enum expression Foo::ONE is not supported in class Bat in file ', $e->getMessage());
-        }
-
+        $this->expectExceptionMessage('An enum expression Foo::ONE is not supported in class Bat in file ');
+        $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
     /** @return list<array{0: string, 1: mixed}> */
