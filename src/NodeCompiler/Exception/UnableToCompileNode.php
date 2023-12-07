@@ -112,6 +112,23 @@ class UnableToCompileNode extends LogicException
         ));
     }
 
+    public static function becauseOfValueIsEnum(
+        CompilerContext $fetchContext,
+        ReflectionClass $targetClass,
+        Node\Expr\ClassConstFetch $constantFetch,
+    ): self {
+        assert($constantFetch->name instanceof Node\Identifier);
+
+        return new self(sprintf(
+            'An enum expression %s::%s is not supported in %s in file %s (line %d)',
+            $targetClass->getName(),
+            $constantFetch->name->name,
+            self::compilerContextToContextDescription($fetchContext),
+            self::getFileName($fetchContext),
+            $constantFetch->getLine(),
+        ));
+    }
+
     private static function getFileName(CompilerContext $fetchContext): string
     {
         $fileName = $fetchContext->getFileName();
