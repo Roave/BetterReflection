@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89b8973b33968735191a2c9927e212bc",
+    "content-hash": "89099df89588f8201fcf47efbb73f536",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1902,16 +1902,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.48",
+            "version": "1.10.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6"
+                "reference": "9367ba4c4f6ad53e9efb594d74a8941563caccf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6",
-                "reference": "087ed4b5f4a7a6e8f3bbdfbfe98ce5c181380bc6",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9367ba4c4f6ad53e9efb594d74a8941563caccf6",
+                "reference": "9367ba4c4f6ad53e9efb594d74a8941563caccf6",
                 "shasum": ""
             },
             "require": {
@@ -1960,7 +1960,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-08T14:34:28+00:00"
+            "time": "2023-12-12T10:05:12+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
