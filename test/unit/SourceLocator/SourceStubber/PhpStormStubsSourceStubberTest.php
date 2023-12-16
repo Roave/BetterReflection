@@ -108,12 +108,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             array_filter(
                 $classNames,
                 static function (string $className): bool {
-                    // Missing in JetBrains/phpstorm-stubs
-                    // @phpstan-ignore-next-line
-                    if ($className === 'Override') {
-                        return false;
-                    }
-
                     $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
@@ -271,17 +265,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             array_filter(
                 $functionNames,
                 static function (string $functionName): bool {
-                    if (
-                        in_array($functionName, [
-                        // Missing in JetBrains/phpstorm-stubs
-                            'str_decrement',
-                            'str_increment',
-                            'stream_context_set_options',
-                        ], true)
-                    ) {
-                        return false;
-                    }
-
                     $reflection = new CoreReflectionFunction($functionName);
 
                     // Check only always enabled extensions
