@@ -779,16 +779,16 @@
         },
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2023.2",
+            "version": "v2023.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "3bb9c8a1050ad324c2dca7964487fa9f081f1005"
+                "reference": "99d8bcab934ae5362f33660b1cd4b8c4d617c40b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/3bb9c8a1050ad324c2dca7964487fa9f081f1005",
-                "reference": "3bb9c8a1050ad324c2dca7964487fa9f081f1005",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/99d8bcab934ae5362f33660b1cd4b8c4d617c40b",
+                "reference": "99d8bcab934ae5362f33660b1cd4b8c4d617c40b",
                 "shasum": ""
             },
             "require-dev": {
@@ -821,9 +821,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2023.2"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2023.3"
             },
-            "time": "2023-07-14T12:50:15+00:00"
+            "time": "2023-11-01T18:52:29+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -1393,22 +1393,22 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.19.0",
+            "version": "6.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "92e9cbd9ccfea0924135a29f4be3959cd59cf54c"
+                "reference": "a1fcefb03ced1e8f3a5be4d92e23bb9e95f51bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/92e9cbd9ccfea0924135a29f4be3959cd59cf54c",
-                "reference": "92e9cbd9ccfea0924135a29f4be3959cd59cf54c",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/a1fcefb03ced1e8f3a5be4d92e23bb9e95f51bca",
+                "reference": "a1fcefb03ced1e8f3a5be4d92e23bb9e95f51bca",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "jetbrains/phpstorm-stubs": "2023.2",
-                "nikic/php-parser": "^4.17.1",
+                "jetbrains/phpstorm-stubs": "2023.3",
+                "nikic/php-parser": "^4.18.0",
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
                 "roave/signature": "^1.8.0"
             },
@@ -1417,9 +1417,9 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0.0",
-                "phpstan/phpstan": "^1.10.47",
+                "phpstan/phpstan": "^1.10.50",
                 "phpstan/phpstan-phpunit": "^1.3.15",
-                "phpunit/phpunit": "^10.5.2",
+                "phpunit/phpunit": "^10.5.3",
                 "roave/infection-static-analysis-plugin": "^1.34.0",
                 "vimeo/psalm": "5.17.0"
             },
@@ -1461,9 +1461,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.19.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.20.0"
             },
-            "time": "2023-12-07T10:58:42+00:00"
+            "time": "2023-12-16T12:01:31+00:00"
         },
         {
             "name": "roave/signature",
