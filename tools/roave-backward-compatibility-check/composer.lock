@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3cfb72305f34513696f4f3c6c7a5e3f",
+    "content-hash": "2c6f1bd78c1526b8789c30052c860837",
     "packages": [
         {
             "name": "azjezz/psl",
@@ -1324,22 +1324,21 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.4.0",
+            "version": "8.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978"
+                "reference": "5e533114a996f73a7551846c06c59a80185f4d16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978",
-                "reference": "9b45bc3431f3dc651a8f2d6e199ca0d1e60a9978",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/5e533114a996f73a7551846c06c59a80185f4d16",
+                "reference": "5e533114a996f73a7551846c06c59a80185f4d16",
                 "shasum": ""
             },
             "require": {
                 "azjezz/psl": "^2.3.1",
-                "composer/composer": "^2.5.1",
-                "ext-json": "*",
+                "composer/composer": "^2.6.4",
                 "nikic/php-parser": "^4.15.3",
                 "nikolaposa/version": "^4.1.0",
                 "ocramius/package-versions": "^2.7.0",
@@ -1387,9 +1386,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.4.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.6.0"
             },
-            "time": "2023-11-25T16:28:35+00:00"
+            "time": "2023-12-20T14:01:33+00:00"
         },
         {
             "name": "roave/better-reflection",
