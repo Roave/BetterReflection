@@ -764,6 +764,28 @@ PHP;
         $classInfo->getConstant('ONE_VALUE')->getValue();
     }
 
+    public function testEnumConstantValueDoesNotThrowException(): void
+    {
+        $phpCode = <<<'PHP'
+        <?php
+
+        enum Foo: int {
+            const ONE = 1;
+        }
+        class Bat {
+            const ONE_VALUE = Foo::ONE;
+        }
+        PHP;
+
+        $reflector = new DefaultReflector(new AggregateSourceLocator([
+            new StringSourceLocator($phpCode, $this->astLocator),
+            new PhpInternalSourceLocator($this->astLocator, $this->sourceStubber),
+        ]));
+        $classInfo = $reflector->reflectClass('Bat');
+
+        self::assertSame(1, $classInfo->getConstant('ONE_VALUE')->getValue());
+    }
+
     /** @return list<array{0: string, 1: mixed}> */
     public static function magicConstantsWithoutNamespaceProvider(): array
     {
