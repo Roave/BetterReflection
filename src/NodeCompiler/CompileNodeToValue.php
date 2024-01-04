@@ -245,7 +245,9 @@ class CompileNodeToValue
         $classReflection = $classContext !== null && $classContext->getName() === $className ? $classContext : $context->getReflector()->reflectClass($className);
 
         if ($classReflection instanceof ReflectionEnum) {
-            throw Exception\UnableToCompileNode::becauseOfValueIsEnum($context, $classReflection, $node);
+            if ($classReflection->hasCase($constantName)) {
+                throw Exception\UnableToCompileNode::becauseOfValueIsEnum($context, $classReflection, $node);
+            }
         }
 
         $reflectionConstant = $classReflection->getConstant($constantName);
