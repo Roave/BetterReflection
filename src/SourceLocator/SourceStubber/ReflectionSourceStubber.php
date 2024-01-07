@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
+use BackedEnum;
 use LogicException;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\ClassConst;
@@ -39,6 +40,7 @@ use ReflectionType as CoreReflectionType;
 use ReflectionUnionType as CoreReflectionUnionType;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
 use Roave\BetterReflection\Util\ClassExistenceChecker;
+use UnitEnum;
 
 use function array_diff;
 use function array_key_exists;
@@ -285,6 +287,10 @@ final class ReflectionSourceStubber implements SourceStubber
         }
 
         foreach ($interfaces as $interfaceName) {
+            if ($classReflection->isEnum() && in_array($interfaceName, [BackedEnum::class, UnitEnum::class], true)) {
+                continue;
+            }
+
             $interfaceNode = new FullyQualified($interfaceName);
 
             if ($classNode instanceof Interface_) {
@@ -479,15 +485,27 @@ final class ReflectionSourceStubber implements SourceStubber
             return false;
         }
 
+        $methodName = $methodReflection->getName();
+
         /** @var array<string, string> $traitAliases */
         $traitAliases = $classReflection->getTraitAliases();
 
-        if (array_key_exists($methodReflection->getName(), $traitAliases)) {
+        if (array_key_exists($methodName, $traitAliases)) {
             return false;
         }
 
         foreach ($classReflection->getTraits() as $trait) {
-            if ($trait->hasMethod($methodReflection->getName())) {
+            if ($trait->hasMethod($methodName)) {
+                return false;
+            }
+        }
+
+        if ($classReflection instanceof CoreReflectionEnum) {
+            if ($methodName === 'cases') {
+                return false;
+            }
+
+            if ($classReflection->isBacked() && in_array($methodName, ['from', 'tryFrom'], true)) {
                 return false;
             }
         }
