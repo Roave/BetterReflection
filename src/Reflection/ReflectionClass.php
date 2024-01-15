@@ -544,7 +544,7 @@ class ReflectionClass implements Reflection
                 continue;
             }
 
-			$method = ReflectionMethod::createFromNode($reflector, $methodNode, $this->locatedSource, $this->getNamespaceName(), $this, $this, $this);
+            $method                                 = ReflectionMethod::createFromNode($reflector, $methodNode, $this->locatedSource, $this->getNamespaceName(), $this, $this, $this);
             $methods[$methodNode->name->toString()] = $method;
         }
 
