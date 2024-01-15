@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use BackedEnum;
+use LogicException;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -540,12 +541,17 @@ class ReflectionClass implements Reflection
         $methods = [];
 
         foreach ($node->getMethods() as $methodNode) {
-            if (array_key_exists($methodNode->name->toString(), $methods)) {
+            $methodName = $methodNode->name->toString();
+            if ($methodName === '') {
+                throw new LogicException('Method name cannot be empty');
+            }
+
+            if (array_key_exists($methodName, $methods)) {
                 continue;
             }
 
-            $method                                 = ReflectionMethod::createFromNode($reflector, $methodNode, $this->locatedSource, $this->getNamespaceName(), $this, $this, $this);
-            $methods[$methodNode->name->toString()] = $method;
+            $method               = ReflectionMethod::createFromNode($reflector, $methodNode, $this->locatedSource, $this->getNamespaceName(), $this, $this, $this);
+            $methods[$methodName] = $method;
         }
 
         if ($node instanceof EnumNode) {
