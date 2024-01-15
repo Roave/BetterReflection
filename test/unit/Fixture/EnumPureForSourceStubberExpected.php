@@ -5,7 +5,7 @@ namespace Roave\BetterReflectionTest\Fixture;
 /**
  * Class comment
  */
-enum EnumPureForSourceStubber implements \Roave\BetterReflectionTest\Fixture\ImplementedInterfaceForEnumSourceStubber, \UnitEnum
+enum EnumPureForSourceStubber implements \Roave\BetterReflectionTest\Fixture\ImplementedInterfaceForEnumSourceStubber
 {
     use \Roave\BetterReflectionTest\Fixture\UsedTraitForEnumSourceStubber;
     use \Roave\BetterReflectionTest\Fixture\UsedTraitToAliasForEnumSourceStubber {
@@ -20,9 +20,6 @@ enum EnumPureForSourceStubber implements \Roave\BetterReflectionTest\Fixture\Imp
      * Method comment
      */
     public function methodFromInterface()
-    {
-    }
-    public static function cases() : array
     {
     }
 }
