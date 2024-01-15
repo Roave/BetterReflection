@@ -540,17 +540,12 @@ class ReflectionClass implements Reflection
         $methods = [];
 
         foreach ($node->getMethods() as $methodNode) {
-            $method = ReflectionMethod::createFromNode(
-                $reflector,
-                $methodNode,
-                $this->locatedSource,
-                $this->getNamespaceName(),
-                $this,
-                $this,
-                $this,
-            );
+            if (array_key_exists($methodNode->name->toString(), $methods)) {
+                continue;
+            }
 
-            $methods[$method->getName()] = $method;
+			$method = ReflectionMethod::createFromNode($reflector, $methodNode, $this->locatedSource, $this->getNamespaceName(), $this, $this, $this);
+            $methods[$methodNode->name->toString()] = $method;
         }
 
         if ($node instanceof EnumNode) {
