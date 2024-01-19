@@ -1410,7 +1410,7 @@ class ReflectionClass implements Reflection
                 $methodHash = $this->methodHash($usedTrait->toString(), $adaptation->method->toString());
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias) {
-                    if ($adaptation->newModifier) {
+                    if ($adaptation->newModifier !== null) {
                         /** @var int-mask-of<ReflectionMethodAdapter::IS_*> $modifier */
                         $modifier                             = $adaptation->newModifier;
                         $traitsData['modifiers'][$methodHash] = $modifier;

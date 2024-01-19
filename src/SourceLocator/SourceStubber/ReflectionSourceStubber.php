@@ -52,6 +52,7 @@ use function get_defined_constants;
 use function implode;
 use function in_array;
 use function is_resource;
+use function is_string;
 use function method_exists;
 use function preg_replace;
 use function sprintf;
@@ -120,7 +121,8 @@ final class ReflectionSourceStubber implements SourceStubber
             ? $this->generateStubInNamespace($node, $classReflection->getNamespaceName())
             : $this->generateStub($node);
 
-        $extensionName = $classReflection->getExtensionName() ?: null;
+        $extensionName = $classReflection->getExtension()?->getName();
+        assert((is_string($extensionName) && $extensionName !== '') || $extensionName === null);
 
         return $this->createStubData($stub, $extensionName);
     }
@@ -147,7 +149,10 @@ final class ReflectionSourceStubber implements SourceStubber
             $functionNode->setReturnType($this->formatType($returnType));
         }
 
-        $extensionName = $functionReflection->getExtensionName() ?: null;
+        /** @phpstan-ignore-next-line */
+        $extensionName = $functionReflection->getExtension()?->getName();
+        /** @phpstan-ignore-next-line */
+        assert((is_string($extensionName) && $extensionName !== '') || $extensionName === null);
 
         if (! $functionReflection->inNamespace()) {
             return $this->createStubData($this->generateStub($functionNode->getNode()), $extensionName);
@@ -214,7 +219,7 @@ final class ReflectionSourceStubber implements SourceStubber
         Class_|Interface_|Trait_|Enum_|Method|Property|Function_ $node,
         CoreReflectionClass|CoreReflectionMethod|CoreReflectionProperty|CoreReflectionFunction $reflection,
     ): void {
-        $docComment  = $reflection->getDocComment() ?: '';
+        $docComment  = $reflection->getDocComment() !== false ? $reflection->getDocComment() : '';
         $annotations = [];
 
         if (

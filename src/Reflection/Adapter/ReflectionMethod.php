@@ -37,6 +37,7 @@ final class ReflectionMethod extends CoreReflectionMethod
         unset($this->class);
     }
 
+    /** @psalm-suppress MethodSignatureMismatch */
     public static function createFromMethodName(string $method): static
     {
         if (! str_contains($method, '::')) {

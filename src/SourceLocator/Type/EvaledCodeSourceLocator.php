@@ -62,7 +62,7 @@ final class EvaledCodeSourceLocator extends AbstractSourceLocator
         $reflection = new ReflectionClass($name);
         $sourceFile = $reflection->getFileName();
 
-        return $sourceFile && is_file($sourceFile)
+        return $sourceFile !== false && is_file($sourceFile)
             ? null : $reflection;
     }
 }
