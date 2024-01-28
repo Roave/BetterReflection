@@ -14,5 +14,8 @@
         "@default": true
     },
     "minMsi": 99,
-    "minCoveredMsi": 99
+    "minCoveredMsi": 99,
+    "phpUnit": {
+        "customPath": "tools/vendor/bin/phpunit"
+    }
 }
