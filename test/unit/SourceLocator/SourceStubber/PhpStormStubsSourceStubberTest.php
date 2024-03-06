@@ -465,6 +465,33 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertSame('Core', $stubData->getExtensionName());
     }
 
+    public function testStubForConstantThatIsDeprecated(): void
+    {
+        $stubData = $this->sourceStubber->generateConstantStub('FILTER_SANITIZE_STRING');
+
+        self::assertInstanceOf(StubData::class, $stubData);
+
+        self::assertStringMatchesFormat(
+            "%Adefine('FILTER_SANITIZE_STRING',%w%d);",
+            $stubData->getStub(),
+        );
+
+        // the constant is deprecated as of PHP 8.1
+        if (PHP_VERSION_ID >= 80100) {
+            self::assertStringContainsString(
+                '@deprecated 8.1',
+                $stubData->getStub(),
+            );
+        } else {
+            self::assertStringNotContainsString(
+                '@deprecated 8.1',
+                $stubData->getStub(),
+            );
+        }
+
+        self::assertSame('filter', $stubData->getExtensionName());
+    }
+
     public function testNoStubForConstantThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
