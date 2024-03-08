@@ -673,7 +673,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return false;
         }
 
-        if (preg_match('#@deprecated (\d+)\.(\d+)(?:\.(\d+)?)$#m', $docComment->getText(), $matches) === 1) {
+        if (preg_match('#@deprecated\s+(\d+)\.(\d+)(?:\.(\d+)?)$#m', $docComment->getText(), $matches) === 1) {
             $major     = $matches[1];
             $minor     = $matches[2];
             $patch     = $matches[3] ?? 0;
