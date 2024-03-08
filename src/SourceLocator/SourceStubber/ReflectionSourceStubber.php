@@ -149,9 +149,7 @@ final class ReflectionSourceStubber implements SourceStubber
             $functionNode->setReturnType($this->formatType($returnType));
         }
 
-        /** @phpstan-ignore-next-line */
         $extensionName = $functionReflection->getExtension()?->getName();
-        /** @phpstan-ignore-next-line */
         assert((is_string($extensionName) && $extensionName !== '') || $extensionName === null);
 
         if (! $functionReflection->inNamespace()) {
