@@ -137,7 +137,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@2.29.0"
         with:
-          coverage: "xdebug"
+          coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: memory_limit=-1, zend.assertions=1
 
