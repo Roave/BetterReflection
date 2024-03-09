@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Reflection\Adapter;
 
+use Attribute;
 use ReflectionAttribute as CoreReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 
@@ -20,7 +21,12 @@ final class ReflectionAttribute extends CoreReflectionAttribute
         return $this->betterReflectionAttribute->getName();
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return int-mask-of<Attribute::TARGET_*>
+     *
+     * @psalm-mutation-free
+     * @psalm-suppress ImplementedReturnTypeMismatch
+     */
     public function getTarget(): int
     {
         return $this->betterReflectionAttribute->getTarget();
