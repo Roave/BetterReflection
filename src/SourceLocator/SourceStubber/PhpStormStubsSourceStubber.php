@@ -673,11 +673,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return false;
         }
 
-        if (preg_match('#@deprecated\s+(\d+)\.(\d+)(?:\.(\d+)?)$#m', $docComment->getText(), $matches) === 1) {
-            $major     = $matches[1];
-            $minor     = $matches[2];
-            $patch     = $matches[3] ?? 0;
-            $versionId = sprintf('%d%02d%02d', $major, $minor, $patch);
+        if (preg_match('#@deprecated\s+(\d+\.\d+)(?:\.(\d+)?)$#m', $docComment->getText(), $matches) === 1) {
+            $majorAndMinor = $matches[1];
+            $patch         = $matches[2] ?? 0;
+            $versionId     = $this->parsePhpVersion($majorAndMinor, $patch);
 
             if ($this->phpVersion >= $versionId) {
                 return true;
