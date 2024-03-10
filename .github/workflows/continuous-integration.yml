@@ -38,6 +38,7 @@ jobs:
         with:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -45,8 +46,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
+
       - name: "Tests"
-        run: "vendor/bin/phpunit"
+        run: "tools/vendor/bin/phpunit"
 
   static-analysis-phpstan:
     name: "Static Analysis by PHPStan"
@@ -73,6 +81,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -80,8 +89,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
+
       - name: "PHPStan"
-        run: "vendor/bin/phpstan analyse --memory-limit=-1"
+        run: "tools/vendor/bin/phpstan analyse --memory-limit=-1"
 
   static-analysis-psalm:
     name: "Static Analysis by Psalm"
@@ -106,6 +122,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -113,8 +130,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
+
       - name: "psalm"
-        run: "vendor/bin/psalm --shepherd --stats"
+        run: "tools/vendor/bin/psalm --shepherd --stats"
 
   mutation-tests:
     name: "Mutation tests"
@@ -139,6 +163,7 @@ jobs:
         with:
           coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1, zend.assertions=1
 
       - name: "Install dependencies"
@@ -146,8 +171,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
+
       - name: "Infection"
-        run: "vendor/bin/roave-infection-static-analysis-plugin --threads=$(nproc)"
+        run: "tools/vendor/bin/roave-infection-static-analysis-plugin --threads=$(nproc)"
         env:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
@@ -176,6 +208,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -183,8 +216,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
+
       - name: "Test Compatibility"
-        run: "vendor/bin/phpunit test/compat"
+        run: "tools/vendor/bin/phpunit test/compat"
 
   demo-scripts:
     name: "Check Demo Scripts"
@@ -209,6 +249,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -243,6 +284,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
@@ -250,11 +292,15 @@ jobs:
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
-      - name: "Install PhpBench"
-        run: "composer require --with-all-dependencies --dev --prefer-stable --no-interaction --no-progress phpbench/phpbench:^1.1.1"
+      - name: "Install CI dependencies"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
 
       - name: "PhpBench"
-        run: "vendor/bin/phpbench run --progress=dots --iterations=1"
+        run: "tools/vendor/bin/phpbench run --progress=dots --iterations=1"
 
   coding-standards:
     name: "Check Coding Standards"
@@ -279,15 +325,18 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
 
       - name: "Coding Standard"
-        run: "vendor/bin/phpcs"
+        run: "tools/vendor/bin/phpcs"
 
   backward-compatibility:
     name: "Check Backward Compatibility"
@@ -315,13 +364,15 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          extensions: intl, sodium
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
-          working-directory: "tools/roave-backward-compatibility-check"
+          working-directory: "tools"
+          custom-cache-suffix: "ci"
 
       - name: "BC Checks"
-        run: tools/roave-backward-compatibility-check/vendor/bin/roave-backward-compatibility-check --from=origin/${{ github.base_ref }}
+        run: tools/vendor/bin/roave-backward-compatibility-check --from=origin/${{ github.base_ref }}

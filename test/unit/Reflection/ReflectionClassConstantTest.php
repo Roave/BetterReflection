@@ -43,7 +43,7 @@ class ReflectionClassConstantTest extends TestCase
     private function getComposerLocator(): ComposerSourceLocator
     {
         return new ComposerSourceLocator(
-            require __DIR__ . '/../../../vendor/autoload.php',
+            require __DIR__ . '/../../../tools/vendor/autoload.php',
             $this->astLocator,
         );
     }
