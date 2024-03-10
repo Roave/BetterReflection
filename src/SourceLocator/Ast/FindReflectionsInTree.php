@@ -87,7 +87,6 @@ final class FindReflectionsInTree
                 ) {
                     $classNamespace = $node->name === null ? null : $this->currentNamespace;
 
-                    /** @psalm-suppress InternalMethod */
                     $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $classNamespace);
 
                     return null;
@@ -96,7 +95,6 @@ final class FindReflectionsInTree
                 if ($this->identifierType->isConstant()) {
                     if ($node instanceof Node\Stmt\Const_) {
                         for ($i = 0; $i < count($node->consts); $i++) {
-                            /** @psalm-suppress InternalMethod */
                             $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace, $i);
                         }
 
@@ -105,7 +103,6 @@ final class FindReflectionsInTree
 
                     if ($node instanceof Node\Expr\FuncCall) {
                         try {
-                            /** @psalm-suppress InternalClass, InternalMethod */
                             ConstantNodeChecker::assertValidDefineFunctionCall($node);
                         } catch (InvalidConstantNode) {
                             return null;
@@ -124,7 +121,6 @@ final class FindReflectionsInTree
                             }
                         }
 
-                        /** @psalm-suppress InternalMethod */
                         $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
 
                         return null;
@@ -132,7 +128,6 @@ final class FindReflectionsInTree
                 }
 
                 if ($this->identifierType->isFunction() && $node instanceof Node\Stmt\Function_) {
-                    /** @psalm-suppress InternalMethod */
                     $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                 }
 

@@ -307,7 +307,6 @@ class AutoloadSourceLocator extends AbstractSourceLocator
 
                 if ($node instanceof Node\Expr\FuncCall) {
                     try {
-                        /** @psalm-suppress InternalClass, InternalMethod */
                         ConstantNodeChecker::assertValidDefineFunctionCall($node);
                     } catch (InvalidConstantNode) {
                         return null;
