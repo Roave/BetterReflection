@@ -53,7 +53,7 @@ jobs:
           custom-cache-suffix: "ci"
 
       - name: "Tests"
-        run: "tools/vendor/bin/phpunit"
+        run: "vendor/bin/phpunit"
 
   static-analysis-phpstan:
     name: "Static Analysis by PHPStan"
@@ -222,7 +222,7 @@ jobs:
           custom-cache-suffix: "ci"
 
       - name: "Test Compatibility"
-        run: "tools/vendor/bin/phpunit test/compat"
+        run: "vendor/bin/phpunit test/compat"
 
   demo-scripts:
     name: "Check Demo Scripts"

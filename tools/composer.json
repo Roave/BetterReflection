@@ -1,12 +1,9 @@
 {
     "require": {
         "doctrine/coding-standard": "^12.0.0",
-        "jetbrains/phpstorm-stubs": "2023.3",
-        "nikic/php-parser": "^4.18.0",
         "phpbench/phpbench": "^1.2.15",
         "phpstan/phpstan": "^1.10.60",
         "phpstan/phpstan-phpunit": "^1.3.16",
-        "phpunit/phpunit": "^10.5.12",
         "vimeo/psalm": "^5.23.0",
         "roave/backward-compatibility-check": "^8.6.0",
         "roave/infection-static-analysis-plugin": "^1.35.0"
@@ -23,7 +20,6 @@
     "autoload": {
         "psr-4": {
             "Roave\\BetterReflection\\": "../src",
-            "Roave\\BetterReflectionTest\\": "../test/unit",
             "Roave\\BetterReflectionBenchmark\\": "../test/benchmark"
         }
     }

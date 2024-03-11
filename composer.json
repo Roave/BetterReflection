@@ -32,9 +32,17 @@
         }
 
     ],
+    "require-dev": {
+        "phpunit/phpunit": "^10.5.12"
+    },
     "autoload": {
         "psr-4": {
             "Roave\\BetterReflection\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Roave\\BetterReflectionTest\\": "test/unit"
         }
     },
     "conflict": {
@@ -44,5 +52,10 @@
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
     "minimum-stability": "dev",
+    "config": {
+        "platform": {
+            "php": "8.2.99"
+        }
+    },
     "prefer-stable": true
 }
