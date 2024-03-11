@@ -46,7 +46,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -88,7 +88,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -129,7 +129,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -170,7 +170,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -215,7 +215,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -291,7 +291,7 @@ jobs:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@2.3.1"
+        uses: "ramsey/composer-install@3.0.0"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
