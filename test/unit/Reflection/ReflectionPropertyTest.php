@@ -8,12 +8,13 @@ use ClassWithPropertiesAndTraitProperties;
 use Error;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use OutOfBoundsException;
+use PhpParser\Modifiers;
 use PhpParser\Node;
-use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\PropertyItem;
 use PhpParser\Node\Stmt\Property;
-use PhpParser\Node\Stmt\PropertyProperty;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
@@ -94,10 +95,10 @@ class ReflectionPropertyTest extends TestCase
     public function testCreateFromNodeWithNotPromotedProperty(): void
     {
         $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
-        $propertyPropertyNode = new PropertyProperty('foo');
+        $propertyPropertyNode = new PropertyItem('foo');
         $property             = ReflectionProperty::createFromNode(
             $this->reflector,
-            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            new Property(Modifiers::PUBLIC, [$propertyPropertyNode]),
             $propertyPropertyNode,
             $classInfo,
             $classInfo,
@@ -109,10 +110,10 @@ class ReflectionPropertyTest extends TestCase
     public function testCreateFromNodeWithPromotedProperty(): void
     {
         $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
-        $propertyPropertyNode = new PropertyProperty('foo');
+        $propertyPropertyNode = new PropertyItem('foo');
         $property             = ReflectionProperty::createFromNode(
             $this->reflector,
-            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            new Property(Modifiers::PUBLIC, [$propertyPropertyNode]),
             $propertyPropertyNode,
             $classInfo,
             $classInfo,
@@ -272,10 +273,10 @@ class ReflectionPropertyTest extends TestCase
     public function testIsDefaultWithRuntimeDeclaredProperty(): void
     {
         $classInfo            = $this->reflector->reflectClass(ExampleClass::class);
-        $propertyPropertyNode = new PropertyProperty('foo');
+        $propertyPropertyNode = new PropertyItem('foo');
         $propertyNode         = ReflectionProperty::createFromNode(
             $this->reflector,
-            new Property(Class_::MODIFIER_PUBLIC, [$propertyPropertyNode]),
+            new Property(Modifiers::PUBLIC, [$propertyPropertyNode]),
             $propertyPropertyNode,
             $classInfo,
             $classInfo,
@@ -456,7 +457,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame($propertyReflection->getDeclaringClass(), $propertyReflection->getImplementingClass());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testSetAndGetValueOfStaticProperty(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';
@@ -485,7 +486,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertSame('value', $propertyReflection->getValue());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testSetValueOfStaticPropertyWithValueAsSecondParameter(): void
     {
         $staticPropertyGetSetFixture = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';

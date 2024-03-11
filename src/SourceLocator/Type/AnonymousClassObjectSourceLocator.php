@@ -97,7 +97,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
              */
             public function enterNode(Node $node)
             {
-                if (! ($node instanceof Node\Stmt\Class_) || $node->name !== null || $node->getLine() !== $this->startLine) {
+                if (! ($node instanceof Node\Stmt\Class_) || $node->name !== null || $node->getStartLine() !== $this->startLine) {
                     return null;
                 }
 
@@ -124,9 +124,7 @@ final class AnonymousClassObjectSourceLocator implements SourceLocator
         /** @var list<Node\Stmt> $ast */
         $ast = $this->parser->parse($fileContents);
 
-        $nodeTraverser = new NodeTraverser();
-        $nodeTraverser->addVisitor(new NameResolver());
-        $nodeTraverser->addVisitor($nodeVisitor);
+        $nodeTraverser = new NodeTraverser(new NameResolver(), $nodeVisitor);
         $nodeTraverser->traverse($ast);
 
         $reflectionClass = (new NodeToReflection())->__invoke(

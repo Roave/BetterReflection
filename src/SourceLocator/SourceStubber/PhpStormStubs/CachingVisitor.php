@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs;
 
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
-use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
@@ -67,7 +67,7 @@ class CachingVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\Stmt\ClassMethod) {
-            return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
+            return NodeVisitor::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
         }
 
         if ($node instanceof Node\Stmt\Function_) {
@@ -76,7 +76,7 @@ class CachingVisitor extends NodeVisitorAbstract
             $functionName                         = $functionNamespacedName->toString();
             $this->functionNodes[$functionName][] = [$node, $this->currentNamespace];
 
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+            return NodeVisitor::DONT_TRAVERSE_CHILDREN;
         }
 
         if ($node instanceof Node\Stmt\Const_) {
@@ -90,11 +90,13 @@ class CachingVisitor extends NodeVisitorAbstract
                 $this->constantNodes[$constNodeName] = [$node, $this->currentNamespace];
             }
 
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+            return NodeVisitor::DONT_TRAVERSE_CHILDREN;
         }
 
-        if ($node instanceof Node\Expr\FuncCall) {
-            $argumentNameNode = $node->args[0];
+        if ($node instanceof Node\Stmt\Expression && $node->expr instanceof Node\Expr\FuncCall) {
+            $functionCall = $node->expr;
+
+            $argumentNameNode = $functionCall->args[0];
             assert($argumentNameNode instanceof Node\Arg);
             $nameNode = $argumentNameNode->value;
             assert($nameNode instanceof Node\Scalar\String_);
@@ -105,17 +107,17 @@ class CachingVisitor extends NodeVisitorAbstract
             // The later definition can pass validation in `ConstantNodeChecker` and has support in `CompileNodeToValue`
             if (
                 in_array($constantName, ['STDIN', 'STDOUT', 'STDERR'], true)
-                && array_key_exists(1, $node->args)
-                && $node->args[1] instanceof Node\Arg
+                && array_key_exists(1, $functionCall->args)
+                && $functionCall->args[1] instanceof Node\Arg
             ) {
-                $node->args[1]->value = $this->builderFactory->funcCall('constant', [$constantName]);
+                $functionCall->args[1]->value = $this->builderFactory->funcCall('constant', [$constantName]);
             }
 
             // @codeCoverageIgnoreStart
             // @infection-ignore-all
             // No invalid definition in PhpStorm stubs
             try {
-                ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                ConstantNodeChecker::assertValidDefineFunctionCall($node->expr);
             } catch (InvalidConstantNode) {
                 return null;
             }
@@ -127,20 +129,25 @@ class CachingVisitor extends NodeVisitorAbstract
                 $nameNode->value = $constantName;
             }
 
-            $this->updateConstantValue($node, $constantName);
+            $this->updateConstantValue($functionCall, $constantName);
 
-            $this->constantNodes[$constantName] = [$node, $this->currentNamespace];
-
-            if (
-                array_key_exists(2, $node->args)
-                && $node->args[2] instanceof Node\Arg
-                && $node->args[2]->value instanceof Node\Expr\ConstFetch
-                && $node->args[2]->value->name->toLowerString() === 'true'
-            ) {
-                $this->constantNodes[strtolower($constantName)] = [$node, $this->currentNamespace];
+            $nodeDocComment = $node->getDocComment();
+            if ($nodeDocComment !== null) {
+                $functionCall->setDocComment($nodeDocComment);
             }
 
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+            $this->constantNodes[$constantName] = [$functionCall, $this->currentNamespace];
+
+            if (
+                array_key_exists(2, $functionCall->args)
+                && $functionCall->args[2] instanceof Node\Arg
+                && $functionCall->args[2]->value instanceof Node\Expr\ConstFetch
+                && $functionCall->args[2]->value->name->toLowerString() === 'true'
+            ) {
+                $this->constantNodes[strtolower($constantName)] = [$functionCall, $this->currentNamespace];
+            }
+
+            return NodeVisitor::DONT_TRAVERSE_CHILDREN;
         }
 
         return null;

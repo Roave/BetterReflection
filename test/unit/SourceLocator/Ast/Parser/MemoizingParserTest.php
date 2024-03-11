@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Name;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PhpParser\Token;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\SourceLocator\Ast\Parser\MemoizingParser;
@@ -22,7 +23,7 @@ use function uniqid;
 #[CoversClass(MemoizingParser::class)]
 class MemoizingParserTest extends TestCase
 {
-    public function testParse(): void
+    public function testParseAndGetTokens(): void
     {
         $wrappedParser = $this->createMock(Parser::class);
 
@@ -37,6 +38,10 @@ class MemoizingParserTest extends TestCase
             ->expects(self::exactly($randomCodeStringsCount))
             ->method('parse')
             ->willReturnCallback(static fn (): array => [new Name('bool')]);
+        $wrappedParser
+            ->expects(self::exactly($randomCodeStringsCount))
+            ->method('getTokens')
+            ->willReturn([new Token(1, 'bool', 1, 1)]);
 
         $parser = new MemoizingParser($wrappedParser);
 
@@ -56,12 +61,13 @@ class MemoizingParserTest extends TestCase
 
         self::assertCount(count($nodeIdentifiers), array_unique($nodeIdentifiers), 'No duplicate nodes allowed');
         self::assertEquals($producedNodes, array_map([$parser, 'parse'], $randomCodeStrings));
+        self::assertCount(1, $parser->getTokens());
     }
 
     public function testParsedCodeIsDifferentAtEachParserLookup(): void
     {
         $code          = '<?php echo "hello world";';
-        $wrappedParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
+        $wrappedParser = (new ParserFactory())->createForNewestSupportedVersion();
 
         $parser = new MemoizingParser($wrappedParser);
 

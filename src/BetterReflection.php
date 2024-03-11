@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection;
 
-use PhpParser\Lexer\Emulative;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Roave\BetterReflection\Reflector\DefaultReflector;
@@ -58,9 +57,7 @@ final class BetterReflection
     public function phpParser(): Parser
     {
         return $this->phpParser
-            ?? $this->phpParser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
-                'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-            ]));
+            ?? $this->phpParser = (new ParserFactory())->createForNewestSupportedVersion();
     }
 
     public function astLocator(): AstLocator

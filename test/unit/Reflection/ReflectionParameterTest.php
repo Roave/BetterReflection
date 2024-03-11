@@ -10,6 +10,7 @@ use OutOfBoundsException;
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\Exception\CodeLocationMissing;
 use Roave\BetterReflection\Reflection\ReflectionFunction;
@@ -412,7 +413,7 @@ class ReflectionParameterTest extends TestCase
         self::assertTrue($secondParam->isVariadic());
     }
 
-    /** @group 109 */
+    #[Group('109')]
     public function testVariadicParametersAreAlsoImplicitlyOptional(): void
     {
         $classInfo = $this->reflector->reflectClass(Methods::class);

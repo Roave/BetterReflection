@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use BackedEnum;
+use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_ as ClassNode;
 use PhpParser\Node\Stmt\ClassMethod;
@@ -357,12 +358,12 @@ class ReflectionClass implements Reflection
 
         if (array_key_exists($methodHash, $this->traitsData['modifiers'])) {
             // PhpParser modifiers are compatible with PHP reflection modifiers
-            if ($this->traitsData['modifiers'][$methodHash] & Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) {
-                $methodModifiers = ($methodModifiers & ~ Node\Stmt\Class_::VISIBILITY_MODIFIER_MASK) | $this->traitsData['modifiers'][$methodHash];
+            if ($this->traitsData['modifiers'][$methodHash] & Modifiers::VISIBILITY_MASK) {
+                $methodModifiers = ($methodModifiers & ~ Modifiers::VISIBILITY_MASK) | $this->traitsData['modifiers'][$methodHash];
             }
 
-            if ($this->traitsData['modifiers'][$methodHash] & Node\Stmt\Class_::MODIFIER_FINAL) {
-                $methodModifiers |= Node\Stmt\Class_::MODIFIER_FINAL;
+            if ($this->traitsData['modifiers'][$methodHash] & Modifiers::FINAL) {
+                $methodModifiers |= Modifiers::FINAL;
             }
         }
 
@@ -574,22 +575,27 @@ class ReflectionClass implements Reflection
     private function addEnumMethods(EnumNode $node, array $methods): array
     {
         $internalLocatedSource = new InternalLocatedSource('', $this->getName(), 'Core');
-        $createMethod          = fn (string $name, array $params, Node\Identifier|Node\NullableType $returnType): ReflectionMethod => ReflectionMethod::createFromNode(
-            $this->reflector,
-            new ClassMethod(
-                new Node\Identifier($name),
-                [
-                    'flags' => ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_STATIC,
-                    'params' => $params,
-                    'returnType' => $returnType,
-                ],
-            ),
-            $internalLocatedSource,
-            $this->getNamespaceName(),
-            $this,
-            $this,
-            $this,
-        );
+        $createMethod          = function (string $name, array $params, Node\Identifier|Node\NullableType $returnType) use ($internalLocatedSource): ReflectionMethod {
+            /** @var array{flags: int, params: Node\Param[], returnType: Node\Identifier|Node\NullableType} $classMethodSubnodes */
+            $classMethodSubnodes = [
+                'flags' => Modifiers::PUBLIC | Modifiers::STATIC,
+                'params' => $params,
+                'returnType' => $returnType,
+            ];
+
+            return ReflectionMethod::createFromNode(
+                $this->reflector,
+                new ClassMethod(
+                    new Node\Identifier($name),
+                    $classMethodSubnodes,
+                ),
+                $internalLocatedSource,
+                $this->getNamespaceName(),
+                $this,
+                $this,
+                $this,
+            );
+        };
 
         $methods['cases'] = $createMethod('cases', [], new Node\Identifier('array'));
 
@@ -844,7 +850,7 @@ class ReflectionClass implements Reflection
 
                 $propertyNode                     = new Node\Stmt\Property(
                     $parameterNode->flags,
-                    [new Node\Stmt\PropertyProperty($parameterNameNode->name)],
+                    [new Node\PropertyItem($parameterNameNode->name)],
                     $parameterNode->getAttributes(),
                     $parameterNode->type,
                     $parameterNode->attrGroups,
@@ -875,10 +881,10 @@ class ReflectionClass implements Reflection
      */
     private function addEnumProperties(array $properties, EnumNode|InterfaceNode $node, Reflector $reflector): array
     {
-        $createProperty = function (string $name, string|Node\Identifier|Node\UnionType $type) use ($reflector): ReflectionProperty {
+        $createProperty = function (string $name, Node\Name|Node\Identifier|Node\UnionType $type) use ($reflector): ReflectionProperty {
             $propertyNode = new Node\Stmt\Property(
-                ClassNode::MODIFIER_PUBLIC | ClassNode::MODIFIER_READONLY,
-                [new Node\Stmt\PropertyProperty($name)],
+                Modifiers::PUBLIC | Modifiers::READONLY,
+                [new Node\PropertyItem($name)],
                 [],
                 $type,
             );
@@ -895,7 +901,7 @@ class ReflectionClass implements Reflection
         if ($node instanceof InterfaceNode) {
             $interfaceName = $this->getName();
             if ($interfaceName === 'UnitEnum') {
-                $properties['name'] = $createProperty('name', 'string');
+                $properties['name'] = $createProperty('name', new Node\Identifier('string'));
             }
 
             if ($interfaceName === 'BackedEnum') {
@@ -905,7 +911,7 @@ class ReflectionClass implements Reflection
                 ]));
             }
         } else {
-            $properties['name'] = $createProperty('name', 'string');
+            $properties['name'] = $createProperty('name', new Node\Identifier('string'));
 
             if ($node->scalarType !== null) {
                 $properties['value'] = $createProperty('value', $node->scalarType);

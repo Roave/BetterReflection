@@ -75,7 +75,7 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Line) {
-                return $node->getLine();
+                return $node->getStartLine();
             }
 
             if ($node instanceof Node\Scalar\MagicConst\Namespace_) {

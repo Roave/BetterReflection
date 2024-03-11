@@ -18,6 +18,7 @@ use PDOException;
 use PhpParser\Parser;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunction as CoreReflectionFunction;
@@ -636,7 +637,7 @@ EOT;
         self::assertNull($this->sourceStubber->generateConstantStub('date_atom'));
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testUpdateConstantValue(): void
     {
         require __DIR__ . '/../../Fixture/FakeConstants.php';

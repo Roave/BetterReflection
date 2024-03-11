@@ -30,7 +30,7 @@ class UnableToCompileNode extends LogicException
             self::compilerContextToContextDescription($context),
             $expression::class,
             self::getFileName($context),
-            $expression->getLine(),
+            $expression->getStartLine(),
         ));
     }
 
@@ -47,7 +47,7 @@ class UnableToCompileNode extends LogicException
             $constantFetch->name->name,
             self::compilerContextToContextDescription($fetchContext),
             self::getFileName($fetchContext),
-            $constantFetch->getLine(),
+            $constantFetch->getStartLine(),
         ));
     }
 
@@ -61,7 +61,7 @@ class UnableToCompileNode extends LogicException
             $constantName,
             self::compilerContextToContextDescription($fetchContext),
             self::getFileName($fetchContext),
-            $constantFetch->getLine(),
+            $constantFetch->getStartLine(),
         ));
 
         $exception->constantName = $constantName;
@@ -85,7 +85,7 @@ class UnableToCompileNode extends LogicException
             $propertyFetch->name->toString(),
             self::compilerContextToContextDescription($fetchContext),
             self::getFileName($fetchContext),
-            $propertyFetch->getLine(),
+            $propertyFetch->getStartLine(),
         ));
     }
 
@@ -96,7 +96,7 @@ class UnableToCompileNode extends LogicException
         return new self(sprintf(
             'No file name for %s (line %d)',
             self::compilerContextToContextDescription($context),
-            $node->getLine(),
+            $node->getStartLine(),
         ));
     }
 
@@ -108,7 +108,7 @@ class UnableToCompileNode extends LogicException
             'Unable to compile initializer in %s in file %s (line %d)',
             self::compilerContextToContextDescription($context),
             self::getFileName($context),
-            $newNode->getLine(),
+            $newNode->getStartLine(),
         ));
     }
 
@@ -125,7 +125,7 @@ class UnableToCompileNode extends LogicException
             $constantFetch->name->name,
             self::compilerContextToContextDescription($fetchContext),
             self::getFileName($fetchContext),
-            $constantFetch->getLine(),
+            $constantFetch->getStartLine(),
         ));
     }
 

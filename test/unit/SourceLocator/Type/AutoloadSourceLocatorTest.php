@@ -6,6 +6,8 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use Foo\Bar\AutoloadableClassWithTwoDirectories;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -107,7 +109,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertNotInstanceOf(AliasLocatedSource::class, $classInfo->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadableInterface(): void
     {
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
@@ -124,7 +126,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertFalse(interface_exists(AutoloadableInterface::class, false));
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadedInterface(): void
     {
         self::assertTrue(interface_exists(AutoloadableInterface::class));
@@ -139,7 +141,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadableTrait(): void
     {
         self::assertFalse(trait_exists(AutoloadableTrait::class, false));
@@ -154,7 +156,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadedTrait(): void
     {
         self::assertTrue(trait_exists(AutoloadableTrait::class));
@@ -169,7 +171,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadableEnum(): void
     {
         self::assertFalse(enum_exists(AutoloadableEnum::class, false));
@@ -184,7 +186,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadedEnum(): void
     {
         self::assertTrue(enum_exists(AutoloadableEnum::class));
@@ -199,7 +201,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertInstanceOf(LocatedSource::class, $reflectionClass->getLocatedSource());
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testCanLocateAutoloadedClassByAlias(): void
     {
         require __DIR__ . '/../../Fixture/AutoloadableByAlias.php';
@@ -247,10 +249,9 @@ class AutoloadSourceLocatorTest extends TestCase
 
     /**
      * Running in a separate process to reduce the amount of existing files to scan in case of a constant lookup failure
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testAutoloadSourceLocatorWillNotFindConstantDeclarationFileIfDeclarationFileIsRemoved(): void
     {
         $constantName        = str_replace('.', '', uniqid('constant_name', true));
@@ -418,7 +419,7 @@ class AutoloadSourceLocatorTest extends TestCase
         self::assertFalse(class_exists(AutoloadableClassWithTwoDirectories::class, false));
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testWillLocateSourcesInPharPath(): void
     {
         require_once 'phar://' . __DIR__ . '/../../Fixture/autoload.phar/vendor/autoload.php';

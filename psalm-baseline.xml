@@ -1,261 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="dev-master@9d2179f9edcbd9a20d4dceb7711fa28f8cc12e33">
+<files psalm-version="5.23.0@005e3184fb6de4350a873b9b8c4dc3cede9db762">
   <file src="src/Reflection/Attribute/ReflectionAttributeHelper.php">
     <ImpureMethodCall>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
     <ImpurePropertyFetch>
-      <code>$attributeNode-&gt;name</code>
-      <code>$attributeNode-&gt;name</code>
-      <code>$attributesGroupNode-&gt;attrs</code>
-      <code>$attributesGroupNode-&gt;attrs</code>
+      <code><![CDATA[$attributeNode->name]]></code>
+      <code><![CDATA[$attributeNode->name]]></code>
+      <code><![CDATA[$attributesGroupNode->attrs]]></code>
+      <code><![CDATA[$attributesGroupNode->attrs]]></code>
     </ImpurePropertyFetch>
   </file>
   <file src="src/Reflection/ReflectionAttribute.php">
     <ImpureFunctionCall>
-      <code>array_map</code>
+      <code><![CDATA[array_map]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code>reflectClass</code>
-      <code>toString</code>
+      <code><![CDATA[reflectClass]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionClass.php">
     <ImpureFunctionCall>
-      <code>$createMethod(
+      <code><![CDATA[$createMethod(
             'from',
             [$valueParameter],
             new Node\Identifier('static'),
-        )</code>
-      <code>$createMethod(
+        )]]></code>
+      <code><![CDATA[$createMethod(
             'tryFrom',
             [$valueParameter],
             new Node\NullableType(new Node\Identifier('static')),
-        )</code>
-      <code>$createMethod($aliasMethodName)</code>
-      <code>$createMethod($method-&gt;getAliasName())</code>
-      <code>$createMethod('cases', [], new Node\Identifier('array'))</code>
-      <code>$createProperty('name', 'string')</code>
-      <code>$createProperty('name', 'string')</code>
-      <code>$createProperty('value', $node-&gt;scalarType)</code>
-      <code>$createProperty('value', new Node\UnionType([
+        )]]></code>
+      <code><![CDATA[$createMethod($aliasMethodName)]]></code>
+      <code><![CDATA[$createMethod($method->getAliasName())]]></code>
+      <code><![CDATA[$createMethod('cases', [], new Node\Identifier('array'))]]></code>
+      <code><![CDATA[$createProperty('name', new Node\Identifier('string'))]]></code>
+      <code><![CDATA[$createProperty('name', new Node\Identifier('string'))]]></code>
+      <code><![CDATA[$createProperty('value', $node->scalarType)]]></code>
+      <code><![CDATA[$createProperty('value', new Node\UnionType([
                     new Node\Identifier('int'),
                     new Node\Identifier('string'),
-                ]))</code>
-      <code>array_map</code>
-      <code>array_map</code>
-      <code>array_map</code>
-      <code>array_map</code>
-      <code>array_map</code>
+                ]))]]></code>
+      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code>createEmpty</code>
-      <code>createEmpty</code>
-      <code>createEmpty</code>
-      <code>createEmpty</code>
-      <code>createEmpty</code>
-      <code>createFromNode</code>
-      <code>createFromNode</code>
-      <code>createFromNode</code>
-      <code>createFromNode</code>
-      <code>getConstants</code>
-      <code>getConstants</code>
-      <code>getConstants</code>
-      <code>getConstants</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getMethods</code>
-      <code>getProperties</code>
-      <code>getProperties</code>
-      <code>getProperties</code>
-      <code>getProperties</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>getTraitUses</code>
-      <code>isAbstract</code>
-      <code>isFinal</code>
-      <code>isReadonly</code>
-      <code>push</code>
-      <code>push</code>
-      <code>push</code>
-      <code>push</code>
-      <code>reflectClass</code>
-      <code>reflectClass</code>
-      <code>reflectClass</code>
-      <code>reflectClass</code>
-      <code>toLowerString</code>
-      <code>toString</code>
-      <code>toString</code>
-      <code>toString</code>
-      <code>toString</code>
+      <code><![CDATA[createEmpty]]></code>
+      <code><![CDATA[createEmpty]]></code>
+      <code><![CDATA[createEmpty]]></code>
+      <code><![CDATA[createEmpty]]></code>
+      <code><![CDATA[createEmpty]]></code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[getConstants]]></code>
+      <code><![CDATA[getConstants]]></code>
+      <code><![CDATA[getConstants]]></code>
+      <code><![CDATA[getConstants]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getMethods]]></code>
+      <code><![CDATA[getProperties]]></code>
+      <code><![CDATA[getProperties]]></code>
+      <code><![CDATA[getProperties]]></code>
+      <code><![CDATA[getProperties]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[getTraitUses]]></code>
+      <code><![CDATA[isAbstract]]></code>
+      <code><![CDATA[isFinal]]></code>
+      <code><![CDATA[isReadonly]]></code>
+      <code><![CDATA[push]]></code>
+      <code><![CDATA[push]]></code>
+      <code><![CDATA[push]]></code>
+      <code><![CDATA[push]]></code>
+      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionClassConstant.php">
     <ImpureMethodCall>
-      <code>__invoke</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
-      <code>isFinal</code>
-      <code>isPrivate</code>
-      <code>isProtected</code>
-      <code>isPublic</code>
+      <code><![CDATA[__invoke]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[isFinal]]></code>
+      <code><![CDATA[isPrivate]]></code>
+      <code><![CDATA[isProtected]]></code>
+      <code><![CDATA[isPublic]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionConstant.php">
     <ImpureMethodCall>
-      <code>__invoke</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>toString</code>
+      <code><![CDATA[__invoke]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionEnum.php">
     <ImpureFunctionCall>
-      <code>array_map</code>
-      <code>array_map</code>
+      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map]]></code>
     </ImpureFunctionCall>
   </file>
   <file src="src/Reflection/ReflectionEnumCase.php">
     <ImpureMethodCall>
-      <code>__invoke</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
+      <code><![CDATA[__invoke]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionFunctionAbstract.php">
     <ImpureMethodCall>
-      <code>addVisitor</code>
-      <code>createFromNode</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getStartLine</code>
-      <code>getStmts</code>
-      <code>getSubNodeNames</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>traverse</code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[getStmts]]></code>
+      <code><![CDATA[getSubNodeNames]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[traverse]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionMethod.php">
     <ImpureFunctionCall>
-      <code>$closure-&gt;__invoke($implementingClassName, $this-&gt;getName(), $args)</code>
-      <code>$closure-&gt;__invoke($object, $this-&gt;getName(), $args)</code>
+      <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName(), $args)]]></code>
+      <code><![CDATA[$closure->__invoke($object, $this->getName(), $args)]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code>classExists</code>
-      <code>isAbstract</code>
-      <code>isFinal</code>
-      <code>isPrivate</code>
-      <code>isProtected</code>
-      <code>isPublic</code>
-      <code>isStatic</code>
-      <code>traitExists</code>
+      <code><![CDATA[classExists]]></code>
+      <code><![CDATA[isAbstract]]></code>
+      <code><![CDATA[isFinal]]></code>
+      <code><![CDATA[isPrivate]]></code>
+      <code><![CDATA[isProtected]]></code>
+      <code><![CDATA[isPublic]]></code>
+      <code><![CDATA[isStatic]]></code>
+      <code><![CDATA[traitExists]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionNamedType.php">
     <ImpureMethodCall>
-      <code>reflectClass</code>
-      <code>toString</code>
+      <code><![CDATA[reflectClass]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionObject.php">
     <ImpureMethodCall>
-      <code>createFromNode</code>
-      <code>getNode</code>
-      <code>getValue</code>
-      <code>makePublic</code>
-      <code>setDefault</code>
+      <code><![CDATA[createFromNode]]></code>
+      <code><![CDATA[getNode]]></code>
+      <code><![CDATA[getValue]]></code>
+      <code><![CDATA[makePublic]]></code>
+      <code><![CDATA[setDefault]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionParameter.php">
     <ImpureMethodCall>
-      <code>__invoke</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>toLowerString</code>
+      <code><![CDATA[__invoke]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionProperty.php">
     <ImpureFunctionCall>
-      <code>$closure-&gt;__invoke($implementingClassName, $this-&gt;getName())</code>
-      <code>$closure-&gt;__invoke($implementingClassName, $this-&gt;getName(), func_num_args() === 2 ? $value : $object)</code>
-      <code>$closure-&gt;__invoke($instance, $this-&gt;getName())</code>
-      <code>$closure-&gt;__invoke($instance, $this-&gt;getName(), $value)</code>
+      <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName())]]></code>
+      <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName(), func_num_args() === 2 ? $value : $object)]]></code>
+      <code><![CDATA[$closure->__invoke($instance, $this->getName())]]></code>
+      <code><![CDATA[$closure->__invoke($instance, $this->getName(), $value)]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code>__invoke</code>
-      <code>classExists</code>
-      <code>getEndLine</code>
-      <code>getStartLine</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
-      <code>isPrivate</code>
-      <code>isProtected</code>
-      <code>isPublic</code>
-      <code>isReadonly</code>
-      <code>isStatic</code>
-      <code>traitExists</code>
+      <code><![CDATA[__invoke]]></code>
+      <code><![CDATA[classExists]]></code>
+      <code><![CDATA[getEndLine]]></code>
+      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[isPrivate]]></code>
+      <code><![CDATA[isProtected]]></code>
+      <code><![CDATA[isPublic]]></code>
+      <code><![CDATA[isReadonly]]></code>
+      <code><![CDATA[isStatic]]></code>
+      <code><![CDATA[traitExists]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionType.php">
     <ImpureMethodCall>
-      <code>new Identifier('null')</code>
-      <code>new Identifier('null')</code>
-      <code>new UnionType($types)</code>
-      <code>new UnionType([$type, new Identifier('null')])</code>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
-      <code>toLowerString</code>
+      <code><![CDATA[new Identifier('null')]]></code>
+      <code><![CDATA[new Identifier('null')]]></code>
+      <code><![CDATA[new UnionType($types)]]></code>
+      <code><![CDATA[new UnionType([$type, new Identifier('null')])]]></code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
     <ImpurePropertyFetch>
-      <code>$type-&gt;type</code>
-      <code>$type-&gt;types</code>
-      <code>$type-&gt;types</code>
+      <code><![CDATA[$type->type]]></code>
+      <code><![CDATA[$type->types]]></code>
+      <code><![CDATA[$type->types]]></code>
     </ImpurePropertyFetch>
   </file>
   <file src="src/Util/CalculateReflectionColumn.php">
     <ImpureMethodCall>
-      <code>getEndFilePos</code>
-      <code>getStartFilePos</code>
-      <code>hasAttribute</code>
-      <code>hasAttribute</code>
+      <code><![CDATA[getEndFilePos]]></code>
+      <code><![CDATA[getStartFilePos]]></code>
+      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[hasAttribute]]></code>
     </ImpureMethodCall>
   </file>
 </files>

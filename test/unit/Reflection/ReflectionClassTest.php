@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Qux;
 use ReflectionClass as CoreReflectionClass;
@@ -2255,7 +2256,7 @@ PHP;
         $classInfo->getStaticPropertyValue('foo');
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testSetStaticPropertyValue(): void
     {
         $staticPropertyGetSetFixtureFile = __DIR__ . '/../Fixture/StaticPropertyGetSet.php';

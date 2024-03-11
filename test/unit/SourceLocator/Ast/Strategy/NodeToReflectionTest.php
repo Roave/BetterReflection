@@ -34,8 +34,7 @@ class NodeToReflectionTest extends TestCase
 
         $this->phpParser = BetterReflectionSingleton::instance()->phpParser();
 
-        $this->nodeTraverser = new NodeTraverser();
-        $this->nodeTraverser->addVisitor(new NameResolver());
+        $this->nodeTraverser = new NodeTraverser(new NameResolver());
     }
 
     private function getFirstAstNodeInString(string $php): Node
