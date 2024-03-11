@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionBenchmark;
 
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PHPUnit\Framework\TestCase;
+use PhpBench\Extension\RunnerExtension;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
@@ -30,14 +30,14 @@ class PhpUnitTestCaseBench
     {
         $reflection       = new BetterReflection();
         $this->reflector  = $reflection->reflector();
-        $reflectionClass  = $this->reflector->reflectClass(TestCase::class);
+        $reflectionClass  = $this->reflector->reflectClass(RunnerExtension::class);
         $this->methods    = array_values($reflectionClass->getMethods());
         $this->parameters = array_merge([], ...array_map(static fn (ReflectionMethod $method): array => $method->getParameters(), $this->methods));
     }
 
     public function benchReflectClass(): void
     {
-        $this->reflector->reflectClass(TestCase::class);
+        $this->reflector->reflectClass(RunnerExtension::class);
     }
 
     public function benchReflectMethodParameters(): void
