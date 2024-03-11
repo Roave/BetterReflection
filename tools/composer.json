@@ -17,7 +17,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "platform": {
-            "php": "8.1.99"
+            "php": "8.2.99"
         }
     },
     "autoload": {
