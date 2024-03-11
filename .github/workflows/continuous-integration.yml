@@ -298,7 +298,7 @@ jobs:
           custom-cache-suffix: "ci"
 
       - name: "PhpBench"
-        run: "tools/vendor/bin/phpbench run --progress=dots --iterations=1"
+        run: "vendor/bin/phpbench run --progress=dots --iterations=1"
 
   coding-standards:
     name: "Check Coding Standards"

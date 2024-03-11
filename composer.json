@@ -33,6 +33,7 @@
 
     ],
     "require-dev": {
+        "phpbench/phpbench": "^1.2.15",
         "phpunit/phpunit": "^11.0.5"
     },
     "autoload": {
@@ -42,7 +43,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Roave\\BetterReflectionTest\\": "test/unit"
+            "Roave\\BetterReflectionTest\\": "test/unit",
+            "Roave\\BetterReflectionBenchmark\\": "test/benchmark"
         }
     },
     "conflict": {
