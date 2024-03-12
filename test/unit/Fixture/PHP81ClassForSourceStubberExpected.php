@@ -4,9 +4,9 @@ namespace Roave\BetterReflectionTest\Fixture;
 
 class PHP81ClassForSourceStubber
 {
-    public final const FINAL_CONST = 'finalConst';
+    final public const FINAL_CONST = 'finalConst';
     public readonly int $readOnly;
-    public function getIntersectionType() : \ArrayIterator&\stdClass
+    public function getIntersectionType(): \ArrayIterator&\stdClass
     {
     }
 }

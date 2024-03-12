@@ -101,15 +101,17 @@ final class FindReflectionsInTree
                         return null;
                     }
 
-                    if ($node instanceof Node\Expr\FuncCall) {
+                    if ($node instanceof Node\Stmt\Expression && $node->expr instanceof Node\Expr\FuncCall) {
+                        $functionCall = $node->expr;
+
                         try {
-                            ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                            ConstantNodeChecker::assertValidDefineFunctionCall($functionCall);
                         } catch (InvalidConstantNode) {
                             return null;
                         }
 
-                        if ($node->name->hasAttribute('namespacedName')) {
-                            $namespacedName = $node->name->getAttribute('namespacedName');
+                        if ($functionCall->name->hasAttribute('namespacedName')) {
+                            $namespacedName = $functionCall->name->getAttribute('namespacedName');
                             assert($namespacedName instanceof Name);
 
                             try {
@@ -121,7 +123,12 @@ final class FindReflectionsInTree
                             }
                         }
 
-                        $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
+                        $nodeDocComment = $node->getDocComment();
+                        if ($nodeDocComment !== null) {
+                            $functionCall->setDocComment($nodeDocComment);
+                        }
+
+                        $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $functionCall, $this->locatedSource, $this->currentNamespace);
 
                         return null;
                     }
@@ -145,9 +152,7 @@ final class FindReflectionsInTree
             }
         };
 
-        $nodeTraverser = new NodeTraverser();
-        $nodeTraverser->addVisitor(new NameResolver());
-        $nodeTraverser->addVisitor($nodeVisitor);
+        $nodeTraverser = new NodeTraverser(new NameResolver(), $nodeVisitor);
         $nodeTraverser->traverse($ast);
 
         return $nodeVisitor->getReflections();

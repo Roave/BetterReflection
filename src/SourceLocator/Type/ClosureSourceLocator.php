@@ -148,9 +148,7 @@ final class ClosureSourceLocator implements SourceLocator
         /** @var list<Node\Stmt> $ast */
         $ast = $this->parser->parse($fileContents);
 
-        $nodeTraverser = new NodeTraverser();
-        $nodeTraverser->addVisitor(new NameResolver());
-        $nodeTraverser->addVisitor($nodeVisitor);
+        $nodeTraverser = new NodeTraverser(new NameResolver(), $nodeVisitor);
         $nodeTraverser->traverse($ast);
 
         $closureNodes = $nodeVisitor->getClosureNodes();

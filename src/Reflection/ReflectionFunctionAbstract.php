@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\Reflection;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Throw_ as NodeThrow;
 use PhpParser\Node\Expr\Yield_ as YieldNode;
 use PhpParser\Node\Expr\YieldFrom as YieldFromNode;
 use PhpParser\Node\Stmt\ClassMethod as MethodNode;
-use PhpParser\Node\Stmt\Throw_ as NodeThrow;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\FindingVisitor;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
@@ -333,8 +333,7 @@ trait ReflectionFunctionAbstract
         }
 
         $visitor   = new FindingVisitor(static fn (Node $node): bool => $node instanceof NodeThrow);
-        $traverser = new NodeTraverser();
-        $traverser->addVisitor($visitor);
+        $traverser = new NodeTraverser($visitor);
         $traverser->traverse($statements);
 
         return $visitor->getFoundNodes() !== [];

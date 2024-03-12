@@ -185,9 +185,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
         $this->cachingVisitor = new CachingVisitor($this->builderFactory);
 
-        $this->nodeTraverser = new NodeTraverser();
-        $this->nodeTraverser->addVisitor(new NameResolver());
-        $this->nodeTraverser->addVisitor($this->cachingVisitor);
+        $this->nodeTraverser = new NodeTraverser(new NameResolver(), $this->cachingVisitor);
 
         if (self::$mapsInitialized) {
             return;

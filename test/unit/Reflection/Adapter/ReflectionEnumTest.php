@@ -7,6 +7,7 @@ namespace Roave\BetterReflectionTest\Reflection\Adapter;
 use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionClassConstant as CoreReflectionClassConstant;
@@ -856,7 +857,7 @@ class ReflectionEnumTest extends TestCase
         self::assertFalse($reflectionClassAdapter->getConstant('FOO'));
     }
 
-    /** @runInSeparateProcess */
+    #[RunInSeparateProcess]
     public function testGetConstantWithEnumCase(): void
     {
         $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);

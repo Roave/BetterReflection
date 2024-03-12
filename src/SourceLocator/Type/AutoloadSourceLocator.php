@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\Type;
 use InvalidArgumentException;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
@@ -64,9 +65,7 @@ class AutoloadSourceLocator extends AbstractSourceLocator
         $this->phpParser       = $phpParser ?? $betterReflection->phpParser();
         $this->constantVisitor = $this->createConstantVisitor();
 
-        $this->nodeTraverser = new NodeTraverser();
-        $this->nodeTraverser->addVisitor(new NameResolver());
-        $this->nodeTraverser->addVisitor($this->constantVisitor);
+        $this->nodeTraverser = new NodeTraverser(new NameResolver(), $this->constantVisitor);
     }
 
     /**
@@ -298,29 +297,31 @@ class AutoloadSourceLocator extends AbstractSourceLocator
                         if ($constNode->namespacedName?->toString() === $this->constantName) {
                             $this->node = $node;
 
-                            return NodeTraverser::STOP_TRAVERSAL;
+                            return NodeVisitor::STOP_TRAVERSAL;
                         }
                     }
 
-                    return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+                    return NodeVisitor::DONT_TRAVERSE_CHILDREN;
                 }
 
-                if ($node instanceof Node\Expr\FuncCall) {
+                if ($node instanceof Node\Stmt\Expression && $node->expr instanceof Node\Expr\FuncCall) {
+                    $functionCall = $node->expr;
+
                     try {
-                        ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                        ConstantNodeChecker::assertValidDefineFunctionCall($functionCall);
                     } catch (InvalidConstantNode) {
                         return null;
                     }
 
-                    $argumentNameNode = $node->args[0];
+                    $argumentNameNode = $functionCall->args[0];
                     assert($argumentNameNode instanceof Node\Arg);
                     $nameNode = $argumentNameNode->value;
                     assert($nameNode instanceof Node\Scalar\String_);
 
                     if ($nameNode->value === $this->constantName) {
-                        $this->node = $node;
+                        $this->node = $functionCall;
 
-                        return NodeTraverser::STOP_TRAVERSAL;
+                        return NodeVisitor::STOP_TRAVERSAL;
                     }
                 }
 

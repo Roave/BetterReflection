@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
-use PhpParser\Lexer\Emulative;
 use PhpParser\ParserFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
@@ -19,10 +20,8 @@ use function class_exists;
 #[CoversClass(AutoloadSourceLocator::class)]
 class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
 {
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testCanFindClassEvenWhenParserIsNotLoadedInMemory(): void
     {
         self::assertFalse(
@@ -30,9 +29,7 @@ class AutoloadSourceLocatorWithoutLoadedParserDependenciesTest extends TestCase
             MemoizingParser::class . ' was not loaded into memory',
         );
 
-        $parser        = (new ParserFactory())->create(ParserFactory::ONLY_PHP7, new Emulative([
-            'usedAttributes' => ['comments', 'startLine', 'endLine', 'startFilePos', 'endFilePos'],
-        ]));
+        $parser        = (new ParserFactory())->createForNewestSupportedVersion();
         $sourceLocator = new AutoloadSourceLocator(
             new Locator($parser),
             $parser,

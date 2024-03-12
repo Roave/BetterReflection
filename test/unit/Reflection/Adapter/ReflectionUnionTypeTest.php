@@ -59,7 +59,7 @@ class ReflectionUnionTypeTest extends TestCase
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
-                ->will($this->returnValue($returnValue));
+                ->willReturn($returnValue);
         }
 
         if ($expectedException !== null) {

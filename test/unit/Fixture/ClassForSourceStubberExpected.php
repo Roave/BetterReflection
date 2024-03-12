@@ -33,50 +33,50 @@ abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture
     public $publicProperty = 'string';
     public static $publicStaticProperty = null;
     public int $propertyWithTypeHint;
-    public function methodWithoutVisibility() : ?\stdClass
+    public function methodWithoutVisibility(): ?\stdClass
     {
     }
     /**
      * Method comment
      */
-    public function publicMethod() : bool
+    public function publicMethod(): bool
     {
     }
-    public function protectedMethod() : int
+    public function protectedMethod(): int
     {
     }
-    public function privateMethod() : ?string
+    public function privateMethod(): ?string
     {
     }
-    public static function publicStaticMethod() : void
+    public static function publicStaticMethod(): void
     {
     }
-    public abstract function publicAbstractMethod();
-    public final function publicFinalMethod() : float
+    abstract public function publicAbstractMethod();
+    final public function publicFinalMethod(): float
     {
     }
-    public function methodWithParameters($string, $int, $float, $bool, $iterable, $callable) : void
+    public function methodWithParameters($string, $int, $float, $bool, $iterable, $callable): void
     {
     }
-    public function methodWithParametersWithTypes(string $string, int $int, float $float, bool $bool, iterable $iterable, callable $callable) : void
+    public function methodWithParametersWithTypes(string $string, int $int, float $float, bool $bool, iterable $iterable, callable $callable): void
     {
     }
-    public function methodWithParametersWithNullableTypes(?string $string, ?int $int, ?float $float, ?bool $bool, ?iterable $iterable, ?callable $callable) : void
+    public function methodWithParametersWithNullableTypes(?string $string, ?int $int, ?float $float, ?bool $bool, ?iterable $iterable, ?callable $callable): void
     {
     }
-    public function methodWithOptionalParameters(string $string = 'string', int $int = 123, float $float = 0.0, bool $bool = true, iterable $iterable = [], ?callable $callable = null) : void
+    public function methodWithOptionalParameters(string $string = 'string', int $int = 123, float $float = 0.0, bool $bool = true, iterable $iterable = [], ?callable $callable = null): void
     {
     }
-    public function methodWithSelfAndParentParameters(self $self, parent $parent) : void
+    public function methodWithSelfAndParentParameters(self $self, parent $parent): void
     {
     }
-    public function methodWithVariadicParameter(string ...$variadic) : void
+    public function methodWithVariadicParameter(string ...$variadic): void
     {
     }
-    public function methodWithParameterPassedByReference(bool &$bool) : void
+    public function methodWithParameterPassedByReference(bool &$bool): void
     {
     }
-    public function &methodReturnsReference() : array
+    public function &methodReturnsReference(): array
     {
     }
 }

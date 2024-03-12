@@ -44,7 +44,7 @@ class ComposerSourceLocatorTest extends TestCase
             ->expects($this->once())
             ->method('findFile')
             ->with($className)
-            ->will($this->returnValue($fileName));
+            ->willReturn($fileName);
 
         $locator = new ComposerSourceLocator($loader, $this->astLocator);
 

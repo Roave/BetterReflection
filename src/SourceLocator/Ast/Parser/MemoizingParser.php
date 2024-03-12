@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\SourceLocator\Ast\Parser;
 use PhpParser\ErrorHandler;
 use PhpParser\Node;
 use PhpParser\Parser;
+use PhpParser\Token;
 
 use function array_key_exists;
 use function hash;
@@ -18,8 +19,11 @@ use function unserialize;
 /** @internal */
 final class MemoizingParser implements Parser
 {
-    /** @var array<string, string> indexed by source hash */
+    /** @var array<string, array{string, Token[]}> indexed by source hash */
     private array $sourceHashToAst = [];
+
+    /** @var Token[] */
+    private array $lastTokens = [];
 
     public function __construct(private Parser $wrappedParser)
     {
@@ -34,15 +38,25 @@ final class MemoizingParser implements Parser
         $hash = sprintf('%s:%d', hash('sha256', $code), strlen($code));
 
         if (array_key_exists($hash, $this->sourceHashToAst)) {
+            [$serializedAst, $tokens] = $this->sourceHashToAst[$hash];
             /** @var Node\Stmt[]|null $ast */
-            $ast = unserialize($this->sourceHashToAst[$hash]);
+            $ast              = unserialize($serializedAst);
+            $this->lastTokens = $tokens;
 
             return $ast;
         }
 
         $ast                          = $this->wrappedParser->parse($code, $errorHandler);
-        $this->sourceHashToAst[$hash] = serialize($ast);
+        $tokens                       = $this->wrappedParser->getTokens();
+        $this->sourceHashToAst[$hash] = [serialize($ast), $tokens];
+        $this->lastTokens             = $tokens;
 
         return $ast;
+    }
+
+    /** @return Token[] */
+    public function getTokens(): array
+    {
+        return $this->lastTokens;
     }
 }

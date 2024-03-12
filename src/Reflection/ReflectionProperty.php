@@ -74,7 +74,7 @@ class ReflectionProperty
     private function __construct(
         private Reflector $reflector,
         PropertyNode $node,
-        Node\Stmt\PropertyProperty $propertyNode,
+        Node\PropertyItem $propertyNode,
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
         private bool $isPromoted,
@@ -187,7 +187,7 @@ class ReflectionProperty
     public static function createFromNode(
         Reflector $reflector,
         PropertyNode $node,
-        Node\Stmt\PropertyProperty $propertyProperty,
+        Node\PropertyItem $propertyProperty,
         ReflectionClass $declaringClass,
         ReflectionClass $implementingClass,
         bool $isPromoted = false,

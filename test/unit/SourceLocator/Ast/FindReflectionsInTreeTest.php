@@ -93,7 +93,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource(sprintf('<?php %s Foo {}', $classType), 'Foo');
@@ -118,7 +118,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource(sprintf('<?php namespace Foo { %s Bar {} }', $classType), 'Foo\Bar');
@@ -142,7 +142,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php function foo() {}', 'foo');
@@ -166,7 +166,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php const FOO = 1;', 'FOO');
@@ -215,7 +215,7 @@ class FindReflectionsInTreeTest extends TestCase
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector = $this->createMock(Reflector::class);
         $reflector
@@ -247,7 +247,7 @@ PHP;
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector = $this->createMock(Reflector::class);
         $reflector
@@ -281,7 +281,7 @@ PHP;
 
         $strategy->expects($this->once())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $reflector = $this->createMock(Reflector::class);
         $reflector
@@ -375,7 +375,7 @@ PHP;
 
         $strategy->expects($this->never())
             ->method('__invoke')
-            ->will($this->returnValue($mockReflectionClass));
+            ->willReturn($mockReflectionClass);
 
         $reflector     = $this->createMock(Reflector::class);
         $locatedSource = new LocatedSource('<?php class Foo { const FOO = 1; }', null);

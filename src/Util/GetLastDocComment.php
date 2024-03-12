@@ -7,7 +7,6 @@ namespace Roave\BetterReflection\Util;
 use PhpParser\NodeAbstract;
 
 use function assert;
-use function is_string;
 
 /** @internal */
 final class GetLastDocComment
@@ -28,7 +27,7 @@ final class GetLastDocComment
 
         /** @psalm-suppress ImpureMethodCall */
         $comment = $docComment->getReformattedText();
-        assert(is_string($comment) && $comment !== '');
+        assert($comment !== '');
 
         return $comment;
     }

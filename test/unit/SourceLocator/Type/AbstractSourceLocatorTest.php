@@ -33,7 +33,7 @@ class AbstractSourceLocatorTest extends TestCase
         $astLocator->expects($this->once())
             ->method('findReflection')
             ->with($mockReflector, $locatedSource, $identifier)
-            ->will($this->returnValue($mockReflection));
+            ->willReturn($mockReflection);
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
@@ -43,7 +43,7 @@ class AbstractSourceLocatorTest extends TestCase
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
             ->with($identifier)
-            ->will($this->returnValue($locatedSource));
+            ->willReturn($locatedSource);
 
         self::assertSame($mockReflection, $sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
@@ -67,7 +67,7 @@ class AbstractSourceLocatorTest extends TestCase
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
             ->with($identifier)
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
@@ -95,7 +95,7 @@ class AbstractSourceLocatorTest extends TestCase
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
             ->with($identifier)
-            ->will($this->returnValue($locatedSource));
+            ->willReturn($locatedSource);
 
         self::assertNull($sourceLocator->locateIdentifier($mockReflector, $identifier));
     }
@@ -115,7 +115,7 @@ class AbstractSourceLocatorTest extends TestCase
         $astLocator->expects($this->once())
             ->method('findReflectionsOfType')
             ->with($mockReflector, $locatedSource, $identifierType)
-            ->will($this->returnValue([$mockReflection]));
+            ->willReturn([$mockReflection]);
 
         $sourceLocator = $this->getMockBuilder(AbstractSourceLocator::class)
             ->setConstructorArgs([$astLocator])
@@ -124,7 +124,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
-            ->will($this->returnValue($locatedSource));
+            ->willReturn($locatedSource);
 
         self::assertSame([$mockReflection], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }
@@ -147,7 +147,7 @@ class AbstractSourceLocatorTest extends TestCase
 
         $sourceLocator->expects($this->once())
             ->method('createLocatedSource')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
 
         self::assertSame([], $sourceLocator->locateIdentifiersByType($mockReflector, $identifierType));
     }

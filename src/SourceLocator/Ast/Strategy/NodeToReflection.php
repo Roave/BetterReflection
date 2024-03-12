@@ -12,8 +12,6 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
-use function implode;
-
 /** @internal */
 class NodeToReflection implements AstConversionStrategy
 {
@@ -28,8 +26,7 @@ class NodeToReflection implements AstConversionStrategy
         Node\Stmt\Namespace_|null $namespace,
         int|null $positionInNode = null,
     ): ReflectionClass|ReflectionConstant|ReflectionFunction {
-        /** @psalm-suppress PossiblyNullPropertyFetch, PossiblyNullReference */
-        $namespaceName = $namespace?->name !== null ? implode('\\', $namespace->name->getParts()) : null;
+        $namespaceName = $namespace?->name?->name;
 
         if ($node instanceof Node\Stmt\Enum_) {
             return ReflectionEnum::createFromNode(
