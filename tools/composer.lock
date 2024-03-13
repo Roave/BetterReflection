@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8a7e4a839f0b596c20430dc06b837ab",
+    "content-hash": "8deda2fbd58d2a164075e790bb00400a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2366,16 +2366,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.61",
+            "version": "1.10.62",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "30049da2df0941c38e2ba49372018aa796b90db4"
+                "reference": "cd5c8a1660ed3540b211407c77abf4af193a6af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/30049da2df0941c38e2ba49372018aa796b90db4",
-                "reference": "30049da2df0941c38e2ba49372018aa796b90db4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cd5c8a1660ed3540b211407c77abf4af193a6af9",
+                "reference": "cd5c8a1660ed3540b211407c77abf4af193a6af9",
                 "shasum": ""
             },
             "require": {
@@ -2424,7 +2424,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-13T09:49:39+00:00"
+            "time": "2024-03-13T12:27:20+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
