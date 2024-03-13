@@ -501,6 +501,39 @@ EOT;
         self::assertSame('filter', $stubData->getExtensionName());
     }
 
+    public function testStubForConstantThatIsDeprecatedInPatchRelease(): void
+    {
+        // use a faked stub to make this test independent of the actual PHP version
+        $exampleStub = <<<'EOT'
+<?php
+
+/**
+ * @deprecated 8.1.2
+ */
+\define('A_CUSTOM_CONSTANT', 513);
+EOT;
+        $stubData    = new StubData($exampleStub, null);
+
+        self::assertStringMatchesFormat(
+            "%Adefine('A_CUSTOM_CONSTANT',%w%d);",
+            $stubData->getStub(),
+        );
+
+        if (PHP_VERSION_ID >= 80100) {
+            self::assertStringContainsString(
+                '@deprecated 8.1.2',
+                $stubData->getStub(),
+            );
+        } else {
+            self::assertStringNotContainsString(
+                '@deprecated 8.1.2',
+                $stubData->getStub(),
+            );
+        }
+
+        self::assertNull($stubData->getExtensionName());
+    }
+
     public function testNoStubForConstantThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
