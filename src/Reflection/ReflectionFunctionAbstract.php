@@ -106,16 +106,14 @@ trait ReflectionFunctionAbstract
         $this->docComment       = GetLastDocComment::forNode($node);
         $this->couldThrow       = $this->computeCouldThrow($node);
 
-        $startLine = null;
-        if ($node->hasAttribute('startLine')) {
-            $startLine = $node->getStartLine();
-            assert($startLine > 0);
+        $startLine = $node->getStartLine();
+        if ($startLine === -1) {
+            $startLine = null;
         }
 
-        $endLine = null;
-        if ($node->hasAttribute('endLine')) {
-            $endLine = $node->getEndLine();
-            assert($endLine > 0);
+        $endLine = $node->getEndLine();
+        if ($endLine === -1) {
+            $endLine = null;
         }
 
         $this->startLine = $startLine;

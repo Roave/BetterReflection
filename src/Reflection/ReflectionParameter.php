@@ -85,17 +85,13 @@ class ReflectionParameter
         $this->isPromoted = $node->flags !== 0;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
 
-        if ($node->hasAttribute('startLine')) {
-            $startLine = $node->getStartLine();
-            assert($startLine > 0);
-        } else {
+        $startLine = $node->getStartLine();
+        if ($startLine === -1) {
             $startLine = null;
         }
 
-        if ($node->hasAttribute('endLine')) {
-            $endLine = $node->getEndLine();
-            assert($endLine > 0);
-        } else {
+        $endLine = $node->getEndLine();
+        if ($endLine === -1) {
             $endLine = null;
         }
 
