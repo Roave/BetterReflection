@@ -560,6 +560,24 @@ EOT;
         self::assertNull($stubData->getExtensionName());
     }
 
+    public function testStubForConstantWithoutPhpdoc(): void
+    {
+        // use a faked stub to make this test independent of the actual PHP version
+        $exampleStub = <<<'EOT'
+<?php
+
+\define('A_CUSTOM_CONSTANT', 513);
+EOT;
+        $stubData    = new StubData($exampleStub, null);
+
+        self::assertStringMatchesFormat(
+            "%Adefine('A_CUSTOM_CONSTANT',%w%d);",
+            $stubData->getStub(),
+        );
+
+        self::assertNull($stubData->getExtensionName());
+    }
+
     public function testNoStubForConstantThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
