@@ -534,6 +534,32 @@ EOT;
         self::assertNull($stubData->getExtensionName());
     }
 
+    public function testStubForConstantThatIsDeprecatedWithUserMessage(): void
+    {
+        // use a faked stub to make this test independent of the actual PHP version
+        $exampleStub = <<<'EOT'
+<?php
+
+/**
+ * @deprecated you should not use it.
+ */
+\define('A_CUSTOM_CONSTANT', 513);
+EOT;
+        $stubData    = new StubData($exampleStub, null);
+
+        self::assertStringMatchesFormat(
+            "%Adefine('A_CUSTOM_CONSTANT',%w%d);",
+            $stubData->getStub(),
+        );
+
+        self::assertStringContainsString(
+            '@deprecated you should not use it.',
+            $stubData->getStub(),
+        );
+
+        self::assertNull($stubData->getExtensionName());
+    }
+
     public function testNoStubForConstantThatDoesNotExist(): void
     {
         self::assertNull($this->sourceStubber->generateConstantStub('SOME_CONSTANT'));
