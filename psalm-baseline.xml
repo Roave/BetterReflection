@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.23.0@005e3184fb6de4350a873b9b8c4dc3cede9db762">
+<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
   <file src="src/Reflection/Attribute/ReflectionAttributeHelper.php">
     <ImpureMethodCall>
       <code><![CDATA[toLowerString]]></code>
@@ -149,16 +149,12 @@
       <code><![CDATA[getStartLine]]></code>
       <code><![CDATA[getStmts]]></code>
       <code><![CDATA[getSubNodeNames]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
       <code><![CDATA[traverse]]></code>
     </ImpureMethodCall>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$endLine]]></code>
+      <code><![CDATA[$startLine]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionMethod.php">
     <ImpureFunctionCall>
@@ -195,10 +191,12 @@
       <code><![CDATA[__invoke]]></code>
       <code><![CDATA[getEndLine]]></code>
       <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
       <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$endLine]]></code>
+      <code><![CDATA[$startLine]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionProperty.php">
     <ImpureFunctionCall>
@@ -212,8 +210,6 @@
       <code><![CDATA[classExists]]></code>
       <code><![CDATA[getEndLine]]></code>
       <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
       <code><![CDATA[isPrivate]]></code>
       <code><![CDATA[isProtected]]></code>
       <code><![CDATA[isPublic]]></code>
@@ -221,6 +217,10 @@
       <code><![CDATA[isStatic]]></code>
       <code><![CDATA[traitExists]]></code>
     </ImpureMethodCall>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$endLine]]></code>
+      <code><![CDATA[$startLine]]></code>
+    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionType.php">
     <ImpureMethodCall>
