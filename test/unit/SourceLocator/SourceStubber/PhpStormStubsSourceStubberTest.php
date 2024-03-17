@@ -468,37 +468,26 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testStubForConstantThatIsDeprecated(): void
     {
-        // use a faked stub to make this test independent of the actual PHP version
-        $exampleStub = <<<'EOT'
-<?php
+        $stubData = $this->sourceStubber->generateConstantStub('MT_RAND_PHP');
 
-/**
- * ID of "string" filter.
- * @link https://php.net/manual/en/filter.constants.php
- * @deprecated 8.1
- */
-\define('FILTER_SANITIZE_STRING', 513);
-EOT;
-        $stubData    = new StubData($exampleStub, 'filter');
-
-        self::assertStringMatchesFormat(
-            "%Adefine('FILTER_SANITIZE_STRING',%w%d);",
+        self::assertStringContainsString(
+            'define("MT_RAND_PHP", 1);',
             $stubData->getStub(),
         );
 
-        if (PHP_VERSION_ID >= 80100) {
+        if (PHP_VERSION_ID >= 80300) {
             self::assertStringContainsString(
-                '@deprecated 8.1',
+                '@deprecated 8.3',
                 $stubData->getStub(),
             );
         } else {
             self::assertStringNotContainsString(
-                '@deprecated 8.1',
+                '@deprecated 8.3',
                 $stubData->getStub(),
             );
         }
 
-        self::assertSame('filter', $stubData->getExtensionName());
+        self::assertSame('standard', $stubData->getExtensionName());
     }
 
     public function testNoStubForConstantThatDoesNotExist(): void
