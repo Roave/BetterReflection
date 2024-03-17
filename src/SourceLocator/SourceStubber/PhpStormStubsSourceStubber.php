@@ -24,9 +24,11 @@ use PhpParser\Parser;
 use PhpParser\PrettyPrinter\Standard;
 use RecursiveIterator;
 use Roave\BetterReflection\Reflection\Annotation\AnnotationHelper;
+use Roave\BetterReflection\Reflection\Exception\InvalidConstantNode;
 use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
+use Roave\BetterReflection\Util\ConstantNodeChecker;
 use SimpleXMLElement;
 use SplFixedArray;
 use Traversable;
@@ -396,6 +398,15 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     private function createStub(Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall $node, Node\Stmt\Namespace_|null $namespaceNode): string
     {
+        if ($node instanceof Node\Expr\FuncCall) {
+            try {
+                ConstantNodeChecker::assertValidDefineFunctionCall($node);
+                $this->addDeprecatedDocComment($node);
+            } catch (InvalidConstantNode) {
+                // just keep going
+            }
+        }
+
         if (! ($node instanceof Node\Expr\FuncCall)) {
             $this->addDeprecatedDocComment($node);
 
@@ -612,13 +623,17 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             : null;
     }
 
-    private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node): void
+    private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_ $node): void
     {
-        if ($node instanceof Node\Stmt\Const_) {
+        if ($node instanceof Node\Expr\FuncCall) {
             if (! $this->isDeprecatedByPhpDocInPhpVersion($node)) {
                 $this->removeAnnotationFromDocComment($node, 'deprecated');
             }
 
+            return;
+        }
+
+        if ($node instanceof Node\Stmt\Const_) {
             return;
         }
 
@@ -647,7 +662,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     private function removeAnnotationFromDocComment(
-        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_ $node,
         string $annotationName,
     ): void {
         $docComment = $node->getDocComment();
@@ -664,7 +679,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return in_array($extension, self::CORE_EXTENSIONS, true);
     }
 
-    private function isDeprecatedByPhpDocInPhpVersion(Node\Stmt\Const_ $node): bool
+    private function isDeprecatedByPhpDocInPhpVersion(Node\Expr\FuncCall $node): bool
     {
         $docComment = $node->getDocComment();
         if ($docComment === null) {
