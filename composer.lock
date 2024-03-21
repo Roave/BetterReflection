@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6bcf8cc2a1276721941e1cc89f88421",
+    "content-hash": "ca4b0964c7625dfb5e5ce68bb59844e4",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -1009,16 +1009,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.0.6",
+            "version": "11.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6af32d7938fc366f86e49a5f5ebb314018d1b1fb"
+                "reference": "afa8d61ba7ae78da739938c999140eb767a1ad7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6af32d7938fc366f86e49a5f5ebb314018d1b1fb",
-                "reference": "6af32d7938fc366f86e49a5f5ebb314018d1b1fb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/afa8d61ba7ae78da739938c999140eb767a1ad7f",
+                "reference": "afa8d61ba7ae78da739938c999140eb767a1ad7f",
                 "shasum": ""
             },
             "require": {
@@ -1089,7 +1089,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.6"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.7"
             },
             "funding": [
                 {
@@ -1105,7 +1105,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-12T15:40:01+00:00"
+            "time": "2024-03-21T07:33:30+00:00"
         },
         {
             "name": "psr/cache",

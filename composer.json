@@ -34,7 +34,7 @@
     ],
     "require-dev": {
         "phpbench/phpbench": "^1.2.15",
-        "phpunit/phpunit": "^11.0.6"
+        "phpunit/phpunit": "^11.0.7"
     },
     "autoload": {
         "psr-4": {
