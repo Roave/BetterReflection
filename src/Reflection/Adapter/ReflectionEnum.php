@@ -537,11 +537,12 @@ final class ReflectionEnum extends CoreReflectionEnum
             return $this->cases;
         }
 
-        $cases = $this->betterReflectionEnum->getCases();
+        $isBacked = $this->betterReflectionEnum->isBacked();
+        $cases    = $this->betterReflectionEnum->getCases();
 
         $mappedCases = [];
         foreach ($cases as $case) {
-            if ($this->betterReflectionEnum->isBacked()) {
+            if ($isBacked) {
                 $mappedCases[] = new ReflectionEnumBackedCase($case);
             } else {
                 $mappedCases[] = new ReflectionEnumUnitCase($case);
