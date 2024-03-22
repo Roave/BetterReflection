@@ -34,6 +34,9 @@ use function strtolower;
  */
 final class ReflectionEnum extends CoreReflectionEnum
 {
+    /** @var list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase>|null */
+    private array|null $cases = null;
+
     public function __construct(private BetterReflectionEnum $betterReflectionEnum)
     {
         /** @phpstan-ignore unset.readOnlyPropertyByPhpDoc */
@@ -590,9 +593,13 @@ final class ReflectionEnum extends CoreReflectionEnum
         return new ReflectionEnumUnitCase($case);
     }
 
-    /** @return list<ReflectionEnumUnitCase|ReflectionEnumBackedCase> */
+    /** @return list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase> */
     public function getCases(): array
     {
+        if ($this->cases !== null) {
+            return $this->cases;
+        }
+
         $cases = $this->betterReflectionEnum->getCases();
 
         $mappedCases = [];
@@ -604,7 +611,7 @@ final class ReflectionEnum extends CoreReflectionEnum
             }
         }
 
-        return $mappedCases;
+        return $this->cases = $mappedCases;
     }
 
     public function isBacked(): bool
