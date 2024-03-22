@@ -13,9 +13,9 @@ final class Memoize {
     private mixed $cached = null;
 
     /**
-     * @var callable(): T
+     * @var (callable(): T)|null
      */
-    private  $fn;
+    private $fn;
 
     /** @param callable(): T $fn */
     public function __construct(callable $fn)
@@ -27,8 +27,9 @@ final class Memoize {
      * @return T
      */
     public function memoize(): mixed {
-        if ($this->cached === null) {
+        if ($this->cached === null && $this->fn !== null) {
             $this->cached = ($this->fn)();
+            $this->fn = null;
         }
         return $this->cached;
     }
