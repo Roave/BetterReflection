@@ -530,14 +530,18 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return list<ReflectionEnumUnitCase|ReflectionEnumBackedCase> */
     public function getCases(): array
     {
-        /** @psalm-suppress ImpureFunctionCall */
-        return array_map(function (BetterReflectionEnumCase $case): ReflectionEnumUnitCase|ReflectionEnumBackedCase {
-            if ($this->betterReflectionEnum->isBacked()) {
-                return new ReflectionEnumBackedCase($case);
-            }
+        $cases = array_values($this->betterReflectionEnum->getCases());
 
-            return new ReflectionEnumUnitCase($case);
-        }, array_values($this->betterReflectionEnum->getCases()));
+        $mappedCases = [];
+        foreach ($cases as $case) {
+            if ($this->betterReflectionEnum->isBacked()) {
+                $mappedCases[] = new ReflectionEnumBackedCase($case);
+            } else {
+                $mappedCases[] = new ReflectionEnumUnitCase($case);
+            }
+        }
+
+        return $mappedCases;
     }
 
     public function isBacked(): bool
