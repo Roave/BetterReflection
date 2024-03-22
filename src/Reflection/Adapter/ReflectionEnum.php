@@ -530,7 +530,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return list<ReflectionEnumUnitCase|ReflectionEnumBackedCase> */
     public function getCases(): array
     {
-        $cases = array_values($this->betterReflectionEnum->getCases());
+        $cases = $this->betterReflectionEnum->getCases();
 
         $mappedCases = [];
         foreach ($cases as $case) {
