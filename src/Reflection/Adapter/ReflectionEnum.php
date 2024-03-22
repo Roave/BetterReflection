@@ -43,7 +43,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         /** @phpstan-ignore unset.readOnlyPropertyByPhpDoc */
         unset($this->name);
 
-        $this->cases = new Memoize(function() {
+        $this->cases = new Memoize(function () {
             $isBacked = $this->betterReflectionEnum->isBacked();
             $cases    = $this->betterReflectionEnum->getCases();
 
@@ -55,6 +55,7 @@ final class ReflectionEnum extends CoreReflectionEnum
                     $mappedCases[] = new ReflectionEnumUnitCase($case);
                 }
             }
+
             return $mappedCases;
         });
     }
@@ -612,7 +613,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase> */
     public function getCases(): array
     {
-        return $this->cases->memoize();
+        return $this->cases->get();
     }
 
     public function isBacked(): bool

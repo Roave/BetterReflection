@@ -4,33 +4,25 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\Util;
 
-/** @template T */
-final class Memoize {
-    /**
-     * @var T
-     * @psalm-suppress PossiblyNullPropertyAssignmentValue
-     */
-    private mixed $cached = null;
+use Closure;
 
-    /**
-     * @var (callable(): T)|null
-     */
-    private $fn;
+/** * @template T * @internal do not touch: you have been warned. */
+final class Memoize
+{
+    private readonly mixed $cached;
 
-    /** @param callable(): T $fn */
-    public function __construct(callable $fn)
+    /** @param pure-Closure(): T $cb */
+    public function __construct(private Closure|null $cb)
     {
-        $this->fn = $fn;
     }
 
-    /**
-     * @return T
-     */
-    public function memoize(): mixed {
-        if ($this->cached === null && $this->fn !== null) {
-            $this->cached = ($this->fn)();
-            $this->fn = null;
+    public function get(): mixed
+    {
+        if ($this->cb) {
+            $this->cached = ($this->cb)();
+            $this->cb     = null;
         }
+
         return $this->cached;
     }
 }
