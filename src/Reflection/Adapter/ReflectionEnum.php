@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnum
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflection\Util\Memoize;
 use ValueError;
 
 use function array_combine;
@@ -33,12 +34,27 @@ use function strtolower;
  */
 final class ReflectionEnum extends CoreReflectionEnum
 {
-    /** @var list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase>|null */
-    private array|null $cases = null;
+    /** @var Memoize<list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase>> */
+    private Memoize $cases;
 
     public function __construct(private BetterReflectionEnum $betterReflectionEnum)
     {
         unset($this->name);
+
+        $this->cases = new Memoize(function() {
+            $isBacked = $this->betterReflectionEnum->isBacked();
+            $cases    = $this->betterReflectionEnum->getCases();
+
+            $mappedCases = [];
+            foreach ($cases as $case) {
+                if ($isBacked) {
+                    $mappedCases[] = new ReflectionEnumBackedCase($case);
+                } else {
+                    $mappedCases[] = new ReflectionEnumUnitCase($case);
+                }
+            }
+            return $mappedCases;
+        });
     }
 
     /** @return non-empty-string */
@@ -533,23 +549,7 @@ final class ReflectionEnum extends CoreReflectionEnum
     /** @return list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase> */
     public function getCases(): array
     {
-        if ($this->cases !== null) {
-            return $this->cases;
-        }
-
-        $isBacked = $this->betterReflectionEnum->isBacked();
-        $cases    = $this->betterReflectionEnum->getCases();
-
-        $mappedCases = [];
-        foreach ($cases as $case) {
-            if ($isBacked) {
-                $mappedCases[] = new ReflectionEnumBackedCase($case);
-            } else {
-                $mappedCases[] = new ReflectionEnumUnitCase($case);
-            }
-        }
-
-        return $this->cases = $mappedCases;
+        return $this->cases->memoize();
     }
 
     public function isBacked(): bool
