@@ -16,6 +16,7 @@ final class Memoize
     {
     }
 
+    /** @return T */
     public function get(): mixed
     {
         if ($this->cb) {
