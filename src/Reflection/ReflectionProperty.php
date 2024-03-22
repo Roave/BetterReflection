@@ -460,7 +460,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        $closure = Closure::bind(fn (object $instance, string $propertyName): mixed => $instance->{$propertyName}, $instance, $implementingClassName);
+        $closure = Closure::bind(static fn (object $instance, string $propertyName): mixed => $instance->{$propertyName}, $instance, $implementingClassName);
 
         assert($closure instanceof Closure);
 
@@ -494,7 +494,7 @@ class ReflectionProperty
 
         $instance = $this->assertObject($object);
 
-        $closure = Closure::bind(function (object $instance, string $propertyName, mixed $value): void {
+        $closure = Closure::bind(static function (object $instance, string $propertyName, mixed $value): void {
             $instance->{$propertyName} = $value;
         }, $instance, $implementingClassName);
 
