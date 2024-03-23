@@ -692,12 +692,10 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             $patch     = $matches[3] ?? 0;
             $versionId = sprintf('%d%02d%02d', $major, $minor, $patch);
 
-            if ($this->phpVersion >= $versionId) {
-                return true;
-            }
+            return $this->phpVersion >= $versionId;
         }
 
-        return false;
+        return true;
     }
 
     private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_ $node): bool

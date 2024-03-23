@@ -338,4 +338,13 @@ class ReflectionConstantTest extends TestCase
 
         self::assertSame($isDeprecated, $constantReflection->isDeprecated());
     }
+
+    public function testIsCurloptFtpSslConstantDeprecated(): void
+    {
+        $betterReflection   = BetterReflectionSingleton::instance();
+        $reflector          = new DefaultReflector($betterReflection->sourceLocator());
+        $constantReflection = $reflector->reflectConstant('CURLOPT_FTP_SSL');
+
+        self::assertTrue($constantReflection->isDeprecated());
+    }
 }
