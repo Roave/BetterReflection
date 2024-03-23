@@ -18,6 +18,7 @@ use Roave\BetterReflection\Reflection\ReflectionEnumCase as BetterReflectionEnum
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Util\FileHelper;
+use Roave\BetterReflection\Util\Memoize;
 use ValueError;
 
 use function array_combine;
@@ -33,9 +34,28 @@ use function strtolower;
  */
 final class ReflectionEnum extends CoreReflectionEnum
 {
+    /** @var Memoize<list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase>> */
+    private Memoize $cases;
+
     public function __construct(private BetterReflectionEnum $betterReflectionEnum)
     {
         unset($this->name);
+
+        $this->cases = new Memoize(function () {
+            $isBacked = $this->betterReflectionEnum->isBacked();
+            $cases    = $this->betterReflectionEnum->getCases();
+
+            $mappedCases = [];
+            foreach ($cases as $case) {
+                if ($isBacked) {
+                    $mappedCases[] = new ReflectionEnumBackedCase($case);
+                } else {
+                    $mappedCases[] = new ReflectionEnumUnitCase($case);
+                }
+            }
+
+            return $mappedCases;
+        });
     }
 
     /** @return non-empty-string */
@@ -527,17 +547,10 @@ final class ReflectionEnum extends CoreReflectionEnum
         return new ReflectionEnumUnitCase($case);
     }
 
-    /** @return list<ReflectionEnumUnitCase|ReflectionEnumBackedCase> */
+    /** @return list<ReflectionEnumUnitCase>|list<ReflectionEnumBackedCase> */
     public function getCases(): array
     {
-        /** @psalm-suppress ImpureFunctionCall */
-        return array_map(function (BetterReflectionEnumCase $case): ReflectionEnumUnitCase|ReflectionEnumBackedCase {
-            if ($this->betterReflectionEnum->isBacked()) {
-                return new ReflectionEnumBackedCase($case);
-            }
-
-            return new ReflectionEnumUnitCase($case);
-        }, array_values($this->betterReflectionEnum->getCases()));
+        return $this->cases->get();
     }
 
     public function isBacked(): bool
