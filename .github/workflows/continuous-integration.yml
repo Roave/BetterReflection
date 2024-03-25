@@ -33,7 +33,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
@@ -75,7 +75,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -116,7 +116,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -157,7 +157,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
@@ -202,7 +202,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -243,7 +243,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -278,7 +278,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -319,7 +319,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -358,7 +358,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.30.0"
+        uses: "shivammathur/setup-php@2.30.1"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
