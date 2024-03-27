@@ -13,8 +13,11 @@ use Roave\BetterReflection\Util\ConstantNodeChecker;
 
 use function array_key_exists;
 use function assert;
+use function class_exists;
 use function constant;
+use function count;
 use function defined;
+use function explode;
 use function in_array;
 use function is_resource;
 use function sprintf;
@@ -195,6 +198,16 @@ class CachingVisitor extends NodeVisitorAbstract
      */
     private function updateConstantValue(Node\Expr\FuncCall|Node\Const_ $node, string $constantName): void
     {
+        // prevent autoloading while discovering class constants
+        $parts = explode('::', $constantName, 2);
+        if (count($parts) === 2) {
+            [$className, $classConstName] = $parts;
+
+            if (! class_exists($className, false)) {
+                return;
+            }
+        }
+
         if (! defined($constantName)) {
             return;
         }
