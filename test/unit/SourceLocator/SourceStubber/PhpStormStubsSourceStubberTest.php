@@ -62,6 +62,7 @@ use function get_defined_constants;
 use function get_defined_functions;
 use function in_array;
 use function sort;
+use function spl_autoload_register;
 use function sprintf;
 
 use const PHP_VERSION_ID;
@@ -624,6 +625,19 @@ class PhpStormStubsSourceStubberTest extends TestCase
     {
         self::assertNull($this->sourceStubber->generateConstantStub('date_atom'));
         self::assertNull($this->sourceStubber->generateConstantStub('date_atom'));
+    }
+
+    #[RunInSeparateProcess]
+    public function testUpdateConstantValueDoesNotTriggerAutoload(): void
+    {
+        spl_autoload_register(static function (string $className): void {
+            self::fail('Parsing php-src constant should not trigger userland autoloading');
+        });
+
+        $sourceStubber     = new PhpStormStubsSourceStubber(BetterReflectionSingleton::instance()->phpParser());
+        $constConstantStub = $sourceStubber->generateConstantStub('JSON_PRETTY_PRINT');
+        self::assertNotNull($constConstantStub);
+        self::assertStringContainsString("define('JSON_PRETTY_PRINT',", $constConstantStub->getStub());
     }
 
     #[RunInSeparateProcess]
