@@ -79,10 +79,10 @@ class ReflectionParameter
 
         $this->name       = $name;
         $this->default    = $node->default;
+        $this->isPromoted = $node->flags !== 0;
         $this->type       = $this->createType($node);
         $this->isVariadic = $node->variadic;
         $this->byRef      = $node->byRef;
-        $this->isPromoted = $node->flags !== 0;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
 
         $startLine = $node->getStartLine();
@@ -420,7 +420,7 @@ class ReflectionParameter
 
         assert($type instanceof Node\Identifier || $type instanceof Node\Name || $type instanceof Node\NullableType || $type instanceof Node\UnionType || $type instanceof Node\IntersectionType);
 
-        $allowsNull = $this->default instanceof Node\Expr\ConstFetch && $this->default->name->toLowerString() === 'null';
+        $allowsNull = $this->default instanceof Node\Expr\ConstFetch && $this->default->name->toLowerString() === 'null' && ! $this->isPromoted;
 
         return ReflectionType::createFromNode($this->reflector, $this, $type, $allowsNull);
     }
