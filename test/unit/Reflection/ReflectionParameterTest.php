@@ -303,26 +303,29 @@ class ReflectionParameterTest extends TestCase
         self::assertNull($method->getParameter('noTypeParam')->getType());
     }
 
-    /** @return list<array{0: non-empty-string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: non-empty-string, 2: bool}> */
     public static function allowsNullProvider(): array
     {
         return [
-            ['classParam', false],
-            ['noTypeParam', true],
-            ['nullableStringAllowsNull', true],
-            ['unionWithNullOnFirstPositionAllowsNull', true],
-            ['unionWithNullOnLastPositionAllowsNull', true],
-            ['stringParamWithNullDefaultValueAllowsNull', true],
-            ['stringWithNullConstantDefaultValueDoesNotAllowNull', false],
+            ['foo', 'classParam', false],
+            ['foo', 'noTypeParam', true],
+            ['foo', 'nullableStringAllowsNull', true],
+            ['foo', 'unionWithNullOnFirstPositionAllowsNull', true],
+            ['foo', 'unionWithNullOnLastPositionAllowsNull', true],
+            ['foo', 'stringParamWithNullDefaultValueAllowsNull', true],
+            ['foo', 'stringWithNullConstantDefaultValueDoesNotAllowNull', false],
         ];
     }
 
-    /** @param non-empty-string $parameterName */
+    /**
+     * @param non-empty-string $methodName
+     * @param non-empty-string $parameterName
+     */
     #[DataProvider('allowsNullProvider')]
-    public function testAllowsNull(string $parameterName, bool $allowsNull): void
+    public function testAllowsNull(string $methodName, string $parameterName, bool $allowsNull): void
     {
         $classInfo = $this->reflector->reflectClass(NullableParameterTypeDeclarations::class);
-        $method    = $classInfo->getMethod('foo');
+        $method    = $classInfo->getMethod($methodName);
         $parameter = $method->getParameter($parameterName);
 
         self::assertSame($allowsNull, $parameter->allowsNull());
