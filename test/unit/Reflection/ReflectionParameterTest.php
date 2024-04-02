@@ -314,6 +314,8 @@ class ReflectionParameterTest extends TestCase
             ['foo', 'unionWithNullOnLastPositionAllowsNull', true],
             ['foo', 'stringParamWithNullDefaultValueAllowsNull', true],
             ['foo', 'stringWithNullConstantDefaultValueDoesNotAllowNull', false],
+            ['__construct', 'stringParamWithNullDefaultValueAllowsNull', true],
+            ['__construct', 'stringPromotedPropertyWithNullDefaultValueDoesNotAllowNull', false],
         ];
     }
 

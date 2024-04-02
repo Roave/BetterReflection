@@ -16,4 +16,12 @@ class NullableParameterTypeDeclarations
         string $stringWithNullConstantDefaultValueDoesNotAllowNull = self::NULLABLE
     ) {
     }
+
+    public function __construct(
+        string $stringParamWithNullDefaultValueAllowsNull = null,
+        public string $stringPromotedPropertyWithNullDefaultValueDoesNotAllowNull = null
+    )
+    {
+
+    }
 }
