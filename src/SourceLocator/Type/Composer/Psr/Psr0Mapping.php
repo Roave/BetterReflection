@@ -14,7 +14,7 @@ use function array_values;
 use function is_dir;
 use function rtrim;
 use function str_replace;
-use function strpos;
+use function str_starts_with;
 
 final class Psr0Mapping implements PsrAutoloaderMapping
 {
@@ -52,7 +52,7 @@ final class Psr0Mapping implements PsrAutoloaderMapping
         $className = $identifier->getName();
 
         foreach ($this->mappings as $prefix => $paths) {
-            if (strpos($className, $prefix) === 0) {
+            if (str_starts_with($className, $prefix)) {
                 return array_map(
                     static fn (string $path): string => $path . '/' . str_replace(['\\', '_'], '/', $className) . '.php',
                     $paths,
