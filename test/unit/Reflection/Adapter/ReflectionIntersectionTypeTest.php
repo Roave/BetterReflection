@@ -43,7 +43,7 @@ class ReflectionIntersectionTypeTest extends TestCase
     {
         return [
             ['__toString', null, 'int|string', []],
-            ['allowsNull', null, true, []],
+            ['allowsNull', null, false, []],
             ['getTypes', null, [], []],
         ];
     }
