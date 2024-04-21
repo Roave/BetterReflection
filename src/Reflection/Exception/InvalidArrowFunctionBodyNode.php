@@ -11,7 +11,7 @@ use RuntimeException;
 use function sprintf;
 use function substr;
 
-class InvalidArrowFunctionBodyNode extends RuntimeException
+final class InvalidArrowFunctionBodyNode extends RuntimeException
 {
     public static function create(Stmt $node): self
     {

@@ -10,7 +10,7 @@ use function is_file;
 use function is_readable;
 use function sprintf;
 
-class FileChecker
+final class FileChecker
 {
     /**
      * @param non-empty-string $filename

@@ -9,7 +9,7 @@ namespace Roave\BetterReflection\SourceLocator\Located;
  *
  * @psalm-immutable
  */
-class AliasLocatedSource extends LocatedSource
+final class AliasLocatedSource extends LocatedSource
 {
     public function __construct(string $source, string $name, string|null $filename, private string $aliasName)
     {

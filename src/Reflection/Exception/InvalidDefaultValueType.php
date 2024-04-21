@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use RuntimeException;
 
-class InvalidDefaultValueType extends RuntimeException
+final class InvalidDefaultValueType extends RuntimeException
 {
 }

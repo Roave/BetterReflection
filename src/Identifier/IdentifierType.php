@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 use function array_key_exists;
 use function sprintf;
 
-class IdentifierType
+final class IdentifierType
 {
     public const IDENTIFIER_CLASS    = ReflectionClass::class;
     public const IDENTIFIER_FUNCTION = ReflectionFunction::class;

@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use function gettype;
 use function sprintf;
 
-class NotAnObject extends InvalidArgumentException
+final class NotAnObject extends InvalidArgumentException
 {
     public static function fromNonObject(mixed $nonObject): self
     {

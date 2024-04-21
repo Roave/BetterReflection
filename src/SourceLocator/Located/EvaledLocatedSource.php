@@ -9,7 +9,7 @@ namespace Roave\BetterReflection\SourceLocator\Located;
  *
  * @psalm-immutable
  */
-class EvaledLocatedSource extends LocatedSource
+final class EvaledLocatedSource extends LocatedSource
 {
     public function isEvaled(): bool
     {

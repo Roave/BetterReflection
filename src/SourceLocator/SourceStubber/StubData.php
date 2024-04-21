@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflection\SourceLocator\SourceStubber;
 
 /** @internal */
-class StubData
+final class StubData
 {
     /** @param non-empty-string|null $extensionName */
     public function __construct(private string $stub, private string|null $extensionName)

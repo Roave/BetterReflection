@@ -11,7 +11,7 @@ use RuntimeException;
 use function sprintf;
 use function substr;
 
-class InvalidConstantNode extends RuntimeException
+final class InvalidConstantNode extends RuntimeException
 {
     public static function create(Node $node): self
     {

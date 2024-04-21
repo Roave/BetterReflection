@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use LogicException;
 
-class NotInternalClass extends LogicException
+final class NotInternalClass extends LogicException
 {
 }

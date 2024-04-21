@@ -12,7 +12,7 @@ use function ltrim;
 use function preg_match;
 use function str_starts_with;
 
-class Identifier
+final class Identifier
 {
     public const WILDCARD = '*';
 

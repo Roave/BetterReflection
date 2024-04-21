@@ -20,7 +20,7 @@ use function array_map;
 use function assert;
 
 /** @psalm-immutable */
-class ReflectionEnum extends ReflectionClass
+final class ReflectionEnum extends ReflectionClass
 {
     private ReflectionNamedType|null $backingType;
 

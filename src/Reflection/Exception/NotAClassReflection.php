@@ -9,7 +9,7 @@ use UnexpectedValueException;
 
 use function sprintf;
 
-class NotAClassReflection extends UnexpectedValueException
+final class NotAClassReflection extends UnexpectedValueException
 {
     public static function fromReflectionClass(ReflectionClass $class): self
     {

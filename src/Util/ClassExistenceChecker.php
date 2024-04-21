@@ -9,7 +9,7 @@ use function interface_exists;
 use function trait_exists;
 
 /** @internal */
-class ClassExistenceChecker
+final class ClassExistenceChecker
 {
     /** @psalm-assert-if-true class-string $name */
     public static function exists(string $name): bool

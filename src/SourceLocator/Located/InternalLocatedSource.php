@@ -9,7 +9,7 @@ namespace Roave\BetterReflection\SourceLocator\Located;
  *
  * @psalm-immutable
  */
-class InternalLocatedSource extends LocatedSource
+final class InternalLocatedSource extends LocatedSource
 {
     /** @param non-empty-string $extensionName */
     public function __construct(string $source, string $name, private string $extensionName)

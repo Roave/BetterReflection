@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\Reflection\Adapter\Exception;
 
 use LogicException;
 
-class NotImplemented extends LogicException
+final class NotImplemented extends LogicException
 {
 }

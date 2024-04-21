@@ -31,7 +31,7 @@ use function is_string;
 use function sprintf;
 
 /** @psalm-immutable */
-class ReflectionParameter
+final class ReflectionParameter
 {
     /** @var non-empty-string */
     private string $name;

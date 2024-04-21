@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class InvalidPrefixMapping extends InvalidArgumentException implements Exception
+final class InvalidPrefixMapping extends InvalidArgumentException implements Exception
 {
     public static function emptyPrefixGiven(): self
     {

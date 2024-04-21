@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class InvalidNodePosition extends InvalidArgumentException
+final class InvalidNodePosition extends InvalidArgumentException
 {
     public static function fromPosition(int $position): self
     {

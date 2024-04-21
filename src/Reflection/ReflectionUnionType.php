@@ -16,7 +16,7 @@ use function implode;
 use function sprintf;
 
 /** @psalm-immutable */
-class ReflectionUnionType extends ReflectionType
+final class ReflectionUnionType extends ReflectionType
 {
     /** @var non-empty-list<ReflectionNamedType|ReflectionIntersectionType> */
     private array $types;

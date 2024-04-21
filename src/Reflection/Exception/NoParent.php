@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use LogicException;
 
-class NoParent extends LogicException
+final class NoParent extends LogicException
 {
 }

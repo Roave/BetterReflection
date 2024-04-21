@@ -9,7 +9,7 @@ use RuntimeException;
 use function is_file;
 use function sprintf;
 
-class InvalidDirectory extends RuntimeException
+final class InvalidDirectory extends RuntimeException
 {
     public static function fromNonDirectory(string $nonDirectory): self
     {

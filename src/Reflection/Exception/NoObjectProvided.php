@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use InvalidArgumentException;
 
-class NoObjectProvided extends InvalidArgumentException
+final class NoObjectProvided extends InvalidArgumentException
 {
     public static function create(): self
     {

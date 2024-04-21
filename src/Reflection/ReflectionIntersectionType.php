@@ -13,7 +13,7 @@ use function assert;
 use function implode;
 
 /** @psalm-immutable */
-class ReflectionIntersectionType extends ReflectionType
+final class ReflectionIntersectionType extends ReflectionType
 {
     /** @var non-empty-list<ReflectionNamedType> */
     private array $types;

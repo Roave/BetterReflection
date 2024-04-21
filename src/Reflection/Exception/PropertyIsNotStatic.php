@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class PropertyIsNotStatic extends RuntimeException
+final class PropertyIsNotStatic extends RuntimeException
 {
     public static function fromName(string $propertyName): self
     {

@@ -21,7 +21,7 @@ use function in_array;
 use function sprintf;
 
 /** @internal */
-class CompileNodeToValue
+final class CompileNodeToValue
 {
     private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
 

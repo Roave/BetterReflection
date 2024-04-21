@@ -27,7 +27,7 @@ use function implode;
 use function is_int;
 
 /** @psalm-immutable */
-class ReflectionConstant implements Reflection
+final class ReflectionConstant implements Reflection
 {
     /**
      * @var non-empty-string

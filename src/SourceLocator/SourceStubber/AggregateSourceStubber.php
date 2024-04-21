@@ -8,7 +8,7 @@ use function array_merge;
 use function array_reduce;
 use function array_values;
 
-class AggregateSourceStubber implements SourceStubber
+final class AggregateSourceStubber implements SourceStubber
 {
     /** @var list<SourceStubber> */
     private array $sourceStubbers;

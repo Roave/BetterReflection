@@ -13,7 +13,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 /** @internal */
-class NodeToReflection implements AstConversionStrategy
+final class NodeToReflection implements AstConversionStrategy
 {
     /**
      * Take an AST node in some located source (potentially in a namespace) and

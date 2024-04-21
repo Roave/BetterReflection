@@ -14,7 +14,7 @@ use function assert;
 use function sprintf;
 
 /** @internal */
-class UnableToCompileNode extends LogicException
+final class UnableToCompileNode extends LogicException
 {
     private string|null $constantName = null;
 

@@ -17,7 +17,7 @@ use function max;
 use function min;
 use function sprintf;
 
-class ParseToAstFailure extends RuntimeException
+final class ParseToAstFailure extends RuntimeException
 {
     public static function fromLocatedSource(LocatedSource $locatedSource, Throwable $previous): self
     {

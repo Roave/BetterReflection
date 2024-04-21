@@ -20,7 +20,7 @@ use function is_dir;
 /**
  * This source locator recursively loads all php files in an entire directory or multiple directories.
  */
-class DirectoriesSourceLocator implements SourceLocator
+final class DirectoriesSourceLocator implements SourceLocator
 {
     private AggregateSourceLocator $aggregateSourceLocator;
 

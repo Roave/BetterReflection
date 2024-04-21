@@ -48,7 +48,7 @@ use function strtolower;
  *   - we expect the autoloader to load classes from a file (i.e. using require/include)
  *   - your autoloader of choice does not replace stream wrappers
  */
-class AutoloadSourceLocator extends AbstractSourceLocator
+final class AutoloadSourceLocator extends AbstractSourceLocator
 {
     private Parser $phpParser;
 

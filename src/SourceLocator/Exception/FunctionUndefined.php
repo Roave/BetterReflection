@@ -16,6 +16,6 @@ use RuntimeException;
  *
  * @see \Roave\BetterReflection\Reflector\Exception\IdentifierNotFound
  */
-class FunctionUndefined extends RuntimeException
+final class FunctionUndefined extends RuntimeException
 {
 }
