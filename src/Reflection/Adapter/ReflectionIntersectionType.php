@@ -35,7 +35,6 @@ class ReflectionIntersectionType extends CoreReflectionIntersectionType
         return $this->betterReflectionType->__toString();
     }
 
-    /** @return false */
     public function allowsNull(): bool
     {
         return $this->betterReflectionType->allowsNull();

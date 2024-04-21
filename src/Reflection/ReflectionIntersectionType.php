@@ -53,7 +53,6 @@ class ReflectionIntersectionType extends ReflectionType
         return $this->types;
     }
 
-    /** @return false */
     public function allowsNull(): bool
     {
         return false;

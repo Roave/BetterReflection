@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Roave/BetterReflection coding standard">
-    <config name="php_version" value="80100"/>
+    <config name="php_version" value="80200"/>
     <arg value="p"/>
     <arg value="s"/>
     <arg name="colors"/>
