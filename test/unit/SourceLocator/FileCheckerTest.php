@@ -13,7 +13,7 @@ use Throwable;
 use function chmod;
 use function fileperms;
 use function sprintf;
-use function strpos;
+use function str_starts_with;
 
 use const PHP_OS;
 
@@ -36,7 +36,7 @@ class FileCheckerTest extends TestCase
 
     public function testCheckFileThrowsExceptionIfFileIsNotReadable(): void
     {
-        if (strpos(PHP_OS, 'WIN') === 0) {
+        if (str_starts_with(PHP_OS, 'WIN')) {
             self::markTestSkipped('It\'s not possible to change file mode on Windows');
         }
 

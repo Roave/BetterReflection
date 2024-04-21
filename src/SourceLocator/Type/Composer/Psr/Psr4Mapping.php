@@ -17,8 +17,8 @@ use function is_dir;
 use function ltrim;
 use function rtrim;
 use function str_replace;
+use function str_starts_with;
 use function strlen;
-use function strpos;
 use function substr;
 
 use const ARRAY_FILTER_USE_KEY;
@@ -78,7 +78,7 @@ final class Psr4Mapping implements PsrAutoloaderMapping
     {
         return array_filter(
             $this->mappings,
-            static fn (string $prefix): bool => strpos($className, $prefix) === 0,
+            static fn (string $prefix): bool => str_starts_with($className, $prefix),
             ARRAY_FILTER_USE_KEY,
         );
     }

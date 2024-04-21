@@ -10,7 +10,7 @@ use Roave\BetterReflection\Reflection\ReflectionFunction;
 
 use function ltrim;
 use function preg_match;
-use function strpos;
+use function str_starts_with;
 
 class Identifier
 {
@@ -26,7 +26,7 @@ class Identifier
         if (
             $name === self::WILDCARD
             || $name === ReflectionFunction::CLOSURE_NAME
-            || strpos($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX) === 0
+            || str_starts_with($name, ReflectionClass::ANONYMOUS_CLASS_NAME_PREFIX)
         ) {
             $this->name = $name;
 
