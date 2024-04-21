@@ -21,7 +21,7 @@ use function file_get_contents;
  * also the class required if you want to use Reflector->getClassesFromFile
  * (which loads all classes from specified file)
  */
-class SingleFileSourceLocator extends AbstractSourceLocator
+final class SingleFileSourceLocator extends AbstractSourceLocator
 {
     /**
      * @param non-empty-string $fileName

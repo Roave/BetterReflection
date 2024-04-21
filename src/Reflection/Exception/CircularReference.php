@@ -8,7 +8,7 @@ use UnexpectedValueException;
 
 use function sprintf;
 
-class CircularReference extends UnexpectedValueException
+final class CircularReference extends UnexpectedValueException
 {
     public static function fromClassName(string $className): self
     {

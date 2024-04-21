@@ -8,7 +8,7 @@ use LogicException;
 
 use function sprintf;
 
-class TwoClosuresOnSameLine extends LogicException
+final class TwoClosuresOnSameLine extends LogicException
 {
     public static function create(string $fileName, int $lineNumber): self
     {

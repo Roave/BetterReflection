@@ -15,7 +15,7 @@ use function sprintf;
 use function strtolower;
 
 /** @psalm-immutable */
-class ReflectionNamedType extends ReflectionType
+final class ReflectionNamedType extends ReflectionType
 {
     private const BUILT_IN_TYPES = [
         'int'      => null,

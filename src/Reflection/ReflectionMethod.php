@@ -26,7 +26,7 @@ use function sprintf;
 use function strtolower;
 
 /** @psalm-immutable */
-class ReflectionMethod
+final class ReflectionMethod
 {
     use ReflectionFunctionAbstract;
 

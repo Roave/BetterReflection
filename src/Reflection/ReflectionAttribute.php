@@ -15,7 +15,7 @@ use function array_map;
 use function assert;
 
 /** @psalm-immutable */
-class ReflectionAttribute
+final class ReflectionAttribute
 {
     /** @var non-empty-string */
     private string $name;

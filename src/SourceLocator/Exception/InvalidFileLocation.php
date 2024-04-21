@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use RuntimeException;
 
-class InvalidFileLocation extends RuntimeException
+final class InvalidFileLocation extends RuntimeException
 {
 }

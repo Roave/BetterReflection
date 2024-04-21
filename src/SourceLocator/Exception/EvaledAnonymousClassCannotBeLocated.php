@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use LogicException;
 
-class EvaledAnonymousClassCannotBeLocated extends LogicException
+final class EvaledAnonymousClassCannotBeLocated extends LogicException
 {
     public static function create(): self
     {

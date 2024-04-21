@@ -9,7 +9,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class ClassDoesNotExist extends RuntimeException
+final class ClassDoesNotExist extends RuntimeException
 {
     public static function forDifferentReflectionType(Reflection $reflection): self
     {

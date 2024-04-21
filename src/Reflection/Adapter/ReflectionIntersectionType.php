@@ -12,7 +12,7 @@ use function array_map;
 use function assert;
 
 /** @psalm-immutable */
-class ReflectionIntersectionType extends CoreReflectionIntersectionType
+final class ReflectionIntersectionType extends CoreReflectionIntersectionType
 {
     public function __construct(private BetterReflectionIntersectionType $betterReflectionType)
     {

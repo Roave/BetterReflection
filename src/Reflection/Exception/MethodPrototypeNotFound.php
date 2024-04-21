@@ -6,6 +6,6 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use ReflectionException;
 
-class MethodPrototypeNotFound extends ReflectionException
+final class MethodPrototypeNotFound extends ReflectionException
 {
 }

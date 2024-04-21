@@ -25,7 +25,7 @@ use function strtolower;
 use function strtoupper;
 
 /** @internal */
-class CachingVisitor extends NodeVisitorAbstract
+final class CachingVisitor extends NodeVisitorAbstract
 {
     private const TRUE_FALSE_NULL = ['true', 'false', 'null'];
 

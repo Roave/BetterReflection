@@ -10,7 +10,7 @@ use function gettype;
 use function is_object;
 use function sprintf;
 
-class InvalidFileInfo extends RuntimeException
+final class InvalidFileInfo extends RuntimeException
 {
     public static function fromNonSplFileInfo(mixed $nonSplFileInfo): self
     {

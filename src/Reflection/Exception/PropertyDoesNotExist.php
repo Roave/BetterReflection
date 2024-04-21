@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class PropertyDoesNotExist extends RuntimeException
+final class PropertyDoesNotExist extends RuntimeException
 {
     public static function fromName(string $propertyName): self
     {

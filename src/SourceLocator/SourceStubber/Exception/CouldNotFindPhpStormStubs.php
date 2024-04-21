@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\SourceStubber\Exception;
 
 use RuntimeException;
 
-class CouldNotFindPhpStormStubs extends RuntimeException
+final class CouldNotFindPhpStormStubs extends RuntimeException
 {
     public static function create(): self
     {

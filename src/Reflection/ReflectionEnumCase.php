@@ -22,7 +22,7 @@ use function is_int;
 use function is_string;
 
 /** @psalm-immutable */
-class ReflectionEnumCase
+final class ReflectionEnumCase
 {
     /** @var non-empty-string */
     private string $name;

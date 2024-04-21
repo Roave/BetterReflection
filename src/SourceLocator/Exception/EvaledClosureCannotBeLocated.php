@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\SourceLocator\Exception;
 
 use LogicException;
 
-class EvaledClosureCannotBeLocated extends LogicException
+final class EvaledClosureCannotBeLocated extends LogicException
 {
     public static function create(): self
     {

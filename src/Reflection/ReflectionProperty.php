@@ -38,7 +38,7 @@ use function sprintf;
 use function str_contains;
 
 /** @psalm-immutable */
-class ReflectionProperty
+final class ReflectionProperty
 {
     /** @var non-empty-string */
     private string $name;

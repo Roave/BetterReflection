@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class ObjectNotInstanceOfClass extends InvalidArgumentException
+final class ObjectNotInstanceOfClass extends InvalidArgumentException
 {
     public static function fromClassName(string $className): self
     {

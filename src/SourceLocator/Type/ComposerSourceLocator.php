@@ -21,7 +21,7 @@ use function file_get_contents;
  * ClassLoader->loadClass because this library has a strict requirement that we
  * do NOT actually load the classes
  */
-class ComposerSourceLocator extends AbstractSourceLocator
+final class ComposerSourceLocator extends AbstractSourceLocator
 {
     public function __construct(private ClassLoader $classLoader, Locator $astLocator)
     {

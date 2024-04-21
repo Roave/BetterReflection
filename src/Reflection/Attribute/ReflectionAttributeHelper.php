@@ -20,7 +20,7 @@ use function array_values;
 use function count;
 
 /** @internal */
-class ReflectionAttributeHelper
+final class ReflectionAttributeHelper
 {
     /**
      * @param Node\AttributeGroup[] $attrGroups

@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflector\Reflector;
 use function array_map;
 use function array_merge;
 
-class AggregateSourceLocator implements SourceLocator
+final class AggregateSourceLocator implements SourceLocator
 {
     /** @param list<SourceLocator> $sourceLocators */
     public function __construct(private array $sourceLocators = [])

@@ -15,7 +15,7 @@ use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflector\Reflector;
 
 /** @internal */
-class CompilerContext
+final class CompilerContext
 {
     public function __construct(
         private Reflector $reflector,

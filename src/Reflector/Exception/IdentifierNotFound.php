@@ -9,7 +9,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class IdentifierNotFound extends RuntimeException
+final class IdentifierNotFound extends RuntimeException
 {
     public function __construct(string $message, private Identifier $identifier)
     {

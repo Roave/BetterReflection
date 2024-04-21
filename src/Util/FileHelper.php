@@ -11,7 +11,7 @@ use function str_replace;
 
 use const DIRECTORY_SEPARATOR;
 
-class FileHelper
+final class FileHelper
 {
     /**
      * @param non-empty-string $path

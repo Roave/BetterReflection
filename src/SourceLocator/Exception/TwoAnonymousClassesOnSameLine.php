@@ -8,7 +8,7 @@ use LogicException;
 
 use function sprintf;
 
-class TwoAnonymousClassesOnSameLine extends LogicException
+final class TwoAnonymousClassesOnSameLine extends LogicException
 {
     public static function create(string $fileName, int $lineNumber): self
     {

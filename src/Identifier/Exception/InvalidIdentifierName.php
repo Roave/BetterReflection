@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class InvalidIdentifierName extends InvalidArgumentException
+final class InvalidIdentifierName extends InvalidArgumentException
 {
     public static function fromInvalidName(string $name): self
     {

@@ -17,7 +17,7 @@ use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
  * Note that this source locator does NOT specify a filename, because we did
  * not load it from a file, so it will be null if you use this locator.
  */
-class StringSourceLocator extends AbstractSourceLocator
+final class StringSourceLocator extends AbstractSourceLocator
 {
     /** @param non-empty-string $source */
     public function __construct(private string $source, Locator $astLocator)

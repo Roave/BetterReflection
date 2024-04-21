@@ -21,7 +21,7 @@ use function assert;
 use function function_exists;
 
 /** @psalm-immutable */
-class ReflectionFunction implements Reflection
+final class ReflectionFunction implements Reflection
 {
     use ReflectionFunctionAbstract;
 

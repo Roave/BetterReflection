@@ -10,7 +10,7 @@ use PhpParser\Node;
 
 use function sprintf;
 
-class NoNodePosition extends InvalidArgumentException
+final class NoNodePosition extends InvalidArgumentException
 {
     public static function fromNode(Node $node): self
     {

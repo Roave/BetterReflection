@@ -6,7 +6,7 @@ namespace Roave\BetterReflection\Reflection\Exception;
 
 use RuntimeException;
 
-class CodeLocationMissing extends RuntimeException
+final class CodeLocationMissing extends RuntimeException
 {
     public static function create(): self
     {

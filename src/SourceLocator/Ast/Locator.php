@@ -18,7 +18,7 @@ use Throwable;
 use function strtolower;
 
 /** @internal */
-class Locator
+final class Locator
 {
     private FindReflectionsInTree $findReflectionsInTree;
 

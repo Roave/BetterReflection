@@ -22,7 +22,7 @@ use function array_map;
 use function assert;
 
 /** @psalm-immutable */
-class ReflectionClassConstant
+final class ReflectionClassConstant
 {
     /** @var non-empty-string */
     private string $name;

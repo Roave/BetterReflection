@@ -25,7 +25,7 @@ use const PATHINFO_EXTENSION;
 /**
  * This source locator loads all php files from \FileSystemIterator
  */
-class FileIteratorSourceLocator implements SourceLocator
+final class FileIteratorSourceLocator implements SourceLocator
 {
     private AggregateSourceLocator|null $aggregateSourceLocator = null;
 

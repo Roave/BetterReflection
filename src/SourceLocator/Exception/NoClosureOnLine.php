@@ -8,7 +8,7 @@ use LogicException;
 
 use function sprintf;
 
-class NoClosureOnLine extends LogicException
+final class NoClosureOnLine extends LogicException
 {
     public static function create(string $fileName, int $lineNumber): self
     {
