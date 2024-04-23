@@ -29,7 +29,7 @@ use Roave\BetterReflection\Util\FileHelper;
 use function array_filter;
 use function assert;
 use function file_get_contents;
-use function strpos;
+use function str_contains;
 
 /** @internal */
 final class ClosureSourceLocator implements SourceLocator
@@ -70,7 +70,7 @@ final class ClosureSourceLocator implements SourceLocator
         /** @phpstan-var non-empty-string $fileName */
         $fileName = $this->coreFunctionReflection->getFileName();
 
-        if (strpos($fileName, 'eval()\'d code') !== false) {
+        if (str_contains($fileName, 'eval()\'d code')) {
             throw EvaledClosureCannotBeLocated::create();
         }
 
