@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08624e27e74fe9cca7fd9fce4510266b",
+    "content-hash": "aa3daca226db9a3a0f796bcf8520e87a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1770,12 +1770,12 @@
             "version": "v5.2.13",
             "source": {
                 "type": "git",
-                "url": "https://github.com/justinrainbow/json-schema.git",
+                "url": "https://github.com/jsonrainbow/json-schema.git",
                 "reference": "fbbe7e5d79f618997bc3332a6f49246036c45793"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/fbbe7e5d79f618997bc3332a6f49246036c45793",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/fbbe7e5d79f618997bc3332a6f49246036c45793",
                 "reference": "fbbe7e5d79f618997bc3332a6f49246036c45793",
                 "shasum": ""
             },
@@ -1830,8 +1830,8 @@
                 "schema"
             ],
             "support": {
-                "issues": "https://github.com/justinrainbow/json-schema/issues",
-                "source": "https://github.com/justinrainbow/json-schema/tree/v5.2.13"
+                "issues": "https://github.com/jsonrainbow/json-schema/issues",
+                "source": "https://github.com/jsonrainbow/json-schema/tree/v5.2.13"
             },
             "time": "2023-09-26T02:20:38+00:00"
         },
@@ -2725,27 +2725,27 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.7.0",
+            "version": "8.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "92d33e416d59d316dc174ba675baeb54ffa9e483"
+                "reference": "323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/92d33e416d59d316dc174ba675baeb54ffa9e483",
-                "reference": "92d33e416d59d316dc174ba675baeb54ffa9e483",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4",
+                "reference": "323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4",
                 "shasum": ""
             },
             "require": {
-                "azjezz/psl": "^2.3.1",
-                "composer/composer": "^2.7.0",
-                "nikic/php-parser": "^4.15.3",
-                "nikolaposa/version": "^4.1.0",
-                "ocramius/package-versions": "^2.7.0",
+                "azjezz/psl": "^2.9.1",
+                "composer/composer": "^2.7.6",
+                "nikic/php-parser": "^4.19.1",
+                "nikolaposa/version": "^4.2.0",
+                "ocramius/package-versions": "^2.8.0",
                 "php": "~8.2.0 || ~8.3.0",
-                "roave/better-reflection": "^6.5.0",
-                "symfony/console": "^7.0"
+                "roave/better-reflection": "^6.26.0",
+                "symfony/console": "^7.0.7"
             },
             "conflict": {
                 "revolt/event-loop": "<0.2.5",
@@ -2753,13 +2753,13 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0.0",
-                "php-standard-library/psalm-plugin": "^2.2.1",
-                "phpunit/phpunit": "^9.5.27",
-                "psalm/plugin-phpunit": "^0.18.4",
-                "roave/infection-static-analysis-plugin": "^1.27.0",
+                "php-standard-library/psalm-plugin": "^2.3.0",
+                "phpunit/phpunit": "^9.6.19",
+                "psalm/plugin-phpunit": "^0.19.0",
+                "roave/infection-static-analysis-plugin": "^1.35.0",
                 "roave/security-advisories": "dev-master",
-                "squizlabs/php_codesniffer": "^3.7.1",
-                "vimeo/psalm": "^5.16"
+                "squizlabs/php_codesniffer": "^3.10.0",
+                "vimeo/psalm": "^5.24.0"
             },
             "bin": [
                 "bin/roave-backward-compatibility-check"
@@ -2787,9 +2787,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.7.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.8.0"
             },
-            "time": "2024-04-11T19:34:27+00:00"
+            "time": "2024-05-22T19:09:31+00:00"
         },
         {
             "name": "roave/better-reflection",
