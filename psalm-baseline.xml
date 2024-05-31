@@ -103,6 +103,12 @@
       <code><![CDATA[reflectClass]]></code>
       <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->namespace]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[non-empty-string|null]]></code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/Reflection/ReflectionClassConstant.php">
     <ImpureMethodCall>
@@ -123,6 +129,12 @@
       <code><![CDATA[getStartLine]]></code>
       <code><![CDATA[getStartLine]]></code>
     </ImpureMethodCall>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->namespace]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[non-empty-string|null]]></code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/Reflection/ReflectionEnum.php">
     <ImpureFunctionCall>
@@ -152,6 +164,9 @@
       <code><![CDATA[getSubNodeNames]]></code>
       <code><![CDATA[traverse]]></code>
     </ImpureMethodCall>
+    <MoreSpecificReturnType>
+      <code><![CDATA[non-empty-string|null]]></code>
+    </MoreSpecificReturnType>
     <PropertyTypeCoercion>
       <code><![CDATA[$endLine]]></code>
       <code><![CDATA[$startLine]]></code>

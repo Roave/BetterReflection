@@ -49,6 +49,10 @@
     "conflict": {
        "thecodingmachine/safe": "<1.1.3"
     },
+    "scripts": {
+        "psalm": "tools/vendor/bin/psalm",
+        "psalm-baseline": "tools/vendor/bin/psalm --set-baseline=psalm-baseline.xml"
+    },
     "suggest": {
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
