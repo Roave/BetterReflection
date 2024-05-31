@@ -29,9 +29,7 @@ class ReflectionFunction implements Reflection
 
     private bool $isStatic;
 
-    /**
-     * @param non-empty-string|null $namespace
-     */
+    /** @param non-empty-string|null $namespace */
     private function __construct(
         private Reflector $reflector,
         Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,

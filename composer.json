@@ -50,6 +50,8 @@
        "thecodingmachine/safe": "<1.1.3"
     },
     "scripts": {
+        "cs": "tools/vendor/bin/phpcs",
+        "csfix": "tools/vendor/bin/phpcbf",
         "psalm": "tools/vendor/bin/psalm",
         "psalm-baseline": "tools/vendor/bin/psalm --set-baseline=psalm-baseline.xml"
     },

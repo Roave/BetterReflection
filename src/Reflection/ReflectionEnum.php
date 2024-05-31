@@ -47,7 +47,7 @@ class ReflectionEnum extends ReflectionClass
     /**
      * @internal
      *
-     * @param EnumNode $node
+     * @param EnumNode              $node
      * @param non-empty-string|null $namespace
      *
      * @psalm-suppress MoreSpecificImplementedParamType
