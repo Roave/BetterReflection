@@ -33,7 +33,10 @@ class ReflectionMethod
     /** @var int-mask-of<ReflectionMethodAdapter::IS_*> */
     private int $modifiers;
 
-    /** @param non-empty-string|null $aliasName */
+    /**
+     * @param non-empty-string|null $aliasName
+     * @param non-empty-string|null $namespace
+     */
     private function __construct(
         private Reflector $reflector,
         MethodNode|Node\Stmt\Function_|Node\Expr\Closure|Node\Expr\ArrowFunction $node,
@@ -59,6 +62,7 @@ class ReflectionMethod
      * @internal
      *
      * @param non-empty-string|null $aliasName
+     * @param non-empty-string|null $namespace
      */
     public static function createFromNode(
         Reflector $reflector,

@@ -146,7 +146,11 @@ class ReflectionClass implements Reflection
      */
     private array|null $cachedParentClasses = null;
 
-    /** @internal */
+    /**
+     * @internal
+     *
+     * @param non-empty-string|null $namespace
+     */
     protected function __construct(
         private Reflector $reflector,
         ClassNode|InterfaceNode|TraitNode|EnumNode $node,
@@ -253,7 +257,7 @@ class ReflectionClass implements Reflection
      * @internal
      *
      * @param ClassNode|InterfaceNode|TraitNode|EnumNode $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
-     * @param string|null                                $namespace optional - if omitted, we assume it is global namespaced class
+     * @param non-empty-string|null                      $namespace optional - if omitted, we assume it is global namespaced class
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -329,6 +333,8 @@ class ReflectionClass implements Reflection
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").
+     *
+     * @return non-empty-string|null
      */
     public function getNamespaceName(): string|null
     {

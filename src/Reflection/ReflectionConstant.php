@@ -61,6 +61,7 @@ class ReflectionConstant implements Reflection
     /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledValue = null;
 
+    /** @param non-empty-string|null $namespace */
     private function __construct(
         private Reflector $reflector,
         Node\Stmt\Const_|Node\Expr\FuncCall $node,
@@ -108,7 +109,8 @@ class ReflectionConstant implements Reflection
      *
      * @internal
      *
-     * @param Node\Stmt\Const_|Node\Expr\FuncCall $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param Node\Stmt\Const_|Node\Expr\FuncCall $node      Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param non-empty-string|null               $namespace
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -126,6 +128,7 @@ class ReflectionConstant implements Reflection
         return self::createFromDefineFunctionCall($reflector, $node, $locatedSource);
     }
 
+    /** @param non-empty-string|null $namespace */
     private static function createFromConstKeyword(
         Reflector $reflector,
         Node\Stmt\Const_ $node,
@@ -182,6 +185,8 @@ class ReflectionConstant implements Reflection
     /**
      * Get the "namespace" name of the constant (e.g. for A\B\FOO, this will
      * return "A\B").
+     *
+     * @return non-empty-string|null
      */
     public function getNamespaceName(): string|null
     {

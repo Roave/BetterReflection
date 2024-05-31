@@ -27,7 +27,11 @@ class ReflectionEnum extends ReflectionClass
     /** @var array<non-empty-string, ReflectionEnumCase> */
     private array $cases;
 
-    /** @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found */
+    /**
+     * @param non-empty-string|null $namespace
+     *
+     * @phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
+     */
     private function __construct(
         private Reflector $reflector,
         EnumNode $node,
@@ -43,7 +47,8 @@ class ReflectionEnum extends ReflectionClass
     /**
      * @internal
      *
-     * @param EnumNode $node
+     * @param EnumNode              $node
+     * @param non-empty-string|null $namespace
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      */

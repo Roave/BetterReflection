@@ -174,6 +174,8 @@ trait ReflectionFunctionAbstract
     /**
      * Get the "namespace" name of the function (e.g. for A\B\foo, this will
      * return "A\B").
+     *
+     * @return non-empty-string|null
      */
     public function getNamespaceName(): string|null
     {

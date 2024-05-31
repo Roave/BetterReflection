@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\SourceLocator\Ast\Strategy;
 
+use LogicException;
 use PhpParser\Node;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionConstant;
@@ -27,6 +28,10 @@ class NodeToReflection implements AstConversionStrategy
         int|null $positionInNode = null,
     ): ReflectionClass|ReflectionConstant|ReflectionFunction {
         $namespaceName = $namespace?->name?->name;
+
+        if ($namespaceName === '') {
+            throw new LogicException('Namespace name should never be empty');
+        }
 
         if ($node instanceof Node\Stmt\Enum_) {
             return ReflectionEnum::createFromNode(
