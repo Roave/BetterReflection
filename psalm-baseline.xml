@@ -152,9 +152,6 @@
       <code><![CDATA[getSubNodeNames]]></code>
       <code><![CDATA[traverse]]></code>
     </ImpureMethodCall>
-    <MoreSpecificReturnType>
-      <code><![CDATA[non-empty-string|null]]></code>
-    </MoreSpecificReturnType>
     <PropertyTypeCoercion>
       <code><![CDATA[$endLine]]></code>
       <code><![CDATA[$startLine]]></code>
