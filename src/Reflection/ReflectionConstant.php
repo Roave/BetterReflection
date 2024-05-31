@@ -182,6 +182,8 @@ class ReflectionConstant implements Reflection
     /**
      * Get the "namespace" name of the constant (e.g. for A\B\FOO, this will
      * return "A\B").
+     *
+     * @return non-empty-string|null
      */
     public function getNamespaceName(): string|null
     {
