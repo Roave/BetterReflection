@@ -329,6 +329,8 @@ class ReflectionClass implements Reflection
     /**
      * Get the "namespace" name of the class (e.g. for A\B\Foo, this will
      * return "A\B").
+     *
+     * @return non-empty-string|null
      */
     public function getNamespaceName(): string|null
     {
