@@ -28,6 +28,10 @@ class NodeToReflection implements AstConversionStrategy
     ): ReflectionClass|ReflectionConstant|ReflectionFunction {
         $namespaceName = $namespace?->name?->name;
 
+        if ($namespaceName === '') {
+            throw new \LogicException('Namespace name should never be empty');
+        }
+
         if ($node instanceof Node\Stmt\Enum_) {
             return ReflectionEnum::createFromNode(
                 $reflector,

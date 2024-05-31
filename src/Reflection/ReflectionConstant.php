@@ -61,11 +61,16 @@ class ReflectionConstant implements Reflection
     /** @psalm-allow-private-mutation */
     private CompiledValue|null $compiledValue = null;
 
+    /**
+     * @param non-empty-string|null $namespace
+     */
     private function __construct(
         private Reflector $reflector,
         Node\Stmt\Const_|Node\Expr\FuncCall $node,
         private LocatedSource $locatedSource,
-        /** @psalm-allow-private-mutation */
+        /**
+         * @psalm-allow-private-mutation
+         */
         private string|null $namespace = null,
         int|null $positionInNode = null,
     ) {
@@ -109,6 +114,7 @@ class ReflectionConstant implements Reflection
      * @internal
      *
      * @param Node\Stmt\Const_|Node\Expr\FuncCall $node Node has to be processed by the PhpParser\NodeVisitor\NameResolver
+     * @param non-empty-string|null $namespace
      */
     public static function createFromNode(
         Reflector $reflector,
@@ -126,6 +132,9 @@ class ReflectionConstant implements Reflection
         return self::createFromDefineFunctionCall($reflector, $node, $locatedSource);
     }
 
+    /**
+     * @param non-empty-string|null $namespace
+     */
     private static function createFromConstKeyword(
         Reflector $reflector,
         Node\Stmt\Const_ $node,
