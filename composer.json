@@ -33,7 +33,7 @@
     ],
     "require-dev": {
         "phpbench/phpbench": "^1.2.15",
-        "phpunit/phpunit": "^11.1.3"
+        "phpunit/phpunit": "^11.2.0"
     },
     "autoload": {
         "psr-4": {
