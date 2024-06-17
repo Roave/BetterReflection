@@ -487,7 +487,7 @@ class ReflectionParameter
     public function getStartLine(): int
     {
         if ($this->startLine === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name));
         }
 
         return $this->startLine;
@@ -501,7 +501,7 @@ class ReflectionParameter
     public function getEndLine(): int
     {
         if ($this->endLine === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name));
         }
 
         return $this->endLine;
@@ -515,7 +515,7 @@ class ReflectionParameter
     public function getStartColumn(): int
     {
         if ($this->startColumn === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name));
         }
 
         return $this->startColumn;
@@ -529,7 +529,7 @@ class ReflectionParameter
     public function getEndColumn(): int
     {
         if ($this->endColumn === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name));
         }
 
         return $this->endColumn;

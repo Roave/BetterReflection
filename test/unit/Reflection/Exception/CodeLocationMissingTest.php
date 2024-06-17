@@ -18,4 +18,12 @@ class CodeLocationMissingTest extends TestCase
         self::assertInstanceOf(CodeLocationMissing::class, $exception);
         self::assertSame('Code location is missing', $exception->getMessage());
     }
+
+    public function testCreateWithHint(): void
+    {
+        $exception = CodeLocationMissing::create('Foobar');
+
+        self::assertInstanceOf(CodeLocationMissing::class, $exception);
+        self::assertSame('Code location is missing. Foobar', $exception->getMessage());
+    }
 }

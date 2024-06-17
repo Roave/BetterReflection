@@ -367,7 +367,7 @@ class ReflectionProperty
     public function getStartLine(): int
     {
         if ($this->startLine === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()));
         }
 
         return $this->startLine;
@@ -383,7 +383,7 @@ class ReflectionProperty
     public function getEndLine(): int
     {
         if ($this->endLine === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()));
         }
 
         return $this->endLine;
@@ -397,7 +397,7 @@ class ReflectionProperty
     public function getStartColumn(): int
     {
         if ($this->startColumn === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()));
         }
 
         return $this->startColumn;
@@ -411,7 +411,7 @@ class ReflectionProperty
     public function getEndColumn(): int
     {
         if ($this->endColumn === null) {
-            throw CodeLocationMissing::create();
+            throw CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()));
         }
 
         return $this->endColumn;
