@@ -8,8 +8,13 @@ use RuntimeException;
 
 class CodeLocationMissing extends RuntimeException
 {
-    public static function create(): self
+    public static function create(string $hint = null): self
     {
-        return new self('Code location is missing');
+        $message = 'Code location is missing';
+        if ($hint !== null) {
+            $message .= '. '.$hint;
+        }
+
+        return new self($message);
     }
 }
