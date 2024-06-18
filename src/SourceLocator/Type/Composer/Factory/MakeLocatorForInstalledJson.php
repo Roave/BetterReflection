@@ -23,13 +23,14 @@ use function array_merge_recursive;
 use function array_values;
 use function assert;
 use function file_get_contents;
-use function is_array;
 use function is_dir;
 use function is_file;
 use function is_string;
 use function json_decode;
 use function realpath;
 use function rtrim;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson
