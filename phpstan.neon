@@ -6,7 +6,6 @@ parameters:
     phpVersion: 80100
 
     level: 6
-    checkGenericClassInNonGenericObjectType: false
 
     paths:
         - src
@@ -30,3 +29,5 @@ parameters:
         -
             message: '#Method Roave\\BetterReflection\\Reflection\\ReflectionClass::computeModifiers\(\) never returns \d+ so it can be removed from the return type#'
             path: src/Reflection/ReflectionClass.php
+        -
+            identifier: missingType.generics
