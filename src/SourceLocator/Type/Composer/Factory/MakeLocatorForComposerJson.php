@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Psr\Psr0Mapping;
@@ -65,12 +64,8 @@ final class MakeLocatorForComposerJson
         $composerJsonContent = file_get_contents($composerJsonPath);
         assert(is_string($composerJsonContent));
 
-        /** @psalm-var array{autoload: ComposerAutoload}|null $composer */
-        $composer = json_decode($composerJsonContent, true);
-
-        if (! is_array($composer)) {
-            throw FailedToParseJson::inFile($composerJsonPath);
-        }
+        /** @psalm-var array{autoload: ComposerAutoload} $composer */
+        $composer = json_decode($composerJsonContent, true, flags: JSON_THROW_ON_ERROR);
 
         $pathPrefix          = $realInstallationPath . '/';
         $classMapPaths       = $this->prefixPaths($this->packageToClassMapPaths($composer), $pathPrefix);

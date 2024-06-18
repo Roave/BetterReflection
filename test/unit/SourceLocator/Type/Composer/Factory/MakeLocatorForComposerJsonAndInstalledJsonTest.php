@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Factory;
 
+use JsonException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -333,7 +334,7 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
 
     public function testWillFailToProduceLocatorForProjectWithInvalidComposerJson(): void
     {
-        $this->expectException(FailedToParseJson::class);
+        $this->expectException(JsonException::class);
 
         (new MakeLocatorForComposerJsonAndInstalledJson())
             ->__invoke(
@@ -344,7 +345,7 @@ class MakeLocatorForComposerJsonAndInstalledJsonTest extends TestCase
 
     public function testWillFailToProduceLocatorForProjectWithInvalidInstalledJson(): void
     {
-        $this->expectException(FailedToParseJson::class);
+        $this->expectException(JsonException::class);
 
         (new MakeLocatorForComposerJsonAndInstalledJson())
             ->__invoke(

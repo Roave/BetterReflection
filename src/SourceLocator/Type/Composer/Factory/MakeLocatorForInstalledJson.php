@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingInstalledJson;
@@ -56,10 +55,9 @@ final class MakeLocatorForInstalledJson
         $composerJsonContent = file_get_contents($composerJsonPath);
         assert(is_string($composerJsonContent));
 
-        /** @psalm-var Composer|null $composer */
-        $composer  = json_decode($composerJsonContent, true);
-        $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
-        $vendorDir = rtrim($vendorDir, '/');
+        /** @psalm-var Composer $composer */
+        $composer  = json_decode($composerJsonContent, true, flags: JSON_THROW_ON_ERROR);
+        $vendorDir = rtrim($composer['config']['vendor-dir'] ?? 'vendor', '/');
 
         $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 
@@ -70,12 +68,8 @@ final class MakeLocatorForInstalledJson
         $jsonContent = file_get_contents($installedJsonPath);
         assert(is_string($jsonContent));
 
-        /** @var array{packages: list<mixed[]>}|list<mixed[]>|null $installedJson */
-        $installedJson = json_decode($jsonContent, true);
-
-        if (! is_array($installedJson)) {
-            throw FailedToParseJson::inFile($installedJsonPath);
-        }
+        /** @var array{packages: list<ComposerPackage>}|list<ComposerPackage> $installedJson */
+        $installedJson = json_decode($jsonContent, true, flags: JSON_THROW_ON_ERROR);
 
         /** @psalm-var list<ComposerPackage> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
