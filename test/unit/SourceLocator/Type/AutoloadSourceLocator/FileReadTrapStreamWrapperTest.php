@@ -162,25 +162,25 @@ class FileReadTrapStreamWrapperTest extends TestCase
         $thrown = new Exception();
 
         try {
-            self::assertSame(
-                'another value produced by the function',
-                FileReadTrapStreamWrapper::withStreamWrapperOverride(
-                    static function () use ($thrown): string {
-                        if (! is_file(__FILE__)) {
-                            throw new UnexpectedValueException('is_file() should operate as usual');
-                        }
+            FileReadTrapStreamWrapper::withStreamWrapperOverride(
+                static function () use ($thrown): void {
+                    if (! is_file(__FILE__)) {
+                        throw new UnexpectedValueException('is_file() should operate as usual');
+                    }
 
-                        throw $thrown;
-                    },
-                    ['http'],
-                ),
+                    throw $thrown;
+                },
+                ['http'],
             );
 
+            // @phpstan-ignore deadCode.unreachable
             self::fail('No exception was raised');
+        // @phpstan-ignore catch.neverThrown
         } catch (Throwable $caught) {
             self::assertSame($thrown, $caught);
         }
 
+        // @phpstan-ignore deadCode.unreachable
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
