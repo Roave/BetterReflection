@@ -6,7 +6,6 @@ namespace Roave\BetterReflection\SourceLocator\Type\Composer\Factory;
 
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
-use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\FailedToParseJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\InvalidProjectDirectory;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingComposerJson;
 use Roave\BetterReflection\SourceLocator\Type\Composer\Factory\Exception\MissingInstalledJson;
@@ -24,13 +23,14 @@ use function array_merge_recursive;
 use function array_values;
 use function assert;
 use function file_get_contents;
-use function is_array;
 use function is_dir;
 use function is_file;
 use function is_string;
 use function json_decode;
 use function realpath;
 use function rtrim;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * @psalm-import-type ComposerAutoload from MakeLocatorForComposerJson
@@ -56,10 +56,9 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         $composerJsonContent = file_get_contents($composerJsonPath);
         assert(is_string($composerJsonContent));
 
-        /** @psalm-var Composer|null $composer */
-        $composer  = json_decode($composerJsonContent, true);
-        $vendorDir = $composer['config']['vendor-dir'] ?? 'vendor';
-        $vendorDir = rtrim($vendorDir, '/');
+        /** @psalm-var Composer $composer */
+        $composer  = json_decode($composerJsonContent, true, flags: JSON_THROW_ON_ERROR);
+        $vendorDir = rtrim($composer['config']['vendor-dir'] ?? 'vendor', '/');
 
         $installedJsonPath = $realInstallationPath . '/' . $vendorDir . '/composer/installed.json';
 
@@ -70,16 +69,8 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         $jsonContent = file_get_contents($installedJsonPath);
         assert(is_string($jsonContent));
 
-        /** @psalm-var array{packages: list<mixed[]>}|list<mixed[]>|null $installedJson */
-        $installedJson = json_decode($jsonContent, true);
-
-        if (! is_array($composer)) {
-            throw FailedToParseJson::inFile($composerJsonPath);
-        }
-
-        if (! is_array($installedJson)) {
-            throw FailedToParseJson::inFile($installedJsonPath);
-        }
+        /** @psalm-var array{packages?: list<ComposerPackage>}|list<ComposerPackage> $installedJson */
+        $installedJson = json_decode($jsonContent, true, flags: JSON_THROW_ON_ERROR);
 
         /** @psalm-var list<ComposerPackage> $installed */
         $installed = $installedJson['packages'] ?? $installedJson;
@@ -188,7 +179,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
 
     /**
      * @param array<string, list<string>> $paths
-     * @param ComposerPackage             $package $package
+     * @param ComposerPackage             $package
      *
      * @return array<string, list<string>>
      */

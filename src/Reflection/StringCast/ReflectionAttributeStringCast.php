@@ -43,10 +43,6 @@ final class ReflectionAttributeStringCast
      */
     private static function argumentsToString(array $arguments): string
     {
-        if ($arguments === []) {
-            return '';
-        }
-
         $string = '';
 
         $argumentNo = 0;
