@@ -46,10 +46,7 @@ class ReflectionNamedType extends ReflectionType
         private ReflectionParameter|ReflectionMethod|ReflectionFunction|ReflectionEnum|ReflectionProperty|ReflectionClassConstant $owner,
         Identifier|Name $type,
     ) {
-        $name = $type->toString();
-        assert($name !== '');
-
-        $this->name = $name;
+        $this->name = $type->toString();
     }
 
     /** @internal */

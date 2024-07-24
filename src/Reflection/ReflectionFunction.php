@@ -38,12 +38,9 @@ class ReflectionFunction implements Reflection
     ) {
         assert($node instanceof Node\Stmt\Function_ || $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction);
 
-        $name = $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction
+        $this->name = $node instanceof Node\Expr\Closure || $node instanceof Node\Expr\ArrowFunction
             ? self::CLOSURE_NAME
             : $node->name->name;
-        assert($name !== '');
-
-        $this->name = $name;
 
         $this->fillFromNode($node);
 

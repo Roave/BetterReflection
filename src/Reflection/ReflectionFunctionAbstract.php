@@ -116,8 +116,10 @@ trait ReflectionFunctionAbstract
             $endLine = null;
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->startLine = $startLine;
-        $this->endLine   = $endLine;
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
+        $this->endLine = $endLine;
 
         try {
             $this->startColumn = CalculateReflectionColumn::getStartColumn($this->getLocatedSource()->getSource(), $node);

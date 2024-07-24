@@ -12,11 +12,16 @@ parameters:
         - test/benchmark
         - test/unit
 
+    # Force the right PhpParser
+    scanDirectories:
+        - vendor/nikic/php-parser
+
     excludePaths:
         analyse:
             - test/unit/Fixture/*
         analyseAndScan:
             - test/unit/Fixture/InvalidParents.php
+            - tools/vendor/*
 
     bootstrapFiles:
         - phar://%currentWorkingDirectory%/test/unit/Fixture/autoload.phar/vendor/autoload.php
