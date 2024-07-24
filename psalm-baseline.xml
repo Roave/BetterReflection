@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="src/Reflection/Attribute/ReflectionAttributeHelper.php">
     <ImpureMethodCall>
       <code><![CDATA[toLowerString]]></code>
@@ -152,10 +152,6 @@
       <code><![CDATA[getSubNodeNames]]></code>
       <code><![CDATA[traverse]]></code>
     </ImpureMethodCall>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$endLine]]></code>
-      <code><![CDATA[$startLine]]></code>
-    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionMethod.php">
     <ImpureFunctionCall>
@@ -194,10 +190,6 @@
       <code><![CDATA[getStartLine]]></code>
       <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$endLine]]></code>
-      <code><![CDATA[$startLine]]></code>
-    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionProperty.php">
     <ImpureFunctionCall>
@@ -218,10 +210,6 @@
       <code><![CDATA[isStatic]]></code>
       <code><![CDATA[traitExists]]></code>
     </ImpureMethodCall>
-    <PropertyTypeCoercion>
-      <code><![CDATA[$endLine]]></code>
-      <code><![CDATA[$startLine]]></code>
-    </PropertyTypeCoercion>
   </file>
   <file src="src/Reflection/ReflectionType.php">
     <ImpureMethodCall>

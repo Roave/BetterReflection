@@ -12,7 +12,6 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
-use function assert;
 
 /** @psalm-immutable */
 class ReflectionAttribute
@@ -30,9 +29,7 @@ class ReflectionAttribute
         private ReflectionClass|ReflectionMethod|ReflectionFunction|ReflectionClassConstant|ReflectionEnumCase|ReflectionProperty|ReflectionParameter $owner,
         private bool $isRepeated,
     ) {
-        $name = $node->name->toString();
-        assert($name !== '');
-        $this->name = $name;
+        $this->name = $node->name->toString();
 
         foreach ($node->args as $argNo => $arg) {
             $this->arguments[$arg->name?->toString() ?? $argNo] = $arg->value;

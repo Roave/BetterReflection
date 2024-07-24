@@ -80,10 +80,7 @@ class ReflectionProperty
         private bool $isPromoted,
         private bool $declaredAtCompileTime,
     ) {
-        $name = $propertyNode->name->name;
-        assert($name !== '');
-
-        $this->name       = $name;
+        $this->name       = $propertyNode->name->name;
         $this->modifiers  = $this->computeModifiers($node);
         $this->type       = $this->createType($node);
         $this->default    = $propertyNode->default;
@@ -100,8 +97,10 @@ class ReflectionProperty
             $endLine = null;
         }
 
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $this->startLine = $startLine;
-        $this->endLine   = $endLine;
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
+        $this->endLine = $endLine;
 
         try {
             $this->startColumn = CalculateReflectionColumn::getStartColumn($declaringClass->getLocatedSource()->getSource(), $node);

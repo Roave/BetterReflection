@@ -62,10 +62,7 @@ class ReflectionClassConstant
         private ReflectionClass $declaringClass,
         private ReflectionClass $implementingClass,
     ) {
-        $name = $node->consts[$positionInNode]->name->name;
-        assert($name !== '');
-
-        $this->name      = $name;
+        $this->name      = $node->consts[$positionInNode]->name->name;
         $this->modifiers = $this->computeModifiers($node);
         $this->type      = $this->createType($node);
         $this->value     = $node->consts[$positionInNode]->value;
