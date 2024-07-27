@@ -49,10 +49,7 @@ class ReflectionMethod
     ) {
         assert($node instanceof MethodNode);
 
-        $name = $node->name->name;
-        assert($name !== '');
-
-        $this->name      = $name;
+        $this->name      = $node->name->name;
         $this->modifiers = $this->computeModifiers($node);
 
         $this->fillFromNode($node);

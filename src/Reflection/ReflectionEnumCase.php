@@ -55,9 +55,7 @@ class ReflectionEnumCase
         EnumCase $node,
         private ReflectionEnum $enum,
     ) {
-        $name = $node->name->toString();
-        assert($name !== '');
-        $this->name = $name;
+        $this->name = $node->name->toString();
 
         $this->value      = $node->expr;
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);

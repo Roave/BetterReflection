@@ -85,12 +85,7 @@ class ReflectionEnum extends ReflectionClass
         $enumCasesNodes = array_filter($node->stmts, static fn (Node\Stmt $stmt): bool => $stmt instanceof Node\Stmt\EnumCase);
 
         return array_combine(
-            array_map(static function (Node\Stmt\EnumCase $enumCaseNode): string {
-                $enumCaseName = $enumCaseNode->name->toString();
-                assert($enumCaseName !== '');
-
-                return $enumCaseName;
-            }, $enumCasesNodes),
+            array_map(static fn (Node\Stmt\EnumCase $enumCaseNode): string => $enumCaseNode->name->toString(), $enumCasesNodes),
             array_map(fn (Node\Stmt\EnumCase $enumCaseNode): ReflectionEnumCase => ReflectionEnumCase::createFromNode($this->reflector, $enumCaseNode, $this), $enumCasesNodes),
         );
     }

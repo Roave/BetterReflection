@@ -165,7 +165,6 @@ class ReflectionClass implements Reflection
             /** @psalm-var class-string|trait-string */
             $name      = $namespacedName->toString();
             $shortName = $node->name->name;
-            assert($shortName !== '');
 
             $this->name      = $name;
             $this->shortName = $shortName;
@@ -1439,10 +1438,7 @@ class ReflectionClass implements Reflection
                     }
 
                     if ($adaptation->newName) {
-                        $adaptationName = $adaptation->newName->name;
-                        assert($adaptationName !== '');
-
-                        $traitsData['aliases'][$adaptationName] = $methodHash;
+                        $traitsData['aliases'][$adaptation->newName->name] = $methodHash;
                         continue;
                     }
                 }

@@ -321,10 +321,8 @@ class ReflectionConstant implements Reflection
             $namespacedName = $constNode->namespacedName;
             assert($namespacedName instanceof Node\Name);
 
-            $name = $namespacedName->toString();
-            assert($name !== '');
+            $name      = $namespacedName->toString();
             $shortName = $constNode->name->name;
-            assert($shortName !== '');
         }
 
         $this->name      = $name;

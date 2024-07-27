@@ -153,7 +153,6 @@ class CompileNodeToValue
         assert($node->var->name instanceof Node\Identifier);
 
         $caseName = $node->var->name->name;
-        assert($caseName !== '');
 
         $case = $class->getCase($caseName);
 
