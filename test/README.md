@@ -11,7 +11,7 @@ The unit test suite covers the library unit implementation. The unit tests can
 be executed by simply running (`--colors` is optional):
 
 ```php
-vendor/bin/phpunit --test-suite unit --colors
+vendor/bin/phpunit --testsuite unit --colors
 ```
 
 ### core
@@ -32,5 +32,5 @@ we are trying to maintain compatibility with core API. Ideally, these should
 pass (where they pass in core, at least).
 
 ```php
-vendor/bin/phpunit --test-suite compat test/compat
+vendor/bin/phpunit --testsuite compat test/compat
 ```
