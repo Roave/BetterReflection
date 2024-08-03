@@ -21,9 +21,6 @@ use function sprintf;
  */
 final class ReflectionClassConstant extends CoreReflectionClassConstant
 {
-    /** @internal */
-    public const IS_FINAL_COMPATIBILITY = 32;
-
     public function __construct(private BetterReflectionClassConstant|BetterReflectionEnumCase $betterClassConstantOrEnumCase)
     {
         unset($this->name);

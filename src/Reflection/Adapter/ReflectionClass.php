@@ -33,9 +33,6 @@ use function strtolower;
  */
 final class ReflectionClass extends CoreReflectionClass
 {
-    /** @internal */
-    public const IS_READONLY_COMPATIBILITY = 65536;
-
     public function __construct(private BetterReflectionClass|BetterReflectionEnum $betterReflectionClass)
     {
         unset($this->name);

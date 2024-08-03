@@ -1201,7 +1201,7 @@ class ReflectionClass implements Reflection
 
     public function isReadOnly(): bool
     {
-        return ($this->modifiers & ReflectionClassAdapter::IS_READONLY_COMPATIBILITY) === ReflectionClassAdapter::IS_READONLY_COMPATIBILITY;
+        return ($this->modifiers & CoreReflectionClass::IS_READONLY) === CoreReflectionClass::IS_READONLY;
     }
 
     /**
@@ -1223,7 +1223,7 @@ class ReflectionClass implements Reflection
 
         $modifiers  = $node->isAbstract() ? CoreReflectionClass::IS_EXPLICIT_ABSTRACT : 0;
         $modifiers += $node->isFinal() ? CoreReflectionClass::IS_FINAL : 0;
-        $modifiers += $node->isReadonly() ? ReflectionClassAdapter::IS_READONLY_COMPATIBILITY : 0;
+        $modifiers += $node->isReadonly() ? CoreReflectionClass::IS_READONLY : 0;
 
         return $modifiers;
     }
