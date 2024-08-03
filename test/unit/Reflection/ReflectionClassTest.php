@@ -1308,7 +1308,7 @@ PHP;
             ['ExampleClass', 0],
             ['AbstractClass', CoreReflectionClass::IS_EXPLICIT_ABSTRACT],
             ['FinalClass', CoreReflectionClass::IS_FINAL],
-            ['ReadOnlyClass', ReflectionClassAdapter::IS_READONLY],
+            ['ReadOnlyClass', ReflectionClassAdapter::IS_READONLY_COMPATIBILITY],
             ['ExampleTrait', 0],
         ];
     }
