@@ -107,6 +107,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         'Phar',
         'posix',
         'pspell',
+        'random',
         'readline',
         'recode',
         'Reflection',
