@@ -460,6 +460,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertNull($this->sourceStubber->generateClassStub($someClassName));
     }
 
+    public function testStubForEnum(): void
+    {
+        $stub = $this->sourceStubber->generateClassStub('Random\IntervalBoundary');
+
+        if (PHP_VERSION_ID >= 80300) {
+            self::assertInstanceOf(StubData::class, $stub);
+        } else {
+            self::assertNull($stub);
+        }
+    }
+
     public function testStubForFunctionThatExists(): void
     {
         self::assertInstanceOf(StubData::class, $this->sourceStubber->generateFunctionStub('phpversion'));

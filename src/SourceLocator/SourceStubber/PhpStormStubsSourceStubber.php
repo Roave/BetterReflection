@@ -107,6 +107,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         'Phar',
         'posix',
         'pspell',
+        'random',
         'readline',
         'recode',
         'Reflection',
@@ -513,7 +514,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     {
         $newStmts = [];
         foreach ($stmts as $stmt) {
-            assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod);
+            assert($stmt instanceof Node\Stmt\ClassConst || $stmt instanceof Node\Stmt\Property || $stmt instanceof Node\Stmt\ClassMethod || $stmt instanceof Node\Stmt\EnumCase);
 
             if (! $this->isSupportedInPhpVersion($stmt)) {
                 continue;
@@ -623,7 +624,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             : null;
     }
 
-    private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_ $node): void
+    private function addDeprecatedDocComment(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_|Node\Stmt\EnumCase $node): void
     {
         if ($node instanceof Node\Expr\FuncCall) {
             if (! $this->isDeprecatedByPhpDocInPhpVersion($node)) {
@@ -647,7 +648,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     private function addAnnotationToDocComment(
-        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_ $node,
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\Const_|Node\Stmt\EnumCase $node,
         string $annotationName,
     ): void {
         $docComment = $node->getDocComment();
@@ -662,7 +663,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     private function removeAnnotationFromDocComment(
-        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_ $node,
+        Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Expr\FuncCall|Node\Stmt\Const_|Node\Stmt\EnumCase $node,
         string $annotationName,
     ): void {
         $docComment = $node->getDocComment();
@@ -698,7 +699,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return true;
     }
 
-    private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_ $node): bool
+    private function isDeprecatedInPhpVersion(Node\Stmt\ClassLike|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Stmt\Function_|Node\Stmt\EnumCase $node): bool
     {
         $deprecatedAttribute = $this->getNodeAttribute($node, 'JetBrains\PhpStorm\Deprecated');
         if ($deprecatedAttribute === null) {
@@ -717,7 +718,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     private function isSupportedInPhpVersion(
-        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param|Node\Stmt\EnumCase $node,
     ): bool {
         [$fromVersion, $toVersion] = $this->getSupportedPhpVersions($node);
 
@@ -730,7 +731,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
     /** @return array{0: int|null, 1: int|null} */
     private function getSupportedPhpVersions(
-        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param|Node\Stmt\EnumCase $node,
     ): array {
         $fromVersion = null;
         $toVersion   = null;
@@ -769,7 +770,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     }
 
     private function getNodeAttribute(
-        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param $node,
+        Node\Stmt\ClassLike|Node\Stmt\Function_|Node\Stmt\Const_|Node\Expr\FuncCall|Node\Stmt\ClassConst|Node\Stmt\Property|Node\Stmt\ClassMethod|Node\Param|Node\Stmt\EnumCase $node,
         string $attributeName,
     ): Node\Attribute|null {
         if ($node instanceof Node\Expr\FuncCall || $node instanceof Node\Stmt\Const_) {
