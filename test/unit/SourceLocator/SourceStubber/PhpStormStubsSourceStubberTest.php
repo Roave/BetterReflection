@@ -462,7 +462,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
     public function testStubForEnum(): void
     {
-        $stub = $this->sourceStubber->generateClassStub('Random\IntervalBoundary');
+        /** @phpstan-var class-string $enumName */
+        $enumName = 'Random\IntervalBoundary';
+        $stub     = $this->sourceStubber->generateClassStub($enumName);
 
         if (PHP_VERSION_ID >= 80300) {
             self::assertInstanceOf(StubData::class, $stub);
