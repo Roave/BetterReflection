@@ -119,7 +119,13 @@ class ReflectionClass implements Reflection
     /** @var array<non-empty-string, ReflectionMethod> */
     private array $immediateMethods;
 
-    /** @var array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>} */
+    /** @var array{
+     *     aliases: array<non-empty-string, non-empty-string>,
+     *     modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>,
+     *     precedences: array<non-empty-string, non-empty-string>,
+     *     hashes: array<non-empty-string, non-empty-string>,
+     * }
+     */
     private array $traitsData;
 
     /**
@@ -358,16 +364,16 @@ class ReflectionClass implements Reflection
     /** @return list<ReflectionMethod> */
     private function createMethodsFromTrait(ReflectionMethod $method): array
     {
-        $methodModifiers = $method->getModifiers();
-        $methodHash      = $this->methodHash($method->getImplementingClass()->getName(), $method->getName());
+        $methodModifiers      = $method->getModifiers();
+        $lowerCasedMethodHash = $this->lowerCasedMethodHash($method->getImplementingClass()->getName(), $method->getName());
 
-        if (array_key_exists($methodHash, $this->traitsData['modifiers'])) {
+        if (array_key_exists($lowerCasedMethodHash, $this->traitsData['modifiers'])) {
             // PhpParser modifiers are compatible with PHP reflection modifiers
-            if ($this->traitsData['modifiers'][$methodHash] & Modifiers::VISIBILITY_MASK) {
-                $methodModifiers = ($methodModifiers & ~ Modifiers::VISIBILITY_MASK) | $this->traitsData['modifiers'][$methodHash];
+            if ($this->traitsData['modifiers'][$lowerCasedMethodHash] & Modifiers::VISIBILITY_MASK) {
+                $methodModifiers = ($methodModifiers & ~ Modifiers::VISIBILITY_MASK) | $this->traitsData['modifiers'][$lowerCasedMethodHash];
             }
 
-            if ($this->traitsData['modifiers'][$methodHash] & Modifiers::FINAL) {
+            if ($this->traitsData['modifiers'][$lowerCasedMethodHash] & Modifiers::FINAL) {
                 $methodModifiers |= Modifiers::FINAL;
             }
         }
@@ -381,12 +387,12 @@ class ReflectionClass implements Reflection
 
         $methods = [];
 
-        if (! array_key_exists($methodHash, $this->traitsData['precedences'])) {
+        if (! array_key_exists($lowerCasedMethodHash, $this->traitsData['precedences'])) {
             $methods[] = $createMethod($method->getAliasName());
         }
 
         foreach ($this->traitsData['aliases'] as $aliasMethodName => $traitAliasDefinition) {
-            if ($methodHash !== $traitAliasDefinition) {
+            if ($lowerCasedMethodHash !== $traitAliasDefinition) {
                 continue;
             }
 
@@ -1360,7 +1366,10 @@ class ReflectionClass implements Reflection
      */
     public function getTraitAliases(): array
     {
-        return $this->traitsData['aliases'];
+        return array_map(
+            fn (string $lowerCasedMethodHash): string => $this->traitsData['hashes'][$lowerCasedMethodHash],
+            $this->traitsData['aliases'],
+        );
     }
 
     /**
@@ -1408,7 +1417,12 @@ class ReflectionClass implements Reflection
      *   // This method would return
      *   //   ['MyTrait1::foo' => 'MyTrait2::foo']
      *
-     * @return array{aliases: array<non-empty-string, non-empty-string>, modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>, precedences: array<non-empty-string, non-empty-string>}
+     * @return array{
+     *     aliases: array<non-empty-string, non-empty-string>,
+     *     modifiers: array<non-empty-string, int-mask-of<ReflectionMethodAdapter::IS_*>>,
+     *     precedences: array<non-empty-string, non-empty-string>,
+     *     hashes: array<non-empty-string, non-empty-string>,
+     * }
      */
     private function computeTraitsData(ClassNode|InterfaceNode|TraitNode|EnumNode $node): array
     {
@@ -1416,6 +1430,7 @@ class ReflectionClass implements Reflection
             'aliases'     => [],
             'modifiers'   => [],
             'precedences' => [],
+            'hashes'      => [],
         ];
 
         foreach ($node->getTraitUses() as $traitUsage) {
@@ -1428,17 +1443,20 @@ class ReflectionClass implements Reflection
                     $usedTrait = end($traitNames);
                 }
 
-                $methodHash = $this->methodHash($usedTrait->toString(), $adaptation->method->toString());
+                $methodHash           = $this->methodHash($usedTrait->toString(), $adaptation->method->toString());
+                $lowerCasedMethodHash = $this->lowerCasedMethodHash($usedTrait->toString(), $adaptation->method->toString());
+
+                $traitsData['hashes'][$lowerCasedMethodHash] = $methodHash;
 
                 if ($adaptation instanceof Node\Stmt\TraitUseAdaptation\Alias) {
                     if ($adaptation->newModifier !== null) {
                         /** @var int-mask-of<ReflectionMethodAdapter::IS_*> $modifier */
-                        $modifier                             = $adaptation->newModifier;
-                        $traitsData['modifiers'][$methodHash] = $modifier;
+                        $modifier                                       = $adaptation->newModifier;
+                        $traitsData['modifiers'][$lowerCasedMethodHash] = $modifier;
                     }
 
                     if ($adaptation->newName) {
-                        $traitsData['aliases'][$adaptation->newName->name] = $methodHash;
+                        $traitsData['aliases'][$adaptation->newName->name] = $lowerCasedMethodHash;
                         continue;
                     }
                 }
@@ -1448,9 +1466,9 @@ class ReflectionClass implements Reflection
                 }
 
                 foreach ($adaptation->insteadof as $insteadof) {
-                    $adaptationNameHash = $this->methodHash($insteadof->toString(), $adaptation->method->toString());
+                    $adaptationNameHash = $this->lowerCasedMethodHash($insteadof->toString(), $adaptation->method->toString());
 
-                    $traitsData['precedences'][$adaptationNameHash] = $methodHash;
+                    $traitsData['precedences'][$adaptationNameHash] = $lowerCasedMethodHash;
                 }
             }
         }
@@ -1468,8 +1486,14 @@ class ReflectionClass implements Reflection
         return sprintf(
             '%s::%s',
             $className,
-            strtolower($methodName),
+            $methodName,
         );
+    }
+
+    /** @return non-empty-string */
+    private function lowerCasedMethodHash(string $className, string $methodName): string
+    {
+        return strtolower($this->methodHash($className, $methodName));
     }
 
     /** @return list<class-string> */

@@ -30,6 +30,7 @@ trait TraitFixtureTraitC
     public function a() {}
     public function b() {}
     public function c() {}
+    public function camelCase() {}
 }
 trait TraitFixtureTraitC2
 {
@@ -45,6 +46,7 @@ class TraitFixtureC
         a as protected a_protected;
         b as b_renamed;
         c as private;
+        camelCase as camelCaseRenamed;
     }
     use TraitFixtureTraitC3 {
         d as d_renamed;
