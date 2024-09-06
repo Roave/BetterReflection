@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "484c447d158f71cedb03973b1fb2978b",
+    "content-hash": "e42724750b4bc3a7c6c88222cff149fd",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2728,16 +2728,16 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.8.0",
+            "version": "8.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4"
+                "reference": "97dc077bd426750007b95f9d1f7ce0a72e93d820"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4",
-                "reference": "323a2f4e4e93a2ad7f127e2e2e692dc8945ab5f4",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/97dc077bd426750007b95f9d1f7ce0a72e93d820",
+                "reference": "97dc077bd426750007b95f9d1f7ce0a72e93d820",
                 "shasum": ""
             },
             "require": {
@@ -2790,9 +2790,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.8.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.9.0"
             },
-            "time": "2024-05-22T19:09:31+00:00"
+            "time": "2024-09-05T15:11:29+00:00"
         },
         {
             "name": "roave/better-reflection",
