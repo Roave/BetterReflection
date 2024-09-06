@@ -1504,6 +1504,26 @@ PHP;
         ], $classInfo->getTraitAliases());
     }
 
+
+    public function testGetMethodsWithTraitAliases(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(
+            __DIR__ . '/../Fixture/TraitFixture.php',
+            $this->astLocator,
+        ));
+
+        $classInfo = $reflector->reflectClass('ClassFixtureG');
+
+        self::assertSame([
+            'method1',
+            'method2',
+            'method3',
+            'alias3',
+            'method4',
+            'alias1',
+        ], array_keys($classInfo->getMethods()));
+    }
+
     public function testGetTraitNamesWithMissingTraitDefinitions(): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
