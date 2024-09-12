@@ -135,3 +135,22 @@ class TraitFixtureF
     }
 
 }
+
+
+
+trait Trait1FixtureG {
+    public function method1() {}
+    public function method2() {}
+}
+
+trait Trait2FixtureG {
+    public function method3() {}
+    public function method4() {}
+}
+
+class ClassFixtureG {
+    use Trait1FixtureG, Trait2FixtureG {
+        method1 as alias1;
+        method3 as alias3;
+    }
+}
