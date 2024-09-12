@@ -29,8 +29,10 @@ use Roave\BetterReflection\SourceLocator\FileChecker;
 use Roave\BetterReflection\SourceLocator\SourceStubber\Exception\CouldNotFindPhpStormStubs;
 use Roave\BetterReflection\SourceLocator\SourceStubber\PhpStormStubs\CachingVisitor;
 use Roave\BetterReflection\Util\ConstantNodeChecker;
+use SeekableIterator;
 use SimpleXMLElement;
 use SplFixedArray;
+use SplObjectStorage;
 use Traversable;
 
 use function array_change_key_case;
@@ -491,6 +493,11 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             } elseif ($className === DatePeriod::class || $className === PDOStatement::class) {
                 if ($name === IteratorAggregate::class && $this->phpVersion < 80000) {
                     $modifiedNames[] = new Node\Name\FullyQualified(Traversable::class);
+                    continue;
+                }
+            } elseif ($className === SplObjectStorage::class) {
+                if ($name === SeekableIterator::class && $this->phpVersion < 80400) {
+                    $modifiedNames[] = new Node\Name\FullyQualified(Iterator::class);
                     continue;
                 }
             }
