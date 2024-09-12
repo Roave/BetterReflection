@@ -1500,6 +1500,7 @@ PHP;
         self::assertSame([
             'a_protected' => 'TraitFixtureTraitC::a',
             'b_renamed' => 'TraitFixtureTraitC::b',
+            'camelCaseRenamed' => 'TraitFixtureTraitC::camelCase',
             'd_renamed' => 'TraitFixtureTraitC3::d',
         ], $classInfo->getTraitAliases());
     }

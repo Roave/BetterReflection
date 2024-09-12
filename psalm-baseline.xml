@@ -46,6 +46,7 @@
       <code><![CDATA[array_map]]></code>
       <code><![CDATA[array_map]]></code>
       <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
       <code><![CDATA[createEmpty]]></code>
