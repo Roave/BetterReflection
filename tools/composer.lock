@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9829f876de8a2f4be242d4530e69e88d",
+    "content-hash": "f05da85cba5ee188a3782886169c6615",
     "packages": [
         {
             "name": "amphp/amp",
@@ -168,16 +168,16 @@
         },
         {
             "name": "azjezz/psl",
-            "version": "2.9.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "1ade4f1a99fe07a8e06f8dee596609aa07585422"
+                "reference": "6683d60ba4d3abf8b4a4a9d94c39d0d08caa0214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/1ade4f1a99fe07a8e06f8dee596609aa07585422",
-                "reference": "1ade4f1a99fe07a8e06f8dee596609aa07585422",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/6683d60ba4d3abf8b4a4a9d94c39d0d08caa0214",
+                "reference": "6683d60ba4d3abf8b4a4a9d94c39d0d08caa0214",
                 "shasum": ""
             },
             "require": {
@@ -186,20 +186,21 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-sodium": "*",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-                "revolt/event-loop": "^1.0.1"
+                "php": "~8.2.0 || ~8.3.0",
+                "revolt/event-loop": "^1.0.6"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.22.0",
-                "php-coveralls/php-coveralls": "^2.6.0",
-                "php-standard-library/psalm-plugin": "^2.2.1",
-                "phpbench/phpbench": "^1.2.14",
-                "phpunit/phpunit": "^9.6.10",
-                "roave/infection-static-analysis-plugin": "^1.32.0",
-                "squizlabs/php_codesniffer": "^3.7.2",
-                "vimeo/psalm": "^5.13.1"
+                "friendsofphp/php-cs-fixer": "^3.52.1",
+                "php-coveralls/php-coveralls": "^2.7.0",
+                "php-standard-library/psalm-plugin": "^2.3.0",
+                "phpbench/phpbench": "^1.2.15",
+                "phpunit/phpunit": "^9.6.18",
+                "roave/infection-static-analysis-plugin": "^1.35.0",
+                "squizlabs/php_codesniffer": "^3.9.0",
+                "vimeo/psalm": "^5.23.1"
             },
             "suggest": {
+                "php-standard-library/phpstan-extension": "PHPStan integration",
                 "php-standard-library/psalm-plugin": "Psalm integration"
             },
             "type": "library",
@@ -230,7 +231,7 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/2.9.1"
+                "source": "https://github.com/azjezz/psl/tree/3.0.2"
             },
             "funding": [
                 {
@@ -238,7 +239,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-05T05:18:37+00:00"
+            "time": "2024-09-13T10:34:56+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -2728,20 +2729,20 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.9.0",
+            "version": "8.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "97dc077bd426750007b95f9d1f7ce0a72e93d820"
+                "reference": "52bcebf0edad5f216c0d0816972f19799bf11802"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/97dc077bd426750007b95f9d1f7ce0a72e93d820",
-                "reference": "97dc077bd426750007b95f9d1f7ce0a72e93d820",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/52bcebf0edad5f216c0d0816972f19799bf11802",
+                "reference": "52bcebf0edad5f216c0d0816972f19799bf11802",
                 "shasum": ""
             },
             "require": {
-                "azjezz/psl": "^2.9.1",
+                "azjezz/psl": "^3.0.2",
                 "composer/composer": "^2.7.6",
                 "nikic/php-parser": "^4.19.1",
                 "nikolaposa/version": "^4.2.0",
@@ -2756,6 +2757,7 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^12.0.0",
+                "estahn/phpunit-json-assertions": "^4.0",
                 "php-standard-library/psalm-plugin": "^2.3.0",
                 "phpunit/phpunit": "^9.6.19",
                 "psalm/plugin-phpunit": "^0.19.0",
@@ -2790,9 +2792,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.9.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.10.0"
             },
-            "time": "2024-09-05T15:11:29+00:00"
+            "time": "2024-10-08T20:10:06+00:00"
         },
         {
             "name": "roave/better-reflection",
