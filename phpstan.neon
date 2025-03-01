@@ -3,6 +3,8 @@ includes:
     - tools/vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
+    phpVersion: 80200
+
     level: 6
 
     paths:

@@ -33,7 +33,7 @@
     ],
     "require-dev": {
         "phpbench/phpbench": "^1.4.0",
-        "phpunit/phpunit": "^11.5.10"
+        "phpunit/phpunit": "^11.5.10|^12.0.5"
     },
     "autoload": {
         "psr-4": {
@@ -59,10 +59,5 @@
         "composer/composer": "Required to use the ComposerSourceLocator"
     },
     "minimum-stability": "dev",
-    "config": {
-        "platform": {
-            "php": "8.2.99"
-        }
-    },
     "prefer-stable": true
 }

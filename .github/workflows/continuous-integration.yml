@@ -41,6 +41,10 @@ jobs:
           extensions: intl, sodium
           ini-values: memory_limit=-1
 
+      - name: "Set composer platform"
+        if: matrix.php-version == '8.2'
+        run: "composer config platform.php 8.2.99"
+
       - name: "Install dependencies"
         uses: "ramsey/composer-install@3.0.0"
         with:
@@ -83,6 +87,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           extensions: intl, sodium
           ini-values: memory_limit=-1
+
+      - name: "Set composer platform"
+        if: matrix.php-version == '8.2'
+        run: "composer config platform.php 8.2.99"
 
       - name: "Install dependencies"
         uses: "ramsey/composer-install@3.0.0"
