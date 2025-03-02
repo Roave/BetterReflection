@@ -17,7 +17,7 @@ Better Reflection is a reflection API that aims to improve and provide more feat
 * Ability to extract AST from methods and functions
 * Ability to return AST representation of a class or function
 * Fetch return type declaration and parameter type declarations in PHP 7 code
-* *Moar stuff coming soon!*
+* *More features coming soon!*
 
 Typically you would use Better Reflection for static analysis tooling. It can serve as a baseline to access type
 information (e.g. doc blocks, type declarations), method/function body AST fetching etc. for static analysis.
