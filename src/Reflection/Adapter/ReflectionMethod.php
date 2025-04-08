@@ -17,7 +17,6 @@ use Roave\BetterReflection\Reflection\Exception\MethodPrototypeNotFound;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
-use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 use Throwable;
@@ -198,10 +197,12 @@ final class ReflectionMethod extends CoreReflectionMethod
      */
     public function getParameters(): array
     {
-        return array_map(
-            static fn (BetterReflectionParameter $parameter): ReflectionParameter => new ReflectionParameter($parameter),
-            $this->betterReflectionMethod->getParameters(),
-        );
+        $parameters = [];
+        foreach ($this->betterReflectionMethod->getParameters() as $parameter) {
+            $parameters[] = new ReflectionParameter($parameter);
+        }
+
+        return $parameters;
     }
 
     /** @psalm-mutation-free */

@@ -384,14 +384,12 @@ final class ReflectionClass extends CoreReflectionClass
     {
         $traits = $this->betterReflectionClass->getTraits();
 
-        /** @var list<trait-string> $traitNames */
-        $traitNames = array_map(static fn (BetterReflectionClass $trait): string => $trait->getName(), $traits);
+        $result = [];
+        foreach ($traits as $trait) {
+            $result[$trait->getName()] = new self($trait);
+        }
 
-        /** @psalm-suppress ImpureFunctionCall */
-        return array_combine(
-            $traitNames,
-            array_map(static fn (BetterReflectionClass $trait): self => new self($trait), $traits),
-        );
+        return $result;
     }
 
     /**

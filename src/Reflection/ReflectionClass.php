@@ -1154,7 +1154,12 @@ class ReflectionClass implements Reflection
      */
     public function getParentClassNames(): array
     {
-        return array_map(static fn (self $parentClass): string => $parentClass->getName(), $this->getParentClasses());
+        $classNames = [];
+        foreach ($this->getParentClasses() as $parentClass) {
+            $classNames[] = $parentClass->getName();
+        }
+
+        return $classNames;
     }
 
     /** @return list<ReflectionClass> */
