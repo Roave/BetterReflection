@@ -184,6 +184,60 @@ jobs:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
+  mutation-tests-phpstan:
+      name: "Mutation tests with PHPStan"
+
+      runs-on: ${{ matrix.operating-system }}
+
+      strategy:
+          matrix:
+              dependencies:
+                  - "locked"
+              php-version:
+                  - "8.4"
+              operating-system:
+                  - "ubuntu-latest"
+
+      steps:
+          - name: "Checkout"
+            uses: "actions/checkout@v4"
+
+          - name: "Install PHP"
+            uses: "shivammathur/setup-php@2.33.0"
+            with:
+                coverage: "xdebug"
+                php-version: "${{ matrix.php-version }}"
+                extensions: intl, sodium
+                ini-values: memory_limit=-1, zend.assertions=1
+
+          - name: "Install dependencies"
+            uses: "ramsey/composer-install@3.1.0"
+            with:
+                dependency-versions: "${{ matrix.dependencies }}"
+
+          - name: "Install CI dependencies"
+            uses: "ramsey/composer-install@3.1.0"
+            with:
+                dependency-versions: "${{ matrix.dependencies }}"
+                working-directory: "tools"
+                custom-cache-suffix: "ci"
+
+          - name: "Warmup PHPStan"
+            run: "tools/vendor/bin/phpstan analyse --memory-limit=-1"
+
+          - name: "Infection"
+            run: "tools/vendor/bin/phpstan-mutant-killer-infection-runner --phpstan-config phpstan.neon --log log.txt --threads=$(nproc)"
+            env:
+                INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
+                STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+
+          - uses: actions/upload-artifact@v4
+            if: ${{ !cancelled() }}
+            with:
+                name: log.txt
+                path: log.txt
+                if-no-files-found: error
+
   compatibility:
     name: "Test Compatibility"
 

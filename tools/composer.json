@@ -5,7 +5,8 @@
         "phpstan/phpstan-phpunit": "^2.0.6",
         "vimeo/psalm": "^6.11.0",
         "roave/backward-compatibility-check": "^8.13.0",
-        "roave/infection-static-analysis-plugin": "^1.37.0"
+        "roave/infection-static-analysis-plugin": "^1.38.0",
+        "phpstan/mutant-killer-infection-runner": "1.0.x-dev"
     },
     "config": {
         "allow-plugins": {
@@ -20,5 +21,7 @@
         "psr-4": {
             "Roave\\BetterReflection\\": "../src"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
