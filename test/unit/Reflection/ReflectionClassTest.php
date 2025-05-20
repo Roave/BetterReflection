@@ -33,6 +33,7 @@ use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionUnionType;
@@ -108,6 +109,7 @@ use function sprintf;
 use function uniqid;
 
 #[CoversClass(ReflectionClass::class)]
+#[CoversClass(ReflectionObject::class)]
 class ReflectionClassTest extends TestCase
 {
     private Locator $astLocator;
