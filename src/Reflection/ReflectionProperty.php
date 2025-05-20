@@ -598,6 +598,7 @@ class ReflectionProperty
 
     public function isVirtual(): bool
     {
+        // @infection-ignore-all AssignCoalesce: It's just optimization
         $this->cachedVirtual ??= $this->createCachedVirtual();
 
         return $this->cachedVirtual;
@@ -621,6 +622,7 @@ class ReflectionProperty
     /** @return array{get?: ReflectionMethod, set?: ReflectionMethod} */
     public function getHooks(): array
     {
+        // @infection-ignore-all AssignCoalesce: It's just optimization
         $this->cachedHooks ??= $this->createCachedHooks();
 
         return $this->cachedHooks;

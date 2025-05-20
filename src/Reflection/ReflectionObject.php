@@ -117,6 +117,7 @@ class ReflectionObject extends ReflectionClass
     {
         $builder = new PropertyNodeBuilder($property->getName());
         $builder->setDefault($property->getValue($instance));
+        // @infection-ignore-all MethodCallRemoval: The call is not necessary because the property is public by default, it's just for clarity
         $builder->makePublic();
 
         return $builder->getNode();
