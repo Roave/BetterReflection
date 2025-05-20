@@ -307,7 +307,7 @@ class ReflectionMethod
     /** @return int-mask-of<ReflectionMethodAdapter::IS_*> */
     private function computeModifiers(MethodNode|Node\PropertyHook $node): int
     {
-        $modifiers = 0;
+        $modifiers = $node->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
 
         if ($node instanceof MethodNode) {
             $modifiers += $node->isStatic() ? CoreReflectionMethod::IS_STATIC : 0;
@@ -316,8 +316,6 @@ class ReflectionMethod
             $modifiers += $node->isPrivate() ? CoreReflectionMethod::IS_PRIVATE : 0;
             $modifiers += $node->isAbstract() ? CoreReflectionMethod::IS_ABSTRACT : 0;
         }
-
-        $modifiers += $node->isFinal() ? CoreReflectionMethod::IS_FINAL : 0;
 
         return $modifiers;
     }

@@ -100,6 +100,45 @@ class GetAndSetPropertyHook extends GetPropertyHook
     }
 }
 
+class SetPropertyHook
+{
+    public string $hook {
+        set (string $value) {
+            $this->hook = $value;
+        }
+    }
+}
+
+class SetAndGetPropertyHook extends SetPropertyHook
+{
+    public string $hook {
+        get {
+            return 'hook';
+        }
+    }
+}
+
+class BothPropertyHooks
+{
+    public string $hook {
+        get {
+            return 'hook';
+        }
+        set (string $value) {
+            $this->hook = $value;
+        }
+    }
+}
+
+class ExtendedHooks extends BothPropertyHooks
+{
+    public string $hook {
+        get {
+            return 'hook2';
+        }
+    }
+}
+
 trait PropertyHookTrait
 {
     public string $hook {

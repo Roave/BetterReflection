@@ -192,10 +192,11 @@ class ReflectionPropertyTest extends TestCase
 
         $notReadOnlyProperty = $classInfo->getProperty('publicProperty');
         self::assertFalse($notReadOnlyProperty->isReadOnly());
+        self::assertTrue($notReadOnlyProperty->isPublic());
 
         $readOnlyProperty = $classInfo->getProperty('readOnlyProperty');
-        self::assertTrue($readOnlyProperty->isPublic());
         self::assertTrue($readOnlyProperty->isReadOnly());
+        self::assertTrue($readOnlyProperty->isPublic());
     }
 
     public function testIsFinal(): void
@@ -204,6 +205,7 @@ class ReflectionPropertyTest extends TestCase
 
         $notReadOnlyProperty = $classInfo->getProperty('publicProperty');
         self::assertFalse($notReadOnlyProperty->isFinal());
+        self::assertTrue($notReadOnlyProperty->isPublic());
 
         $finalPublicProperty = $classInfo->getProperty('finalPublicProperty');
         self::assertTrue($finalPublicProperty->isFinal());
@@ -215,6 +217,7 @@ class ReflectionPropertyTest extends TestCase
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
 
         $notAbstractProperty = $classInfo->getProperty('publicProperty');
+        self::assertTrue($notAbstractProperty->isPublic());
         self::assertFalse($notAbstractProperty->isAbstract());
     }
 
@@ -227,6 +230,7 @@ class ReflectionPropertyTest extends TestCase
         $classInfo = $reflector->reflectClass('\\Roave\\BetterReflectionTest\\Fixture\\ReadOnlyClass');
 
         $property = $classInfo->getProperty('property');
+        self::assertTrue($property->isPrivate());
         self::assertTrue($property->isReadOnly());
     }
 
@@ -265,25 +269,32 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($property->getDocComment());
     }
 
-    /** @return list<array{0: non-empty-string, 1: int-mask-of<ReflectionPropertyAdapter::IS_*>}> */
+    /** @return list<array{0: non-empty-string, 1: class-string, 2: non-empty-string, 3: int-mask-of<ReflectionPropertyAdapter::IS_*>}> */
     public static function modifierProvider(): array
     {
         return [
-            ['publicProperty', CoreReflectionProperty::IS_PUBLIC],
-            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED],
-            ['privateProperty', CoreReflectionProperty::IS_PRIVATE],
-            ['publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC],
-            ['readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_READONLY | ReflectionPropertyAdapter::IS_PROTECTED_SET_COMPATIBILITY],
-            ['finalPublicProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_FINAL_COMPATIBILITY],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'publicProperty', CoreReflectionProperty::IS_PUBLIC],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'protectedProperty', CoreReflectionProperty::IS_PROTECTED],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'privateProperty', CoreReflectionProperty::IS_PRIVATE],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'publicStaticProperty', CoreReflectionProperty::IS_PUBLIC | CoreReflectionProperty::IS_STATIC],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'readOnlyProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_READONLY | ReflectionPropertyAdapter::IS_PROTECTED_SET_COMPATIBILITY],
+            [__DIR__ . '/../Fixture/ExampleClass.php', 'Roave\BetterReflectionTest\Fixture\ExampleClass', 'finalPublicProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_FINAL_COMPATIBILITY],
+            [__DIR__ . '/../Fixture/PropertyHooks.php', 'Roave\BetterReflectionTest\Fixture\AbstractPropertyHooks', 'hook', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_ABSTRACT_COMPATIBILITY | ReflectionPropertyAdapter::IS_VIRTUAL_COMPATIBILITY],
         ];
     }
 
-    /** @param non-empty-string $propertyName */
+    /**
+     * @param non-empty-string $fileName
+     * @param class-string     $className
+     * @param non-empty-string $propertyName
+     */
     #[DataProvider('modifierProvider')]
-    public function testGetModifiers(string $propertyName, int $expectedModifier): void
+    public function testGetModifiers(string $fileName, string $className, string $propertyName, int $expectedModifier): void
     {
-        $classInfo = $this->reflector->reflectClass(ExampleClass::class);
-        $property  = $classInfo->getProperty($propertyName);
+        $reflector = new DefaultReflector(new SingleFileSourceLocator($fileName, $this->astLocator));
+        $classInfo = $reflector->reflectClass($className);
+
+        $property = $classInfo->getProperty($propertyName);
 
         self::assertSame($expectedModifier, $property->getModifiers());
     }
@@ -972,25 +983,29 @@ PHP;
         self::assertTrue($protectedPrivateSet->isPrivateSet());
     }
 
-    /** @return list<array{0: non-empty-string, 1: bool}> */
+    /** @return list<array{0: non-empty-string, 1: bool, 2: int-mask-of<ReflectionPropertyAdapter::IS_*>}> */
     public static function asymmetricVisibilityImplicitFinalProvider(): array
     {
         return [
-            ['publicPrivateSetIsFinal', true],
-            ['protectedPrivateSetIsFinal', true],
-            ['privatePrivateSetIsNotFinal', false],
+            ['publicPrivateSetIsFinal', true, ReflectionPropertyAdapter::IS_PUBLIC | ReflectionPropertyAdapter::IS_PRIVATE_SET_COMPATIBILITY | ReflectionPropertyAdapter::IS_FINAL_COMPATIBILITY],
+            ['protectedPrivateSetIsFinal', true, ReflectionPropertyAdapter::IS_PROTECTED | ReflectionPropertyAdapter::IS_PRIVATE_SET_COMPATIBILITY | ReflectionPropertyAdapter::IS_FINAL_COMPATIBILITY],
+            ['privatePrivateSetIsNotFinal', false, ReflectionPropertyAdapter::IS_PRIVATE],
         ];
     }
 
-    /** @param non-empty-string $propertyName */
+    /**
+     * @param non-empty-string                             $propertyName
+     * @param int-mask-of<ReflectionPropertyAdapter::IS_*> $modifiers
+     */
     #[DataProvider('asymmetricVisibilityImplicitFinalProvider')]
-    public function testAsymmetricVisibilityImplicitFinal(string $propertyName, bool $isFinal): void
+    public function testAsymmetricVisibilityImplicitFinal(string $propertyName, bool $isFinal, int $modifiers): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AsymmetricVisibilityImplicitFinal.php', $this->astLocator));
         $classInfo = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\AsymmetricVisibilityImplicitFinal');
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($isFinal, $property->isFinal());
+        self::assertSame($modifiers, $property->getModifiers());
     }
 
     /** @return list<array{0: non-empty-string, 1: bool}> */
@@ -1023,6 +1038,7 @@ PHP;
 
         $hookProperty = $classInfo->getProperty('hook');
         self::assertTrue($hookProperty->isAbstract());
+        self::assertTrue($hookProperty->isPublic());
     }
 
     public function testIsAbstractInInterface(): void
@@ -1032,6 +1048,7 @@ PHP;
 
         $abstractProperty = $classInfo->getProperty('abstractPropertyFromInterface');
         self::assertTrue($abstractProperty->isAbstract());
+        self::assertTrue($abstractProperty->isPublic());
     }
 
     public function testNoHooks(): void
@@ -1210,6 +1227,20 @@ PHP;
         self::assertTrue($getAndSetHookProperty->hasHook(ReflectionPropertyHookType::Set));
         self::assertSame('Roave\BetterReflectionTest\Fixture\GetPropertyHook', $getAndSetHookProperty->getHook(ReflectionPropertyHookType::Get)->getDeclaringClass()->getName());
         self::assertSame('Roave\BetterReflectionTest\Fixture\GetAndSetPropertyHook', $getAndSetHookProperty->getHook(ReflectionPropertyHookType::Set)->getDeclaringClass()->getName());
+    }
+
+    public function testExtendingHooks2(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyHooks.php', $this->astLocator));
+
+        $classInfo = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\ExtendedHooks');
+
+        $getAndSetHookProperty = $classInfo->getProperty('hook');
+        self::assertCount(2, $getAndSetHookProperty->getHooks());
+        self::assertTrue($getAndSetHookProperty->hasHook(ReflectionPropertyHookType::Get));
+        self::assertTrue($getAndSetHookProperty->hasHook(ReflectionPropertyHookType::Set));
+        self::assertSame('Roave\BetterReflectionTest\Fixture\ExtendedHooks', $getAndSetHookProperty->getHook(ReflectionPropertyHookType::Get)->getDeclaringClass()->getName());
+        self::assertSame('Roave\BetterReflectionTest\Fixture\BothPropertyHooks', $getAndSetHookProperty->getHook(ReflectionPropertyHookType::Set)->getDeclaringClass()->getName());
     }
 
     public function testUseHookFromTrait(): void

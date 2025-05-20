@@ -61,25 +61,34 @@ class ReflectionClassConstantTest extends TestCase
     {
         $const = $this->getExampleConstant('MY_CONST_1');
         self::assertTrue($const->isPublic());
+        self::assertFalse($const->isProtected());
+        self::assertFalse($const->isPrivate());
+        self::assertFalse($const->isFinal());
     }
 
     public function testOnlyPublicVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_3');
         self::assertTrue($const->isPublic());
+        self::assertFalse($const->isProtected());
+        self::assertFalse($const->isPrivate());
         self::assertFalse($const->isFinal());
     }
 
     public function testOnlyProtectedVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_4');
+        self::assertFalse($const->isPublic());
         self::assertTrue($const->isProtected());
+        self::assertFalse($const->isPrivate());
         self::assertFalse($const->isFinal());
     }
 
     public function testPrivateVisibility(): void
     {
         $const = $this->getExampleConstant('MY_CONST_5');
+        self::assertFalse($const->isPublic());
+        self::assertFalse($const->isProtected());
         self::assertTrue($const->isPrivate());
         self::assertFalse($const->isFinal());
     }
@@ -94,7 +103,9 @@ class ReflectionClassConstantTest extends TestCase
     public function testProtectedFinal(): void
     {
         $const = $this->getExampleConstant('MY_CONST_7');
+        self::assertFalse($const->isPublic());
         self::assertTrue($const->isProtected());
+        self::assertFalse($const->isPrivate());
         self::assertTrue($const->isFinal());
     }
 
