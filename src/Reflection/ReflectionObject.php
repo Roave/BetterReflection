@@ -27,7 +27,7 @@ use function preg_match;
 /** @psalm-immutable */
 class ReflectionObject extends ReflectionClass
 {
-    protected function __construct(private Reflector $reflector, private ReflectionClass $reflectionClass, private object $object)
+    private function __construct(private Reflector $reflector, private ReflectionClass $reflectionClass, private object $object)
     {
     }
 
