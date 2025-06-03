@@ -10,6 +10,9 @@
             "report": "/^\\d\\.\\d\\.x$/"
         }
     },
+    "phpStan": {
+        "customPath": "tools/vendor/bin/phpstan"
+    },
     "mutators": {
         "@default": true
     },
