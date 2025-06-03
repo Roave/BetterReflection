@@ -182,7 +182,7 @@ jobs:
         run: "tools/vendor/bin/phpstan analyse --memory-limit=-1"
 
       - name: "Infection"
-        run: "tools/infection.phar --static-analysis-tool=phpstan --threads=$(nproc)"
+        run: "tools/vendor/bin/infection --static-analysis-tool=phpstan --threads=$(nproc)"
         env:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}

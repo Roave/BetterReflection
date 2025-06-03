@@ -35,7 +35,7 @@ class FileCheckerTest extends TestCase
         FileChecker::assertReadableFile(__DIR__);
     }
 
-    public function CheckFileThrowsExceptionIfFileIsNotReadable(): void
+    public function testCheckFileThrowsExceptionIfFileIsNotReadable(): void
     {
         if (str_starts_with(PHP_OS, 'WIN')) {
             self::markTestSkipped('It\'s not possible to change file mode on Windows');
