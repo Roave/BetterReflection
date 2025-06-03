@@ -140,8 +140,8 @@ jobs:
       - name: "psalm"
         run: "tools/vendor/bin/psalm --shepherd --stats"
 
-  mutation-tests:
-    name: "Mutation tests"
+  mutation-tests-phpstan:
+    name: "Mutation tests with PHPStan"
 
     runs-on: ${{ matrix.operating-system }}
 
@@ -178,11 +178,21 @@ jobs:
           working-directory: "tools"
           custom-cache-suffix: "ci"
 
+      - name: "Warmup PHPStan"
+        run: "tools/vendor/bin/phpstan analyse --memory-limit=-1"
+
       - name: "Infection"
-        run: "tools/vendor/bin/roave-infection-static-analysis-plugin --threads=$(nproc)"
+        run: "tools/infection.phar --static-analysis-tool=phpstan --threads=$(nproc)"
         env:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: log.txt
+          path: log.txt
+          if-no-files-found: error
 
   compatibility:
     name: "Test Compatibility"
