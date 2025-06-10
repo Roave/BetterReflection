@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0f8a30b99a43ea2bd098725245a46ce",
+    "content-hash": "bcef4271152c1e079d75641d1d9d9eac",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2292,16 +2292,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.29.14",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "feea2a48a8aeedd3a4d2105167b41a46f0e568a3"
+                "reference": "43a82b6bcd92fad706d3e3f5f6f681425db2c4a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/feea2a48a8aeedd3a4d2105167b41a46f0e568a3",
-                "reference": "feea2a48a8aeedd3a4d2105167b41a46f0e568a3",
+                "url": "https://api.github.com/repos/infection/infection/zipball/43a82b6bcd92fad706d3e3f5f6f681425db2c4a8",
+                "reference": "43a82b6bcd92fad706d3e3f5f6f681425db2c4a8",
                 "shasum": ""
             },
             "require": {
@@ -2321,8 +2321,8 @@
                 "nikic/php-parser": "^5.3",
                 "ondram/ci-detector": "^4.1.0",
                 "php": "^8.2",
-                "sanmai/later": "^0.1.1",
-                "sanmai/pipeline": "^5.1 || ^6",
+                "sanmai/later": "^0.1.7",
+                "sanmai/pipeline": "^6.16",
                 "sebastian/diff": "^3.0.2 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
                 "symfony/console": "^6.4 || ^7.0",
                 "symfony/filesystem": "^6.4 || ^7.0",
@@ -2346,10 +2346,13 @@
                 "phpstan/phpstan-webmozart-assert": "^2.0",
                 "phpunit/phpunit": "^11.5",
                 "rector/rector": "^2.0",
+                "shipmonk/dead-code-detector": "^0.12.0",
+                "shipmonk/name-collision-detector": "^2.1",
                 "sidz/phpstan-rules": "^0.5.1",
                 "symfony/yaml": "^6.4 || ^7.0",
                 "thecodingmachine/phpstan-safe-rule": "^1.4"
             },
+            "default-branch": true,
             "bin": [
                 "bin/infection"
             ],
@@ -2404,7 +2407,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.29.14"
+                "source": "https://github.com/infection/infection/tree/master"
             },
             "funding": [
                 {
@@ -2416,7 +2419,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-03-02T18:49:12+00:00"
+            "time": "2025-06-10T10:13:06+00:00"
         },
         {
             "name": "infection/mutator",
@@ -4039,62 +4042,6 @@
                 "source": "https://github.com/Roave/BetterReflection/tree/6.59.0"
             },
             "time": "2025-05-27T21:09:39+00:00"
-        },
-        {
-            "name": "roave/infection-static-analysis-plugin",
-            "version": "1.38.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Roave/infection-static-analysis-plugin.git",
-                "reference": "431c7bba21df58bf11186ec03501e2b47d321b2f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Roave/infection-static-analysis-plugin/zipball/431c7bba21df58bf11186ec03501e2b47d321b2f",
-                "reference": "431c7bba21df58bf11186ec03501e2b47d321b2f",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.2",
-                "infection/infection": "0.29.14",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
-                "sanmai/later": "^0.1.7",
-                "vimeo/psalm": "^6.12.0"
-            },
-            "conflict": {
-                "symfony/polyfill-php84": "<1.30.0"
-            },
-            "require-dev": {
-                "azjezz/psl": "^3.3.0",
-                "doctrine/coding-standard": "^13.0.1",
-                "phpunit/phpunit": "^11.5.21",
-                "psalm/plugin-phpunit": "^0.19.5"
-            },
-            "bin": [
-                "bin/roave-infection-static-analysis-plugin"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Roave\\InfectionStaticAnalysis\\": "src/Roave/InfectionStaticAnalysis"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "Static analysis on top of mutation testing - prevents escaped mutants from being invalid according to static analysis",
-            "support": {
-                "issues": "https://github.com/Roave/infection-static-analysis-plugin/issues",
-                "source": "https://github.com/Roave/infection-static-analysis-plugin/tree/1.38.0"
-            },
-            "time": "2025-06-04T01:32:53+00:00"
         },
         {
             "name": "sanmai/later",
@@ -6150,7 +6097,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "infection/infection": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
