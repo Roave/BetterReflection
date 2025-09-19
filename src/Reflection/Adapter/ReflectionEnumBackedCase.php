@@ -125,6 +125,11 @@ final class ReflectionEnumBackedCase extends CoreReflectionEnumBackedCase
         return new ReflectionEnum($this->betterReflectionEnumCase->getDeclaringEnum());
     }
 
+    public function hasBackingValue(): bool
+    {
+        return $this->betterReflectionEnumCase->hasValueExpression();
+    }
+
     public function getBackingValue(): int|string
     {
         return $this->betterReflectionEnumCase->getValue();
