@@ -134,7 +134,14 @@ final class FindReflectionsInTree
                     }
                 }
 
-                if ($this->identifierType->isFunction() && $node instanceof Node\Stmt\Function_) {
+                if (
+                    $this->identifierType->isFunction()
+                    && (
+                        $node instanceof Node\Stmt\Function_
+                        || $node instanceof Node\Expr\Closure
+                        || $node instanceof Node\Expr\ArrowFunction
+                    )
+                ) {
                     $this->reflections[] = $this->astConversionStrategy->__invoke($this->reflector, $node, $this->locatedSource, $this->currentNamespace);
                 }
 

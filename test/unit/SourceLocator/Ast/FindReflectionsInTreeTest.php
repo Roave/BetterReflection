@@ -139,7 +139,18 @@ class FindReflectionsInTreeTest extends TestCase
         );
     }
 
-    public function testInvokeCallsReflectNodesForFunction(): void
+    /** @return list<array{0: string, 1: string}> */
+    public static function dataFunctionSources(): array
+    {
+        return [
+            ['<?php function foo() {}', 'function'],
+            ['<?php $foo = function() {};', 'closure'],
+            ['<?php fn() => "foo";', 'arrow_function'],
+        ];
+    }
+
+    #[DataProvider('dataFunctionSources')]
+    public function testInvokeCallsReflectNodesForFunction(string $source, string $name): void
     {
         $strategy = $this->createMock(NodeToReflection::class);
 
@@ -150,7 +161,7 @@ class FindReflectionsInTreeTest extends TestCase
             ->willReturn($mockReflection);
 
         $reflector     = $this->createMock(Reflector::class);
-        $locatedSource = new LocatedSource('<?php function foo() {}', 'foo');
+        $locatedSource = new LocatedSource($source, $name);
 
         self::assertSame(
             [$mockReflection],
