@@ -41,7 +41,7 @@ class ClosureSourceLocatorTest extends TestCase
         parent::setUp();
 
         $this->parser    = BetterReflectionSingleton::instance()->phpParser();
-        $this->reflector = $this->createMock(Reflector::class);
+        $this->reflector = self::createStub(Reflector::class);
     }
 
     /** @return list<array{0: Closure, 1: string|null, 2: non-empty-string, 3: int, 4: int}> */
@@ -132,7 +132,7 @@ class ClosureSourceLocatorTest extends TestCase
 
         $sourceLocatorReflection = new CoreReflectionClass($sourceLocator);
 
-        $coreReflectionPropertyMock = $this->createMock(CoreReflectionFunction::class);
+        $coreReflectionPropertyMock = self::createStub(CoreReflectionFunction::class);
         $coreReflectionPropertyMock
             ->method('getFileName')
             ->willReturn(__FILE__);
@@ -213,7 +213,7 @@ class ClosureSourceLocatorTest extends TestCase
         $sourceLocator = new ClosureSourceLocator(static function (): void {
         }, $this->parser);
 
-        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue = $this->createMock(CoreReflectionFunction::class);
+        $sourceLocatorReflectionCoreFunctionReflectionPropertyValue = self::createStub(CoreReflectionFunction::class);
         $sourceLocatorReflectionCoreFunctionReflectionPropertyValue
             ->method('getFileName')
             ->willReturn('sdklfjdfslsdfhlkjsdglkjsdflgkj');

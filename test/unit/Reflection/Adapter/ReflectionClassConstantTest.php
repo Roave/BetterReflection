@@ -46,7 +46,7 @@ class ReflectionClassConstantTest extends TestCase
         self::assertSame(ReflectionClassConstantAdapter::class, $reflectionClassConstantAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
+    /** @return list<array{0: non-empty-string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public static function methodExpectationProvider(): array
     {
         return [
@@ -67,6 +67,7 @@ class ReflectionClassConstantTest extends TestCase
     }
 
     /**
+     * @param non-empty-string             $methodName
      * @param list<mixed>                  $args
      * @param class-string<Throwable>|null $expectedException
      */
@@ -105,21 +106,21 @@ class ReflectionClassConstantTest extends TestCase
     #[DataProvider('dataAdapterMethodsForEnumCase')]
     public function testAdapterMethodsForEnumCase(string $methodName, mixed $expectedValue): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter(self::createStub(BetterReflectionEnumCase::class));
 
         self::assertSame($expectedValue, $reflectionClassConstantAdapter->{$methodName}());
     }
 
     public function testHasTypeForEnumCase(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter(self::createStub(BetterReflectionEnumCase::class));
 
         self::assertFalse($reflectionClassConstantAdapter->hasType());
     }
 
     public function testGetTypeForEnumCase(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter(self::createStub(BetterReflectionEnumCase::class));
 
         self::assertNull($reflectionClassConstantAdapter->getType());
     }
@@ -128,12 +129,12 @@ class ReflectionClassConstantTest extends TestCase
     {
         require_once __DIR__ . '/../../Fixture/Enums.php';
 
-        $reflectionClassAdapter = $this->createMock(BetterReflectionClass::class);
+        $reflectionClassAdapter = self::createStub(BetterReflectionClass::class);
         $reflectionClassAdapter
             ->method('getName')
             ->willReturn(PureEnum::class);
 
-        $reflectionEnumCaseAdapter = $this->createMock(BetterReflectionEnumCase::class);
+        $reflectionEnumCaseAdapter = self::createStub(BetterReflectionEnumCase::class);
         $reflectionEnumCaseAdapter
             ->method('getDeclaringClass')
             ->willReturn($reflectionClassAdapter);
@@ -148,7 +149,7 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
     {
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant = self::createStub(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getDocComment')
             ->willReturn(null);
@@ -160,18 +161,18 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetAttributes(): void
     {
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
             ->willReturn('SomeAttribute');
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
             ->willReturn('AnotherAttribute');
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant = self::createStub(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getAttributes')
             ->willReturn($betterReflectionAttributes);
@@ -191,21 +192,21 @@ class ReflectionClassConstantTest extends TestCase
         /** @phpstan-var class-string $anotherAttributeClassName */
         $anotherAttributeClassName = 'AnotherAttribute';
 
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
             ->willReturn($someAttributeClassName);
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
             ->willReturn($anotherAttributeClassName);
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
+        $betterReflectionClassConstant = self::getStubBuilder(BetterReflectionClassConstant::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getAttributes'])
-            ->getMock();
+            ->getStub();
 
         $betterReflectionClassConstant
             ->method('getAttributes')
@@ -227,7 +228,7 @@ class ReflectionClassConstantTest extends TestCase
         /** @phpstan-var class-string $interfaceName */
         $interfaceName = 'InterfaceName';
 
-        $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass1 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass1
             ->method('getName')
             ->willReturn($className);
@@ -244,12 +245,12 @@ class ReflectionClassConstantTest extends TestCase
                 [$interfaceName, false],
             ]);
 
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass1);
 
-        $betterReflectionAttributeClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass2 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass2
             ->method('getName')
             ->willReturn('Whatever');
@@ -268,12 +269,12 @@ class ReflectionClassConstantTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass2);
 
-        $betterReflectionAttributeClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass3 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass3
             ->method('getName')
             ->willReturn('Whatever');
@@ -292,7 +293,7 @@ class ReflectionClassConstantTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute3 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute3
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass3);
@@ -303,10 +304,10 @@ class ReflectionClassConstantTest extends TestCase
             $betterReflectionAttribute3,
         ];
 
-        $betterReflectionClassConstant = $this->getMockBuilder(BetterReflectionClassConstant::class)
+        $betterReflectionClassConstant = self::getStubBuilder(BetterReflectionClassConstant::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getAttributes'])
-            ->getMock();
+            ->getStub();
 
         $betterReflectionClassConstant
             ->method('getAttributes')
@@ -321,7 +322,7 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetAttributesThrowsExceptionForInvalidFlags(): void
     {
-        $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant  = self::createStub(BetterReflectionClassConstant::class);
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
 
         $this->expectException(ValueError::class);
@@ -330,21 +331,21 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testIsEnumCaseWithClassConstant(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionClassConstant::class));
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter(self::createStub(BetterReflectionClassConstant::class));
 
         self::assertFalse($reflectionClassConstantAdapter->isEnumCase());
     }
 
     public function testIsEnumCaseWithEnumCase(): void
     {
-        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($this->createMock(BetterReflectionEnumCase::class));
+        $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter(self::createStub(BetterReflectionEnumCase::class));
 
         self::assertTrue($reflectionClassConstantAdapter->isEnumCase());
     }
 
     public function testPropertyName(): void
     {
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant = self::createStub(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getName')
             ->willReturn('FOO');
@@ -355,12 +356,12 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testPropertyClass(): void
     {
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass = self::createStub(BetterReflectionClass::class);
         $betterReflectionClass
             ->method('getName')
             ->willReturn('Foo');
 
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant = self::createStub(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getImplementingClass')
             ->willReturn($betterReflectionClass);
@@ -371,7 +372,7 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testUnknownProperty(): void
     {
-        $betterReflectionClassConstant  = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant  = self::createStub(BetterReflectionClassConstant::class);
         $reflectionClassConstantAdapter = new ReflectionClassConstantAdapter($betterReflectionClassConstant);
         $this->expectException(OutOfBoundsException::class);
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionClassConstant::$foo does not exist.');
@@ -381,12 +382,12 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetDeclaringClassForClass(): void
     {
-        $betterReflectionClass = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass = self::createStub(BetterReflectionClass::class);
         $betterReflectionClass
             ->method('getName')
             ->willReturn('DeclaringClass');
 
-        $betterReflectionClassConstant = $this->createMock(BetterReflectionClassConstant::class);
+        $betterReflectionClassConstant = self::createStub(BetterReflectionClassConstant::class);
         $betterReflectionClassConstant
             ->method('getImplementingClass')
             ->willReturn($betterReflectionClass);
@@ -399,12 +400,12 @@ class ReflectionClassConstantTest extends TestCase
 
     public function testGetDeclaringClassForEnum(): void
     {
-        $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
+        $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
         $betterReflectionEnum
             ->method('getName')
             ->willReturn('DeclaringEnum');
 
-        $betterReflectionEnumCase = $this->createMock(BetterReflectionEnumCase::class);
+        $betterReflectionEnumCase = self::createStub(BetterReflectionEnumCase::class);
         $betterReflectionEnumCase
             ->method('getDeclaringClass')
             ->willReturn($betterReflectionEnum);

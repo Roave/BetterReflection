@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
 use Roave\BetterReflection\Identifier\Identifier;
@@ -39,9 +39,9 @@ class EvaledCodeSourceLocatorTest extends TestCase
         $this->sourceStubber = $betterReflection->sourceStubber();
     }
 
-    private function getMockReflector(): Reflector&MockObject
+    private function getMockReflector(): Reflector&Stub
     {
-        return $this->createMock(Reflector::class);
+        return self::createStub(Reflector::class);
     }
 
     public function testCanReflectEvaledClass(): void

@@ -23,8 +23,8 @@ class ReflectionUnionTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->reflector = $this->createMock(Reflector::class);
-        $this->owner     = $this->createMock(ReflectionParameter::class);
+        $this->reflector = self::createStub(Reflector::class);
+        $this->owner     = self::createStub(ReflectionParameter::class);
     }
 
     /** @return list<array{0: Node\UnionType, 1: string, 2: bool}> */
@@ -56,7 +56,7 @@ class ReflectionUnionTypeTest extends TestCase
 
         self::assertCount(2, $types);
 
-        $owner = $this->createMock(ReflectionParameter::class);
+        $owner = self::createStub(ReflectionParameter::class);
 
         $cloneTypeReflection = $typeReflection->withOwner($owner);
 

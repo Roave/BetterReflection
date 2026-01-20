@@ -20,13 +20,13 @@ class AbstractSourceLocatorTest extends TestCase
 {
     public function testLocateIdentifierCallsFindReflection(): void
     {
-        $mockReflector = $this->createMock(Reflector::class);
+        $mockReflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
-        $mockReflection = $this->createMock(ReflectionClass::class);
+        $mockReflection = self::createStub(ReflectionClass::class);
 
         $astLocator = $this->createMock(AstLocator::class);
 
@@ -50,7 +50,7 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifierReturnsNullWithoutTryingToFindReflectionWhenUnableToLocateSource(): void
     {
-        $mockReflector = $this->createMock(Reflector::class);
+        $mockReflector = self::createStub(Reflector::class);
 
         $identifier = new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS));
 
@@ -74,7 +74,7 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifierReturnsNullWhenFindLocatorThrowsException(): void
     {
-        $mockReflector = $this->createMock(Reflector::class);
+        $mockReflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
@@ -102,13 +102,13 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeCallsFindReflectionsOfType(): void
     {
-        $mockReflector = $this->createMock(Reflector::class);
+        $mockReflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo{}', 'Foo');
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 
-        $mockReflection = $this->createMock(ReflectionClass::class);
+        $mockReflection = self::createStub(ReflectionClass::class);
 
         $astLocator = $this->createMock(AstLocator::class);
 
@@ -131,7 +131,7 @@ class AbstractSourceLocatorTest extends TestCase
 
     public function testLocateIdentifiersByTypeReturnsEmptyArrayWithoutTryingToFindReflectionsWhenUnableToLocateSource(): void
     {
-        $mockReflector = $this->createMock(Reflector::class);
+        $mockReflector = self::createStub(Reflector::class);
 
         $identifierType = new IdentifierType(IdentifierType::IDENTIFIER_CLASS);
 

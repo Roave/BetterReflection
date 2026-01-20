@@ -17,7 +17,7 @@ class ReflectionAttributeHelperTest extends TestCase
 {
     public function testCreateAttributes(): void
     {
-        $ast             = $this->createMock(Node\Stmt\Class_::class);
+        $ast             = self::createStub(Node\Stmt\Class_::class);
         $ast->attrGroups = [
             new Node\AttributeGroup([
                 new Node\Attribute(new Node\Name('SomeAttr')),
@@ -26,9 +26,9 @@ class ReflectionAttributeHelperTest extends TestCase
             ]),
         ];
 
-        $reflection = $this->createMock(ReflectionClass::class);
+        $reflection = self::createStub(ReflectionClass::class);
         $attributes = ReflectionAttributeHelper::createAttributes(
-            $this->createMock(Reflector::class),
+            self::createStub(Reflector::class),
             $reflection,
             $ast->attrGroups,
         );
@@ -42,17 +42,17 @@ class ReflectionAttributeHelperTest extends TestCase
 
     public function testFilterAttributesByName(): void
     {
-        $attribute1 = $this->createMock(ReflectionAttribute::class);
+        $attribute1 = self::createStub(ReflectionAttribute::class);
         $attribute1
             ->method('getName')
             ->willReturn('SomeAttr');
 
-        $attribute2 = $this->createMock(ReflectionAttribute::class);
+        $attribute2 = self::createStub(ReflectionAttribute::class);
         $attribute2
             ->method('getName')
             ->willReturn('AnotherAttr');
 
-        $attribute3 = $this->createMock(ReflectionAttribute::class);
+        $attribute3 = self::createStub(ReflectionAttribute::class);
         $attribute3
             ->method('getName')
             ->willReturn('AnotherAttr');
@@ -76,7 +76,7 @@ class ReflectionAttributeHelperTest extends TestCase
         /** @phpstan-var class-string $interfaceName */
         $interfaceName = 'InterfaceName';
 
-        $attributeClass1 = $this->createMock(ReflectionClass::class);
+        $attributeClass1 = self::createStub(ReflectionClass::class);
         $attributeClass1
             ->method('getName')
             ->willReturn($className);
@@ -93,12 +93,12 @@ class ReflectionAttributeHelperTest extends TestCase
                 [$interfaceName, false],
             ]);
 
-        $attribute1 = $this->createMock(ReflectionAttribute::class);
+        $attribute1 = self::createStub(ReflectionAttribute::class);
         $attribute1
             ->method('getClass')
             ->willReturn($attributeClass1);
 
-        $attributeClass2 = $this->createMock(ReflectionClass::class);
+        $attributeClass2 = self::createStub(ReflectionClass::class);
         $attributeClass2
             ->method('getName')
             ->willReturn('Whatever');
@@ -117,12 +117,12 @@ class ReflectionAttributeHelperTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $attribute2 = $this->createMock(ReflectionAttribute::class);
+        $attribute2 = self::createStub(ReflectionAttribute::class);
         $attribute2
             ->method('getClass')
             ->willReturn($attributeClass2);
 
-        $attributeClass3 = $this->createMock(ReflectionClass::class);
+        $attributeClass3 = self::createStub(ReflectionClass::class);
         $attributeClass3
             ->method('getName')
             ->willReturn('Whatever');
@@ -141,7 +141,7 @@ class ReflectionAttributeHelperTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $attribute3 = $this->createMock(ReflectionAttribute::class);
+        $attribute3 = self::createStub(ReflectionAttribute::class);
         $attribute3
             ->method('getClass')
             ->willReturn($attributeClass3);

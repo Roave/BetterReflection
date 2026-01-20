@@ -42,7 +42,7 @@ class ReflectionNamedTypeTest extends TestCase
 
     public function testWillRenderNullabilityMarkerWhenGiven(): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+        $reflectionStub = self::createStub(BetterReflectionNamedType::class);
         $reflectionStub->method('__toString')
             ->willReturn('foo');
 
@@ -64,7 +64,7 @@ class ReflectionNamedTypeTest extends TestCase
     #[DataProvider('dataNoNullabilityMarkerForMixed')]
     public function testNoNullabilityMarkerForMixed(string $mixedType): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+        $reflectionStub = self::createStub(BetterReflectionNamedType::class);
         $reflectionStub->method('getName')
             ->willReturn($mixedType);
         $reflectionStub->method('__toString')
@@ -75,13 +75,13 @@ class ReflectionNamedTypeTest extends TestCase
 
     public function testWillReportThatItAcceptsOrRejectsNull(): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
+        $reflectionStub = self::createStub(BetterReflectionNamedType::class);
 
         self::assertFalse((new ReflectionNamedTypeAdapter($reflectionStub, false))->allowsNull());
         self::assertTrue((new ReflectionNamedTypeAdapter($reflectionStub, true))->allowsNull());
     }
 
-    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
+    /** @return list<array{0: non-empty-string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public static function methodExpectationProvider(): array
     {
         return [
@@ -91,19 +91,21 @@ class ReflectionNamedTypeTest extends TestCase
     }
 
     /**
+     * @param non-empty-string             $methodName
      * @param list<mixed>                  $args
      * @param class-string<Throwable>|null $expectedException
      */
     #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
-
         if ($expectedException === null) {
+            $reflectionStub = $this->createMock(BetterReflectionNamedType::class);
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->willReturn($returnValue);
+        } else {
+            $reflectionStub = self::createStub(BetterReflectionNamedType::class);
         }
 
         if ($expectedException !== null) {
@@ -132,8 +134,8 @@ class ReflectionNamedTypeTest extends TestCase
     #[DataProvider('dataIsBuildin')]
     public function testIsBuiltin(string $type, bool $isBuiltin): void
     {
-        $reflector = $this->createMock(Reflector::class);
-        $owner     = $this->createMock(BetterReflectionMethod::class);
+        $reflector = self::createStub(Reflector::class);
+        $owner     = self::createStub(BetterReflectionMethod::class);
 
         $betterReflectionNamedType = new BetterReflectionNamedType($reflector, $owner, new Node\Name($type));
         $reflectionTypeAdapter     = new ReflectionNamedTypeAdapter($betterReflectionNamedType, false);

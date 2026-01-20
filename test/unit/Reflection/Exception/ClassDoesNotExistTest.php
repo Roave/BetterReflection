@@ -14,10 +14,9 @@ class ClassDoesNotExistTest extends TestCase
 {
     public function testForDifferentReflectionType(): void
     {
-        $reflection = $this->createMock(Reflection::class);
+        $reflection = self::createStub(Reflection::class);
 
         $reflection
-            ->expects(self::any())
             ->method('getName')
             ->willReturn('potato');
 

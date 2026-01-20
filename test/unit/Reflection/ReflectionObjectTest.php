@@ -146,7 +146,7 @@ class ReflectionObjectTest extends TestCase
 
         $classInfo = ReflectionObject::createFromInstance($foo);
 
-        $mockClass = $this->createMock(ReflectionClass::class);
+        $mockClass = self::createStub(ReflectionClass::class);
 
         $reflectionObjectReflection = new CoreReflectionObject($classInfo);
 

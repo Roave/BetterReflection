@@ -54,7 +54,7 @@ class ReflectionParameterTest extends TestCase
         self::assertSame(ReflectionParameterAdapter::class, $reflectionParameterAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed}> */
+    /** @return list<array{0: non-empty-string, 1: list<mixed>, 2: mixed, 3: string|null, 4: mixed}> */
     public static function methodExpectationProvider(): array
     {
         return [
@@ -80,6 +80,7 @@ class ReflectionParameterTest extends TestCase
     }
 
     /**
+     * @param non-empty-string             $methodName
      * @param list<mixed>                  $args
      * @param class-string<Throwable>|null $expectedException
      */
@@ -91,13 +92,14 @@ class ReflectionParameterTest extends TestCase
         string|null $expectedException,
         mixed $expectedReturnValue,
     ): void {
-        $reflectionStub = $this->createMock(BetterReflectionParameter::class);
-
         if ($expectedException === null) {
+            $reflectionStub = $this->createMock(BetterReflectionParameter::class);
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->willReturn($returnValue);
+        } else {
+            $reflectionStub = self::createStub(BetterReflectionParameter::class);
         }
 
         $adapter = new ReflectionParameterAdapter($reflectionStub);
@@ -117,10 +119,10 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetDeclaringFunctionWithFunction(): void
     {
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getDeclaringFunction')
-            ->willReturn($this->createMock(BetterReflectionFunction::class));
+            ->willReturn(self::createStub(BetterReflectionFunction::class));
 
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
@@ -129,10 +131,10 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetDeclaringFunctionWithMethod(): void
     {
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getDeclaringFunction')
-            ->willReturn($this->createMock(BetterReflectionMethod::class));
+            ->willReturn(self::createStub(BetterReflectionMethod::class));
 
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
@@ -141,10 +143,10 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetDeclaringClass(): void
     {
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getDeclaringClass')
-            ->willReturn($this->createMock(BetterReflectionClass::class));
+            ->willReturn(self::createStub(BetterReflectionClass::class));
 
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
@@ -153,10 +155,10 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetType(): void
     {
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getType')
-            ->willReturn($this->createMock(BetterReflectionNamedType::class));
+            ->willReturn(self::createStub(BetterReflectionNamedType::class));
 
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
@@ -165,18 +167,18 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetAttributes(): void
     {
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
             ->willReturn('SomeAttribute');
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
             ->willReturn('AnotherAttribute');
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getAttributes')
             ->willReturn($betterReflectionAttributes);
@@ -196,21 +198,21 @@ class ReflectionParameterTest extends TestCase
         /** @phpstan-var class-string $anotherAttributeClassName */
         $anotherAttributeClassName = 'AnotherAttribute';
 
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getName')
             ->willReturn($someAttributeClassName);
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getName')
             ->willReturn($anotherAttributeClassName);
 
         $betterReflectionAttributes = [$betterReflectionAttribute1, $betterReflectionAttribute2];
 
-        $betterReflectionParameter = $this->getMockBuilder(BetterReflectionParameter::class)
+        $betterReflectionParameter = self::getStubBuilder(BetterReflectionParameter::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getAttributes'])
-            ->getMock();
+            ->getStub();
 
         $betterReflectionParameter
             ->method('getAttributes')
@@ -232,7 +234,7 @@ class ReflectionParameterTest extends TestCase
         /** @phpstan-var class-string $interfaceName */
         $interfaceName = 'InterfaceName';
 
-        $betterReflectionAttributeClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass1 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass1
             ->method('getName')
             ->willReturn($className);
@@ -249,12 +251,12 @@ class ReflectionParameterTest extends TestCase
                 [$interfaceName, false],
             ]);
 
-        $betterReflectionAttribute1 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute1 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute1
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass1);
 
-        $betterReflectionAttributeClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass2 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass2
             ->method('getName')
             ->willReturn('Whatever');
@@ -273,12 +275,12 @@ class ReflectionParameterTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $betterReflectionAttribute2 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute2 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute2
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass2);
 
-        $betterReflectionAttributeClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionAttributeClass3 = self::createStub(BetterReflectionClass::class);
         $betterReflectionAttributeClass3
             ->method('getName')
             ->willReturn('Whatever');
@@ -297,7 +299,7 @@ class ReflectionParameterTest extends TestCase
                 [$interfaceName, true],
             ]);
 
-        $betterReflectionAttribute3 = $this->createMock(BetterReflectionAttribute::class);
+        $betterReflectionAttribute3 = self::createStub(BetterReflectionAttribute::class);
         $betterReflectionAttribute3
             ->method('getClass')
             ->willReturn($betterReflectionAttributeClass3);
@@ -308,10 +310,10 @@ class ReflectionParameterTest extends TestCase
             $betterReflectionAttribute3,
         ];
 
-        $betterReflectionParameter = $this->getMockBuilder(BetterReflectionParameter::class)
+        $betterReflectionParameter = self::getStubBuilder(BetterReflectionParameter::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getAttributes'])
-            ->getMock();
+            ->getStub();
 
         $betterReflectionParameter
             ->method('getAttributes')
@@ -326,7 +328,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetAttributesThrowsExceptionForInvalidFlags(): void
     {
-        $betterReflectionParameter  = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter  = self::createStub(BetterReflectionParameter::class);
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
         $this->expectException(ValueError::class);
@@ -335,7 +337,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testPropertyName(): void
     {
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
         $betterReflectionParameter
             ->method('getName')
             ->willReturn('foo');
@@ -346,7 +348,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testUnknownProperty(): void
     {
-        $betterReflectionParameter  = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionParameter  = self::createStub(BetterReflectionParameter::class);
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
         $this->expectException(OutOfBoundsException::class);
         $this->expectExceptionMessage('Property Roave\BetterReflection\Reflection\Adapter\ReflectionParameter::$foo does not exist.');
@@ -356,64 +358,64 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetClass(): void
     {
-        $betterReflectionClass1 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass1 = self::createStub(BetterReflectionClass::class);
         $betterReflectionClass1
             ->method('getName')
             ->willReturn('Foo');
-        $betterReflectionClass2 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass2 = self::createStub(BetterReflectionClass::class);
         $betterReflectionClass2
             ->method('getName')
             ->willReturn('Boo');
-        $betterReflectionClass3 = $this->createMock(BetterReflectionClass::class);
+        $betterReflectionClass3 = self::createStub(BetterReflectionClass::class);
         $betterReflectionClass3
             ->method('getName')
             ->willReturn('Doo');
 
-        $betterReflectionFunction = $this->createMock(BetterReflectionFunction::class);
-        $typeParameter            = $this->createMock(BetterReflectionParameter::class);
+        $betterReflectionFunction = self::createStub(BetterReflectionFunction::class);
+        $typeParameter            = self::createStub(BetterReflectionParameter::class);
         $typeParameter
             ->method('getDeclaringFunction')
             ->willReturn($betterReflectionFunction);
 
         $nullType   = new BetterReflectionNamedType(
-            $this->createMock(Reflector::class),
+            self::createStub(Reflector::class),
             $typeParameter,
             new Identifier('null'),
         );
-        $classType1 = $this->createMock(BetterReflectionNamedType::class);
+        $classType1 = self::createStub(BetterReflectionNamedType::class);
         $classType1
             ->method('getClass')
             ->willReturn($betterReflectionClass1);
         $classType1
             ->method('allowsNull')
             ->willReturn(false);
-        $classType2 = $this->createMock(BetterReflectionNamedType::class);
+        $classType2 = self::createStub(BetterReflectionNamedType::class);
         $classType2
             ->method('getClass')
             ->willReturn($betterReflectionClass2);
         $classType2
             ->method('allowsNull')
             ->willReturn(false);
-        $classType3 = $this->createMock(BetterReflectionNamedType::class);
+        $classType3 = self::createStub(BetterReflectionNamedType::class);
         $classType3
             ->method('getClass')
             ->willReturn($betterReflectionClass3);
         $classType3
             ->method('allowsNull')
             ->willReturn(true);
-        $intersectionType = $this->createMock(BetterReflectionIntersectionType::class);
+        $intersectionType = self::createStub(BetterReflectionIntersectionType::class);
 
-        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithMoreThanTwoTypes
             ->method('getTypes')
             ->willReturn([$classType1, $classType2, $nullType]);
 
-        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithTwoNonNullableTypes
             ->method('getTypes')
             ->willReturn([$classType1, $classType2]);
 
-        $unionTypeNullable = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeNullable = self::createStub(BetterReflectionUnionType::class);
         $unionTypeNullable
             ->method('allowsNull')
             ->willReturn(true);
@@ -421,7 +423,7 @@ class ReflectionParameterTest extends TestCase
             ->method('getTypes')
             ->willReturn([$classType1, $nullType]);
 
-        $unionWithIntersection = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection = self::createStub(BetterReflectionUnionType::class);
         $unionWithIntersection
             ->method('allowsNull')
             ->willReturn(true);
@@ -429,7 +431,7 @@ class ReflectionParameterTest extends TestCase
             ->method('getTypes')
             ->willReturn([$intersectionType, $classType1]);
 
-        $unionWithIntersection2 = $this->createMock(BetterReflectionUnionType::class);
+        $unionWithIntersection2 = self::createStub(BetterReflectionUnionType::class);
         $unionWithIntersection2
             ->method('allowsNull')
             ->willReturn(true);
@@ -450,7 +452,7 @@ class ReflectionParameterTest extends TestCase
         ];
 
         foreach ($types as $typeNo => [$type, $typeClassName]) {
-            $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+            $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
             $betterReflectionParameter
                 ->method('getType')
                 ->willReturn($type);
@@ -468,8 +470,8 @@ class ReflectionParameterTest extends TestCase
 
     public function testIsArray(): void
     {
-        $reflector     = $this->createMock(Reflector::class);
-        $typeParameter = $this->createMock(BetterReflectionParameter::class);
+        $reflector     = self::createStub(Reflector::class);
+        $typeParameter = self::createStub(BetterReflectionParameter::class);
 
         $nullType           = new BetterReflectionNamedType(
             $reflector,
@@ -491,15 +493,15 @@ class ReflectionParameterTest extends TestCase
             $typeParameter,
             new Identifier('ARRAY'),
         );
-        $nullableArrayType  = $this->createMock(BetterReflectionUnionType::class);
+        $nullableArrayType  = self::createStub(BetterReflectionUnionType::class);
         $nullableArrayType
             ->method('getTypes')
             ->willReturn([$arrayType, $nullType]);
-        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithMoreThanTwoTypes
             ->method('getTypes')
             ->willReturn([$boolType, $arrayType, $nullType]);
-        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithTwoNonNullableTypes
             ->method('getTypes')
             ->willReturn([$boolType, $arrayType]);
@@ -513,11 +515,11 @@ class ReflectionParameterTest extends TestCase
             [$nullableArrayType, true],
             [$unionTypeWithMoreThanTwoTypes, false],
             [$unionTypeWithTwoNonNullableTypes, false],
-            [$this->createMock(BetterReflectionIntersectionType::class), false],
+            [self::createStub(BetterReflectionIntersectionType::class), false],
         ];
 
         foreach ($types as $typeNo => [$type, $isArray]) {
-            $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+            $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
             $betterReflectionParameter
                 ->method('getType')
                 ->willReturn($type);
@@ -530,8 +532,8 @@ class ReflectionParameterTest extends TestCase
 
     public function testIsCallable(): void
     {
-        $reflector                 = $this->createMock(Reflector::class);
-        $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+        $reflector                 = self::createStub(Reflector::class);
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
 
         $nullType              = new BetterReflectionNamedType(
             $reflector,
@@ -553,15 +555,15 @@ class ReflectionParameterTest extends TestCase
             $betterReflectionParameter,
             new Identifier('CALLABLE'),
         );
-        $nullableArrayType     = $this->createMock(BetterReflectionUnionType::class);
+        $nullableArrayType     = self::createStub(BetterReflectionUnionType::class);
         $nullableArrayType
             ->method('getTypes')
             ->willReturn([$callableType, $nullType]);
-        $unionTypeWithMoreThanTwoTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithMoreThanTwoTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithMoreThanTwoTypes
             ->method('getTypes')
             ->willReturn([$boolType, $callableType, $nullType]);
-        $unionTypeWithTwoNonNullableTypes = $this->createMock(BetterReflectionUnionType::class);
+        $unionTypeWithTwoNonNullableTypes = self::createStub(BetterReflectionUnionType::class);
         $unionTypeWithTwoNonNullableTypes
             ->method('getTypes')
             ->willReturn([$boolType, $callableType]);
@@ -575,11 +577,11 @@ class ReflectionParameterTest extends TestCase
             [$nullableArrayType, true],
             [$unionTypeWithMoreThanTwoTypes, false],
             [$unionTypeWithTwoNonNullableTypes, false],
-            [$this->createMock(BetterReflectionIntersectionType::class), false],
+            [self::createStub(BetterReflectionIntersectionType::class), false],
         ];
 
         foreach ($types as $typeNo => [$type, $isCallable]) {
-            $betterReflectionParameter = $this->createMock(BetterReflectionParameter::class);
+            $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
             $betterReflectionParameter
                 ->method('getType')
                 ->willReturn($type);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -29,9 +29,9 @@ class AggregateSourceLocatorTest extends TestCase
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
-    private function getMockReflector(): Reflector&MockObject
+    private function getMockReflector(): Reflector&Stub
     {
-        return $this->createMock(Reflector::class);
+        return self::createStub(Reflector::class);
     }
 
     public function testInvokeWillTraverseAllGivenLocatorsAndFailToResolve(): void
@@ -55,7 +55,7 @@ class AggregateSourceLocatorTest extends TestCase
         $locator3 = $this->createMock(SourceLocator::class);
         $locator4 = $this->createMock(SourceLocator::class);
 
-        $source3 = $this->createMock(ReflectionClass::class);
+        $source3 = self::createStub(ReflectionClass::class);
 
         $locator1->expects($this->once())->method('locateIdentifier');
         $locator2->expects($this->once())->method('locateIdentifier');
@@ -106,9 +106,9 @@ class AggregateSourceLocatorTest extends TestCase
         $locator3 = $this->createMock(SourceLocator::class);
         $locator4 = $this->createMock(SourceLocator::class);
 
-        $source2 = $this->createMock(ReflectionClass::class);
+        $source2 = self::createStub(ReflectionClass::class);
 
-        $source3 = $this->createMock(ReflectionClass::class);
+        $source3 = self::createStub(ReflectionClass::class);
 
         $locator1->expects($this->once())->method('locateIdentifiersByType')->willReturn([]);
         $locator2->expects($this->once())->method('locateIdentifiersByType')->willReturn([$source2]);

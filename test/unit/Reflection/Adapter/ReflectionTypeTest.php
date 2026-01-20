@@ -51,12 +51,12 @@ class ReflectionTypeTest extends TestCase
 
     public function testFromTypeWithNamedType(): void
     {
-        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionNamedType::class)));
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromType(self::createStub(BetterReflectionNamedType::class)));
     }
 
     public function testFromTypeOrNullWithNamedType(): void
     {
-        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionNamedType::class)));
+        self::assertInstanceOf(ReflectionNamedTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull(self::createStub(BetterReflectionNamedType::class)));
     }
 
     /** @return list<array{0: string, 1: string}> */
@@ -71,9 +71,9 @@ class ReflectionTypeTest extends TestCase
     #[DataProvider('dataWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType')]
     public function testWillMakeNullableNamedTypeOutOfNullableUnionWithOnlyOneType(string $firstType, string $secondType): void
     {
-        $unionType = $this->createMock(BetterReflectionUnionType::class);
-        $fooType   = $this->createMock(BetterReflectionNamedType::class);
-        $nullType  = $this->createMock(BetterReflectionNamedType::class);
+        $unionType = self::createStub(BetterReflectionUnionType::class);
+        $fooType   = self::createStub(BetterReflectionNamedType::class);
+        $nullType  = self::createStub(BetterReflectionNamedType::class);
 
         $fooType->method('getName')
             ->willReturn($firstType);
@@ -93,10 +93,10 @@ class ReflectionTypeTest extends TestCase
 
     public function testWillNotMakeNullableNamedTypeOutOfNullableUnionWithMoreTypes(): void
     {
-        $unionType = $this->createMock(BetterReflectionUnionType::class);
-        $fooType   = $this->createMock(BetterReflectionNamedType::class);
-        $booType   = $this->createMock(BetterReflectionNamedType::class);
-        $nullType  = $this->createMock(BetterReflectionNamedType::class);
+        $unionType = self::createStub(BetterReflectionUnionType::class);
+        $fooType   = self::createStub(BetterReflectionNamedType::class);
+        $booType   = self::createStub(BetterReflectionNamedType::class);
+        $nullType  = self::createStub(BetterReflectionNamedType::class);
 
         $fooType->method('getName')
             ->willReturn('foo');
@@ -116,29 +116,29 @@ class ReflectionTypeTest extends TestCase
 
     public function testFromTypeWithUnionType(): void
     {
-        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionUnionType::class)));
+        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromType(self::createStub(BetterReflectionUnionType::class)));
     }
 
     public function testFromTypeOrNullWithUnionType(): void
     {
-        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionUnionType::class)));
+        self::assertInstanceOf(ReflectionUnionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull(self::createStub(BetterReflectionUnionType::class)));
     }
 
     public function testFromTypeWithIntersectionType(): void
     {
-        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromType($this->createMock(BetterReflectionIntersectionType::class)));
+        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromType(self::createStub(BetterReflectionIntersectionType::class)));
     }
 
     public function testFromTypeOrNullWithIntersectionType(): void
     {
-        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull($this->createMock(BetterReflectionIntersectionType::class)));
+        self::assertInstanceOf(ReflectionIntersectionTypeAdapter::class, ReflectionTypeAdapter::fromTypeOrNull(self::createStub(BetterReflectionIntersectionType::class)));
     }
 
     public function testMixedAllowsNull(): void
     {
         $type = ReflectionTypeAdapter::fromTypeOrNull(new BetterReflectionNamedType(
-            $this->createMock(Reflector::class),
-            $this->createMock(BetterReflectionParameter::class),
+            self::createStub(Reflector::class),
+            self::createStub(BetterReflectionParameter::class),
             new Identifier('mixed'),
         ));
         self::assertTrue($type->allowsNull());

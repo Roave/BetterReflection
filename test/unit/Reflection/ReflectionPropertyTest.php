@@ -903,7 +903,7 @@ PHP;
 
         self::assertCount(2, $attributes);
 
-        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+        $implementingClassReflection = self::createStub(ReflectionClass::class);
 
         $clonePropertyReflection = $propertyReflection->withImplementingClass($implementingClassReflection);
 
