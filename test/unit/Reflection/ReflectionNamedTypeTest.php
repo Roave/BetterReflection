@@ -32,8 +32,8 @@ class ReflectionNamedTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->reflector  = $this->createMock(Reflector::class);
-        $this->owner      = $this->createMock(ReflectionParameter::class);
+        $this->reflector  = self::createStub(Reflector::class);
+        $this->owner      = self::createStub(ReflectionParameter::class);
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
     }
 
@@ -406,7 +406,7 @@ class ReflectionNamedTypeTest extends TestCase
     {
         $typeReflection = $this->createType('string');
 
-        $owner = $this->createMock(ReflectionParameter::class);
+        $owner = self::createStub(ReflectionParameter::class);
 
         $cloneTypeReflection = $typeReflection->withOwner($owner);
 

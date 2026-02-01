@@ -50,7 +50,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForClassNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php class Foo {}', 'Foo');
 
@@ -70,7 +70,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForTraitNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php trait Foo {}', 'Foo');
 
@@ -91,7 +91,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForInterfaceNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php interface Foo {}', 'Foo');
 
@@ -112,7 +112,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForEnumNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php enum Foo {}', 'Foo');
 
@@ -132,7 +132,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForFunctionNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php function foo(){}', 'foo');
 
@@ -152,7 +152,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForClosureNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php function() {};', null);
 
@@ -173,7 +173,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForArrowFunctionNode(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php fn () => "";', null);
 
@@ -194,7 +194,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByConst(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php const FOO = 1;', 'FOO');
 
@@ -215,7 +215,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByConstWithMoreConstants(): void
     {
-        $reflector        = $this->createMock(Reflector::class);
+        $reflector        = self::createStub(Reflector::class);
         $nodeToReflection = new NodeToReflection();
 
         $source = '<?php const FOO = 1, BOO = 2;';
@@ -246,7 +246,7 @@ class NodeToReflectionTest extends TestCase
 
     public function testReturnsReflectionForConstantNodeByDefine(): void
     {
-        $reflector = $this->createMock(Reflector::class);
+        $reflector = self::createStub(Reflector::class);
 
         $locatedSource = new LocatedSource('<?php define("FOO", 1);', 'FOO');
 

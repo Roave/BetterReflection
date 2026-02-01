@@ -13,7 +13,6 @@ use Iterator;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
@@ -181,7 +180,6 @@ class ReflectionClassTest extends TestCase
         self::assertSame('ClassWithExplicitGlobalNamespace', $classInfo->getShortName());
     }
 
-    #[CoversNothing]
     public function testReflectingAClassDoesNotLoadTheClass(): void
     {
         self::assertFalse(class_exists(ExampleClass::class, false));
@@ -1726,7 +1724,7 @@ PHP;
         self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
     }
 
-    #[RequiresPhp('8.3')]
+    #[RequiresPhp('>=8.3')]
     public function testMethodsFromTraitsWithFinal(): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
@@ -2888,7 +2886,7 @@ PHP;
             }
 
             class ClassHasStringableTrait {
-            	use HasStringableTrait;
+                use HasStringableTrait;
             }
         PHP;
 

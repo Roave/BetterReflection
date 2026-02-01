@@ -208,7 +208,7 @@ class ReflectionAttributeTest extends TestCase
         $classReflection     = $this->reflector->reflectClass(ClassWithAttributes::class);
         $attributeReflection = $classReflection->getAttributes()[0];
 
-        $owner = $this->createMock(ReflectionClass::class);
+        $owner = self::createStub(ReflectionClass::class);
 
         $cloneAttributeReflection = $attributeReflection->withOwner($owner);
 

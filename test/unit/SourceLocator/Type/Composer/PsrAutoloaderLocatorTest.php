@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -27,7 +27,7 @@ use function sort;
 #[CoversClass(PsrAutoloaderLocator::class)]
 class PsrAutoloaderLocatorTest extends TestCase
 {
-    private PsrAutoloaderMapping&MockObject $psrMapping;
+    private PsrAutoloaderMapping&Stub $psrMapping;
 
     private Reflector $reflector;
 
@@ -37,7 +37,7 @@ class PsrAutoloaderLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->psrMapping = $this->createMock(PsrAutoloaderMapping::class);
+        $this->psrMapping = self::createStub(PsrAutoloaderMapping::class);
         $this->psrLocator = new PsrAutoloaderLocator(
             $this->psrMapping,
             BetterReflectionSingleton::instance()

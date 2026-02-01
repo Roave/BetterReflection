@@ -586,9 +586,9 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetStartLineThrowsExceptionWhenMissing(): void
     {
-        $reflector          = $this->createMock(Reflector::class);
+        $reflector          = self::createStub(Reflector::class);
         $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
-        $functionReflection = $this->createMock(ReflectionFunction::class);
+        $functionReflection = self::createStub(ReflectionFunction::class);
 
         $parameterReflection = ReflectionParameter::createFromNode(
             $reflector,
@@ -604,9 +604,9 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetEndLineThrowsExceptionWhenMissing(): void
     {
-        $reflector          = $this->createMock(Reflector::class);
+        $reflector          = self::createStub(Reflector::class);
         $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
-        $functionReflection = $this->createMock(ReflectionFunction::class);
+        $functionReflection = self::createStub(ReflectionFunction::class);
 
         $parameterReflection = ReflectionParameter::createFromNode(
             $reflector,
@@ -622,9 +622,9 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetStartColumnThrowsExceptionWhenMissing(): void
     {
-        $reflector          = $this->createMock(Reflector::class);
+        $reflector          = self::createStub(Reflector::class);
         $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
-        $functionReflection = $this->createMock(ReflectionFunction::class);
+        $functionReflection = self::createStub(ReflectionFunction::class);
 
         $parameterReflection = ReflectionParameter::createFromNode(
             $reflector,
@@ -640,9 +640,9 @@ class ReflectionParameterTest extends TestCase
 
     public function testGetEndColumnThrowsExceptionWhenMissing(): void
     {
-        $reflector          = $this->createMock(Reflector::class);
+        $reflector          = self::createStub(Reflector::class);
         $parameterNode      = new Node\Param(new Node\Expr\Variable('foo'));
-        $functionReflection = $this->createMock(ReflectionFunction::class);
+        $functionReflection = self::createStub(ReflectionFunction::class);
 
         $parameterReflection = ReflectionParameter::createFromNode(
             $reflector,
@@ -769,7 +769,7 @@ class ReflectionParameterTest extends TestCase
 
         self::assertCount(2, $attributes);
 
-        $functionReflection = $this->createMock(ReflectionMethod::class);
+        $functionReflection = self::createStub(ReflectionMethod::class);
 
         $cloneParameterReflection = $parameterReflection->withFunction($functionReflection);
 

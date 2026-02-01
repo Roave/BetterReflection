@@ -39,7 +39,7 @@ class ReflectionIntersectionTypeTest extends TestCase
         self::assertSame(ReflectionIntersectionTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
+    /** @return list<array{0: non-empty-string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public static function methodExpectationProvider(): array
     {
         return [
@@ -50,19 +50,21 @@ class ReflectionIntersectionTypeTest extends TestCase
     }
 
     /**
+     * @param non-empty-string             $methodName
      * @param list<mixed>                  $args
      * @param class-string<Throwable>|null $expectedException
      */
     #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionIntersectionType::class);
-
         if ($expectedException === null) {
+            $reflectionStub = $this->createMock(BetterReflectionIntersectionType::class);
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->willReturn($returnValue);
+        } else {
+            $reflectionStub = self::createStub(BetterReflectionIntersectionType::class);
         }
 
         if ($expectedException !== null) {
@@ -75,10 +77,10 @@ class ReflectionIntersectionTypeTest extends TestCase
 
     public function testGetTypes(): void
     {
-        $betterReflectionType1 = $this->createMock(BetterReflectionNamedType::class);
-        $betterReflectionType2 = $this->createMock(BetterReflectionNamedType::class);
+        $betterReflectionType1 = self::createStub(BetterReflectionNamedType::class);
+        $betterReflectionType2 = self::createStub(BetterReflectionNamedType::class);
 
-        $betterReflectionIntersectionType = $this->createMock(BetterReflectionIntersectionType::class);
+        $betterReflectionIntersectionType = self::createStub(BetterReflectionIntersectionType::class);
         $betterReflectionIntersectionType
             ->method('getTypes')
             ->willReturn([

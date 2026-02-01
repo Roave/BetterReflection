@@ -8,7 +8,7 @@ use Foo\Bar\AutoloadableClassWithTwoDirectories;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionObject;
@@ -64,9 +64,9 @@ class AutoloadSourceLocatorTest extends TestCase
         $this->astLocator = $configuration->astLocator();
     }
 
-    private function getMockReflector(): Reflector&MockObject
+    private function getMockReflector(): Reflector&Stub
     {
-        return $this->createMock(Reflector::class);
+        return self::createStub(Reflector::class);
     }
 
     public function testClassLoads(): void

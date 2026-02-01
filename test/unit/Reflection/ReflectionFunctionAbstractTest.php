@@ -6,7 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Parser;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass as CoreReflectionClass;
@@ -31,7 +31,7 @@ use stdClass;
 
 use function sprintf;
 
-#[CoversClass(ReflectionFunctionAbstract::class)]
+#[CoversTrait(ReflectionFunctionAbstract::class)]
 class ReflectionFunctionAbstractTest extends TestCase
 {
     private Parser $parser;

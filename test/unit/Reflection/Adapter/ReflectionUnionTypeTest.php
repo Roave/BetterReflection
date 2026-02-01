@@ -40,7 +40,7 @@ class ReflectionUnionTypeTest extends TestCase
         self::assertSame(ReflectionUnionTypeAdapter::class, $reflectionTypeAdapterReflection->getMethod($methodName)->getDeclaringClass()->getName());
     }
 
-    /** @return list<array{0: string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
+    /** @return list<array{0: non-empty-string, 1: class-string|null, 2: mixed, 3: list<mixed>}> */
     public static function methodExpectationProvider(): array
     {
         return [
@@ -51,19 +51,21 @@ class ReflectionUnionTypeTest extends TestCase
     }
 
     /**
+     * @param non-empty-string             $methodName
      * @param list<mixed>                  $args
      * @param class-string<Throwable>|null $expectedException
      */
     #[DataProvider('methodExpectationProvider')]
     public function testAdapterMethods(string $methodName, string|null $expectedException, mixed $returnValue, array $args): void
     {
-        $reflectionStub = $this->createMock(BetterReflectionUnionType::class);
-
         if ($expectedException === null) {
+            $reflectionStub = $this->createMock(BetterReflectionUnionType::class);
             $reflectionStub->expects($this->once())
                 ->method($methodName)
                 ->with(...$args)
                 ->willReturn($returnValue);
+        } else {
+            $reflectionStub = self::createStub(BetterReflectionUnionType::class);
         }
 
         if ($expectedException !== null) {
@@ -76,10 +78,10 @@ class ReflectionUnionTypeTest extends TestCase
 
     public function testGetTypes(): void
     {
-        $betterReflectionType1 = $this->createMock(BetterReflectionNamedType::class);
-        $betterReflectionType2 = $this->createMock(BetterReflectionNamedType::class);
-        $betterReflectionType3 = $this->createMock(BetterReflectionNamedType::class);
-        $betterReflectionType4 = $this->createMock(BetterReflectionIntersectionType::class);
+        $betterReflectionType1 = self::createStub(BetterReflectionNamedType::class);
+        $betterReflectionType2 = self::createStub(BetterReflectionNamedType::class);
+        $betterReflectionType3 = self::createStub(BetterReflectionNamedType::class);
+        $betterReflectionType4 = self::createStub(BetterReflectionIntersectionType::class);
         $betterReflectionType4
             ->method('getTypes')
             ->willReturn([
@@ -87,7 +89,7 @@ class ReflectionUnionTypeTest extends TestCase
                 $betterReflectionType2,
             ]);
 
-        $betterReflectionUnionType = $this->createMock(BetterReflectionUnionType::class);
+        $betterReflectionUnionType = self::createStub(BetterReflectionUnionType::class);
         $betterReflectionUnionType
             ->method('getTypes')
             ->willReturn([

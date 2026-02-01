@@ -756,7 +756,7 @@ PHP;
         self::assertCount(1, $parameters);
         self::assertCount(2, $attributes);
 
-        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+        $implementingClassReflection = self::createStub(ReflectionClass::class);
 
         $cloneMethodReflection = $methodReflection->withImplementingClass($implementingClassReflection, 'alias', CoreReflectionMethod::IS_PROTECTED);
 
@@ -791,7 +791,7 @@ PHP;
         self::assertCount(1, $parameters);
         self::assertCount(2, $attributes);
 
-        $currentClassReflection = $this->createMock(ReflectionClass::class);
+        $currentClassReflection = self::createStub(ReflectionClass::class);
 
         $cloneMethodReflection = $methodReflection->withCurrentClass($currentClassReflection);
 

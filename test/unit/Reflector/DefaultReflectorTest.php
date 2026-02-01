@@ -34,7 +34,7 @@ class DefaultReflectorTest extends TestCase
 
     public function testReflectClass(): void
     {
-        $reflection = $this->createMock(ReflectionClass::class);
+        $reflection = self::createStub(ReflectionClass::class);
 
         $sourceLocator = $this->createMock(SourceLocator::class);
         $sourceLocator
@@ -66,7 +66,7 @@ class DefaultReflectorTest extends TestCase
 
     public function testReflectFunction(): void
     {
-        $reflection = $this->createMock(ReflectionFunction::class);
+        $reflection = self::createStub(ReflectionFunction::class);
 
         $sourceLocator = $this->createMock(SourceLocator::class);
         $sourceLocator
@@ -98,7 +98,7 @@ class DefaultReflectorTest extends TestCase
 
     public function testReflectConstant(): void
     {
-        $reflection = $this->createMock(ReflectionConstant::class);
+        $reflection = self::createStub(ReflectionConstant::class);
 
         $sourceLocator = $this->createMock(SourceLocator::class);
         $sourceLocator

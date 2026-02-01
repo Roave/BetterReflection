@@ -20,6 +20,8 @@ use function defined;
 use function explode;
 use function in_array;
 use function is_resource;
+use function restore_error_handler;
+use function set_error_handler;
 use function sprintf;
 use function strtolower;
 use function strtoupper;
@@ -212,9 +214,15 @@ class CachingVisitor extends NodeVisitorAbstract
             return;
         }
 
-        // @ because access to deprecated constant throws deprecated warning
-        /** @var scalar|resource|list<scalar>|null $constantValue */
-        $constantValue           = @constant($constantName);
+        // Error handler to suppress deprecated constant warnings (e.g., E_STRICT in PHP 8.4+)
+        set_error_handler(static fn (): bool => true);
+        try {
+            /** @var scalar|resource|list<scalar>|null $constantValue */
+            $constantValue = constant($constantName);
+        } finally {
+            restore_error_handler();
+        }
+
         $normalizedConstantValue = is_resource($constantValue)
             ? $this->builderFactory->funcCall('constant', [$constantName])
             /** @phpstan-ignore argument.type */

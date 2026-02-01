@@ -40,7 +40,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         parent::setUp();
 
         $this->parser    = BetterReflectionSingleton::instance()->phpParser();
-        $this->reflector = $this->createMock(Reflector::class);
+        $this->reflector = self::createStub(Reflector::class);
     }
 
     /** @return list<array{0: object, 1: string, 2: int, 3: int}> */
@@ -153,7 +153,7 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
         $sourceLocatorReflection = new CoreReflectionClass($sourceLocator);
 
-        $coreReflectionPropertyMock = $this->createMock(CoreReflectionClass::class);
+        $coreReflectionPropertyMock = self::createStub(CoreReflectionClass::class);
         $coreReflectionPropertyMock
             ->method('isAnonymous')
             ->willReturn(true);
@@ -247,11 +247,11 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
 
     public function testExceptionIfSourceFileIsNotReadable(): void
     {
-        $class = $this->createMock(stdClass::class);
+        $class = self::createStub(stdClass::class);
 
         $sourceLocator = new AnonymousClassObjectSourceLocator($class, $this->parser);
 
-        $sourceLocatorReflectionCoreClassReflectionPropertyValue = $this->createMock(CoreReflectionClass::class);
+        $sourceLocatorReflectionCoreClassReflectionPropertyValue = self::createStub(CoreReflectionClass::class);
         $sourceLocatorReflectionCoreClassReflectionPropertyValue
             ->method('isAnonymous')
             ->willReturn(true);

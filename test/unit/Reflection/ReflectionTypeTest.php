@@ -28,8 +28,8 @@ class ReflectionTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->reflector = $this->createMock(Reflector::class);
-        $this->owner     = $this->createMock(ReflectionParameter::class);
+        $this->reflector = self::createStub(Reflector::class);
+        $this->owner     = self::createStub(ReflectionParameter::class);
     }
 
     /** @return array<int|string, array{0: Node\Identifier|Node\Name|Node\NullableType|Node\UnionType|Node\IntersectionType, 1: bool, 2: class-string, 3: string, 4: bool}> */

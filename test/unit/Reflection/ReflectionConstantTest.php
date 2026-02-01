@@ -162,9 +162,9 @@ class ReflectionConstantTest extends TestCase
     {
         $this->expectException(InvalidConstantNode::class);
         ReflectionConstant::createFromNode(
-            $this->createMock(Reflector::class),
+            self::createStub(Reflector::class),
             new Node\Expr\FuncCall(new Node\Expr\Variable('foo')),
-            $this->createMock(LocatedSource::class),
+            self::createStub(LocatedSource::class),
         );
     }
 

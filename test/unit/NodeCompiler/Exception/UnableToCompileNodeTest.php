@@ -81,10 +81,9 @@ final class UnableToCompileNodeTest extends TestCase
     #[DataProvider('supportedContextTypes')]
     public function testBecauseOfNotFoundClassConstantReference(CompilerContext $context, string $contextName): void
     {
-        $targetClass = $this->createMock(ReflectionClass::class);
+        $targetClass = self::createStub(ReflectionClass::class);
 
         $targetClass
-            ->expects(self::any())
             ->method('getName')
             ->willReturn('An\\Example');
 
@@ -107,10 +106,9 @@ final class UnableToCompileNodeTest extends TestCase
     #[DataProvider('supportedContextTypes')]
     public function testBecauseOfOfInvalidEnumCasePropertyFetch(CompilerContext $context, string $contextName): void
     {
-        $targetClass = $this->createMock(ReflectionClass::class);
+        $targetClass = self::createStub(ReflectionClass::class);
 
         $targetClass
-            ->expects(self::any())
             ->method('getName')
             ->willReturn('An\\Example');
 

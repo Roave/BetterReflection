@@ -328,7 +328,7 @@ class ReflectionClassConstantTest extends TestCase
 
         self::assertCount(2, $attributes);
 
-        $implementingClassReflection = $this->createMock(ReflectionClass::class);
+        $implementingClassReflection = self::createStub(ReflectionClass::class);
 
         $cloneConstantReflection = $constantReflection->withImplementingClass($implementingClassReflection);
 

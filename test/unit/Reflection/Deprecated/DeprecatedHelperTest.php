@@ -90,7 +90,7 @@ class DeprecatedHelperTest extends TestCase
     #[DataProvider('deprecatedDocCommentProvider')]
     public function testIsDeprecatedByDocComment(string|null $docComment, bool $isDeprecated): void
     {
-        $reflection = $this->createMock(ReflectionClass::class);
+        $reflection = self::createStub(ReflectionClass::class);
         $reflection
             ->method('getDocComment')
             ->willReturn($docComment);

@@ -29,9 +29,12 @@ class Psr0MappingTest extends TestCase
         self::assertEquals($expectedDirectories, Psr0Mapping::fromArrayMappings($mappings)->directories());
     }
 
-    /** @param array<string, list<string>> $mappings */
+    /**
+     * @param array<string, list<string>> $mappings
+     * @param list<string>                $expectedDirectories
+     */
     #[DataProvider('mappings')]
-    public function testIdempotentConstructor(array $mappings): void
+    public function testIdempotentConstructor(array $mappings, array $expectedDirectories): void
     {
         self::assertEquals(Psr0Mapping::fromArrayMappings($mappings), Psr0Mapping::fromArrayMappings($mappings));
     }

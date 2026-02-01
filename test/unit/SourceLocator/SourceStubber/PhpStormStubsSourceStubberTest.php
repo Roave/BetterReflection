@@ -133,19 +133,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                         return false;
                     }
 
-                    // https://github.com/JetBrains/phpstorm-stubs/pull/1781
-                    /** @var list<class-string> $missingClasses */
-                    $missingClasses = [
-                        'NoDiscard',
-                        'DelayedTargetValidation',
-                    ];
-                    if (
-                        PHP_VERSION_ID >= 80500
-                        && in_array($className, $missingClasses, true)
-                    ) {
-                        return false;
-                    }
-
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
@@ -203,10 +190,9 @@ class PhpStormStubsSourceStubberTest extends TestCase
         foreach ($original->getMethods() as $method) {
             $methodName = $original->getName() . '#' . $method->getName();
 
-            // https://github.com/JetBrains/phpstorm-stubs/pull/1781
+            // Needs fixes in JetBrains/phpstorm-stubs
             if (
                 in_array($methodName, [
-                    'Closure#getCurrent',
                     'SplMinHeap#__serialize',
                     'SplMinHeap#__unserialize',
                     'SplMaxHeap#__serialize',
@@ -237,13 +223,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             assert($originalConstantName !== '');
 
             $constantName = $original->getName() . '::' . $originalConstant->getName();
-
-            // https://github.com/JetBrains/phpstorm-stubs/pull/1781
-            if (
-                in_array($constantName, ['Attribute::TARGET_CONSTANT'], true)
-            ) {
-                continue;
-            }
 
             $stubbedConstant = $stubbed->getConstant($originalConstantName);
 
@@ -342,20 +321,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 static function (string $functionName): bool {
                     $reflection = new CoreReflectionFunction($functionName);
 
-                    // https://github.com/JetBrains/phpstorm-stubs/pull/1781
-                    if (
-                        PHP_VERSION_ID >= 80500
-                        && in_array($functionName, [
-                            'array_first',
-                            'array_last',
-                            'clone',
-                            'get_error_handler',
-                            'get_exception_handler',
-                        ], true)
-                    ) {
-                        return false;
-                    }
-
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
@@ -416,19 +381,6 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             foreach ($extensionConstants as $constantName => $constantValue) {
-                // https://github.com/JetBrains/phpstorm-stubs/pull/1781
-                if (
-                    PHP_VERSION_ID >= 80500
-                    && in_array($constantName, [
-                        'IMAGETYPE_SVG',
-                        'IMAGETYPE_HEIF',
-                        'PHP_BUILD_DATE',
-                        'ZEND_VM_KIND',
-                    ], true)
-                ) {
-                    continue;
-                }
-
                 $provider[] = [$constantName, $constantValue, $extensionName];
             }
         }

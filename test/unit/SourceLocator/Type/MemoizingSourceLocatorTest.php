@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\SourceLocator\Type;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Identifier\Identifier;
 use Roave\BetterReflection\Identifier\IdentifierType;
@@ -29,9 +30,9 @@ use function uniqid;
 #[CoversClass(MemoizingSourceLocator::class)]
 class MemoizingSourceLocatorTest extends TestCase
 {
-    private Reflector&MockObject $reflector1;
+    private Reflector&Stub $reflector1;
 
-    private Reflector&MockObject $reflector2;
+    private Reflector&Stub $reflector2;
 
     private SourceLocator&MockObject $wrappedLocator;
 
@@ -46,8 +47,8 @@ class MemoizingSourceLocatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->reflector1       = $this->createMock(Reflector::class);
-        $this->reflector2       = $this->createMock(Reflector::class);
+        $this->reflector1       = self::createStub(Reflector::class);
+        $this->reflector2       = self::createStub(Reflector::class);
         $this->wrappedLocator   = $this->createMock(SourceLocator::class);
         $this->memoizingLocator = new MemoizingSourceLocator($this->wrappedLocator);
         $this->identifierNames  = array_values(array_unique(array_map(
@@ -116,12 +117,12 @@ class MemoizingSourceLocatorTest extends TestCase
             new IdentifierType(IdentifierType::IDENTIFIER_CLASS),
         ];
         $symbols1 = [
-            IdentifierType::IDENTIFIER_FUNCTION => [$this->createMock(Reflection::class)],
-            IdentifierType::IDENTIFIER_CLASS    => [$this->createMock(Reflection::class)],
+            IdentifierType::IDENTIFIER_FUNCTION => [self::createStub(Reflection::class)],
+            IdentifierType::IDENTIFIER_CLASS    => [self::createStub(Reflection::class)],
         ];
         $symbols2 = [
-            IdentifierType::IDENTIFIER_FUNCTION => [$this->createMock(Reflection::class)],
-            IdentifierType::IDENTIFIER_CLASS    => [$this->createMock(Reflection::class)],
+            IdentifierType::IDENTIFIER_FUNCTION => [self::createStub(Reflection::class)],
+            IdentifierType::IDENTIFIER_CLASS    => [self::createStub(Reflection::class)],
         ];
 
         $this
@@ -184,7 +185,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 self::logicalOr(...$reflectors),
                 self::callback(static fn (Identifier $identifier): bool => in_array($identifier, $identifiers, true)),
             )
-            ->willReturnCallback(function (
+            ->willReturnCallback(static function (
                 Reflector $reflector,
                 Identifier $identifier,
             ) use (
@@ -197,7 +198,7 @@ class MemoizingSourceLocatorTest extends TestCase
                 $fetchedSymbolsCount[$hash] = ($fetchedSymbolsCount[$hash] ?? 0) + 1;
 
                 return [
-                    $this->createMock(Reflection::class),
+                    self::createStub(Reflection::class),
                     null,
                 ][random_int(0, 1)];
             });
