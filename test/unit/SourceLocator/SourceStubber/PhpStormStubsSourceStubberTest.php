@@ -558,6 +558,28 @@ class PhpStormStubsSourceStubberTest extends TestCase
         self::assertStringEndsWith(";\n", $stub->getStub());
     }
 
+    public function testStubForConstantDeclaredByDefineThatIsDeprecated(): void
+    {
+        $stubData = $this->sourceStubber->generateConstantStub('E_STRICT');
+
+        self::assertStringContainsString(
+            "define('E_STRICT', 2048);",
+            $stubData->getStub(),
+        );
+
+        if (PHP_VERSION_ID >= 80400) {
+            self::assertStringContainsString(
+                '@deprecated 8.4',
+                $stubData->getStub(),
+            );
+        } else {
+            self::assertStringNotContainsString(
+                '@deprecated 8.4',
+                $stubData->getStub(),
+            );
+        }
+    }
+
     public function testStubForConstantDeclaredByConst(): void
     {
         $stub = $this->sourceStubber->generateConstantStub('ast\AST_ARG_LIST');
