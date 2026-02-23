@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5d0d5e68fe6a19d80b940b816168f11",
+    "content-hash": "b27fbc0988cac053b7201438d872a72b",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3443,11 +3443,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.39",
+            "version": "2.1.40",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c6f73a2af4cbcd99c931d0fb8f08548cc0fa8224",
-                "reference": "c6f73a2af4cbcd99c931d0fb8f08548cc0fa8224",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
+                "reference": "9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
                 "shasum": ""
             },
             "require": {
@@ -3492,20 +3492,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-11T14:48:56+00:00"
+            "time": "2026-02-23T15:04:35+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.15",
+            "version": "2.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "0f6ba8e22a3e919353a8f4615ea3cd2e91626c7f"
+                "reference": "6ab598e1bc106e6827fd346ae4a12b4a5d634c32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/0f6ba8e22a3e919353a8f4615ea3cd2e91626c7f",
-                "reference": "0f6ba8e22a3e919353a8f4615ea3cd2e91626c7f",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/6ab598e1bc106e6827fd346ae4a12b4a5d634c32",
+                "reference": "6ab598e1bc106e6827fd346ae4a12b4a5d634c32",
                 "shasum": ""
             },
             "require": {
@@ -3546,9 +3546,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.15"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.16"
             },
-            "time": "2026-02-11T14:43:43+00:00"
+            "time": "2026-02-14T09:05:21+00:00"
         },
         {
             "name": "psr/clock",
@@ -3956,16 +3956,16 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.18.0",
+            "version": "8.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "8bbe2006daad3b0fc8331376ca8c519b21e9bdb8"
+                "reference": "810eb88eeff37ef300653bcfb77ca51a314777a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/8bbe2006daad3b0fc8331376ca8c519b21e9bdb8",
-                "reference": "8bbe2006daad3b0fc8331376ca8c519b21e9bdb8",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/810eb88eeff37ef300653bcfb77ca51a314777a2",
+                "reference": "810eb88eeff37ef300653bcfb77ca51a314777a2",
                 "shasum": ""
             },
             "require": {
@@ -3991,7 +3991,7 @@
                 "doctrine/coding-standard": "^14.0.0",
                 "justinrainbow/json-schema": "^6.6.4",
                 "php-standard-library/psalm-plugin": "^2.3.0",
-                "phpunit/phpunit": "^12.5.10",
+                "phpunit/phpunit": "^12.5.11",
                 "psalm/plugin-phpunit": "^0.19.5",
                 "roave/infection-static-analysis-plugin": "^1.43.0",
                 "roave/security-advisories": "dev-master",
@@ -4024,9 +4024,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.18.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.19.0"
             },
-            "time": "2026-02-09T11:15:47+00:00"
+            "time": "2026-02-13T19:14:25+00:00"
         },
         {
             "name": "roave/better-reflection",
