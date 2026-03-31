@@ -61,7 +61,7 @@ class DefaultReflectorTest extends TestCase
         ))->reflectAllClasses();
 
         self::assertContainsOnlyInstancesOf(ReflectionClass::class, $classes);
-        self::assertCount(11, $classes);
+        self::assertCount(12, $classes);
     }
 
     public function testReflectFunction(): void
