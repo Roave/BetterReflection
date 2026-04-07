@@ -47,12 +47,10 @@ final class ReflectionEnum extends CoreReflectionEnum
 
         /** @phpstan-ignore argument.type */
         $this->cases = new Memoize(static function () use ($enum) {
-            $isBacked = $enum->isBacked();
-            $cases    = $enum->getCases();
-
             $mappedCases = [];
-            foreach ($cases as $case) {
-                if ($isBacked) {
+
+            foreach ($enum->getCases() as $case) {
+                if ($case->hasValueExpression()) {
                     $mappedCases[] = new ReflectionEnumBackedCase($case);
                 } else {
                     $mappedCases[] = new ReflectionEnumUnitCase($case);
