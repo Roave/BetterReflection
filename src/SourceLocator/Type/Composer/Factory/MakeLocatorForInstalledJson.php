@@ -95,6 +95,7 @@ final class MakeLocatorForInstalledJson
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
+                /** @phpstan-ignore argument.type */
                     Psr4Mapping::fromArrayMappings(array_merge_recursive(
                         [],
                         ...array_map(fn (array $package): array => $this->prefixWithPackagePath(
@@ -107,6 +108,7 @@ final class MakeLocatorForInstalledJson
                     $astLocator,
                 ),
                 new PsrAutoloaderLocator(
+                    /** @phpstan-ignore argument.type */
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
                         [],
                         ...array_map(fn (array $package): array => $this->prefixWithPackagePath(
@@ -181,7 +183,7 @@ final class MakeLocatorForInstalledJson
      * @param array<int|string, array<string>> $paths
      * @param ComposerPackage                  $package
      *
-     * @return array<int|string, string|array<string>>
+     * @return array<int|string, array<string>>
      */
     private function prefixWithPackagePath(array $paths, string $trimmedInstallationPath, array $package, string $vendorDir): array
     {

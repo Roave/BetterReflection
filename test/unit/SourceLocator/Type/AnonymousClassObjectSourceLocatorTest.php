@@ -24,7 +24,9 @@ use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use stdClass;
 
 use function assert;
+use function is_object;
 use function is_string;
+use function method_exists;
 use function realpath;
 use function sprintf;
 
@@ -49,15 +51,25 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
         $fileWithClasses                = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstances.php'));
         $fileWithClassWithNestedClasses = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php'));
 
+        /** @var array{object, object} $classes */
         $classes                = require $fileWithClasses;
         $classWithNestedClasses = require $fileWithClassWithNestedClasses;
+
+        assert(is_object($classWithNestedClasses));
+        assert(method_exists($classWithNestedClasses, 'getWrapped'));
+
+        $wrapped0 = $classWithNestedClasses->getWrapped(0);
+        $wrapped1 = $classWithNestedClasses->getWrapped(1);
+
+        assert(is_object($wrapped0));
+        assert(is_object($wrapped1));
 
         return [
             [$classes[0], $fileWithClasses, 3, 9],
             [$classes[1], $fileWithClasses, 11, 17],
             [$classWithNestedClasses, $fileWithClassWithNestedClasses, 3, 13],
-            [$classWithNestedClasses->getWrapped(0), $fileWithClassWithNestedClasses, 8, 8],
-            [$classWithNestedClasses->getWrapped(1), $fileWithClassWithNestedClasses, 11, 11],
+            [$wrapped0, $fileWithClassWithNestedClasses, 8, 8],
+            [$wrapped1, $fileWithClassWithNestedClasses, 11, 11],
         ];
     }
 
@@ -175,7 +187,9 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     /** @return list<array{0: string, 1: object}> */
     public static function exceptionIfTwoAnonymousClassesOnSameLineProvider(): array
     {
-        $file    = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+        $file = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/AnonymousClassInstancesOnSameLine.php'));
+
+        /** @var array{object, object} $classes */
         $classes = require $file;
 
         return [
@@ -204,16 +218,27 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     {
         $class = require __DIR__ . '/../../Fixture/NestedAnonymousClassInstances.php';
 
+        assert(is_object($class));
+        assert(method_exists($class, 'getWrapped'));
+
+        $wrapped0 = $class->getWrapped(0);
+        $wrapped1 = $class->getWrapped(1);
+
+        assert(is_object($wrapped0));
+        assert(is_object($wrapped1));
+
         return [
             [$class, 3, 13],
-            [$class->getWrapped(0), 8, 8],
-            [$class->getWrapped(1), 11, 11],
+            [$wrapped0, 8, 8],
+            [$wrapped1, 11, 11],
         ];
     }
 
     public function testExceptionIfEvaledAnonymousClass(): void
     {
         $class = require __DIR__ . '/../../Fixture/EvaledAnonymousClassInstance.php';
+
+        assert(is_object($class));
 
         $this->expectException(EvaledAnonymousClassCannotBeLocated::class);
 
@@ -229,6 +254,8 @@ class AnonymousClassObjectSourceLocatorTest extends TestCase
     public function testNamesAreResolved(): void
     {
         $class = require __DIR__ . '/../../Fixture/AnonymousClassExtendingClassFromNamespace.php';
+
+        assert(is_object($class));
 
         $sourceLocator = new AnonymousClassObjectSourceLocator($class, $this->parser);
         $reflector     = new DefaultReflector(BetterReflectionSingleton::instance()->sourceLocator());

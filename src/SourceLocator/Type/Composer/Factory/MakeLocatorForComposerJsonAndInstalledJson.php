@@ -95,6 +95,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
         return new AggregateSourceLocator(array_merge(
             [
                 new PsrAutoloaderLocator(
+                    /** @phpstan-ignore argument.type */
                     Psr4Mapping::fromArrayMappings(array_merge_recursive(
                         $this->prefixWithInstallationPath($this->packageToPsr4AutoloadNamespaces($composer), $realInstallationPath),
                         ...array_map(fn (array $package): array => $this->prefixWithPackagePath(
@@ -107,6 +108,7 @@ final class MakeLocatorForComposerJsonAndInstalledJson
                     $astLocator,
                 ),
                 new PsrAutoloaderLocator(
+                    /** @phpstan-ignore argument.type */
                     Psr0Mapping::fromArrayMappings(array_merge_recursive(
                         $this->prefixWithInstallationPath($this->packageToPsr0AutoloadNamespaces($composer), $realInstallationPath),
                         ...array_map(fn (array $package): array => $this->prefixWithPackagePath(

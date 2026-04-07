@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Composer\Autoload\ClassLoader;
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,7 @@ use Roave\BetterReflectionTest\Fixture\OtherClassWithConstants;
 use Roave\BetterReflectionTest\Fixture\ParentClassWithConstants;
 use Roave\BetterReflectionTest\Fixture\TraitWithConstants;
 
+use function assert;
 use function sprintf;
 
 class ReflectionClassConstantTest extends TestCase
@@ -42,10 +44,11 @@ class ReflectionClassConstantTest extends TestCase
 
     private function getComposerLocator(): ComposerSourceLocator
     {
-        return new ComposerSourceLocator(
-            require __DIR__ . '/../../../vendor/autoload.php',
-            $this->astLocator,
-        );
+        $loader = require __DIR__ . '/../../../vendor/autoload.php';
+
+        assert($loader instanceof ClassLoader);
+
+        return new ComposerSourceLocator($loader, $this->astLocator);
     }
 
     /** @param non-empty-string $name */

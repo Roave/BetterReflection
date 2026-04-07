@@ -52,11 +52,21 @@ class ClosureSourceLocatorTest extends TestCase
         $fileWithArrowFunctionInNamespace = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ArrowFunctionInNamespace.php'));
         $fileWithArrowFunctionNoNamespace = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ArrowFunctionNoNamespace.php'));
 
+        $closureInNamespace       = require __DIR__ . '/../../Fixture/ClosureInNamespace.php';
+        $closureNoNamespace       = require __DIR__ . '/../../Fixture/ClosureNoNamespace.php';
+        $arrowFunctionInNamespace = require __DIR__ . '/../../Fixture/ArrowFunctionInNamespace.php';
+        $arrowFunctionNoNamespace = require __DIR__ . '/../../Fixture/ArrowFunctionNoNamespace.php';
+
+        assert($closureInNamespace instanceof Closure);
+        assert($closureNoNamespace instanceof Closure);
+        assert($arrowFunctionInNamespace instanceof Closure);
+        assert($arrowFunctionNoNamespace instanceof Closure);
+
         return [
-            [require $fileWithClosureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
-            [require $fileWithClosureNoNamespace, null, $fileWithClosureNoNamespace, 3, 6],
-            [require $fileWithArrowFunctionInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithArrowFunctionInNamespace, 5, 5],
-            [require $fileWithArrowFunctionNoNamespace, null, $fileWithArrowFunctionNoNamespace, 3, 3],
+            [$closureInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithClosureInNamespace, 5, 8],
+            [$closureNoNamespace, null, $fileWithClosureNoNamespace, 3, 6],
+            [$arrowFunctionInNamespace, 'Roave\BetterReflectionTest\Fixture', $fileWithArrowFunctionInNamespace, 5, 5],
+            [$arrowFunctionNoNamespace, null, $fileWithArrowFunctionNoNamespace, 3, 3],
         ];
     }
 
@@ -88,7 +98,7 @@ class ClosureSourceLocatorTest extends TestCase
     {
         eval('$closure = function () {};');
 
-        /** @phpstan-ignore variable.undefined */
+        /** @phpstan-ignore variable.undefined,argument.type */
         $locator = new ClosureSourceLocator($closure, $this->parser);
 
         $this->expectException(EvaledClosureCannotBeLocated::class);
@@ -165,7 +175,9 @@ class ClosureSourceLocatorTest extends TestCase
     /** @return list<array{0: string, 1: Closure}> */
     public static function exceptionIfTwoClosuresOnSameLineProvider(): array
     {
-        $file     = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+        $file = FileHelper::normalizeWindowsPath(self::realPath(__DIR__ . '/../../Fixture/ClosuresOnSameLine.php'));
+
+        /** @var array{Closure, Closure} $closures */
         $closures = require $file;
 
         return [
@@ -192,6 +204,8 @@ class ClosureSourceLocatorTest extends TestCase
     public function testNamesAreResolved(): void
     {
         $closure = require __DIR__ . '/../../Fixture/ClosureWithParameterWithClassFromNamespace.php';
+
+        assert($closure instanceof Closure);
 
         $sourceLocator = new ClosureSourceLocator($closure, $this->parser);
         $reflector     = new DefaultReflector(BetterReflectionSingleton::instance()->sourceLocator());

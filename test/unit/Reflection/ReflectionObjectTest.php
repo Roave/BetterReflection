@@ -30,6 +30,7 @@ use function array_map;
 use function assert;
 use function get_class_methods;
 use function in_array;
+use function is_object;
 use function is_string;
 use function random_int;
 use function realpath;
@@ -55,6 +56,7 @@ class ReflectionObjectTest extends TestCase
 
         $file = FileHelper::normalizeWindowsPath($file);
 
+        /** @var array{object, object} $anonymousClasses */
         $anonymousClasses = require $file;
 
         return [
@@ -84,6 +86,8 @@ class ReflectionObjectTest extends TestCase
         $file = FileHelper::normalizeWindowsPath($file);
 
         $anonymousClass = require $file;
+
+        assert(is_object($anonymousClass));
 
         $classInfo = ReflectionObject::createFromInstance($anonymousClass);
 
