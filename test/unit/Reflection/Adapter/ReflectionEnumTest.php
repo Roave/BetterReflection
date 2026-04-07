@@ -35,8 +35,10 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
+use Roave\BetterReflectionTest\Reflection\Adapter\ReflectionEnumTest\ExampleUnitEnum;
 use stdClass;
 use Throwable;
+use UnitEnum;
 use ValueError;
 
 use function array_combine;
@@ -1180,7 +1182,9 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->newLazyProxy(static fn () => null);
+        $reflectionEnumAdapter->newLazyProxy(static function (): UnitEnum {
+            self::fail('Not supposed to be called');
+        });
     }
 
     public function testMarkLazyObjectAsInitialized(): void
@@ -1191,7 +1195,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->markLazyObjectAsInitialized(new stdClass());
+        $reflectionEnumAdapter->markLazyObjectAsInitialized(ExampleUnitEnum::A);
     }
 
     public function testGetLazyInitializer(): void
@@ -1202,7 +1206,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->getLazyInitializer(new stdClass());
+        $reflectionEnumAdapter->getLazyInitializer(ExampleUnitEnum::A);
     }
 
     public function testInitializeLazyObject(): void
@@ -1213,7 +1217,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->initializeLazyObject(new stdClass());
+        $reflectionEnumAdapter->initializeLazyObject(ExampleUnitEnum::A);
     }
 
     public function testIsUninitializedLazyObject(): void
@@ -1224,7 +1228,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->isUninitializedLazyObject(new stdClass());
+        $reflectionEnumAdapter->isUninitializedLazyObject(ExampleUnitEnum::A);
     }
 
     public function testResetAsLazyGhost(): void
@@ -1235,7 +1239,7 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->resetAsLazyGhost(new stdClass(), static fn () => null);
+        $reflectionEnumAdapter->resetAsLazyGhost(ExampleUnitEnum::A, static fn () => null);
     }
 
     public function testResetAsLazyProxy(): void
@@ -1246,6 +1250,6 @@ class ReflectionEnumTest extends TestCase
         $betterReflectionEnum = self::createStub(BetterReflectionEnum::class);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
-        $reflectionEnumAdapter->resetAsLazyProxy(new stdClass(), static fn () => null);
+        $reflectionEnumAdapter->resetAsLazyProxy(ExampleUnitEnum::A, static fn (UnitEnum $enum): UnitEnum => $enum);
     }
 }

@@ -1275,7 +1275,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = self::createStub(BetterReflectionObject::class);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-        $reflectionObjectAdapter->newLazyProxy(static fn () => null);
+        $reflectionObjectAdapter->newLazyProxy(static fn (object $object): object => $object);
     }
 
     public function testMarkLazyObjectAsInitialized(): void
@@ -1341,6 +1341,6 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = self::createStub(BetterReflectionObject::class);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-        $reflectionObjectAdapter->resetAsLazyProxy(new stdClass(), static fn () => null);
+        $reflectionObjectAdapter->resetAsLazyProxy(new stdClass(), static fn (object $object): object => $object);
     }
 }

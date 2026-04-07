@@ -567,17 +567,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $stubData->getStub(),
         );
 
-        if (PHP_VERSION_ID >= 80400) {
-            self::assertStringContainsString(
-                '@deprecated 8.4',
-                $stubData->getStub(),
-            );
-        } else {
-            self::assertStringNotContainsString(
-                '@deprecated 8.4',
-                $stubData->getStub(),
-            );
-        }
+        self::assertStringContainsString(
+            '@deprecated 8.4',
+            $stubData->getStub(),
+        );
     }
 
     public function testStubForConstantDeclaredByConst(): void
