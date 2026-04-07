@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use ClassWithPropertiesAndTraitProperties;
+use Composer\Autoload\ClassLoader;
 use Error;
 use ExtendedClassWithPropertiesAndTraitProperties;
 use OutOfBoundsException;
@@ -51,6 +52,7 @@ use Roave\BetterReflectionTest\Fixture\StringEnum;
 use stdClass;
 use TraitWithProperty;
 
+use function assert;
 use function sprintf;
 
 #[CoversClass(ReflectionProperty::class)]
@@ -65,8 +67,10 @@ class ReflectionPropertyTest extends TestCase
     {
         parent::setUp();
 
+        $loader = $GLOBALS['loader'];
+        assert($loader instanceof ClassLoader);
         $this->astLocator = BetterReflectionSingleton::instance()->astLocator();
-        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
     public function testCreateFromName(): void

@@ -21,7 +21,6 @@ enum ReflectionPropertyHookType: string
 
     public static function fromCoreReflectionPropertyHookType(CoreReflectionPropertyHookType $hookType): self
     {
-        /** @phpstan-ignore match.unhandled */
         return match ($hookType) {
             CoreReflectionPropertyHookType::Get => self::Get,
             CoreReflectionPropertyHookType::Set => self::Set,

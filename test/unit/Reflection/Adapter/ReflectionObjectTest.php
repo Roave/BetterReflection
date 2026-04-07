@@ -249,8 +249,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('hasMethod')
-            ->with('fooBoo')
-            ->willReturn(true);
+            ->willReturnMap([['fooBoo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -286,8 +285,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('getMethod')
-            ->with('fooBoo')
-            ->willReturn($betterReflectionMethod);
+            ->willReturnMap([['fooBoo', $betterReflectionMethod]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -339,8 +337,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionObject
             ->method('isSubclassOf')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -379,8 +376,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionObject
             ->method('implementsInterface')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -1275,7 +1271,7 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = self::createStub(BetterReflectionObject::class);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-        $reflectionObjectAdapter->newLazyProxy(static fn () => null);
+        $reflectionObjectAdapter->newLazyProxy(static fn (object $object): object => $object);
     }
 
     public function testMarkLazyObjectAsInitialized(): void
@@ -1341,6 +1337,6 @@ class ReflectionObjectTest extends TestCase
         $betterReflectionObject = self::createStub(BetterReflectionObject::class);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
-        $reflectionObjectAdapter->resetAsLazyProxy(new stdClass(), static fn () => null);
+        $reflectionObjectAdapter->resetAsLazyProxy(new stdClass(), static fn (object $object): object => $object);
     }
 }

@@ -418,6 +418,7 @@ final class ReflectionSourceStubber implements SourceStubber
                 continue;
             }
 
+            /** @phpstan-ignore argument.type */
             $classConstantNode = $this->builderFactory->classConst($constantReflection->getName(), $constantReflection->getValue());
             $constantType      = $constantReflection->getType();
 

@@ -1,11 +1,11 @@
 {
     "require": {
         "doctrine/coding-standard": "^14.0.0",
-        "phpstan/phpstan": "^2.1.40",
+        "infection/infection": "^0.32.6",
+        "phpstan/phpstan": "^2.1.46",
         "phpstan/phpstan-phpunit": "^2.0.16",
-        "vimeo/psalm": "^6.15.1",
-        "roave/backward-compatibility-check": "^8.19.0",
-        "roave/infection-static-analysis-plugin": "^1.43.0"
+        "vimeo/psalm": "^6.16.1",
+        "roave/backward-compatibility-check": "^8.20.0"
     },
     "config": {
         "allow-plugins": {
@@ -13,7 +13,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
         "platform": {
-            "php": "8.3.99"
+            "php": "8.4.99"
         }
     },
     "autoload": {

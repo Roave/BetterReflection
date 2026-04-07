@@ -567,17 +567,10 @@ class PhpStormStubsSourceStubberTest extends TestCase
             $stubData->getStub(),
         );
 
-        if (PHP_VERSION_ID >= 80400) {
-            self::assertStringContainsString(
-                '@deprecated 8.4',
-                $stubData->getStub(),
-            );
-        } else {
-            self::assertStringNotContainsString(
-                '@deprecated 8.4',
-                $stubData->getStub(),
-            );
-        }
+        self::assertStringContainsString(
+            '@deprecated 8.4',
+            $stubData->getStub(),
+        );
     }
 
     public function testStubForConstantDeclaredByConst(): void
@@ -730,12 +723,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $classMapReflection = $stubberReflection->getProperty('classMap');
 
+        /** @var array<string, string> $classMapValue */
         $classMapValue                                                     = $classMapReflection->getValue();
         $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = 'fakeconstants/FakeConstantsStub.php';
         $classMapReflection->setValue($classMapReflection, $classMapValue);
 
         $constantMapReflection = $stubberReflection->getProperty('constantMap');
 
+        /** @var array<string, string> $constantMapValue */
         $constantMapValue                                                      = $constantMapReflection->getValue();
         $constantMapValue['define_constant']                                   = 'fakeconstants/FakeConstantsStub.php';
         $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = 'fakeconstants/FakeConstantsStub.php';

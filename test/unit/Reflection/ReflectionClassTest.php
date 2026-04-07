@@ -8,13 +8,13 @@ use ArrayIterator;
 use BackedEnum;
 use Bar;
 use Baz;
+use Composer\Autoload\ClassLoader;
 use E;
 use Iterator;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Qux;
@@ -120,7 +120,10 @@ class ReflectionClassTest extends TestCase
 
     private function getComposerLocator(): ComposerSourceLocator
     {
-        return new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator);
+        $loader = $GLOBALS['loader'];
+        assert($loader instanceof ClassLoader);
+
+        return new ComposerSourceLocator($loader, $this->astLocator);
     }
 
     public function testCanReflectInternalClassWithDefaultLocator(): void
@@ -1724,7 +1727,6 @@ PHP;
         self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
     }
 
-    #[RequiresPhp('>=8.3')]
     public function testMethodsFromTraitsWithFinal(): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(

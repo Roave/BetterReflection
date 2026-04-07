@@ -3,7 +3,7 @@ includes:
     - tools/vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
-    level: 8
+    level: 10
 
     paths:
         - src
@@ -26,10 +26,6 @@ parameters:
 
     ignoreErrors:
         -
-            identifier: class.notFound
-            message: '#(unknown class|invalid type) PropertyHookType#'
-
-        -
             identifier: missingType.generics
         -
             identifier: impure.functionCall
@@ -41,6 +37,9 @@ parameters:
             identifier: possiblyImpure.new
         -
             identifier: property.readOnlyByPhpDocAssignNotInConstructor
+        # Adding hooks to child classes is really sly/evil, and we won't care about it
+        -
+            identifier: unset.possiblyHookedProperty
         -
             identifier: staticMethod.alreadyNarrowedType
             path: test/unit/

@@ -22,7 +22,6 @@ jobs:
           - "highest"
           - "locked"
         php-version:
-          - "8.3"
           - "8.4"
           - "8.5"
         operating-system:
@@ -34,7 +33,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
@@ -42,12 +41,12 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -66,7 +65,6 @@ jobs:
         dependencies:
           - "locked"
         php-version:
-          - "8.3"
           - "8.4"
           - "8.5"
         operating-system:
@@ -77,7 +75,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -85,12 +83,12 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -120,7 +118,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -128,12 +126,12 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -161,7 +159,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "xdebug"
           php-version: "${{ matrix.php-version }}"
@@ -169,19 +167,19 @@ jobs:
           ini-values: memory_limit=-1, zend.assertions=1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
           custom-cache-suffix: "ci"
 
       - name: "Infection"
-        run: "tools/vendor/bin/roave-infection-static-analysis-plugin --threads=$(nproc)"
+        run: "tools/vendor/bin/infection"
         env:
           INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
@@ -206,7 +204,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -214,12 +212,12 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -247,7 +245,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -255,7 +253,7 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
@@ -282,7 +280,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -290,12 +288,12 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
 
       - name: "Install CI dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -323,7 +321,7 @@ jobs:
         uses: "actions/checkout@v6"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -331,7 +329,7 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"
@@ -362,7 +360,7 @@ jobs:
           fetch-depth: 0
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@2.36.0"
+        uses: "shivammathur/setup-php@2.37.0"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
@@ -370,7 +368,7 @@ jobs:
           ini-values: memory_limit=-1
 
       - name: "Install dependencies"
-        uses: "ramsey/composer-install@3.1.1"
+        uses: "ramsey/composer-install@3.2.1"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           working-directory: "tools"

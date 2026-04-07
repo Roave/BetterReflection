@@ -179,7 +179,6 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    #[RequiresPhp('>=8.3')]
     public function testClassStubWithTypedConstants(): void
     {
         require_once __DIR__ . '/../../Fixture/PHP83ClassForSourceStubber.php';

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflectionTest\Reflection;
 
+use Composer\Autoload\ClassLoader;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
@@ -39,6 +40,7 @@ use SplDoublyLinkedList;
 use stdClass;
 use Throwable;
 
+use function assert;
 use function sprintf;
 
 use const SORT_ASC as SORT_ASC_TEST;
@@ -56,8 +58,10 @@ class ReflectionParameterTest extends TestCase
 
         $betterReflection = BetterReflectionSingleton::instance();
 
+        $loader = $GLOBALS['loader'];
+        assert($loader instanceof ClassLoader);
         $this->astLocator = $betterReflection->astLocator();
-        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->reflector  = new DefaultReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
     public function testCreateFromClassNameAndMethod(): void

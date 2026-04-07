@@ -498,8 +498,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionClass
             ->method('isSubclassOf')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
@@ -563,8 +562,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionClass
             ->method('implementsInterface')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
@@ -1334,7 +1332,7 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass = self::createStub(BetterReflectionClass::class);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-        $reflectionClassAdapter->newLazyProxy(static fn () => null);
+        $reflectionClassAdapter->newLazyProxy(static fn (): object => new stdClass());
     }
 
     public function testMarkLazyObjectAsInitialized(): void
@@ -1400,6 +1398,6 @@ class ReflectionClassTest extends TestCase
         $betterReflectionClass = self::createStub(BetterReflectionClass::class);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
-        $reflectionClassAdapter->resetAsLazyProxy(new stdClass(), static fn () => null);
+        $reflectionClassAdapter->resetAsLazyProxy(new stdClass(), static fn (): object => new stdClass());
     }
 }
