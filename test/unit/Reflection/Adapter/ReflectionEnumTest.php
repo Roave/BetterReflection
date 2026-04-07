@@ -196,8 +196,7 @@ class ReflectionEnumTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionEnum
             ->method('isSubclassOf')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 
@@ -239,8 +238,7 @@ class ReflectionEnumTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionEnum
             ->method('implementsInterface')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionEnumAdapter = new ReflectionEnumAdapter($betterReflectionEnum);
 

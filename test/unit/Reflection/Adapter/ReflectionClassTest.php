@@ -498,8 +498,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionClass
             ->method('isSubclassOf')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 
@@ -563,8 +562,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionClass
             ->method('implementsInterface')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionClass);
 

@@ -249,8 +249,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('hasMethod')
-            ->with('fooBoo')
-            ->willReturn(true);
+            ->willReturnMap([['fooBoo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -286,8 +285,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn([$betterReflectionMethod]);
         $betterReflectionObject
             ->method('getMethod')
-            ->with('fooBoo')
-            ->willReturn($betterReflectionMethod);
+            ->willReturnMap([['fooBoo', $betterReflectionMethod]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -339,8 +337,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionObject
             ->method('isSubclassOf')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
@@ -379,8 +376,7 @@ class ReflectionObjectTest extends TestCase
             ->willReturn(['Foo']);
         $betterReflectionObject
             ->method('implementsInterface')
-            ->with('Foo')
-            ->willReturn(true);
+            ->willReturnMap([['Foo', true]]);
 
         $reflectionObjectAdapter = new ReflectionObjectAdapter($betterReflectionObject);
 
