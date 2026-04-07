@@ -303,8 +303,9 @@ class ReflectionClass implements Reflection
             return $this->parentClassName;
         }
 
-        if ($this->implementsClassNames !== []) {
-            return $this->implementsClassNames[0];
+        $implementsClassName = $this->getInterfaceClassNames();
+        if ($implementsClassName !== []) {
+            return $implementsClassName[0];
         }
 
         return 'class';
@@ -1298,17 +1299,21 @@ class ReflectionClass implements Reflection
     }
 
     /**
-     * @param array<class-string, self> $interfaces
+     * @param list<class-string> $interfaceClassNames
      *
-     * @return array<class-string, self>
+     * @return list<class-string>
      */
-    private function addStringableInterface(array $interfaces): array
+    private function addStringableInterfaceClassName(array $interfaceClassNames): array
     {
         /** @psalm-var class-string $stringableClassName */
         $stringableClassName = Stringable::class;
 
-        if (array_key_exists($stringableClassName, $interfaces) || ($this->isInterface && $this->getName() === $stringableClassName)) {
-            return $interfaces;
+        if ($this->isInterface && $this->getName() === $stringableClassName) {
+            return $interfaceClassNames;
+        }
+
+        if (in_array($stringableClassName, $interfaceClassNames, true)) {
+            return $interfaceClassNames;
         }
 
         $methods = $this->immediateMethods;
@@ -1322,7 +1327,7 @@ class ReflectionClass implements Reflection
                     $stringableInterfaceReflection = $this->reflector->reflectClass($stringableClassName);
 
                     if ($stringableInterfaceReflection->isInternal()) {
-                        $interfaces[$stringableClassName] = $stringableInterfaceReflection;
+                        $interfaceClassNames[] = $stringableClassName;
                     }
                 } catch (IdentifierNotFound) {
                     // Stringable interface does not exist on target PHP version
@@ -1333,28 +1338,25 @@ class ReflectionClass implements Reflection
             }
         }
 
-        return $interfaces;
+        return $interfaceClassNames;
     }
 
     /**
-     * @param array<class-string, self> $interfaces
+     * @param list<class-string> $interfaceClassNames
      *
-     * @return array<class-string, self>
-     *
-     * @psalm-suppress MoreSpecificReturnType
+     * @return list<class-string>
      */
-    private function addEnumInterfaces(array $interfaces): array
+    private function addEnumInterfaceClassNames(array $interfaceClassNames): array
     {
         assert($this->isEnum === true);
 
-        $interfaces[UnitEnum::class] = $this->reflector->reflectClass(UnitEnum::class);
+        $interfaceClassNames[] = UnitEnum::class;
 
         if ($this->isBackedEnum) {
-            $interfaces[BackedEnum::class] = $this->reflector->reflectClass(BackedEnum::class);
+            $interfaceClassNames[] = BackedEnum::class;
         }
 
-        /** @psalm-suppress LessSpecificReturnStatement */
-        return $interfaces;
+        return $interfaceClassNames;
     }
 
     /** @return list<trait-string> */
@@ -1574,7 +1576,13 @@ class ReflectionClass implements Reflection
     /** @return list<class-string> */
     public function getInterfaceClassNames(): array
     {
-        return $this->implementsClassNames;
+        $implementsClassNames = $this->implementsClassNames;
+
+        if ($this->isEnum) {
+            $implementsClassNames = $this->addEnumInterfaceClassNames($implementsClassNames);
+        }
+
+        return $this->addStringableInterfaceClassName($implementsClassNames);
     }
 
     /**
@@ -1610,19 +1618,15 @@ class ReflectionClass implements Reflection
             return [];
         }
 
-        $interfaces = array_combine(
-            $this->implementsClassNames,
+        $implementsClassName = $this->getInterfaceClassNames();
+
+        return array_combine(
+            $implementsClassName,
             array_map(
                 fn (string $interfaceClassName): ReflectionClass => $this->reflector->reflectClass($interfaceClassName),
-                $this->implementsClassNames,
+                $implementsClassName,
             ),
         );
-
-        if ($this->isEnum) {
-            $interfaces = $this->addEnumInterfaces($interfaces);
-        }
-
-        return $this->addStringableInterface($interfaces);
     }
 
     /**
@@ -1755,21 +1759,15 @@ class ReflectionClass implements Reflection
             return array_slice($this->getInterfacesHierarchy(AlreadyVisitedClasses::createEmpty()), 1);
         }
 
-        $interfaces = array_merge(
+        return array_merge(
             [],
             ...array_map(
                 fn (string $interfaceClassName): array => $this->reflector
                     ->reflectClass($interfaceClassName)
                     ->getInterfacesHierarchy(AlreadyVisitedClasses::createEmpty()),
-                $this->implementsClassNames,
+                $this->getInterfaceClassNames(),
             ),
         );
-
-        if ($this->isEnum) {
-            $interfaces = $this->addEnumInterfaces($interfaces);
-        }
-
-        return $this->addStringableInterface($interfaces);
     }
 
     /**
@@ -1797,7 +1795,7 @@ class ReflectionClass implements Reflection
             }
         }
 
-        return $this->addStringableInterface($interfaces);
+        return $interfaces;
     }
 
     /**

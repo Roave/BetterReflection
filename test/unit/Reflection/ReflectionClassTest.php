@@ -512,12 +512,12 @@ class ReflectionClassTest extends TestCase
             [
                 __DIR__ . '/../Fixture/Enums.php',
                 IntEnum::class,
-                ['Roave\BetterReflectionTest\Fixture\InterfaceForEnum'],
+                ['Roave\BetterReflectionTest\Fixture\InterfaceForEnum', UnitEnum::class, BackedEnum::class],
             ],
             [
                 __DIR__ . '/../Fixture/Enums.php',
                 Fixture\IsDeprecated::class,
-                [],
+                [UnitEnum::class],
             ],
         ];
     }
@@ -1867,6 +1867,7 @@ PHP;
 
         self::assertSame([InterfaceForEnum::class, UnitEnum::class], $classInfo->getInterfaceNames());
         self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+        self::assertContains(UnitEnum::class, $classInfo->getInterfaceClassNames());
     }
 
     public function testGetInterfaceNamesForBackedEnum(): void
@@ -1880,7 +1881,9 @@ PHP;
 
         self::assertSame([InterfaceForEnum::class, UnitEnum::class, BackedEnum::class], $classInfo->getInterfaceNames());
         self::assertArrayHasKey(UnitEnum::class, $classInfo->getImmediateInterfaces());
+        self::assertContains(UnitEnum::class, $classInfo->getInterfaceClassNames());
         self::assertArrayHasKey(BackedEnum::class, $classInfo->getImmediateInterfaces());
+        self::assertContains(BackedEnum::class, $classInfo->getInterfaceClassNames());
     }
 
     public function testGetInterfaces(): void
@@ -2763,26 +2766,32 @@ PHP;
 
         $classImplementingStringable = $reflector->reflectClass('ClassHasStringable');
         self::assertContains(Stringable::class, $classImplementingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $classImplementingStringable->getInterfaceClassNames());
         self::assertArrayHasKey(Stringable::class, $classImplementingStringable->getImmediateInterfaces());
 
         $classNotImplementingStringable = $reflector->reflectClass('ClassHasStringableAutomatically');
         self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceClassNames());
         self::assertArrayHasKey(Stringable::class, $classNotImplementingStringable->getImmediateInterfaces());
 
         $classNotImplementingStringable = $reflector->reflectClass('ClassHasStringableAutomaticallyWithLowercasedMethodName');
         self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $classNotImplementingStringable->getInterfaceClassNames());
         self::assertArrayHasKey(Stringable::class, $classNotImplementingStringable->getImmediateInterfaces());
 
         $interfaceExtendingStringable = $reflector->reflectClass('InterfaceHasStringable');
         self::assertContains(Stringable::class, $interfaceExtendingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $interfaceExtendingStringable->getInterfaceClassNames());
         self::assertArrayHasKey(Stringable::class, $interfaceExtendingStringable->getImmediateInterfaces());
 
         $interfaceNotExtendingStringable = $reflector->reflectClass('InterfaceHasStringableAutomatically');
         self::assertContains(Stringable::class, $interfaceNotExtendingStringable->getInterfaceNames());
+        self::assertContains(Stringable::class, $interfaceNotExtendingStringable->getInterfaceClassNames());
         self::assertArrayHasKey(Stringable::class, $interfaceNotExtendingStringable->getImmediateInterfaces());
 
         $stringable = $reflector->reflectClass('Stringable');
         self::assertNotContains(Stringable::class, $stringable->getInterfaceNames());
+        self::assertNotContains(Stringable::class, $stringable->getInterfaceClassNames());
         self::assertArrayNotHasKey(Stringable::class, $stringable->getImmediateInterfaces());
     }
 
