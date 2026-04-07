@@ -47,6 +47,7 @@ use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
+use Roave\BetterReflectionTest\Fixture\ReadonlyExampleClass;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\StringEnum;
 use stdClass;
@@ -287,6 +288,26 @@ class ReflectionPropertyTest extends TestCase
     public function testGetModifiers(string $propertyName, int $expectedModifier): void
     {
         $classInfo = $this->reflector->reflectClass(ExampleClass::class);
+        $property  = $classInfo->getProperty($propertyName);
+
+        self::assertSame($expectedModifier, $property->getModifiers());
+    }
+
+    /** @return list<array{0: non-empty-string, 1: int-mask-of<ReflectionPropertyAdapter::IS_*>}> */
+    public static function modifierInReadonlyClassProvider(): array
+    {
+        return [
+            ['publicProperty', CoreReflectionProperty::IS_PUBLIC | ReflectionPropertyAdapter::IS_PROTECTED_SET_COMPATIBILITY],
+            ['protectedProperty', CoreReflectionProperty::IS_PROTECTED],
+            ['privateProperty', CoreReflectionProperty::IS_PRIVATE],
+        ];
+    }
+
+    /** @param non-empty-string $propertyName */
+    #[DataProvider('modifierInReadonlyClassProvider')]
+    public function testGetModifiersInReadonlyClass(string $propertyName, int $expectedModifier): void
+    {
+        $classInfo = $this->reflector->reflectClass(ReadonlyExampleClass::class);
         $property  = $classInfo->getProperty($propertyName);
 
         self::assertSame($expectedModifier, $property->getModifiers());
