@@ -3,7 +3,7 @@ includes:
     - tools/vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
-    level: 8
+    level: 9
 
     paths:
         - src

@@ -723,12 +723,14 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $classMapReflection = $stubberReflection->getProperty('classMap');
 
+        /** @var array<string, string> $classMapValue */
         $classMapValue                                                     = $classMapReflection->getValue();
         $classMapValue['roave\betterreflectiontest\fixture\fakeconstants'] = 'fakeconstants/FakeConstantsStub.php';
         $classMapReflection->setValue($classMapReflection, $classMapValue);
 
         $constantMapReflection = $stubberReflection->getProperty('constantMap');
 
+        /** @var array<string, string> $constantMapValue */
         $constantMapValue                                                      = $constantMapReflection->getValue();
         $constantMapValue['define_constant']                                   = 'fakeconstants/FakeConstantsStub.php';
         $constantMapValue['roave\betterreflectiontest\fixture\const_constant'] = 'fakeconstants/FakeConstantsStub.php';

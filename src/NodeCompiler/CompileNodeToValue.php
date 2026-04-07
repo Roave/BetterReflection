@@ -141,10 +141,12 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Expr\Cast\Int_) {
+                /** @phpstan-ignore cast.int */
                 return (int) $this($node->expr, $context)->value;
             }
 
             if ($node instanceof Node\Expr\Cast\Double) {
+                /** @phpstan-ignore cast.double */
                 return (float) $this($node->expr, $context)->value;
             }
 
@@ -153,6 +155,7 @@ class CompileNodeToValue
             }
 
             if ($node instanceof Node\Expr\Cast\String_) {
+                /** @phpstan-ignore cast.string */
                 return (string) $this($node->expr, $context)->value;
             }
 

@@ -8,6 +8,7 @@ use ArrayIterator;
 use BackedEnum;
 use Bar;
 use Baz;
+use Composer\Autoload\ClassLoader;
 use E;
 use Iterator;
 use PhpParser\Node;
@@ -119,7 +120,10 @@ class ReflectionClassTest extends TestCase
 
     private function getComposerLocator(): ComposerSourceLocator
     {
-        return new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator);
+        $loader = $GLOBALS['loader'];
+        assert($loader instanceof ClassLoader);
+
+        return new ComposerSourceLocator($loader, $this->astLocator);
     }
 
     public function testCanReflectInternalClassWithDefaultLocator(): void

@@ -6,6 +6,7 @@ namespace Roave\BetterReflectionTest\Reflection;
 
 use ClassWithMethodsAndTraitMethods;
 use Closure;
+use Composer\Autoload\ClassLoader;
 use ExtendedClassWithMethodsAndTraitMethods;
 use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -48,6 +49,7 @@ use stdClass;
 use TraitFixtureC;
 use TraitWithMethod;
 
+use function assert;
 use function basename;
 
 #[CoversClass(ReflectionMethod::class)]
@@ -65,9 +67,11 @@ class ReflectionMethodTest extends TestCase
 
         $betterReflection = BetterReflectionSingleton::instance();
 
+        $loader = $GLOBALS['loader'];
+        assert($loader instanceof ClassLoader);
         $this->astLocator    = $betterReflection->astLocator();
         $this->sourceStubber = $betterReflection->sourceStubber();
-        $this->reflector     = new DefaultReflector(new ComposerSourceLocator($GLOBALS['loader'], $this->astLocator));
+        $this->reflector     = new DefaultReflector(new ComposerSourceLocator($loader, $this->astLocator));
     }
 
     public function testCreateFromName(): void
