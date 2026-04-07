@@ -14,7 +14,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Qux;
@@ -1724,7 +1723,6 @@ PHP;
         self::assertSame('TraitFixtureTraitC2', $classInfo->getMethod('d_renamed')->getDeclaringClass()->getName());
     }
 
-    #[RequiresPhp('>=8.3')]
     public function testMethodsFromTraitsWithFinal(): void
     {
         $reflector = new DefaultReflector(new SingleFileSourceLocator(
