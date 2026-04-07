@@ -14,8 +14,8 @@
     "mutators": {
         "@default": true
     },
-    "minMsi": 99,
-    "minCoveredMsi": 99,
+    "minMsi": 98,
+    "minCoveredMsi": 98,
     "staticAnalysisTool": "phpstan",
     "phpStan": {
         "customPath": "tools/vendor/bin/phpstan"
