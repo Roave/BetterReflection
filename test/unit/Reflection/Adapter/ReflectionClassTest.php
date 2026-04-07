@@ -1200,8 +1200,7 @@ class ReflectionClassTest extends TestCase
             ->willReturn(AutoloadableEnum::class);
         $betterReflectionEnum
             ->method('hasCase')
-            ->with('ENUM_CASE')
-            ->willReturn(true);
+            ->willReturnMap([['ENUM_CASE', true]]);
         $betterReflectionEnum
             ->expects($this->once())
             ->method('getCase')
@@ -1224,13 +1223,11 @@ class ReflectionClassTest extends TestCase
         $betterReflectionEnum = $this->createMock(BetterReflectionEnum::class);
         $betterReflectionEnum
             ->method('hasCase')
-            ->with('ENUM_CASE')
-            ->willReturn(true);
+            ->willReturnMap([['ENUM_CASE', true]]);
         $betterReflectionEnum
             ->expects($this->once())
             ->method('getCase')
-            ->with('ENUM_CASE')
-            ->willReturn($betterReflectionEnumCase);
+            ->willReturnMap([['ENUM_CASE', $betterReflectionEnumCase]]);
 
         $reflectionClassAdapter = new ReflectionClassAdapter($betterReflectionEnum);
 
