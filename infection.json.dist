@@ -1,4 +1,5 @@
 {
+    "$schema": "./tools/vendor/infection/infection/resources/schema.json",
     "source": {
         "directories": [
             "src"
@@ -14,5 +15,9 @@
         "@default": true
     },
     "minMsi": 99,
-    "minCoveredMsi": 99
+    "minCoveredMsi": 99,
+    "staticAnalysisTool": "phpstan",
+    "phpStan": {
+        "customPath": "tools/vendor/bin/phpstan"
+    }
 }
