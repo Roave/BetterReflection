@@ -42,6 +42,7 @@ use Roave\BetterReflectionTest\Fixture\Attr;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTraitStaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
+use Roave\BetterReflectionTest\Fixture\ClassWithPromotedPropertyWithArrayDefault;
 use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InitializedProperties;
@@ -323,13 +324,25 @@ class ReflectionPropertyTest extends TestCase
         self::assertTrue($promotedProperty->isPrivate());
         self::assertTrue($promotedProperty->hasType());
         self::assertSame('int|null', $promotedProperty->getType()->__toString());
-        self::assertFalse($promotedProperty->hasDefaultValue());
-        self::assertNull($promotedProperty->getDefaultValue());
+        self::assertTrue($promotedProperty->hasDefaultValue());
+        self::assertSame(123, $promotedProperty->getDefaultValue());
         self::assertSame(54, $promotedProperty->getStartLine());
         self::assertSame(54, $promotedProperty->getEndLine());
         self::assertSame(60, $promotedProperty->getStartColumn());
         self::assertSame(95, $promotedProperty->getEndColumn());
         self::assertSame('/** Some doccomment */', $promotedProperty->getDocComment());
+    }
+
+    public function testPromotedPropertyWithArrayDefaultValue(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/ExampleClass.php', $this->astLocator));
+        $classInfo = $reflector->reflectClass(ClassWithPromotedPropertyWithArrayDefault::class);
+
+        $property = $classInfo->getProperty('parameters');
+
+        self::assertTrue($property->isPromoted());
+        self::assertTrue($property->hasDefaultValue());
+        self::assertSame([], $property->getDefaultValue());
     }
 
     public function testIsDefaultAndIsDynamic(): void

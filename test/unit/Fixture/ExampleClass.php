@@ -89,6 +89,13 @@ namespace Roave\BetterReflectionTest\Fixture {
     {
     }
 
+    class ClassWithPromotedPropertyWithArrayDefault
+    {
+        public function __construct(protected array $parameters = [])
+        {
+        }
+    }
+
     class ExampleClassWhereConstructorIsNotFirstMethod
     {
         public function someMethod()
