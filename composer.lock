@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0bdda5a58bf8a9b7b3d89ce74bfa42f",
+    "content-hash": "2fc983f093ebc69216db91836be20557",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -594,16 +594,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "14.1.0",
+            "version": "14.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "a9a9019d28e62c13609b3f0590202ea73264e0e7"
+                "reference": "c875dc3bc9551710bda98938e3557c6987307831"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/a9a9019d28e62c13609b3f0590202ea73264e0e7",
-                "reference": "a9a9019d28e62c13609b3f0590202ea73264e0e7",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c875dc3bc9551710bda98938e3557c6987307831",
+                "reference": "c875dc3bc9551710bda98938e3557c6987307831",
                 "shasum": ""
             },
             "require": {
@@ -659,7 +659,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.1.0"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.1.1"
             },
             "funding": [
                 {
@@ -679,7 +679,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-12T05:08:24+00:00"
+            "time": "2026-04-13T04:55:38+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -976,16 +976,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.1.1",
+            "version": "13.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "bf114c99266501d45acc00ad96d5606f3f7ad99c"
+                "reference": "06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bf114c99266501d45acc00ad96d5606f3f7ad99c",
-                "reference": "bf114c99266501d45acc00ad96d5606f3f7ad99c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc",
+                "reference": "06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc",
                 "shasum": ""
             },
             "require": {
@@ -999,16 +999,16 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.4.1",
-                "phpunit/php-code-coverage": "^14.0",
+                "phpunit/php-code-coverage": "^14.1.1",
                 "phpunit/php-file-iterator": "^7.0.0",
                 "phpunit/php-invoker": "^7.0.0",
                 "phpunit/php-text-template": "^6.0.0",
                 "phpunit/php-timer": "^9.0.0",
                 "sebastian/cli-parser": "^5.0.0",
-                "sebastian/comparator": "^8.1.0",
+                "sebastian/comparator": "^8.1.1",
                 "sebastian/diff": "^8.1.0",
                 "sebastian/environment": "^9.2.0",
-                "sebastian/exporter": "^8.0.0",
+                "sebastian/exporter": "^8.0.1",
                 "sebastian/git-state": "^1.0",
                 "sebastian/global-state": "^9.0.0",
                 "sebastian/object-enumerator": "^8.0.0",
@@ -1055,7 +1055,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.1"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.3"
             },
             "funding": [
                 {
@@ -1063,7 +1063,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-04-08T03:07:38+00:00"
+            "time": "2026-04-13T05:40:20+00:00"
         },
         {
             "name": "psr/cache",
