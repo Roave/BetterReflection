@@ -177,12 +177,10 @@ class FileReadTrapStreamWrapperTest extends TestCase
 
             /** @phpstan-ignore deadCode.unreachable */
             self::fail('No exception was raised');
-        /** @phpstan-ignore catch.neverThrown */
         } catch (Throwable $caught) {
             self::assertSame($thrown, $caught);
         }
 
-        /** @phpstan-ignore deadCode.unreachable */
         self::assertNull(FileReadTrapStreamWrapper::$autoloadLocatedFile);
         self::assertNotEmpty(file_get_contents(__FILE__), 'Stream wrapper was removed, file reads work again');
     }
