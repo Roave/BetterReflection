@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fc983f093ebc69216db91836be20557",
+    "content-hash": "a90d2dd0c755c531bc82c223d438f307",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -976,16 +976,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.1.3",
+            "version": "13.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc"
+                "reference": "f51a678e41401c9b3eb3d3e506c054fee215dd93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc",
-                "reference": "06184715ee25f3af84d3b4a9ce28ff1f92bd0bfc",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f51a678e41401c9b3eb3d3e506c054fee215dd93",
+                "reference": "f51a678e41401c9b3eb3d3e506c054fee215dd93",
                 "shasum": ""
             },
             "require": {
@@ -1005,7 +1005,7 @@
                 "phpunit/php-text-template": "^6.0.0",
                 "phpunit/php-timer": "^9.0.0",
                 "sebastian/cli-parser": "^5.0.0",
-                "sebastian/comparator": "^8.1.1",
+                "sebastian/comparator": "^8.1.2",
                 "sebastian/diff": "^8.1.0",
                 "sebastian/environment": "^9.2.0",
                 "sebastian/exporter": "^8.0.1",
@@ -1055,7 +1055,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.3"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.4"
             },
             "funding": [
                 {
@@ -1063,7 +1063,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-04-13T05:40:20+00:00"
+            "time": "2026-04-15T05:07:43+00:00"
         },
         {
             "name": "psr/cache",
