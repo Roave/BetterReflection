@@ -511,7 +511,7 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->skipLazyInitialization(new stdClass());
     }
 
-    #[RequiresPhp('>=8.4')]
+    #[RequiresPhp('>=8.4.0')]
     public function testHasAndGetHookWhenNoHooks(): void
     {
         $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
@@ -527,7 +527,7 @@ class ReflectionPropertyTest extends TestCase
         self::assertNull($reflectionPropertyAdapter->getHook(PropertyHookType::Get));
     }
 
-    #[RequiresPhp('>=8.4')]
+    #[RequiresPhp('>=8.4.0')]
     public function testHasAndGetHook(): void
     {
         $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
