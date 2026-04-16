@@ -116,7 +116,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertNull($stubData->getExtensionName());
     }
 
-    #[RequiresPhp('<8.5')]
+    #[RequiresPhp('<8.5.0')]
     public function testClassStub(): void
     {
         require_once __DIR__ . '/../../Fixture/ClassForSourceStubber.php';
@@ -189,7 +189,7 @@ class ReflectionSourceStubberTest extends TestCase
         self::assertStringEqualsFile(__DIR__ . '/../../Fixture/PHP83ClassForSourceStubberExpected.php', $stubData->getStub());
     }
 
-    #[RequiresPhp('>=8.5')]
+    #[RequiresPhp('>=8.5.0')]
     public function testClassStubWithPHP85Changes(): void
     {
         require_once __DIR__ . '/../../Fixture/PHP85ClassForSourceStubber.php';
