@@ -20,7 +20,7 @@ final class ReflectionNamedType extends CoreReflectionNamedType
     /** @var non-empty-string */
     private string $toString;
 
-    /** @param \Roave\BetterReflection\Reflection\ReflectionNamedType|non-empty-string $type */
+    /** @param BetterReflectionNamedType|non-empty-string $type */
     public function __construct(BetterReflectionNamedType|string $type, private bool $allowsNull = false)
     {
         if ($type instanceof BetterReflectionNamedType) {
