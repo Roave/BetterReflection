@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37165817cb5f876e7b238bec855c9645",
+    "content-hash": "148697f48f81bc09ba6cb52c9bcd5acd",
     "packages": [
         {
             "name": "amphp/amp",
@@ -5639,20 +5639,20 @@
         },
         {
             "name": "roave/backward-compatibility-check",
-            "version": "8.20.0",
+            "version": "8.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BackwardCompatibilityCheck.git",
-                "reference": "ba4f4b2c4d388d2bf974d1fefa28557e628d8da4"
+                "reference": "ee85fb8879cfe939814d84e18ec6cb5c33904b75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/ba4f4b2c4d388d2bf974d1fefa28557e628d8da4",
-                "reference": "ba4f4b2c4d388d2bf974d1fefa28557e628d8da4",
+                "url": "https://api.github.com/repos/Roave/BackwardCompatibilityCheck/zipball/ee85fb8879cfe939814d84e18ec6cb5c33904b75",
+                "reference": "ee85fb8879cfe939814d84e18ec6cb5c33904b75",
                 "shasum": ""
             },
             "require": {
-                "composer/composer": "^2.9.5",
+                "composer/composer": "^2.9.8",
                 "ext-dom": "*",
                 "ext-json": "*",
                 "ext-libxml": "*",
@@ -5661,21 +5661,21 @@
                 "nikolaposa/version": "^4.2.1",
                 "ocramius/package-versions": "^2.11.0",
                 "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
-                "php-standard-library/dict": "^6.0",
-                "php-standard-library/env": "^6.0",
-                "php-standard-library/file": "^6.0",
-                "php-standard-library/filesystem": "^6.0",
-                "php-standard-library/foundation": "^6.0",
-                "php-standard-library/iter": "^6.0",
-                "php-standard-library/json": "^6.0",
-                "php-standard-library/regex": "^6.0",
-                "php-standard-library/shell": "^6.0",
-                "php-standard-library/str": "^6.0",
-                "php-standard-library/type": "^6.0",
-                "php-standard-library/vec": "^6.0",
-                "roave/better-reflection": "^6.69.0",
-                "symfony/console": "^7.4.4"
+                "php-standard-library/async": "^6.1.1",
+                "php-standard-library/dict": "^6.1.1",
+                "php-standard-library/env": "^6.1.1",
+                "php-standard-library/file": "^6.1.1",
+                "php-standard-library/filesystem": "^6.1.1",
+                "php-standard-library/foundation": "^6.1.1",
+                "php-standard-library/iter": "^6.1.1",
+                "php-standard-library/json": "^6.1.1",
+                "php-standard-library/regex": "^6.1.1",
+                "php-standard-library/shell": "^6.1.1",
+                "php-standard-library/str": "^6.1.1",
+                "php-standard-library/type": "^6.1.1",
+                "php-standard-library/vec": "^6.1.1",
+                "roave/better-reflection": "^6.71.0",
+                "symfony/console": "^7.4.11"
             },
             "conflict": {
                 "marc-mabe/php-enum": "<4.7.2",
@@ -5684,16 +5684,16 @@
             },
             "require-dev": {
                 "doctrine/coding-standard": "^14.0.0",
-                "justinrainbow/json-schema": "^6.7.2",
-                "php-standard-library/hash": "^6.0",
-                "php-standard-library/psalm-plugin": "^2.3.0",
-                "php-standard-library/secure-random": "^6.0",
-                "phpunit/phpunit": "^12.5.12",
-                "psalm/plugin-phpunit": "^0.19.5",
-                "roave/infection-static-analysis-plugin": "^1.43.0",
+                "justinrainbow/json-schema": "^6.8.2",
+                "php-standard-library/hash": "^6.1.1",
+                "php-standard-library/psalm-plugin": "^2.4.0",
+                "php-standard-library/secure-random": "^6.1.1",
+                "phpunit/phpunit": "^13.1.10",
+                "psalm/plugin-phpunit": "^0.19.7",
+                "roave/infection-static-analysis-plugin": "^1.44.0",
                 "roave/security-advisories": "dev-master",
                 "squizlabs/php_codesniffer": "^4.0.1",
-                "vimeo/psalm": "^6.15.1"
+                "vimeo/psalm": "^6.16.1"
             },
             "bin": [
                 "bin/roave-backward-compatibility-check"
@@ -5721,9 +5721,9 @@
             "description": "Tool to compare two revisions of a public API to check for BC breaks",
             "support": {
                 "issues": "https://github.com/Roave/BackwardCompatibilityCheck/issues",
-                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.20.0"
+                "source": "https://github.com/Roave/BackwardCompatibilityCheck/tree/8.21.0"
             },
-            "time": "2026-03-20T13:02:25+00:00"
+            "time": "2026-05-15T14:19:15+00:00"
         },
         {
             "name": "roave/better-reflection",
