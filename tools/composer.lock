@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40bb21ab9c753fba55f1426eacd12e87",
+    "content-hash": "64d3462daf406633ea5d7e0f64aa9c8d",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2228,16 +2228,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.33.0",
+            "version": "0.33.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "86fcca6b623b8fcc8eff7388bd907d863ec9209c"
+                "reference": "afa08ff0feb21fac9f8351c9c6a6856f0ef58fdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/86fcca6b623b8fcc8eff7388bd907d863ec9209c",
-                "reference": "86fcca6b623b8fcc8eff7388bd907d863ec9209c",
+                "url": "https://api.github.com/repos/infection/infection/zipball/afa08ff0feb21fac9f8351c9c6a6856f0ef58fdb",
+                "reference": "afa08ff0feb21fac9f8351c9c6a6856f0ef58fdb",
                 "shasum": ""
             },
             "require": {
@@ -2251,7 +2251,7 @@
                 "fidry/cpu-core-counter": "^1.0",
                 "infection/abstract-testframework-adapter": "^0.5.0",
                 "infection/extension-installer": "^0.1.0",
-                "infection/include-interceptor": "^0.2.5",
+                "infection/include-interceptor": "^0.2.5 || ^1.0.0",
                 "infection/mutator": "^0.4",
                 "justinrainbow/json-schema": "^6.0",
                 "nikic/php-parser": "^5.6.2",
@@ -2350,7 +2350,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.33.0"
+                "source": "https://github.com/infection/infection/tree/0.33.1"
             },
             "funding": [
                 {
@@ -2362,7 +2362,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-05-17T05:45:44+00:00"
+            "time": "2026-05-17T17:44:47+00:00"
         },
         {
             "name": "infection/mutator",
@@ -5126,11 +5126,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.54",
+            "version": "2.1.55",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
-                "reference": "8be50c3992107dc837b17da4d140fbbdf9a5c5bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9eaac3826ed5e9b8427350a43cac825eeca3f566",
+                "reference": "9eaac3826ed5e9b8427350a43cac825eeca3f566",
                 "shasum": ""
             },
             "require": {
@@ -5175,7 +5175,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-29T13:31:09+00:00"
+            "time": "2026-05-18T11:57:34+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",

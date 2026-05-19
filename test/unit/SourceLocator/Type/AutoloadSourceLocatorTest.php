@@ -471,7 +471,6 @@ class AutoloadSourceLocatorTest extends TestCase
             spl_autoload_unregister($brokenAutoloader);
         }
 
-        /** @phpstan-ignore deadCode.unreachable */
         self::assertSame($previousErrorHandler, $getErrorHandler());
         self::assertNotFalse(file_get_contents(__FILE__));
     }
