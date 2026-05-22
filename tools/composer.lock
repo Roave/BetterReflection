@@ -3021,33 +3021,33 @@
         },
         {
             "name": "ocramius/package-versions",
-            "version": "2.11.0",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "23359bf3003a71b053ac8ab4b3f651597bd3d261"
+                "reference": "18b02a63e837246e812cae72e211db32d7980019"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/23359bf3003a71b053ac8ab4b3f651597bd3d261",
-                "reference": "23359bf3003a71b053ac8ab4b3f651597bd3d261",
+                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/18b02a63e837246e812cae72e211db32d7980019",
+                "reference": "18b02a63e837246e812cae72e211db32d7980019",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2.0",
-                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0"
             },
             "replace": {
                 "composer/package-versions-deprecated": "*"
             },
             "require-dev": {
-                "composer/composer": "^2.9.2",
+                "composer/composer": "^2.9.8",
                 "doctrine/coding-standard": "^14.0.0",
                 "ext-zip": "^1.15.0",
-                "phpunit/phpunit": "^11.5.44",
-                "psalm/plugin-phpunit": "^0.19.5",
-                "roave/infection-static-analysis-plugin": "^1.39.0",
-                "vimeo/psalm": "^6.13.1"
+                "phpunit/phpunit": "^13.1.11",
+                "psalm/plugin-phpunit": "^0.19.7",
+                "roave/infection-static-analysis-plugin": "^1.44.0",
+                "vimeo/psalm": "^6.16.1"
             },
             "type": "library",
             "autoload": {
@@ -3068,7 +3068,7 @@
             "description": "Provides efficient querying for installed package versions (no runtime IO)",
             "support": {
                 "issues": "https://github.com/Ocramius/PackageVersions/issues",
-                "source": "https://github.com/Ocramius/PackageVersions/tree/2.11.0"
+                "source": "https://github.com/Ocramius/PackageVersions/tree/2.12.0"
             },
             "funding": [
                 {
@@ -3080,7 +3080,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-27T11:43:11+00:00"
+            "time": "2026-05-21T19:52:53+00:00"
         },
         {
             "name": "ondram/ci-detector",
