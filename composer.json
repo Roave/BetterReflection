@@ -32,7 +32,7 @@
 
     ],
     "require-dev": {
-        "phpbench/phpbench": "^1.6.1",
+        "phpbench/phpbench": "^1.7.0",
         "phpunit/phpunit": "^13.2.0"
     },
     "autoload": {
