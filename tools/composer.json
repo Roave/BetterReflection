@@ -1,7 +1,7 @@
 {
     "require": {
         "doctrine/coding-standard": "^14.0.0",
-        "infection/infection": "^0.33.3",
+        "infection/infection": "^0.34.0",
         "phpstan/phpstan": "^2.2.2",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "vimeo/psalm": "^6.16.1",
