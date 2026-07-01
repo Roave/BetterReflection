@@ -500,7 +500,6 @@ class ReflectionProperty
 
             $closure = Closure::bind(fn (string $implementingClassName, string $propertyName): mixed => $implementingClassName::${$propertyName}, null, $implementingClassName);
 
-            /** @phpstan-ignore function.alreadyNarrowedType, instanceof.alwaysTrue */
             assert($closure instanceof Closure);
 
             return $closure->__invoke($implementingClassName, $this->getName());
@@ -510,7 +509,6 @@ class ReflectionProperty
 
         $closure = Closure::bind(fn (object $instance, string $propertyName): mixed => $instance->{$propertyName}, $instance, $implementingClassName);
 
-        /** @phpstan-ignore function.alreadyNarrowedType, instanceof.alwaysTrue */
         assert($closure instanceof Closure);
 
         return $closure->__invoke($instance, $this->getName());
@@ -534,7 +532,6 @@ class ReflectionProperty
                 $_implementingClassName::${$_propertyName} = $value;
             }, null, $implementingClassName);
 
-            /** @phpstan-ignore function.alreadyNarrowedType, instanceof.alwaysTrue */
             assert($closure instanceof Closure);
 
             $closure->__invoke($implementingClassName, $this->getName(), func_num_args() === 2 ? $value : $object);
@@ -548,7 +545,6 @@ class ReflectionProperty
             $instance->{$propertyName} = $value;
         }, $instance, $implementingClassName);
 
-        /** @phpstan-ignore function.alreadyNarrowedType, instanceof.alwaysTrue */
         assert($closure instanceof Closure);
 
         $closure->__invoke($instance, $this->getName(), $value);
