@@ -53,7 +53,7 @@ class ReflectionFunctionStringCastTest extends TestCase
         $reflector          = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, (BetterReflectionSingleton::instance()->sourceStubber())));
         $functionReflection = $reflector->reflectFunction('phpversion');
 
-        self::assertStringMatchesFormat("Function [ <internal:standard> function phpversion ] {\n\n  - Parameters [1] {\n    Parameter #0 [ <required> ?string \$extension ]\n  }\n  - Return [ string|false ]\n}", (string) $functionReflection);
+        self::assertStringMatchesFormat("Function [ <internal:standard> function phpversion ] {\n\n  - Parameters [1] {\n    Parameter #0 [ <optional> ?string \$extension = NULL ]\n  }\n  - Return [ string|false ]\n}", (string) $functionReflection);
     }
 
     public function testToStringWithNoFileName(): void

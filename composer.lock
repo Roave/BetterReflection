@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7138f7d96e7830655bc6fe4a016bf1cb",
+    "content-hash": "b51c2d9456b036e5d5a3bed2dc0845ed",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2026.1",
+            "version": "v2026.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs",
-                "reference": "2cdd054c4109dfb76667c9198bf9427606354243"
+                "reference": "709e512210784a7c0a677b3a89d35def844a59b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/2cdd054c4109dfb76667c9198bf9427606354243",
-                "reference": "2cdd054c4109dfb76667c9198bf9427606354243",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/709e512210784a7c0a677b3a89d35def844a59b9",
+                "reference": "709e512210784a7c0a677b3a89d35def844a59b9",
                 "shasum": ""
             },
             "require-dev": {
@@ -48,7 +48,7 @@
                 "stubs",
                 "type"
             ],
-            "time": "2026-02-19T20:12:01+00:00"
+            "time": "2026-06-12T13:19:10+00:00"
         },
         {
             "name": "nikic/php-parser",
