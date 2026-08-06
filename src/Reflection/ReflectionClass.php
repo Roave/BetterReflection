@@ -1075,7 +1075,7 @@ class ReflectionClass implements Reflection
     public function getDefaultProperties(): array
     {
         return array_map(
-            static fn (ReflectionProperty $property) => $property->getDefaultValue(),
+            static fn (ReflectionProperty $property): mixed => $property->getDefaultValue(),
             $this->getProperties(),
         );
     }

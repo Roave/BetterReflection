@@ -253,7 +253,7 @@ class ReflectionObject extends ReflectionClass
     public function getDefaultProperties(): array
     {
         return array_map(
-            static fn (ReflectionProperty $property) => $property->getDefaultValue(),
+            static fn (ReflectionProperty $property): mixed => $property->getDefaultValue(),
             array_filter($this->getProperties(), static fn (ReflectionProperty $property): bool => $property->isDefault()),
         );
     }

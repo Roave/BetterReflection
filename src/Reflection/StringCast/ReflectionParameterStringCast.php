@@ -54,6 +54,7 @@ final class ReflectionParameterStringCast
             return '';
         }
 
+        /** @var mixed $defaultValue */
         $defaultValue = $parameterReflection->getDefaultValue();
 
         if (is_array($defaultValue)) {

@@ -374,10 +374,8 @@ class ReflectionProperty
     /**
      * Get the default value of the property (as defined before constructor is
      * called, when the property is defined)
-     *
-     * @return scalar|array<scalar>|null
      */
-    public function getDefaultValue(): string|int|float|bool|array|null
+    public function getDefaultValue(): mixed
     {
         if ($this->default === null) {
             return null;
@@ -393,10 +391,7 @@ class ReflectionProperty
             );
         }
 
-        /** @psalm-var scalar|array<scalar>|null $value */
-        $value = $this->compiledDefaultValue->value;
-
-        return $value;
+        return $this->compiledDefaultValue->value;
     }
 
     public function isDeprecated(): bool

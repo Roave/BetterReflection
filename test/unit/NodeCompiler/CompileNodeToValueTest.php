@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\NodeCompiler;
 
 use BadMethodCallException;
+use Closure;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Yield_;
@@ -1131,6 +1132,18 @@ PHP
         $getHookParameterAttribute = $getHookParameter->getAttributes()[0];
 
         self::assertSame($expectedValue, $getHookParameterAttribute->getArguments()[0]);
+    }
+
+    public function testClosureInParameterDefault(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(self::realPath(__DIR__ . '/../Fixture/AttributesWithClosures.php'), $this->astLocator));
+        $class     = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\ClassWithClosuresInAttributes');
+        $parameter = $class->getMethod('methodWithClosureInParameterDefault')->getParameter('callback');
+
+        $default = $parameter->getDefaultValue();
+
+        self::assertInstanceOf(Closure::class, $default);
+        self::assertSame('default', $default());
     }
 
     public function testObjectCast(): void

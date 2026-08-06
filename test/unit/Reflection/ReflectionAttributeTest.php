@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection;
 
 use Attribute;
+use Closure;
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 use Roave\BetterReflection\Reflection\ReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionClass;
@@ -18,6 +20,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\AnotherAttr;
 use Roave\BetterReflectionTest\Fixture\Attr;
+use Roave\BetterReflectionTest\Fixture\AttrWithCallback;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributesWithArguments;
 use Roave\BetterReflectionTest\Fixture\ClassWithRepeatedAttributes;
@@ -121,6 +124,43 @@ class ReflectionAttributeTest extends TestCase
         self::assertCount(count($expectedArguments), $attributes[0]->getArgumentsExpressions());
         self::assertContainsOnlyInstancesOf(Node\Expr::class, $attributes[0]->getArgumentsExpressions());
         self::assertSame($expectedArguments, $attributes[0]->getArguments());
+    }
+
+    public function testGetArgumentsWithClosures(): void
+    {
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AttributesWithClosures.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\ClassWithClosuresInAttributes');
+        $attributes      = $classReflection->getAttributesByName(AttrWithCallback::class);
+
+        self::assertCount(3, $attributes);
+
+        $closure = $attributes[0]->getArguments()[0];
+        self::assertInstanceOf(Closure::class, $closure);
+        self::assertSame(42, $closure(21));
+
+        $namedArgumentClosure = $attributes[1]->getArguments()['callback'];
+        self::assertInstanceOf(Closure::class, $namedArgumentClosure);
+        self::assertSame('abc', $namedArgumentClosure('ABC'));
+
+        $firstClassCallable = $attributes[2]->getArguments()[0];
+        self::assertInstanceOf(Closure::class, $firstClassCallable);
+        self::assertSame('ABC', $firstClassCallable('abc'));
+    }
+
+    #[RequiresPhp('>= 8.5.0')]
+    public function testGetArgumentsWithClosureBoundToDeclaringClass(): void
+    {
+        require_once __DIR__ . '/../Fixture/AttributesWithClosures.php';
+
+        $reflector       = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/AttributesWithClosures.php', $this->astLocator));
+        $classReflection = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\ClassWithScopedClosureInAttribute');
+        $attributes      = $classReflection->getAttributesByName(AttrWithCallback::class);
+
+        self::assertCount(1, $attributes);
+
+        $closure = $attributes[0]->getArguments()[0];
+        self::assertInstanceOf(Closure::class, $closure);
+        self::assertSame('scoped', $closure());
     }
 
     public function testGetTargetWithClass(): void

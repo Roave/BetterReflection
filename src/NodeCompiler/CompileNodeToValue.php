@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Roave\BetterReflection\NodeCompiler;
 
+use Closure;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node;
+use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionClassConstant;
 use Roave\BetterReflection\Reflection\ReflectionEnum;
@@ -14,6 +16,7 @@ use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Roave\BetterReflection\Util\FileHelper;
 
 use function assert;
+use function class_exists;
 use function constant;
 use function defined;
 use function dirname;
@@ -167,6 +170,17 @@ class CompileNodeToValue
                 return (object) $this($node->expr, $context)->value;
             }
 
+            if ($node instanceof Node\Expr\Closure) {
+                return $this->compileClosureDeclaration($node, $context);
+            }
+
+            if (
+                ($node instanceof Node\Expr\FuncCall || $node instanceof Node\Expr\StaticCall)
+                && $node->isFirstClassCallable()
+            ) {
+                return $this->compileClosureDeclaration($node, $context);
+            }
+
             throw Exception\UnableToCompileNode::forUnRecognizedExpressionInContext($node, $context);
         });
 
@@ -174,6 +188,43 @@ class CompileNodeToValue
         $value = $constExprEvaluator->evaluateDirectly($node);
 
         return new CompiledValue($value, $constantName);
+    }
+
+    /**
+     * Compile a closure or a first-class callable declared in a constant expression (PHP 8.5+)
+     * into a real Closure, like native reflection does.
+     *
+     * The language guarantees such closures are static and capture no variables,
+     * so evaluating the declaration itself executes no user code.
+     */
+    private function compileClosureDeclaration(Node\Expr\Closure|Node\Expr\FuncCall|Node\Expr\StaticCall $node, CompilerContext $context): Closure
+    {
+        if ($node instanceof Node\Expr\StaticCall && $node->class instanceof Node\Name) {
+            $className   = $this->resolveClassName($node->class->toString(), $context);
+            $node        = clone $node;
+            $node->class = new Node\Name\FullyQualified($className);
+        }
+
+        $code = (new PrettyPrinter())->prettyPrintExpr($node);
+
+        $namespace = $context->getNamespace();
+
+        // The namespace wrapper keeps the fallback to global scope for unqualified function calls
+        $code = $namespace !== null && $namespace !== ''
+            ? sprintf('namespace %s; return %s;', $namespace, $code)
+            : sprintf('return %s;', $code);
+
+        $closure = eval($code);
+        assert($closure instanceof Closure);
+
+        $className = $context->getClass()?->getName();
+
+        // Bind the class scope like native reflection does, but never trigger autoloading
+        if ($className !== null && class_exists($className, false)) {
+            return Closure::bind($closure, null, $className) ?? $closure;
+        }
+
+        return $closure;
     }
 
     private function getEnumPropertyValue(Node\Expr\PropertyFetch $node, CompilerContext $context): mixed
