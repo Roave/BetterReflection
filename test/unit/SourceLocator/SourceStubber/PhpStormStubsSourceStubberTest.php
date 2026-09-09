@@ -1045,6 +1045,17 @@ class PhpStormStubsSourceStubberTest extends TestCase
         }
     }
 
+    public function testLanguageLevelTypeAwareDefaultResourceDoesNotBecomeNativeResourceType(): void
+    {
+        $sourceStubber = new PhpStormStubsSourceStubber($this->phpParser, 70400);
+        $reflector     = new DefaultReflector(new PhpInternalSourceLocator($this->astLocator, $sourceStubber));
+
+        $function = $reflector->reflectFunction('finfo_open');
+
+        self::assertStringContainsString('@return resource|false', $function->getDocComment() ?? '');
+        self::assertNull($function->getReturnType());
+    }
+
     /** @return list<array{0: string, 1: int, 2: bool}> */
     public static function dataConstantInPhpVersion(): array
     {
