@@ -18,6 +18,17 @@ use PhpParser\BuilderFactory;
 use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
+use PhpParser\Node\ComplexType;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\ClassConst;
+use PhpParser\Node\Stmt\ClassLike;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Const_;
+use PhpParser\Node\Stmt\EnumCase;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Property;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\Parser;
@@ -43,11 +54,13 @@ use function explode;
 use function file_get_contents;
 use function in_array;
 use function is_dir;
+use function is_string;
+use function ltrim;
 use function preg_match;
 use function preg_replace;
 use function sprintf;
-use function str_contains;
 use function str_replace;
+use function strpos;
 use function strtolower;
 use function usort;
 
@@ -575,6 +588,15 @@ final class PhpStormStubsSourceStubber implements SourceStubber
             return;
         }
 
+        $rawType = $this->getRawStmtType($function);
+
+        if ($rawType !== null && self::isResourcePseudoType($rawType)) {
+            $this->addTagToDocComment($function, sprintf('return %s', $rawType));
+            $function->returnType = null;
+
+            return;
+        }
+
         $type = $this->getStmtType($function);
 
         if ($type === null) {
@@ -595,13 +617,34 @@ final class PhpStormStubsSourceStubber implements SourceStubber
 
             $this->modifyStmtTypeByPhpVersion($parameterNode);
 
+            $rawType = $this->getRawStmtType($parameterNode);
+
+            if ($rawType !== null && self::isResourcePseudoType($rawType)) {
+                assert($parameterNode->var instanceof Node\Expr\Variable);
+                assert(is_string($parameterNode->var->name));
+
+                $this->addTagToDocComment($function, sprintf('param %s $%s', $rawType, $parameterNode->var->name));
+                $parameterNode->type = null;
+            }
+
             $parameters[] = $parameterNode;
         }
 
         $function->params = $parameters;
     }
 
-    private function getStmtType(Node\Stmt\Function_|Node\Stmt\ClassMethod|Node\Stmt\Property|Node\Param $node): Node\Name|Node\Identifier|Node\ComplexType|null
+    private function getStmtType(Function_|ClassMethod|Property|Param $node): Name|Identifier|ComplexType|null
+    {
+        $type = $this->getRawStmtType($node);
+
+        if ($type === null) {
+            return null;
+        }
+
+        return $this->normalizeType($type);
+    }
+
+    private function getRawStmtType(Function_|ClassMethod|Property|Param $node): string|null
     {
         $languageLevelTypeAwareAttribute = $this->getNodeAttribute($node, 'JetBrains\PhpStorm\Internal\LanguageLevelTypeAware');
 
@@ -624,13 +667,13 @@ final class PhpStormStubsSourceStubber implements SourceStubber
                 continue;
             }
 
-            return $this->normalizeType($type->value->value);
+            return $type->value->value;
         }
 
         assert($languageLevelTypeAwareAttribute->args[1]->value instanceof Node\Scalar\String_);
 
         return $languageLevelTypeAwareAttribute->args[1]->value->value !== ''
-            ? $this->normalizeType($languageLevelTypeAwareAttribute->args[1]->value->value)
+            ? $languageLevelTypeAwareAttribute->args[1]->value->value
             : null;
     }
 
@@ -808,15 +851,37 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         return $parts[0] * 10000 + $parts[1] * 100 + ($parts[2] ?? $defaultPatch);
     }
 
-    private function normalizeType(string $type): Node\Name|Node\Identifier|Node\ComplexType|null
+    private function normalizeType(string $type): Name|Identifier|ComplexType|null
     {
         // There are some invalid types in stubs, eg. `string[]|string|null`
-        if (str_contains($type, '[')) {
+        if (strpos($type, '[') !== false) {
+            return null;
+        }
+
+        if (self::isResourcePseudoType($type)) {
             return null;
         }
 
         /** @psalm-suppress InternalClass, InternalMethod */
         return BuilderHelpers::normalizeType($type);
+    }
+
+    /**
+     * `resource` is a pseudo-type: PHP has no such native type, and a `resource`
+     * typehint in source code is read back as a class name. The stubs use it in
+     * `#[LanguageLevelTypeAware]` to describe pre-PHP 8 signatures, so it must never
+     * become a native type - it is moved into the PHPDoc instead, where `resource`
+     * is a well-known type.
+     */
+    private static function isResourcePseudoType(string $type): bool
+    {
+        return in_array('resource', explode('|', ltrim($type, '?')), true);
+    }
+
+    private function addTagToDocComment(ClassLike|ClassConst|Property|ClassMethod|Function_|Const_|EnumCase $node, string $tag): void
+    {
+        $this->removeAnnotationFromDocComment($node, $tag);
+        $this->addAnnotationToDocComment($node, $tag);
     }
 
     private function getStubsDirectory(): string
