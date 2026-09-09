@@ -59,8 +59,8 @@ use function ltrim;
 use function preg_match;
 use function preg_replace;
 use function sprintf;
+use function str_contains;
 use function str_replace;
-use function strpos;
 use function strtolower;
 use function usort;
 
@@ -854,7 +854,7 @@ final class PhpStormStubsSourceStubber implements SourceStubber
     private function normalizeType(string $type): Name|Identifier|ComplexType|null
     {
         // There are some invalid types in stubs, eg. `string[]|string|null`
-        if (strpos($type, '[') !== false) {
+        if (str_contains($type, '[')) {
             return null;
         }
 
