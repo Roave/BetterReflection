@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\SourceLocator\Ast;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;

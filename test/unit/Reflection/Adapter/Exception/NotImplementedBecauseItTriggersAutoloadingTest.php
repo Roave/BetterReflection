@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection\Adapter;
+namespace Roave\BetterReflectionTest\Reflection\Adapter\Exception;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

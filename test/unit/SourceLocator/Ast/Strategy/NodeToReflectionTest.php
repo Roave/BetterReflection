@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflector;
+namespace Roave\BetterReflectionTest\SourceLocator\Ast\Strategy;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
