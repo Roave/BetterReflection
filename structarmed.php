@@ -48,7 +48,7 @@ return Architecture::define()
         'SourceLocatorAst'  => ['+Reflector', 'Located', 'Util'],
         'Located'           => ['SourceLocator', 'Util'],
         'SourceStubber'     => ['Reflection', 'SourceLocator', 'Util'],
-        'SourceLocatorType' => ['+SourceLocatorAst', 'Root', 'SourceLocator', 'SourceStubber', 'Util'],
+        'SourceLocatorType' => ['+SourceLocatorAst', 'Root', 'SourceLocator', 'SourceStubber'],
         'Composer'          => ['+SourceLocatorType'],
-        'Util'              => ['+SourceLocatorAst', 'SourceLocator', 'SourceLocatorType'],
+        'Util'              => ['+SourceLocatorAst', 'SourceLocator'],
     ]);
