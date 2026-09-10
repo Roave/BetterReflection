@@ -10,7 +10,7 @@ return Architecture::define()
         __DIR__ . '/test/unit/Fixture',
     ])
     ->withPreset(Preset::PSR4())
-    ->layerPattern('Facade', '/^Roave\\\\BetterReflection\\\\BetterReflection$/')
+    ->layerPattern('Root', '/^Roave\\\\BetterReflection\\\\BetterReflection$/')
     ->layerPattern('Identifier', '/^Roave\\\\BetterReflection\\\\Identifier\\\\.*$/')
     ->layerPattern('NodeCompiler', '/^Roave\\\\BetterReflection\\\\NodeCompiler\\\\.*$/')
     ->layerPattern(
@@ -38,17 +38,17 @@ return Architecture::define()
     ->layerPattern('Composer', '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\Composer\\\\.*$/')
     ->layerPattern('Util', '/^Roave\\\\BetterReflection\\\\Util\\\\.*$/')
     ->ruleset([
-        'Facade'            => ['+SourceLocatorType'],
+        'Root'              => ['+SourceLocatorType'],
         'Identifier'        => ['Reflection'],
         'NodeCompiler'      => ['Reflection', 'Reflector', 'Util'],
-        'Reflection'        => ['+NodeCompiler', 'ReflectionAdapter', 'Facade', 'Located', 'SourceLocatorType'],
+        'Reflection'        => ['+NodeCompiler', 'ReflectionAdapter', 'Root', 'Located', 'SourceLocatorType'],
         'ReflectionAdapter' => ['Reflection', 'Reflector', 'Util'],
         'Reflector'         => ['Identifier', 'Reflection', 'SourceLocatorType'],
         'SourceLocator'     => [],
         'SourceLocatorAst'  => ['+Reflector', 'Located', 'Util'],
         'Located'           => ['SourceLocator', 'Util'],
         'SourceStubber'     => ['Reflection', 'SourceLocator', 'Util'],
-        'SourceLocatorType' => ['+SourceLocatorAst', 'Facade', 'SourceLocator', 'SourceStubber', 'Util'],
+        'SourceLocatorType' => ['+SourceLocatorAst', 'Root', 'SourceLocator', 'SourceStubber', 'Util'],
         'Composer'          => ['+SourceLocatorType'],
         'Util'              => ['+SourceLocatorAst', 'SourceLocator', 'SourceLocatorType'],
     ]);
