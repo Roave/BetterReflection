@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr\Excetion;
+namespace Roave\BetterReflectionTest\SourceLocator\Type\Composer\Psr\Exception;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
