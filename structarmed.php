@@ -10,33 +10,29 @@ return Architecture::define()
         __DIR__ . '/test/unit/Fixture',
     ])
     ->withPreset(Preset::PSR4())
-    ->layerPattern('Root', '/^Roave\\\\BetterReflection\\\\BetterReflection$/')
-    ->layerPattern('Identifier', '/^Roave\\\\BetterReflection\\\\Identifier\\\\.*$/')
-    ->layerPattern('NodeCompiler', '/^Roave\\\\BetterReflection\\\\NodeCompiler\\\\.*$/')
-    ->layerPattern(
-        'Reflection',
+    ->layer('Root', 'src/BetterReflection.php')
+    ->layer('Identifier', 'src/Identifier/')
+    ->layer('NodeCompiler', 'src/NodeCompiler/')
+    ->layerPattern('Reflection',
         '/^Roave\\\\BetterReflection\\\\Reflection\\\\.*$/',
         '/^Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\.*$/'
     )
-    ->layerPattern('ReflectionAdapter', '/^Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\.*$/')
-    ->layerPattern('Reflector', '/^Roave\\\\BetterReflection\\\\Reflector\\\\.*$/')
-    ->layerPattern(
-        'SourceLocator',
-        [
-            '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\FileChecker$/',
-            '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Exception\\\\.*$/',
-        ]
-    )
-    ->layerPattern('SourceLocatorAst', '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Ast\\\\.*$/')
-    ->layerPattern('Located', '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Located\\\\.*$/')
-    ->layerPattern('SourceStubber', '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\SourceStubber\\\\.*$/')
+    ->layer('ReflectionAdapter', 'src/Reflection/Adapter/')
+    ->layer('Reflector', 'src/Reflector/')
+    ->layer('SourceLocator', [
+        'src/SourceLocator/FileChecker.php',
+        'src/SourceLocator/Exception/',
+    ])
+    ->layer('SourceLocatorAst', 'src/SourceLocator/Ast/')
+    ->layer('Located', 'src/SourceLocator/Located/')
+    ->layer('SourceStubber', 'src/SourceLocator/SourceStubber/')
     ->layerPattern(
         'SourceLocatorType',
         '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\.*$/',
         '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\Composer\\\\.*$/'
     )
-    ->layerPattern('Composer', '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\Composer\\\\.*$/')
-    ->layerPattern('Util', '/^Roave\\\\BetterReflection\\\\Util\\\\.*$/')
+    ->layer('Composer', 'src/SourceLocator/Type/Composer/')
+    ->layer('Util', 'src/Util/')
     ->ruleset([
         'Root'              => ['+SourceLocatorType'],
         'Identifier'        => ['Reflection'],
