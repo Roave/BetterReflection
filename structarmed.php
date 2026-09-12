@@ -13,11 +13,7 @@ return Architecture::define()
     ->layer('Root', 'src/BetterReflection.php')
     ->layer('Identifier', 'src/Identifier/')
     ->layer('NodeCompiler', 'src/NodeCompiler/')
-    ->layerPattern('Reflection',
-        '/^Roave\\\\BetterReflection\\\\Reflection\\\\.*$/',
-        '/^Roave\\\\BetterReflection\\\\Reflection\\\\Adapter\\\\.*$/'
-    )
-    ->layer('ReflectionAdapter', 'src/Reflection/Adapter/')
+    ->layer('Reflection', 'src/Reflection/')
     ->layer('Reflector', 'src/Reflector/')
     ->layer('SourceLocator', [
         'src/SourceLocator/FileChecker.php',
@@ -26,25 +22,18 @@ return Architecture::define()
     ->layer('SourceLocatorAst', 'src/SourceLocator/Ast/')
     ->layer('Located', 'src/SourceLocator/Located/')
     ->layer('SourceStubber', 'src/SourceLocator/SourceStubber/')
-    ->layerPattern(
-        'SourceLocatorType',
-        '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\.*$/',
-        '/^Roave\\\\BetterReflection\\\\SourceLocator\\\\Type\\\\Composer\\\\.*$/'
-    )
-    ->layer('Composer', 'src/SourceLocator/Type/Composer/')
+    ->layer('SourceLocatorType', 'src/SourceLocator/Type/')
     ->layer('Util', 'src/Util/')
     ->ruleset([
         'Root'              => ['+SourceLocatorType'],
         'Identifier'        => ['Reflection'],
         'NodeCompiler'      => ['Reflection', 'Reflector', 'Util'],
-        'Reflection'        => ['+NodeCompiler', 'ReflectionAdapter', 'Root', 'Located', 'SourceLocatorType'],
-        'ReflectionAdapter' => ['Reflection', 'Reflector', 'Util'],
-        'Reflector'         => ['Identifier', 'Reflection', 'SourceLocatorType'],
+        'Reflection'        => ['+NodeCompiler', 'Located', 'Root', 'SourceLocatorType'],
+        'Reflector'         => ['+Identifier', 'SourceLocatorType'],
         'SourceLocator'     => [],
         'SourceLocatorAst'  => ['+Reflector', 'Located', 'Util'],
         'Located'           => ['SourceLocator', 'Util'],
         'SourceStubber'     => ['Reflection', 'SourceLocator', 'Util'],
-        'SourceLocatorType' => ['+SourceLocatorAst', 'Root', 'SourceLocator', 'SourceStubber'],
-        'Composer'          => ['+SourceLocatorType'],
+        'SourceLocatorType' => ['+SourceLocatorAst', '+SourceStubber', 'Root'],
         'Util'              => ['+SourceLocatorAst', 'SourceLocator'],
     ]);
