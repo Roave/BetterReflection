@@ -51,7 +51,8 @@ final class PhpInternalSourceLocator extends AbstractSourceLocator
             $reflectionClass = new CoreReflectionClass($className);
 
             if (strtolower($reflectionClass->getName()) !== strtolower($className)) {
-                $aliasName  = $className;
+                $aliasName = $className;
+                /** @psalm-var class-string|trait-string $className */
                 $className  = $reflectionClass->getName();
                 $identifier = new Identifier($className, $identifier->getType());
             }
