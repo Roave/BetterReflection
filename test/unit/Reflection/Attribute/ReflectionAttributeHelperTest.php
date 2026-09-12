@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflectionTest\Reflection;
+namespace Roave\BetterReflectionTest\Reflection\Attribute;
 
 use PhpParser\Node;
 use PHPUnit\Framework\Attributes\CoversClass;
