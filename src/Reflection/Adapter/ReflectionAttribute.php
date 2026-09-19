@@ -7,6 +7,7 @@ namespace Roave\BetterReflection\Reflection\Adapter;
 use Attribute;
 use OutOfBoundsException;
 use ReflectionAttribute as CoreReflectionAttribute;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 
 use function sprintf;
@@ -25,6 +26,21 @@ final class ReflectionAttribute extends CoreReflectionAttribute
     public function getName(): string
     {
         return $this->betterReflectionAttribute->getName();
+    }
+
+    public function getShortName(): string
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
+    public function getNamespaceName(): string
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
+    public function inNamespace(): bool
+    {
+        throw new NotImplemented('Not implemented');
     }
 
     /**
