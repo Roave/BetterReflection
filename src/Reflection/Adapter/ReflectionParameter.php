@@ -9,6 +9,7 @@ use OutOfBoundsException;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionFunctionAbstract as CoreReflectionFunctionAbstract;
 use ReflectionParameter as CoreReflectionParameter;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionIntersectionType as BetterReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
@@ -43,6 +44,11 @@ final class ReflectionParameter extends CoreReflectionParameter
     public function getName(): string
     {
         return $this->betterReflectionParameter->getName();
+    }
+
+    public function getDocComment(): string|false
+    {
+        throw new NotImplemented('Not implemented');
     }
 
     public function isPassedByReference(): bool
