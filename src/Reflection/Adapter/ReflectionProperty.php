@@ -10,6 +10,7 @@ use PropertyHookType;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplemented;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
@@ -191,6 +192,16 @@ final class ReflectionProperty extends CoreReflectionProperty
     public function isDynamic(): bool
     {
         return $this->betterReflectionProperty->isDynamic();
+    }
+
+    public function isReadable(string|null $scope, object|null $object = null): bool
+    {
+        throw new NotImplemented('Not implemented');
+    }
+
+    public function isWritable(string|null $scope, object|null $object = null): bool
+    {
+        throw new NotImplemented('Not implemented');
     }
 
     /**
