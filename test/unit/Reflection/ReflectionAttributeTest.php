@@ -15,6 +15,7 @@ use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\AnotherAttr;
 use Roave\BetterReflectionTest\Fixture\Attr;
@@ -69,6 +70,40 @@ class ReflectionAttributeTest extends TestCase
 
         self::assertSame(Attr::class, $attributes[0]->getName());
         self::assertSame(AnotherAttr::class, $attributes[1]->getName());
+    }
+
+    public function testGetShortNameAndNamespaceName(): void
+    {
+        $attributes = $this->reflector->reflectClass(ClassWithAttributes::class)->getAttributes();
+        self::assertNotEmpty($attributes);
+
+        self::assertSame('Attr', $attributes[0]->getShortName());
+        self::assertSame('Roave\BetterReflectionTest\Fixture', $attributes[0]->getNamespaceName());
+        self::assertTrue($attributes[0]->inNamespace());
+    }
+
+    public function testGetShortNameAndNamespaceNameForFullyQualifiedAttributes(): void
+    {
+        $php = <<<'PHP'
+            <?php
+            #[\Vendor\Nested\AttributeName]
+            #[\GlobalAttribute]
+            class ClassWithFullyQualifiedAttributes
+            {
+            }
+        PHP;
+
+        $attributes = (new DefaultReflector(new StringSourceLocator($php, $this->astLocator)))
+            ->reflectClass('ClassWithFullyQualifiedAttributes')
+            ->getAttributes();
+
+        self::assertCount(2, $attributes);
+        self::assertSame('AttributeName', $attributes[0]->getShortName());
+        self::assertSame('Vendor\Nested', $attributes[0]->getNamespaceName());
+        self::assertTrue($attributes[0]->inNamespace());
+        self::assertSame('GlobalAttribute', $attributes[1]->getShortName());
+        self::assertNull($attributes[1]->getNamespaceName());
+        self::assertFalse($attributes[1]->inNamespace());
     }
 
     public function testGetClass(): void
