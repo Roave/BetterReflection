@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Roave\BetterReflection\SourceLocator\Ast\Exception;
+namespace Roave\BetterReflectionTest\SourceLocator\Ast\Exception;
 
 use Exception;
 use PhpParser\Error;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Roave\BetterReflection\SourceLocator\Ast\Exception\ParseToAstFailure;
 use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 
 #[CoversClass(ParseToAstFailure::class)]
