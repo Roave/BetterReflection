@@ -2,8 +2,8 @@
     "require": {
         "doctrine/coding-standard": "^14.0.0",
         "infection/infection": "^0.35.6",
-        "phpstan/phpstan": "^2.2.17",
-        "phpstan/phpstan-phpunit": "^2.0.21",
+        "phpstan/phpstan": "^2.3.0",
+        "phpstan/phpstan-phpunit": "^2.1.0",
         "vimeo/psalm": "^6.19.1",
         "roave/backward-compatibility-check": "^8.23.0"
     },
