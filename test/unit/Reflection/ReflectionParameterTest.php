@@ -119,6 +119,49 @@ class ReflectionParameterTest extends TestCase
         self::assertFalse($parameterInfo->allowsNull());
     }
 
+    public function testGetDocComment(): void
+    {
+        $content = <<<'PHP'
+            <?php
+            function foo(
+                /** Leading comment */
+                $leading,
+                $trailing /** Trailing comment */,
+                /** Overridden leading comment */
+                $overridden /** Trailing comment takes precedence */,
+                $plain /* Plain comment */,
+                $fakeDoc /* Plain comment containing /** a fake doc comment */,
+                $noSpaceDocMarker /**x*/,
+                $emptyDocMarker /**/,
+                $asteriskDocMarker /***/,
+                $multiple /** First trailing comment */ /** Last trailing comment */,
+                $lineComment // Plain line comment containing /** fake
+                /** Trailing comment after a line comment */,
+                $hashComment # Plain hash comment containing /** fake
+                /** Trailing comment after a hash comment */,
+                $none,
+                $default = 1 /** Trailing comment with a default value */
+            ) {}
+            PHP;
+
+        $reflector = new DefaultReflector(new StringSourceLocator($content, $this->astLocator));
+        $function  = $reflector->reflectFunction('foo');
+
+        self::assertSame('/** Leading comment */', $function->getParameter('leading')->getDocComment());
+        self::assertSame('/** Trailing comment */', $function->getParameter('trailing')->getDocComment());
+        self::assertSame('/** Trailing comment takes precedence */', $function->getParameter('overridden')->getDocComment());
+        self::assertNull($function->getParameter('plain')->getDocComment());
+        self::assertNull($function->getParameter('fakeDoc')->getDocComment());
+        self::assertNull($function->getParameter('noSpaceDocMarker')->getDocComment());
+        self::assertNull($function->getParameter('emptyDocMarker')->getDocComment());
+        self::assertNull($function->getParameter('asteriskDocMarker')->getDocComment());
+        self::assertSame('/** Last trailing comment */', $function->getParameter('multiple')->getDocComment());
+        self::assertSame('/** Trailing comment after a line comment */', $function->getParameter('lineComment')->getDocComment());
+        self::assertSame('/** Trailing comment after a hash comment */', $function->getParameter('hashComment')->getDocComment());
+        self::assertNull($function->getParameter('none')->getDocComment());
+        self::assertSame('/** Trailing comment with a default value */', $function->getParameter('default')->getDocComment());
+    }
+
     public function testCreateFromClosureThrowsExceptionWhenParameterDoesNotExist(): void
     {
         $this->expectException(OutOfBoundsException::class);
