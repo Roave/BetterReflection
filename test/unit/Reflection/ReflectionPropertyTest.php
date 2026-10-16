@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
+use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
 use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
@@ -27,6 +28,7 @@ use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionClass;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionObject;
 use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionPropertyHookType;
@@ -47,6 +49,11 @@ use Roave\BetterReflectionTest\Fixture\DefaultProperties;
 use Roave\BetterReflectionTest\Fixture\ExampleClass;
 use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessBase;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessChild;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessMagic;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessMagicGetOnly;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessOther;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ReadonlyExampleClass;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
@@ -836,6 +843,201 @@ PHP;
         $this->expectException(Error::class);
         $this->expectExceptionMessage('Removed property');
         $classReflection->getProperty('toBeRemoved')->isInitialized($object);
+    }
+
+    /** @return list<array{0: class-string, 1: non-empty-string, 2: class-string|null, 3: bool, 4: bool}> */
+    public static function propertyAccessByScopeProvider(): array
+    {
+        return [
+            [PropertyAccessBase::class, 'publicProperty', null, true, true],
+            [PropertyAccessBase::class, 'protectedProperty', null, false, false],
+            [PropertyAccessBase::class, 'protectedProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'protectedProperty', PropertyAccessChild::class, true, true],
+            [PropertyAccessBase::class, 'protectedProperty', PropertyAccessOther::class, false, false],
+            [PropertyAccessBase::class, 'privateProperty', null, false, false],
+            [PropertyAccessBase::class, 'privateProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'privateProperty', PropertyAccessChild::class, false, false],
+            [PropertyAccessBase::class, 'protectedSetterProperty', null, true, false],
+            [PropertyAccessBase::class, 'protectedSetterProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'protectedSetterProperty', PropertyAccessChild::class, true, true],
+            [PropertyAccessBase::class, 'privateSetterProperty', null, true, false],
+            [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessChild::class, true, false],
+            [PropertyAccessChild::class, 'childProtectedProperty', PropertyAccessBase::class, true, true],
+        ];
+    }
+
+    /**
+     * @param class-string      $className
+     * @param non-empty-string  $propertyName
+     * @param class-string|null $scope
+     */
+    #[DataProvider('propertyAccessByScopeProvider')]
+    public function testPropertyAccessByScope(
+        string $className,
+        string $propertyName,
+        string|null $scope,
+        bool $isReadable,
+        bool $isWritable,
+    ): void {
+        $classReflection = $this->reflector->reflectClass($className);
+        $property        = $classReflection->getProperty($propertyName);
+
+        self::assertNotNull($property);
+        self::assertSame($isReadable, $property->isReadable($scope));
+        self::assertSame($isWritable, $property->isWritable($scope));
+    }
+
+    public function testIsReadableAndWritableCheckPropertyInitialization(): void
+    {
+        $classReflection = $this->reflector->reflectClass(InitializedProperties::class);
+        $object          = new InitializedProperties();
+
+        self::assertFalse($classReflection->getProperty('withType')->isReadable(null, $object));
+        self::assertTrue($classReflection->getProperty('withTypeInitialized')->isReadable(null, $object));
+
+        $classReflection = $this->reflector->reflectClass(PropertyAccessBase::class);
+        $object          = new PropertyAccessBase();
+
+        self::assertTrue($classReflection->getProperty('publicProperty')->isReadable(null, $object));
+        self::assertFalse($classReflection->getProperty('staticUninitialized')->isReadable(null));
+        self::assertTrue($classReflection->getProperty('staticUninitialized')->isWritable(null));
+        self::assertTrue($classReflection->getProperty('staticInitialized')->isReadable(null));
+        self::assertTrue($classReflection->getProperty('staticWithoutType')->isReadable(null));
+    }
+
+    #[RunInSeparateProcess]
+    public function testIsReadableUsesRuntimeInitializationForStaticProperties(): void
+    {
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('staticUninitialized');
+
+        self::assertFalse($property->isReadable(null));
+
+        PropertyAccessBase::$staticUninitialized = 1;
+
+        self::assertTrue($property->isReadable(null));
+    }
+
+    public function testReadonlyPropertyAccessWithObject(): void
+    {
+        $classReflection = $this->reflector->reflectClass(PropertyAccessBase::class);
+        $property        = $classReflection->getProperty('readonlyProperty');
+        $object          = new PropertyAccessBase();
+
+        self::assertFalse($property->isReadable(null, $object));
+        self::assertFalse($property->isWritable(null, $object));
+        self::assertTrue($property->isWritable(PropertyAccessBase::class, $object));
+
+        $property->setValue($object, 1);
+
+        self::assertTrue($property->isReadable(null, $object));
+        self::assertFalse($property->isWritable(PropertyAccessBase::class, $object));
+    }
+
+    public function testPropertyHooksAccess(): void
+    {
+        $reflector = new DefaultReflector(new SingleFileSourceLocator(__DIR__ . '/../Fixture/PropertyHooks.php', $this->astLocator));
+        $classInfo = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\PropertyHooks');
+
+        $getOnlyProperty = $classInfo->getProperty('readOnlyHook');
+        self::assertTrue($getOnlyProperty->isReadable(null));
+        self::assertFalse($getOnlyProperty->isWritable(null));
+
+        $abstractClass   = $reflector->reflectClass('Roave\BetterReflectionTest\Fixture\ToBeVirtualOrNotToBeVirtualThatIsTheQuestion');
+        $setOnlyProperty = $abstractClass->getProperty('virtualBecauseSetWorksWithDifferentProperty');
+        self::assertFalse($setOnlyProperty->isReadable(null));
+        self::assertTrue($setOnlyProperty->isWritable(null));
+    }
+
+    public function testMagicPropertyAccess(): void
+    {
+        $classReflection = $this->reflector->reflectClass(PropertyAccessMagic::class);
+        $object          = new PropertyAccessMagic();
+
+        self::assertTrue($classReflection->getProperty('secret')->isReadable(null));
+        self::assertTrue($classReflection->getProperty('secret')->isReadable(null, $object));
+        self::assertFalse($classReflection->getProperty('notIsset')->isReadable(null, $object));
+        self::assertTrue($classReflection->getProperty('secret')->isWritable(null));
+        self::assertTrue($classReflection->getProperty('secret')->isWritable(null, $object));
+
+        $getOnlyClassReflection = $this->reflector->reflectClass(PropertyAccessMagicGetOnly::class);
+        $getOnlyObject          = new PropertyAccessMagicGetOnly();
+        self::assertTrue($getOnlyClassReflection->getProperty('secret')->isReadable(null, $getOnlyObject));
+    }
+
+    public function testEffectivePropertyForSubclassObject(): void
+    {
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('propertyOverriddenByChild');
+
+        self::assertFalse($property->isReadable(null, new PropertyAccessBase()));
+        self::assertTrue($property->isReadable(null, new PropertyAccessChild()));
+        self::assertTrue($property->isWritable(null, new PropertyAccessChild()));
+    }
+
+    public function testDynamicPropertyAccess(): void
+    {
+        $object                  = new stdClass();
+        $object->dynamicProperty = 1;
+
+        $property = ReflectionObject::createFromInstance($object)->getProperty('dynamicProperty');
+
+        self::assertNotNull($property);
+        self::assertTrue($property->isDynamic());
+        self::assertFalse($property->isReadable(null));
+        self::assertTrue($property->isReadable(null, $object));
+        self::assertFalse($property->isReadable(null, new stdClass()));
+        self::assertTrue($property->isWritable(null));
+        self::assertTrue($property->isWritable(null, new stdClass()));
+    }
+
+    public function testIsReadableThrowsErrorWhenScopeClassDoesNotExist(): void
+    {
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('publicProperty');
+
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage('Class "UnknownPropertyAccessScope" not found');
+
+        $property->isReadable('UnknownPropertyAccessScope');
+    }
+
+    public function testIsReadableThrowsWhenObjectIsNotInstanceOfDeclaringClass(): void
+    {
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('publicProperty');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $property->isReadable(null, new stdClass());
+    }
+
+    public function testIsWritableThrowsWhenObjectIsNotInstanceOfDeclaringClass(): void
+    {
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('publicProperty');
+
+        $this->expectException(ObjectNotInstanceOfClass::class);
+
+        $property->isWritable(null, new stdClass());
+    }
+
+    public function testIsReadableThrowsWhenObjectIsPassedForStaticProperty(): void
+    {
+        $object   = new PropertyAccessBase();
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('staticInitialized');
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('null is expected as object argument for static properties');
+
+        $property->isReadable(null, $object);
+    }
+
+    public function testIsWritableThrowsWhenObjectIsPassedForStaticProperty(): void
+    {
+        $object   = new PropertyAccessBase();
+        $property = $this->reflector->reflectClass(PropertyAccessBase::class)->getProperty('staticInitialized');
+
+        $this->expectException(CoreReflectionException::class);
+        $this->expectExceptionMessage('null is expected as object argument for static properties');
+
+        $property->isWritable(null, $object);
     }
 
     /** @return list<array{0: string, 1: bool}> */

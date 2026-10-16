@@ -266,13 +266,18 @@ class ReflectionSourceStubberTest extends TestCase
         );
 
         return array_map(
-            static fn (string $symbol): array => [$symbol],
+            static fn (string $className): array => [$className],
             array_values(array_filter(
                 $allSymbols,
-                static function (string $symbol): bool {
-                    $reflection = new CoreReflectionClass($symbol);
+                static function (string $className): bool {
+                    $reflection = new CoreReflectionClass($className);
 
                     if (! $reflection->isInternal()) {
+                        return false;
+                    }
+
+                    // @phpstan-ignore function.impossibleType
+                    if (in_array($className, ['Io\\Poll\\Context'], true)) {
                         return false;
                     }
 

@@ -34,10 +34,15 @@ use Roave\BetterReflection\Util\GetLastDocComment;
 
 use function array_map;
 use function assert;
+use function class_exists;
 use function func_num_args;
+use function in_array;
 use function is_object;
+use function method_exists;
+use function property_exists;
 use function sprintf;
 use function str_contains;
+use function strcasecmp;
 
 /** @psalm-immutable */
 class ReflectionProperty
@@ -339,6 +344,90 @@ class ReflectionProperty
         }
     }
 
+    public function isReadable(string|null $scope, object|null $object = null): bool
+    {
+        if ($this->isDynamic()) {
+            return $this->isDynamicPropertyReadable($object);
+        }
+
+        if ($this->isStatic() && $object !== null) {
+            throw new ReflectionException('null is expected as object argument for static properties');
+        }
+
+        $property    = $this;
+        $objectClass = null;
+
+        if ($object !== null) {
+            [$property, $objectClass] = $this->getEffectivePropertyAndObjectClass($object);
+        }
+
+        $propertyClass = $property->getImplementingClass();
+        $scopeClass    = $property->reflectScope($scope);
+
+        if (! self::isVisibleFromScope($propertyClass, $scopeClass, $property->getVisibility())) {
+            if ($property->isStatic()) {
+                return false;
+            }
+
+            return $property->isReadableThroughMagic($objectClass ?? $propertyClass, $object);
+        }
+
+        if ($property->isVirtual()) {
+            return $property->hasHook(ReflectionPropertyHookType::Get);
+        }
+
+        if ($object !== null && ! $property->hasHook(ReflectionPropertyHookType::Get)) {
+            return $property->isInitializedOnObject($object);
+        }
+
+        if ($property->isStatic()) {
+            return $property->isStaticInitialized();
+        }
+
+        return true;
+    }
+
+    public function isWritable(string|null $scope, object|null $object = null): bool
+    {
+        if ($this->isDynamic()) {
+            return $this->isDynamicPropertyWritable($object);
+        }
+
+        if ($this->isStatic() && $object !== null) {
+            throw new ReflectionException('null is expected as object argument for static properties');
+        }
+
+        $property    = $this;
+        $objectClass = null;
+
+        if ($object !== null) {
+            [$property, $objectClass] = $this->getEffectivePropertyAndObjectClass($object);
+        }
+
+        $propertyClass = $property->getImplementingClass();
+        $scopeClass    = $property->reflectScope($scope);
+
+        if (! self::isVisibleFromScope($propertyClass, $scopeClass, $property->getVisibility())) {
+            if ($property->isStatic()) {
+                return false;
+            }
+
+            return ($objectClass ?? $propertyClass)->hasMethod('__set');
+        }
+
+        if (! self::isVisibleFromScope($propertyClass, $scopeClass, $property->getSetVisibility())) {
+            return false;
+        }
+
+        if ($property->isVirtual()) {
+            return $property->hasHook(ReflectionPropertyHookType::Set);
+        }
+
+        return $object === null
+            || ! $property->isReadOnly()
+            || ! $property->isInitializedOnObject($object);
+    }
+
     public function isReadOnly(): bool
     {
         return (bool) ($this->modifiers & ReflectionPropertyAdapter::IS_READONLY)
@@ -621,6 +710,179 @@ class ReflectionProperty
         $this->cachedHooks ??= $this->createCachedHooks();
 
         return $this->cachedHooks;
+    }
+
+    /**
+     * @return array{0: self, 1: ReflectionClass}
+     *
+     * @throws ObjectNotInstanceOfClass
+     */
+    private function getEffectivePropertyAndObjectClass(object $object): array
+    {
+        $propertyClass = $this->getImplementingClass();
+
+        if (! $propertyClass->isInstance($object)) {
+            throw ObjectNotInstanceOfClass::fromClassName($propertyClass->getName());
+        }
+
+        if ($object::class === $propertyClass->getName()) {
+            return [$this, $propertyClass];
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $objectClass = ReflectionClass::createFromInstance($object);
+
+        if ($this->isPrivate()) {
+            return [$this, $objectClass];
+        }
+
+        return [$objectClass->getProperty($this->name) ?? $this, $objectClass];
+    }
+
+    private function isDynamicPropertyReadable(object|null $object): bool
+    {
+        if ($object === null) {
+            return $this->getImplementingClass()->hasMethod('__get');
+        }
+
+        if (property_exists($object, $this->name)) {
+            return true;
+        }
+
+        if (! method_exists($object, '__get')) {
+            return false;
+        }
+
+        if (! method_exists($object, '__isset')) {
+            return true;
+        }
+
+        return isset($object->{$this->name});
+    }
+
+    private function isDynamicPropertyWritable(object|null $object): bool
+    {
+        if ($object === null) {
+            $class = $this->getImplementingClass();
+        } else {
+            /** @psalm-suppress ImpureMethodCall */
+            $class = ReflectionClass::createFromInstance($object);
+        }
+
+        if (! $class->isReadOnly() && ! $class->isEnum()) {
+            return true;
+        }
+
+        return $object === null
+            ? $class->hasMethod('__set')
+            : method_exists($object, '__set');
+    }
+
+    private function isReadableThroughMagic(ReflectionClass $class, object|null $object): bool
+    {
+        if (! $class->hasMethod('__get')) {
+            return false;
+        }
+
+        if ($object === null || ! $class->hasMethod('__isset')) {
+            return true;
+        }
+
+        return isset($object->{$this->name});
+    }
+
+    private function isInitializedOnObject(object $object): bool
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        return (new CoreReflectionProperty($this->getImplementingClass()->getName(), $this->name))
+            ->isInitialized($object);
+    }
+
+    private function isStaticInitialized(): bool
+    {
+        $className = $this->getImplementingClass()->getName();
+
+        /** @psalm-suppress ImpureFunctionCall */
+        if (! class_exists($className, false)) {
+            return $this->isInitialized();
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        return (new CoreReflectionProperty($className, $this->name))->isInitialized();
+    }
+
+    private function reflectScope(string|null $scope): ReflectionClass|null
+    {
+        if ($scope === null) {
+            return null;
+        }
+
+        try {
+            /** @psalm-suppress ImpureMethodCall */
+            return $this->reflector->reflectClass($scope);
+        } catch (IdentifierNotFound) {
+            throw new Error(sprintf('Class "%s" not found', $scope));
+        }
+    }
+
+    /** @psalm-mutation-free */
+    private static function isVisibleFromScope(
+        ReflectionClass $propertyClass,
+        ReflectionClass|null $scopeClass,
+        int $visibility,
+    ): bool {
+        if ($visibility & CoreReflectionProperty::IS_PUBLIC) {
+            return true;
+        }
+
+        if ($scopeClass === null) {
+            return false;
+        }
+
+        $propertyClassName = $propertyClass->getName();
+        $scopeClassName    = $scopeClass->getName();
+
+        if (strcasecmp($propertyClassName, $scopeClassName) === 0) {
+            return true;
+        }
+
+        if ($visibility & CoreReflectionProperty::IS_PRIVATE) {
+            return false;
+        }
+
+        return $scopeClass->isSubclassOf($propertyClassName)
+            || $propertyClass->isSubclassOf($scopeClassName)
+            || $scopeClass->implementsInterface($propertyClassName)
+            || $propertyClass->implementsInterface($scopeClassName)
+            || in_array($scopeClassName, $propertyClass->getTraitNames(), true);
+    }
+
+    /** @psalm-mutation-free */
+    private function getVisibility(): int
+    {
+        if ($this->isPublic()) {
+            return CoreReflectionProperty::IS_PUBLIC;
+        }
+
+        if ($this->isProtected()) {
+            return CoreReflectionProperty::IS_PROTECTED;
+        }
+
+        return CoreReflectionProperty::IS_PRIVATE;
+    }
+
+    /** @psalm-mutation-free */
+    private function getSetVisibility(): int
+    {
+        if ($this->isPrivateSet()) {
+            return CoreReflectionProperty::IS_PRIVATE;
+        }
+
+        if ($this->isProtectedSet()) {
+            return CoreReflectionProperty::IS_PROTECTED;
+        }
+
+        return $this->getVisibility();
     }
 
     /**

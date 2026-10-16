@@ -10,12 +10,15 @@ use PropertyHookType;
 use ReflectionException as CoreReflectionException;
 use ReflectionMethod as CoreReflectionMethod;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
+use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
 use Roave\BetterReflection\Reflection\ReflectionAttribute as BetterReflectionAttribute;
 use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
 use Roave\BetterReflection\Reflection\ReflectionPropertyHookType as BetterReflectionPropertyHookType;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use Throwable;
 use TypeError;
 use ValueError;
@@ -191,6 +194,24 @@ final class ReflectionProperty extends CoreReflectionProperty
     public function isDynamic(): bool
     {
         return $this->betterReflectionProperty->isDynamic();
+    }
+
+    public function isReadable(string|null $scope, object|null $object = null): bool
+    {
+        try {
+            return $this->betterReflectionProperty->isReadable($scope, $object);
+        } catch (ClassDoesNotExist | IdentifierNotFound | ObjectNotInstanceOfClass $e) {
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
+        }
+    }
+
+    public function isWritable(string|null $scope, object|null $object = null): bool
+    {
+        try {
+            return $this->betterReflectionProperty->isWritable($scope, $object);
+        } catch (ClassDoesNotExist | IdentifierNotFound | ObjectNotInstanceOfClass $e) {
+            throw new CoreReflectionException($e->getMessage(), previous: $e);
+        }
     }
 
     /**

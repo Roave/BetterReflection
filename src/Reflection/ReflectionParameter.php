@@ -9,6 +9,7 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use OutOfBoundsException;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Param as ParamNode;
 use Roave\BetterReflection\NodeCompiler\CompiledValue;
@@ -21,6 +22,7 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionParameterStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\Util\CalculateReflectionColumn;
 use Roave\BetterReflection\Util\Exception\NoNodePosition;
+use Roave\BetterReflection\Util\GetLastDocComment;
 
 use function array_map;
 use function assert;
@@ -28,7 +30,11 @@ use function count;
 use function is_array;
 use function is_object;
 use function is_string;
+use function preg_match;
 use function sprintf;
+use function strlen;
+
+use const PREG_UNMATCHED_AS_NULL;
 
 /** @psalm-immutable */
 class ReflectionParameter
@@ -45,6 +51,9 @@ class ReflectionParameter
     private bool $byRef;
 
     private bool $isPromoted;
+
+    /** @var non-empty-string|null */
+    private string|null $docComment;
 
     /** @var list<ReflectionAttribute> */
     private array $attributes;
@@ -83,6 +92,8 @@ class ReflectionParameter
         $this->type       = $this->createType($node);
         $this->isVariadic = $node->variadic;
         $this->byRef      = $node->byRef;
+        $source           = $function->getLocatedSource()->getSource();
+        $this->docComment = self::getTrailingDocComment($node, $source) ?? GetLastDocComment::forNode($node);
         $this->attributes = ReflectionAttributeHelper::createAttributes($reflector, $this, $node->attrGroups);
 
         $startLine = $node->getStartLine();
@@ -295,6 +306,68 @@ class ReflectionParameter
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /** @return non-empty-string|null */
+    public function getDocComment(): string|null
+    {
+        return $this->docComment;
+    }
+
+    /**
+     * @return non-empty-string|null
+     *
+     * @psalm-pure
+     */
+    private static function getTrailingDocComment(ParamNode $node, string $source): string|null
+    {
+        /** @psalm-suppress ImpureMethodCall */
+        $hasEndFilePos = $node->hasAttribute('endFilePos');
+        if (! $hasEndFilePos) {
+            return null;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $endFilePos = $node->getEndFilePos();
+        $docComment = null;
+        $offset     = $endFilePos + 1;
+        // Match PHP's distinction between `/** comment */` and regular `/**x*/` comments.
+        $pattern = <<<'REGEX'
+            ~\G(?:
+                [ \t\r\n]+
+              | (?<docComment>/\*\*(?=[ \t\r\n])(?:[^*]|\*(?!/))*\*/)
+              | /\*(?:[^*]|\*(?!/))*\*/
+              | //(?:(?!\?>)[^\r\n])*(?:\r\n|\r|\n|\z|(?=\?>))
+              | \#(?!\[)(?:(?!\?>)[^\r\n])*(?:\r\n|\r|\n|\z|(?=\?>))
+            )~x
+            REGEX;
+
+        while (true) {
+            $matched = preg_match($pattern, $source, $matches, PREG_UNMATCHED_AS_NULL, $offset);
+            if ($matched === false) {
+                throw new LogicException('Failed to scan trailing parameter comment.');
+            }
+
+            if ($matched !== 1) {
+                break;
+            }
+
+            /** @psalm-suppress PossiblyNullArgument */
+            $offset    += strlen($matches[0]);
+            $docComment = $matches['docComment'] ?? $docComment;
+        }
+
+        if ($docComment === null) {
+            return null;
+        }
+
+        /** @psalm-suppress ImpureMethodCall */
+        $doc = new Doc($docComment);
+        /** @psalm-suppress ImpureMethodCall */
+        $reformattedDocComment = $doc->getReformattedText();
+        assert($reformattedDocComment !== '');
+
+        return $reformattedDocComment;
     }
 
     /**

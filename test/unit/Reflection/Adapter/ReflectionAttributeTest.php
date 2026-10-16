@@ -45,6 +45,9 @@ class ReflectionAttributeTest extends TestCase
         return [
             ['__toString', null, '', []],
             ['getName', null, '', []],
+            ['getShortName', null, '', []],
+            ['getNamespaceName', null, '', []],
+            ['inNamespace', null, false, []],
             ['getTarget', null, 1, []],
             ['isRepeated', null, false, []],
             ['getArguments', null, [], []],
@@ -76,6 +79,18 @@ class ReflectionAttributeTest extends TestCase
 
         $adapter = new ReflectionAttributeAdapter($reflectionStub);
         $adapter->{$methodName}(...$args);
+    }
+
+    public function testGetNamespaceNameReturnsEmptyStringForGlobalAttribute(): void
+    {
+        $betterReflectionAttribute = self::createStub(BetterReflectionAttribute::class);
+        $betterReflectionAttribute
+            ->method('getNamespaceName')
+            ->willReturn(null);
+
+        $reflectionAttributeAdapter = new ReflectionAttributeAdapter($betterReflectionAttribute);
+
+        self::assertSame('', $reflectionAttributeAdapter->getNamespaceName());
     }
 
     public function testPropertyName(): void

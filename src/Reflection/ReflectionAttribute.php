@@ -13,6 +13,10 @@ use Roave\BetterReflection\Reflection\StringCast\ReflectionAttributeStringCast;
 use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
+use function assert;
+use function ltrim;
+use function strrpos;
+use function substr;
 
 /** @psalm-immutable */
 class ReflectionAttribute
@@ -56,6 +60,31 @@ class ReflectionAttribute
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /** @return non-empty-string */
+    public function getShortName(): string
+    {
+        $name      = ltrim($this->name, '\\');
+        $position  = strrpos($name, '\\');
+        $shortName = $position === false ? $name : substr($name, $position + 1);
+
+        assert($shortName !== '');
+
+        return $shortName;
+    }
+
+    public function getNamespaceName(): string|null
+    {
+        $name     = ltrim($this->name, '\\');
+        $position = strrpos($name, '\\');
+
+        return $position === false ? null : substr($name, 0, $position);
+    }
+
+    public function inNamespace(): bool
+    {
+        return $this->getNamespaceName() !== null;
     }
 
     public function getClass(): ReflectionClass

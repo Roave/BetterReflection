@@ -133,6 +133,38 @@ class PhpStormStubsSourceStubberTest extends TestCase
                         return false;
                     }
 
+                    // Needs new release of JetBrains/phpstorm-stubs
+                    if (
+                        // @phpstan-ignore function.impossibleType
+                        in_array($className, [
+                            'Io\\IoException',
+                            'Io\\Poll\\BackendUnavailableException',
+                            'Io\\Poll\\FailedContextInitializationException',
+                            'Io\\Poll\\FailedPollOperationException',
+                            'Io\\Poll\\FailedPollWaitException',
+                            'Io\\Poll\\FailedHandleAddException',
+                            'Io\\Poll\\FailedWatcherModificationException',
+                            'Io\\Poll\\Handle',
+                            'Io\\Poll\\HandleAlreadyWatchedException',
+                            'Io\\Poll\\InactiveWatcherException',
+                            'Io\\Poll\\InvalidHandleException',
+                            'Io\\Poll\\Backend',
+                            'Io\\Poll\\Context',
+                            'Io\\Poll\\Event',
+                            'Io\\Poll\\PollException',
+                            'Io\\Poll\\Watcher',
+                            'SortDirection',
+                            'StreamError',
+                            'StreamErrorCode',
+                            'StreamErrorMode',
+                            'StreamErrorStore',
+                            'StreamException',
+                            'StreamPollHandle',
+                        ], true)
+                    ) {
+                        return false;
+                    }
+
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
@@ -190,19 +222,8 @@ class PhpStormStubsSourceStubberTest extends TestCase
         foreach ($original->getMethods() as $method) {
             $methodName = $original->getName() . '#' . $method->getName();
 
-            // Needs fixes in JetBrains/phpstorm-stubs
-            if (
-                in_array($methodName, [
-                    'SplMinHeap#__serialize',
-                    'SplMinHeap#__unserialize',
-                    'SplMaxHeap#__serialize',
-                    'SplMaxHeap#__unserialize',
-                    'SplPriorityQueue#__serialize',
-                    'SplPriorityQueue#__unserialize',
-                    'SplHeap#__serialize',
-                    'SplHeap#__unserialize',
-                ], true)
-            ) {
+            // Needs new release of JetBrains/phpstorm-stubs
+            if (in_array($methodName, ['php_user_filter#seek'], true)) {
                 continue;
             }
 
@@ -321,6 +342,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
                 static function (string $functionName): bool {
                     $reflection = new CoreReflectionFunction($functionName);
 
+                    // Needs new release of JetBrains/phpstorm-stubs
+                    if (
+                        in_array($functionName, [
+                            'clamp',
+                            'stream_clear_errors',
+                            'stream_last_errors',
+                            'stream_socket_get_crypto_status',
+                        ], true)
+                    ) {
+                        return false;
+                    }
+
                     // Check only always enabled extensions
                     return in_array($reflection->getExtensionName(), self::EXTENSIONS, true);
                 },
@@ -341,8 +374,15 @@ class PhpStormStubsSourceStubberTest extends TestCase
 
         $stubbedReflectionParameters = $stubbedReflection->getParameters();
 
-        if ($functionName === 'strrchr') {
-            // New parameter in PHP 8.3.0
+        // Needs new release of JetBrains/phpstorm-stubs
+        if (
+            in_array($functionName, [
+                'stream_copy_to_stream',
+                'stream_is_local',
+                'stream_select',
+                'stream_socket_pair',
+            ], true)
+        ) {
             return;
         }
 
@@ -381,6 +421,18 @@ class PhpStormStubsSourceStubberTest extends TestCase
             }
 
             foreach ($extensionConstants as $constantName => $constantValue) {
+                // Needs new release of JetBrains/phpstorm-stubs
+                if (
+                    in_array($constantName, [
+                        'ARRAY_FILTER_USE_VALUE',
+                        'STREAM_CRYPTO_STATUS_NONE',
+                        'STREAM_CRYPTO_STATUS_WANT_READ',
+                        'STREAM_CRYPTO_STATUS_WANT_WRITE',
+                    ], true)
+                ) {
+                    continue;
+                }
+
                 $provider[] = [$constantName, $constantValue, $extensionName];
             }
         }

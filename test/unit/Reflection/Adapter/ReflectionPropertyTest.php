@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Roave\BetterReflectionTest\Reflection\Adapter;
 
 use ArgumentCountError;
+use Error;
 use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -82,6 +83,8 @@ class ReflectionPropertyTest extends TestCase
             ['isPromoted', [], true, null, true, null],
             ['isReadOnly', [], true, null, true, null],
             ['isVirtual', [], true, null, true, null],
+            ['isReadable', [null], true, null, true, null],
+            ['isWritable', [null], true, null, true, null],
             ['hasHooks', [], false, null, false, null],
             ['getHooks', [], [], null, [], null],
         ];
@@ -272,6 +275,45 @@ class ReflectionPropertyTest extends TestCase
         $this->expectException(CoreReflectionException::class);
 
         $reflectionPropertyAdapter->isInitialized(new stdClass());
+    }
+
+    public function testIsReadableWrapsObjectNotInstanceOfClass(): void
+    {
+        $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('isReadable')
+            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionPropertyAdapter->isReadable(null, new stdClass());
+    }
+
+    public function testIsWritableWrapsObjectNotInstanceOfClass(): void
+    {
+        $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('isWritable')
+            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        $this->expectException(CoreReflectionException::class);
+        $reflectionPropertyAdapter->isWritable(null, new stdClass());
+    }
+
+    public function testIsReadableDoesNotWrapErrors(): void
+    {
+        $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
+        $betterReflectionProperty
+            ->method('isReadable')
+            ->willThrowException(new Error('Class "Unknown" not found'));
+
+        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+
+        $this->expectException(Error::class);
+        $reflectionPropertyAdapter->isReadable('Unknown');
     }
 
     public function testGetAttributes(): void

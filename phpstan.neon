@@ -24,6 +24,8 @@ parameters:
     bootstrapFiles:
         - phar://%currentWorkingDirectory%/test/unit/Fixture/autoload.phar/vendor/autoload.php
 
+    reportUnmatchedIgnoredErrors: false
+
     ignoreErrors:
         -
             identifier: missingType.generics

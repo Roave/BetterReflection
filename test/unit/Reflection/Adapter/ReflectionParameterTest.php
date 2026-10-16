@@ -60,6 +60,7 @@ class ReflectionParameterTest extends TestCase
         return [
             ['__toString', [], 'string', null, 'string'],
             ['getName', [], 'name', null, 'name'],
+            ['getDocComment', [], '/** Parameter comment */', null, '/** Parameter comment */'],
             ['isPassedByReference', [], true, null, true],
             ['canBePassedByValue', [], true, null, true],
             ['getDeclaringClass', [], null, null, null],
@@ -127,6 +128,18 @@ class ReflectionParameterTest extends TestCase
         $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
 
         self::assertInstanceOf(ReflectionFunctionAdapter::class, $reflectionParameterAdapter->getDeclaringFunction());
+    }
+
+    public function testGetDocCommentReturnsFalseWhenNoDocComment(): void
+    {
+        $betterReflectionParameter = self::createStub(BetterReflectionParameter::class);
+        $betterReflectionParameter
+            ->method('getDocComment')
+            ->willReturn(null);
+
+        $reflectionParameterAdapter = new ReflectionParameterAdapter($betterReflectionParameter);
+
+        self::assertFalse($reflectionParameterAdapter->getDocComment());
     }
 
     public function testGetDeclaringFunctionWithMethod(): void

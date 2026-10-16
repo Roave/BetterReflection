@@ -27,6 +27,24 @@ final class ReflectionAttribute extends CoreReflectionAttribute
         return $this->betterReflectionAttribute->getName();
     }
 
+    /** @psalm-mutation-free */
+    public function getShortName(): string
+    {
+        return $this->betterReflectionAttribute->getShortName();
+    }
+
+    /** @psalm-mutation-free */
+    public function getNamespaceName(): string
+    {
+        return $this->betterReflectionAttribute->getNamespaceName() ?? '';
+    }
+
+    /** @psalm-mutation-free */
+    public function inNamespace(): bool
+    {
+        return $this->betterReflectionAttribute->inNamespace();
+    }
+
     /**
      * @return int-mask-of<Attribute::TARGET_*>|self::TARGET_CONSTANT_COMPATIBILITY
      *
