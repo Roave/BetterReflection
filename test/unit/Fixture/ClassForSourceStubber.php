@@ -128,10 +128,6 @@ abstract class ClassForSourceStubber extends ParentClassForSourceStubber impleme
     {
     }
 
-    public function methodWithSelfAndParentParameters(self $self, parent $parent) : void
-    {
-    }
-
     public function methodWithVariadicParameter(string ...$variadic) : void
     {
     }
