@@ -67,9 +67,6 @@ abstract class ClassForSourceStubber extends \Roave\BetterReflectionTest\Fixture
     public function methodWithOptionalParameters(string $string = 'string', int $int = 123, float $float = 0.0, bool $bool = true, iterable $iterable = [], ?callable $callable = null): void
     {
     }
-    public function methodWithSelfAndParentParameters(self $self, parent $parent): void
-    {
-    }
     public function methodWithVariadicParameter(string ...$variadic): void
     {
     }
