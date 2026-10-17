@@ -2,8 +2,10 @@
 
 namespace Roave\BetterReflectionTest\Fixture;
 
-class PropertyAccessBase
+class PropertyAccessBase implements PropertyAccessInterface
 {
+    use PropertyAccessTrait;
+
     public int $publicProperty = 1;
     protected int $protectedProperty = 1;
     private int $privateProperty = 1;

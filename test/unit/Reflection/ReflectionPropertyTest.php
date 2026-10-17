@@ -41,6 +41,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
+use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTraitStaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
@@ -51,9 +52,11 @@ use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessBase;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessChild;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessInterface;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessMagic;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessMagicGetOnly;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessOther;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessTrait;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ReadonlyExampleClass;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
@@ -62,6 +65,7 @@ use stdClass;
 use TraitWithProperty;
 
 use function assert;
+use function class_exists;
 use function sprintf;
 
 #[CoversClass(ReflectionProperty::class)]
@@ -864,6 +868,10 @@ PHP;
             [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessBase::class, true, true],
             [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessChild::class, true, false],
             [PropertyAccessChild::class, 'childProtectedProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'protectedProperty', PropertyAccessInterface::class, true, true],
+            [PropertyAccessBase::class, 'privateProperty', PropertyAccessInterface::class, false, false],
+            [PropertyAccessBase::class, 'traitProtectedProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'traitProtectedProperty', PropertyAccessTrait::class, false, false],
         ];
     }
 
@@ -916,6 +924,16 @@ PHP;
         PropertyAccessBase::$staticUninitialized = 1;
 
         self::assertTrue($property->isReadable(null));
+    }
+
+    #[RunInSeparateProcess]
+    public function testIsReadableDoesNotAutoloadClassForStaticProperties(): void
+    {
+        $classReflection = $this->reflector->reflectClass(PropertyAccessBase::class);
+
+        self::assertTrue($classReflection->getProperty('staticInitialized')->isReadable(null));
+        self::assertFalse($classReflection->getProperty('staticUninitialized')->isReadable(null));
+        self::assertFalse(class_exists(PropertyAccessBase::class, false));
     }
 
     public function testReadonlyPropertyAccessWithObject(): void
@@ -988,6 +1006,8 @@ PHP;
         self::assertFalse($property->isReadable(null, new stdClass()));
         self::assertTrue($property->isWritable(null));
         self::assertTrue($property->isWritable(null, new stdClass()));
+        self::assertFalse($property->isWritable(null, new ReadonlyExampleClass()));
+        self::assertFalse($property->isWritable(null, AutoloadableEnum::ENUM_CASE));
     }
 
     public function testIsReadableThrowsErrorWhenScopeClassDoesNotExist(): void

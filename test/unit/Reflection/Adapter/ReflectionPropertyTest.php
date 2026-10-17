@@ -15,11 +15,14 @@ use PropertyHookType;
 use ReflectionClass as CoreReflectionClass;
 use ReflectionException as CoreReflectionException;
 use ReflectionProperty as CoreReflectionProperty;
+use Roave\BetterReflection\Identifier\Identifier;
+use Roave\BetterReflection\Identifier\IdentifierType;
 use Roave\BetterReflection\Reflection\Adapter\Exception\NotImplementedBecauseItTriggersAutoloading;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionAttribute as ReflectionAttributeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionClass as ReflectionClassAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionNamedType as ReflectionNamedTypeAdapter;
 use Roave\BetterReflection\Reflection\Adapter\ReflectionProperty as ReflectionPropertyAdapter;
+use Roave\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Roave\BetterReflection\Reflection\Exception\NoObjectProvided;
 use Roave\BetterReflection\Reflection\Exception\NotAnObject;
 use Roave\BetterReflection\Reflection\Exception\ObjectNotInstanceOfClass;
@@ -29,6 +32,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod as BetterReflectionMethod
 use Roave\BetterReflection\Reflection\ReflectionNamedType as BetterReflectionNamedType;
 use Roave\BetterReflection\Reflection\ReflectionParameter as BetterReflectionParameter;
 use Roave\BetterReflection\Reflection\ReflectionProperty as BetterReflectionProperty;
+use Roave\BetterReflection\Reflector\Exception\IdentifierNotFound;
 use stdClass;
 use Throwable;
 use TypeError;
@@ -277,30 +281,39 @@ class ReflectionPropertyTest extends TestCase
         $reflectionPropertyAdapter->isInitialized(new stdClass());
     }
 
-    public function testIsReadableWrapsObjectNotInstanceOfClass(): void
+    /** @return list<array{0: 'isReadable'|'isWritable', 1: Throwable}> */
+    public static function isReadableAndWritableWrappedExceptionsProvider(): array
     {
-        $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
-        $betterReflectionProperty
-            ->method('isReadable')
-            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+        $exceptions = [
+            new ClassDoesNotExist('Foo'),
+            new IdentifierNotFound('Foo', new Identifier('Foo', new IdentifierType(IdentifierType::IDENTIFIER_CLASS))),
+            ObjectNotInstanceOfClass::fromClassName('Foo'),
+        ];
 
-        $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
+        $data = [];
+        foreach (['isReadable', 'isWritable'] as $methodName) {
+            foreach ($exceptions as $exception) {
+                $data[] = [$methodName, $exception];
+            }
+        }
 
-        $this->expectException(CoreReflectionException::class);
-        $reflectionPropertyAdapter->isReadable(null, new stdClass());
+        return $data;
     }
 
-    public function testIsWritableWrapsObjectNotInstanceOfClass(): void
+    /** @param 'isReadable'|'isWritable' $methodName */
+    #[DataProvider('isReadableAndWritableWrappedExceptionsProvider')]
+    public function testIsReadableAndWritableWrapExceptions(string $methodName, Throwable $exception): void
     {
         $betterReflectionProperty = self::createStub(BetterReflectionProperty::class);
         $betterReflectionProperty
-            ->method('isWritable')
-            ->willThrowException(ObjectNotInstanceOfClass::fromClassName('Foo'));
+            ->method($methodName)
+            ->willThrowException($exception);
 
         $reflectionPropertyAdapter = new ReflectionPropertyAdapter($betterReflectionProperty);
 
         $this->expectException(CoreReflectionException::class);
-        $reflectionPropertyAdapter->isWritable(null, new stdClass());
+        $this->expectExceptionMessage($exception->getMessage());
+        $reflectionPropertyAdapter->{$methodName}(null, new stdClass());
     }
 
     public function testIsReadableDoesNotWrapErrors(): void
