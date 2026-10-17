@@ -36,7 +36,6 @@ use function array_map;
 use function assert;
 use function class_exists;
 use function func_num_args;
-use function in_array;
 use function is_object;
 use function method_exists;
 use function property_exists;
@@ -852,9 +851,7 @@ class ReflectionProperty
 
         return $scopeClass->isSubclassOf($propertyClassName)
             || $propertyClass->isSubclassOf($scopeClassName)
-            || $scopeClass->implementsInterface($propertyClassName)
-            || $propertyClass->implementsInterface($scopeClassName)
-            || in_array($scopeClassName, $propertyClass->getTraitNames(), true);
+            || $propertyClass->implementsInterface($scopeClassName);
     }
 
     /** @psalm-mutation-free */

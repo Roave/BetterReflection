@@ -51,9 +51,11 @@ use Roave\BetterReflectionTest\Fixture\InitializedProperties;
 use Roave\BetterReflectionTest\Fixture\Php74PropertyTypeDeclarations;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessBase;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessChild;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessInterface;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessMagic;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessMagicGetOnly;
 use Roave\BetterReflectionTest\Fixture\PropertyAccessOther;
+use Roave\BetterReflectionTest\Fixture\PropertyAccessTrait;
 use Roave\BetterReflectionTest\Fixture\PropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ReadonlyExampleClass;
 use Roave\BetterReflectionTest\Fixture\StaticPropertyGetSet;
@@ -864,6 +866,10 @@ PHP;
             [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessBase::class, true, true],
             [PropertyAccessBase::class, 'privateSetterProperty', PropertyAccessChild::class, true, false],
             [PropertyAccessChild::class, 'childProtectedProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'protectedProperty', PropertyAccessInterface::class, true, true],
+            [PropertyAccessBase::class, 'privateProperty', PropertyAccessInterface::class, false, false],
+            [PropertyAccessBase::class, 'traitProtectedProperty', PropertyAccessBase::class, true, true],
+            [PropertyAccessBase::class, 'traitProtectedProperty', PropertyAccessTrait::class, false, false],
         ];
     }
 
