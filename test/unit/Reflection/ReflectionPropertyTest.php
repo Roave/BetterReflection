@@ -41,6 +41,7 @@ use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\StringSourceLocator;
 use Roave\BetterReflectionTest\BetterReflectionSingleton;
 use Roave\BetterReflectionTest\Fixture\Attr;
+use Roave\BetterReflectionTest\Fixture\AutoloadableEnum;
 use Roave\BetterReflectionTest\Fixture\ClassForHinting;
 use Roave\BetterReflectionTest\Fixture\ClassUsesTraitStaticPropertyGetSet;
 use Roave\BetterReflectionTest\Fixture\ClassWithAttributes;
@@ -64,6 +65,7 @@ use stdClass;
 use TraitWithProperty;
 
 use function assert;
+use function class_exists;
 use function sprintf;
 
 #[CoversClass(ReflectionProperty::class)]
@@ -924,6 +926,16 @@ PHP;
         self::assertTrue($property->isReadable(null));
     }
 
+    #[RunInSeparateProcess]
+    public function testIsReadableDoesNotAutoloadClassForStaticProperties(): void
+    {
+        $classReflection = $this->reflector->reflectClass(PropertyAccessBase::class);
+
+        self::assertTrue($classReflection->getProperty('staticInitialized')->isReadable(null));
+        self::assertFalse($classReflection->getProperty('staticUninitialized')->isReadable(null));
+        self::assertFalse(class_exists(PropertyAccessBase::class, false));
+    }
+
     public function testReadonlyPropertyAccessWithObject(): void
     {
         $classReflection = $this->reflector->reflectClass(PropertyAccessBase::class);
@@ -994,6 +1006,8 @@ PHP;
         self::assertFalse($property->isReadable(null, new stdClass()));
         self::assertTrue($property->isWritable(null));
         self::assertTrue($property->isWritable(null, new stdClass()));
+        self::assertFalse($property->isWritable(null, new ReadonlyExampleClass()));
+        self::assertFalse($property->isWritable(null, AutoloadableEnum::ENUM_CASE));
     }
 
     public function testIsReadableThrowsErrorWhenScopeClassDoesNotExist(): void

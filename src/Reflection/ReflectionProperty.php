@@ -725,6 +725,7 @@ class ReflectionProperty
         }
 
         if ($object::class === $propertyClass->getName()) {
+            // @infection-ignore-all ReturnRemoval: There's no difference, it's just optimization
             return [$this, $propertyClass];
         }
 

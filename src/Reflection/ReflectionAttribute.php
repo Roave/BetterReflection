@@ -14,7 +14,6 @@ use Roave\BetterReflection\Reflector\Reflector;
 
 use function array_map;
 use function assert;
-use function ltrim;
 use function strrpos;
 use function substr;
 
@@ -65,9 +64,8 @@ class ReflectionAttribute
     /** @return non-empty-string */
     public function getShortName(): string
     {
-        $name      = ltrim($this->name, '\\');
-        $position  = strrpos($name, '\\');
-        $shortName = $position === false ? $name : substr($name, $position + 1);
+        $position  = strrpos($this->name, '\\');
+        $shortName = $position === false ? $this->name : substr($this->name, $position + 1);
 
         assert($shortName !== '');
 
@@ -76,10 +74,9 @@ class ReflectionAttribute
 
     public function getNamespaceName(): string|null
     {
-        $name     = ltrim($this->name, '\\');
-        $position = strrpos($name, '\\');
+        $position = strrpos($this->name, '\\');
 
-        return $position === false ? null : substr($name, 0, $position);
+        return $position === false ? null : substr($this->name, 0, $position);
     }
 
     public function inNamespace(): bool

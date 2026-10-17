@@ -21,6 +21,7 @@ use Roave\BetterReflection\Reflection\ReflectionParameter;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\Reflector\Reflector;
 use Roave\BetterReflection\SourceLocator\Ast\Locator;
+use Roave\BetterReflection\SourceLocator\Located\LocatedSource;
 use Roave\BetterReflection\SourceLocator\Type\AggregateSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\ComposerSourceLocator;
 use Roave\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
@@ -140,6 +141,7 @@ class ReflectionParameterTest extends TestCase
                 $hashComment # Plain hash comment containing /** fake
                 /** Trailing comment after a hash comment */,
                 $none,
+                $noWhitespace/** Trailing comment without whitespace */,
                 $default = 1 /** Trailing comment with a default value */
             ) {}
             PHP;
@@ -159,7 +161,31 @@ class ReflectionParameterTest extends TestCase
         self::assertSame('/** Trailing comment after a line comment */', $function->getParameter('lineComment')->getDocComment());
         self::assertSame('/** Trailing comment after a hash comment */', $function->getParameter('hashComment')->getDocComment());
         self::assertNull($function->getParameter('none')->getDocComment());
+        self::assertSame('/** Trailing comment without whitespace */', $function->getParameter('noWhitespace')->getDocComment());
         self::assertSame('/** Trailing comment with a default value */', $function->getParameter('default')->getDocComment());
+    }
+
+    public function testGetDocCommentIgnoresSourceWhenParameterNodeHasNoPosition(): void
+    {
+        $locatedSource = self::createStub(LocatedSource::class);
+        $locatedSource
+            ->method('getSource')
+            ->willReturn('/** Not a parameter doc comment */');
+
+        $functionReflection = self::createStub(ReflectionFunction::class);
+        $functionReflection
+            ->method('getLocatedSource')
+            ->willReturn($locatedSource);
+
+        $parameterReflection = ReflectionParameter::createFromNode(
+            self::createStub(Reflector::class),
+            new Node\Param(new Node\Expr\Variable('foo')),
+            $functionReflection,
+            0,
+            false,
+        );
+
+        self::assertNull($parameterReflection->getDocComment());
     }
 
     public function testCreateFromClosureThrowsExceptionWhenParameterDoesNotExist(): void
