@@ -980,16 +980,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.14",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "0c8abba0634f637bd78c4e451981da368d403463"
+                "reference": "2c99cf2e92516985dea4914812b93d9daf01cdd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/0c8abba0634f637bd78c4e451981da368d403463",
-                "reference": "0c8abba0634f637bd78c4e451981da368d403463",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/2c99cf2e92516985dea4914812b93d9daf01cdd6",
+                "reference": "2c99cf2e92516985dea4914812b93d9daf01cdd6",
                 "shasum": ""
             },
             "require": {
@@ -1036,7 +1036,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.14"
+                "source": "https://github.com/composer/ca-bundle/tree/1.6.0"
             },
             "funding": [
                 {
@@ -1048,7 +1048,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-21T14:57:29+00:00"
+            "time": "2026-10-20T20:14:05+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -5859,23 +5859,23 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.74.0",
+            "version": "6.75.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0"
+                "reference": "b68eed282302be0278a2615ccb4448a9c9d1d4c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/76b224f120578ed156a211f04d59a5f418a2b3c0",
-                "reference": "76b224f120578ed156a211f04d59a5f418a2b3c0",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/b68eed282302be0278a2615ccb4448a9c9d1d4c3",
+                "reference": "b68eed282302be0278a2615ccb4448a9c9d1d4c3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "jetbrains/phpstorm-stubs": "2026.2",
                 "nikic/php-parser": "^5.9.0",
-                "php": "~8.4.1 || ~8.5.0"
+                "php": "~8.4.1 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "thecodingmachine/safe": "<1.1.3"
@@ -5922,9 +5922,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.74.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.75.0"
             },
-            "time": "2026-10-16T22:44:45+00:00"
+            "time": "2026-10-17T21:34:56+00:00"
         },
         {
             "name": "sanmai/di-container",
