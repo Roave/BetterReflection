@@ -5,7 +5,7 @@
         "phpstan/phpstan": "^2.3.2",
         "phpstan/phpstan-phpunit": "^2.1.1",
         "vimeo/psalm": "^6.20.1",
-        "roave/backward-compatibility-check": "^8.23.0"
+        "roave/backward-compatibility-check": "^8.25.0"
     },
     "config": {
         "allow-plugins": {
