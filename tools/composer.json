@@ -2,10 +2,10 @@
     "require": {
         "doctrine/coding-standard": "^14.0.0",
         "infection/infection": "^0.35.8",
-        "phpstan/phpstan": "^2.3.2",
+        "phpstan/phpstan": "^2.3.4",
         "phpstan/phpstan-phpunit": "^2.1.1",
-        "vimeo/psalm": "^6.20.1",
-        "roave/backward-compatibility-check": "^8.25.0"
+        "vimeo/psalm": "^6.20.4",
+        "roave/backward-compatibility-check": "^8.27.0"
     },
     "config": {
         "allow-plugins": {
