@@ -988,20 +988,21 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-02-09T13:06:12+00:00"
+            "time": "2024-02-09T13:06:12+00:00",
+            "published-time": "2024-02-09T13:06:43+00:00"
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.6.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "2c99cf2e92516985dea4914812b93d9daf01cdd6"
+                "reference": "0c64479fae6952ba4cf021a72c0ac530394c91d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/2c99cf2e92516985dea4914812b93d9daf01cdd6",
-                "reference": "2c99cf2e92516985dea4914812b93d9daf01cdd6",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/0c64479fae6952ba4cf021a72c0ac530394c91d4",
+                "reference": "0c64479fae6952ba4cf021a72c0ac530394c91d4",
                 "shasum": ""
             },
             "require": {
@@ -1048,7 +1049,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.6.0"
+                "source": "https://github.com/composer/ca-bundle/tree/1.6.1"
             },
             "funding": [
                 {
@@ -1060,8 +1061,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-20T20:14:05+00:00",
-            "published-time": "2026-10-20T20:17:23+00:00"
+            "time": "2026-10-29T14:10:42+00:00",
+            "published-time": "2026-10-29T14:45:12+00:00"
         },
         {
             "name": "composer/class-map-generator",
@@ -1135,21 +1136,21 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.10.3",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "f0de0bf90226853b841672f086d8b58b02332504"
+                "reference": "472b418967419c6124edd91dc6310a3bec091dae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/f0de0bf90226853b841672f086d8b58b02332504",
-                "reference": "f0de0bf90226853b841672f086d8b58b02332504",
+                "url": "https://api.github.com/repos/composer/composer/zipball/472b418967419c6124edd91dc6310a3bec091dae",
+                "reference": "472b418967419c6124edd91dc6310a3bec091dae",
                 "shasum": ""
             },
             "require": {
-                "composer/ca-bundle": "^1.5",
-                "composer/class-map-generator": "^1.4.0",
+                "composer/ca-bundle": "^1.6",
+                "composer/class-map-generator": "^1.8.0",
                 "composer/metadata-minifier": "^1.0",
                 "composer/pcre": "^2.3 || ^3.3",
                 "composer/semver": "^3.3",
@@ -1158,7 +1159,7 @@
                 "ext-filter": "*",
                 "ext-hash": "*",
                 "ext-json": "*",
-                "justinrainbow/json-schema": "^6.5.1",
+                "justinrainbow/json-schema": "^6.6.3",
                 "php": "^7.2.5 || ^8.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "react/promise": "^3.3",
@@ -1175,7 +1176,7 @@
                 "symfony/process": "^5.4.47 || ^6.4.25 || ^7.1.10 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.11.8",
+                "phpstan/phpstan": "1.12.33",
                 "phpstan/phpstan-deprecation-rules": "^1.2.0",
                 "phpstan/phpstan-phpunit": "^1.4.0",
                 "phpstan/phpstan-strict-rules": "^1.6.0",
@@ -1199,7 +1200,7 @@
                     ]
                 },
                 "branch-alias": {
-                    "dev-main": "2.10-dev"
+                    "dev-main": "2.11-dev"
                 }
             },
             "autoload": {
@@ -1234,7 +1235,7 @@
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
                 "security": "https://github.com/composer/composer/security/policy",
-                "source": "https://github.com/composer/composer/tree/2.10.3"
+                "source": "https://github.com/composer/composer/tree/2.11.1"
             },
             "funding": [
                 {
@@ -1246,8 +1247,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-27T11:34:23+00:00",
-            "published-time": "2026-08-27T11:37:21+00:00"
+            "time": "2026-10-30T13:52:10+00:00",
+            "published-time": "2026-10-30T14:03:09+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -1394,16 +1395,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.5.2",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "9dfce66f1e97360ea5e6d3e38ab14277e4cc591e"
+                "reference": "d92543b7ede9c4ec6b59853cefb061e39866d2cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/9dfce66f1e97360ea5e6d3e38ab14277e4cc591e",
-                "reference": "9dfce66f1e97360ea5e6d3e38ab14277e4cc591e",
+                "url": "https://api.github.com/repos/composer/semver/zipball/d92543b7ede9c4ec6b59853cefb061e39866d2cf",
+                "reference": "d92543b7ede9c4ec6b59853cefb061e39866d2cf",
                 "shasum": ""
             },
             "require": {
@@ -1455,7 +1456,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.5.2"
+                "source": "https://github.com/composer/semver/tree/3.6.0"
             },
             "funding": [
                 {
@@ -1467,8 +1468,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-22T15:37:26+00:00",
-            "published-time": "2026-10-22T15:38:04+00:00"
+            "time": "2026-10-29T09:13:34+00:00",
+            "published-time": "2026-10-29T09:14:11+00:00"
         },
         {
             "name": "composer/spdx-licenses",
@@ -1806,7 +1807,8 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-05-06T08:26:05+00:00"
+            "time": "2026-05-06T08:26:05+00:00",
+            "published-time": "2026-05-06T12:56:03+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1900,7 +1902,8 @@
                 "issues": "https://github.com/doctrine/coding-standard/issues",
                 "source": "https://github.com/doctrine/coding-standard/tree/14.0.0"
             },
-            "time": "2025-09-21T18:21:47+00:00"
+            "time": "2025-09-21T18:21:47+00:00",
+            "published-time": "2025-09-30T17:01:23+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -2126,7 +2129,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-05-28T19:10:29+00:00"
+            "time": "2026-05-28T19:10:29+00:00",
+            "published-time": "2026-05-28T19:12:08+00:00"
         },
         {
             "name": "infection/extension-installer",
@@ -2192,7 +2196,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2021-10-20T22:08:34+00:00"
+            "time": "2021-10-20T22:08:34+00:00",
+            "published-time": "2022-01-17T16:32:15+00:00"
         },
         {
             "name": "infection/include-interceptor",
@@ -2248,7 +2253,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-05-03T21:48:06+00:00"
+            "time": "2024-05-03T21:48:06+00:00",
+            "published-time": "2026-05-06T22:52:27+00:00"
         },
         {
             "name": "infection/infection",
@@ -2388,7 +2394,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-10-14T09:21:58+00:00"
+            "time": "2026-10-14T09:21:58+00:00",
+            "published-time": "2026-10-14T09:26:48+00:00"
         },
         {
             "name": "infection/mutator",
@@ -2441,7 +2448,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-04-29T08:19:52+00:00"
+            "time": "2025-04-29T08:19:52+00:00",
+            "published-time": "2025-04-29T08:21:00+00:00"
         },
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -2615,21 +2623,21 @@
         },
         {
             "name": "league/uri",
-            "version": "7.9.0",
+            "version": "7.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri.git",
-                "reference": "fcc872a3d872aa13f935e0cd1887b9abb06da07f"
+                "reference": "40403f5c3141457a61f7f1aba6706e8fa4a0ece5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri/zipball/fcc872a3d872aa13f935e0cd1887b9abb06da07f",
-                "reference": "fcc872a3d872aa13f935e0cd1887b9abb06da07f",
+                "url": "https://api.github.com/repos/thephpleague/uri/zipball/40403f5c3141457a61f7f1aba6706e8fa4a0ece5",
+                "reference": "40403f5c3141457a61f7f1aba6706e8fa4a0ece5",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "league/uri-interfaces": "^7.9.0",
+                "league/uri-interfaces": "^7.9.1",
                 "php": "^8.1",
                 "psr/http-factory": "^1"
             },
@@ -2702,7 +2710,7 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
-                "source": "https://github.com/thephpleague/uri/tree/7.9.0"
+                "source": "https://github.com/thephpleague/uri/tree/7.9.1"
             },
             "funding": [
                 {
@@ -2710,21 +2718,21 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-16T15:19:33+00:00",
-            "published-time": "2026-10-16T15:24:11+00:00"
+            "time": "2026-10-27T07:14:23+00:00",
+            "published-time": "2026-10-28T08:38:15+00:00"
         },
         {
             "name": "league/uri-interfaces",
-            "version": "7.9.0",
+            "version": "7.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri-interfaces.git",
-                "reference": "eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58"
+                "reference": "994300a79e17f179112dc259f8df0c4de982f736"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58",
-                "reference": "eb5f6d24e6a4fe0a8e9c78ded4eb1dfff1404f58",
+                "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/994300a79e17f179112dc259f8df0c4de982f736",
+                "reference": "994300a79e17f179112dc259f8df0c4de982f736",
                 "shasum": ""
             },
             "require": {
@@ -2787,7 +2795,7 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri-src/issues",
-                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.9.0"
+                "source": "https://github.com/thephpleague/uri-interfaces/tree/7.9.1"
             },
             "funding": [
                 {
@@ -2795,8 +2803,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-16T15:19:33+00:00",
-            "published-time": "2026-10-16T15:24:18+00:00"
+            "time": "2026-10-27T07:14:23+00:00",
+            "published-time": "2026-10-28T08:38:21+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -3184,7 +3192,8 @@
                 "issues": "https://github.com/OndraM/ci-detector/issues",
                 "source": "https://github.com/OndraM/ci-detector/tree/4.2.0"
             },
-            "time": "2024-03-12T13:22:30+00:00"
+            "time": "2024-03-12T13:22:30+00:00",
+            "published-time": "2024-03-12T13:23:38+00:00"
         },
         {
             "name": "phar-io/version",
@@ -3235,25 +3244,26 @@
                 "issues": "https://github.com/phar-io/version/issues",
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
-            "time": "2022-02-21T01:04:05+00:00"
+            "time": "2022-02-21T01:04:05+00:00",
+            "published-time": "2022-02-21T01:04:30+00:00"
         },
         {
             "name": "php-standard-library/async",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/async.git",
-                "reference": "3d2fbaf391cd256f5543f96889e9e738840d321a"
+                "reference": "f3640ac41bbaac82df85f70ad6ecfe3eb8afcc00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/async/zipball/3d2fbaf391cd256f5543f96889e9e738840d321a",
-                "reference": "3d2fbaf391cd256f5543f96889e9e738840d321a",
+                "url": "https://api.github.com/repos/php-standard-library/async/zipball/f3640ac41bbaac82df85f70ad6ecfe3eb8afcc00",
+                "reference": "f3640ac41bbaac82df85f70ad6ecfe3eb8afcc00",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/date-time": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/date-time": "^6.4",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0",
                 "php-standard-library/promise": "^6.0",
@@ -3271,7 +3281,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3305,28 +3315,28 @@
                 "cooperative-multitasking"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/async/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/async/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:26+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/channel",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/channel.git",
-                "reference": "f2f5f0ee4d04dccc57d33e6620671c6296e881e2"
+                "reference": "22f75128a88356cacc837160b592495eeca50742"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/channel/zipball/f2f5f0ee4d04dccc57d33e6620671c6296e881e2",
-                "reference": "f2f5f0ee4d04dccc57d33e6620671c6296e881e2",
+                "url": "https://api.github.com/repos/php-standard-library/channel/zipball/22f75128a88356cacc837160b592495eeca50742",
+                "reference": "22f75128a88356cacc837160b592495eeca50742",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/async": "^6.4",
                 "php-standard-library/foundation": "^6.0",
                 "revolt/event-loop": "^1.0.8"
             },
@@ -3341,7 +3351,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3375,27 +3385,27 @@
                 "message-passing"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/channel/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/channel/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:26+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/collection",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/collection.git",
-                "reference": "d31f6a015958ae4e13e2c1d47621d9786ee1ec1a"
+                "reference": "65d8f2e487696c55757f6883f05494091681c330"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/collection/zipball/d31f6a015958ae4e13e2c1d47621d9786ee1ec1a",
-                "reference": "d31f6a015958ae4e13e2c1d47621d9786ee1ec1a",
+                "url": "https://api.github.com/repos/php-standard-library/collection/zipball/65d8f2e487696c55757f6883f05494091681c330",
+                "reference": "65d8f2e487696c55757f6883f05494091681c330",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0"
             },
@@ -3410,7 +3420,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3442,27 +3452,27 @@
                 "vector"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/collection/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/collection/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:24+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:50+00:00"
         },
         {
             "name": "php-standard-library/comparison",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/comparison.git",
-                "reference": "e77454e109feaa13732a3d556e1f8855b216b4fd"
+                "reference": "c56577a81a9b6f33146d59e2dff9d2647961071b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/comparison/zipball/e77454e109feaa13732a3d556e1f8855b216b4fd",
-                "reference": "e77454e109feaa13732a3d556e1f8855b216b4fd",
+                "url": "https://api.github.com/repos/php-standard-library/comparison/zipball/c56577a81a9b6f33146d59e2dff9d2647961071b",
+                "reference": "c56577a81a9b6f33146d59e2dff9d2647961071b",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0"
             },
@@ -3475,7 +3485,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3508,28 +3518,28 @@
                 "ordering"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/comparison/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/comparison/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "php-standard-library/date-time",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/date-time.git",
-                "reference": "4d280c6192e1b17ee8a59e07ed0fc29129bcd373"
+                "reference": "e40e6068ea13e8d3e1b92dc01d4e4a46ba4d3eef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/date-time/zipball/4d280c6192e1b17ee8a59e07ed0fc29129bcd373",
-                "reference": "4d280c6192e1b17ee8a59e07ed0fc29129bcd373",
+                "url": "https://api.github.com/repos/php-standard-library/date-time/zipball/e40e6068ea13e8d3e1b92dc01d4e4a46ba4d3eef",
+                "reference": "e40e6068ea13e8d3e1b92dc01d4e4a46ba4d3eef",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/comparison": "^6.0",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0",
@@ -3547,7 +3557,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3581,27 +3591,27 @@
                 "timezone"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/date-time/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/date-time/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:27+00:00"
+            "time": "2026-10-28T01:24:56+00:00",
+            "published-time": "2026-10-28T15:57:52+00:00"
         },
         {
             "name": "php-standard-library/default",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/default.git",
-                "reference": "6f7daf0864b4f319dee645cb0ffd7c4be0c9907c"
+                "reference": "d38ea78355ccc0c43651c8261f44398ca45cf2f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/default/zipball/6f7daf0864b4f319dee645cb0ffd7c4be0c9907c",
-                "reference": "6f7daf0864b4f319dee645cb0ffd7c4be0c9907c",
+                "url": "https://api.github.com/repos/php-standard-library/default/zipball/d38ea78355ccc0c43651c8261f44398ca45cf2f4",
+                "reference": "d38ea78355ccc0c43651c8261f44398ca45cf2f4",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -3612,7 +3622,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3641,27 +3651,27 @@
                 "interface"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/default/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/default/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:28+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:53+00:00"
         },
         {
             "name": "php-standard-library/dict",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/dict.git",
-                "reference": "0c3f7546c4dd5887e085e21663eedaa3df78a00d"
+                "reference": "0dc081706d88350763719867ead57e98f8a3781e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/dict/zipball/0c3f7546c4dd5887e085e21663eedaa3df78a00d",
-                "reference": "0c3f7546c4dd5887e085e21663eedaa3df78a00d",
+                "url": "https://api.github.com/repos/php-standard-library/dict/zipball/0dc081706d88350763719867ead57e98f8a3781e",
+                "reference": "0dc081706d88350763719867ead57e98f8a3781e",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0"
             },
             "conflict": {
@@ -3677,7 +3687,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3711,27 +3721,27 @@
                 "map"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/dict/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/dict/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:28+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:52+00:00"
         },
         {
             "name": "php-standard-library/either-or-both",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/either-or-both.git",
-                "reference": "cd443b661dae1dc87f309e17953e9a7426690195"
+                "reference": "41cd12fae8f7ade29db63257281035817bb1979b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/either-or-both/zipball/cd443b661dae1dc87f309e17953e9a7426690195",
-                "reference": "cd443b661dae1dc87f309e17953e9a7426690195",
+                "url": "https://api.github.com/repos/php-standard-library/either-or-both/zipball/41cd12fae8f7ade29db63257281035817bb1979b",
+                "reference": "41cd12fae8f7ade29db63257281035817bb1979b",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/comparison": "^6.0",
                 "php-standard-library/foundation": "^6.0",
                 "php-standard-library/option": "^6.0"
@@ -3746,7 +3756,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3781,27 +3791,27 @@
                 "union-type"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/either-or-both/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/either-or-both/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:27+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/env",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/env.git",
-                "reference": "093b68fbe9f1104142735c2e2a5ca42931c9a8f1"
+                "reference": "fc32cc1841015dd83a45b442cfa241fadd3f4c95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/env/zipball/093b68fbe9f1104142735c2e2a5ca42931c9a8f1",
-                "reference": "093b68fbe9f1104142735c2e2a5ca42931c9a8f1",
+                "url": "https://api.github.com/repos/php-standard-library/env/zipball/fc32cc1841015dd83a45b442cfa241fadd3f4c95",
+                "reference": "fc32cc1841015dd83a45b442cfa241fadd3f4c95",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0"
             },
             "conflict": {
@@ -3814,7 +3824,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3846,31 +3856,31 @@
                 "environment"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/env/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/env/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "php-standard-library/file",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/file.git",
-                "reference": "8e6c84b64060278c833e64fb8fb3298a34d2d3af"
+                "reference": "a2f3b8030ccfb325b6fa5da3521034b7fca4a2c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/file/zipball/8e6c84b64060278c833e64fb8fb3298a34d2d3af",
-                "reference": "8e6c84b64060278c833e64fb8fb3298a34d2d3af",
+                "url": "https://api.github.com/repos/php-standard-library/file/zipball/a2f3b8030ccfb325b6fa5da3521034b7fca4a2c9",
+                "reference": "a2f3b8030ccfb325b6fa5da3521034b7fca4a2c9",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
-                "php-standard-library/date-time": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/async": "^6.4",
+                "php-standard-library/date-time": "^6.4",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/io": "^6.0"
+                "php-standard-library/io": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -3885,7 +3895,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3918,27 +3928,27 @@
                 "io"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/file/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/file/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:26+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/filesystem",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/filesystem.git",
-                "reference": "65a13875f9f918a10b072a3f6975dfd9e4e412e6"
+                "reference": "4194f7acb105cf1dd836458a7fa5a72f28fe0e15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/filesystem/zipball/65a13875f9f918a10b072a3f6975dfd9e4e412e6",
-                "reference": "65a13875f9f918a10b072a3f6975dfd9e4e412e6",
+                "url": "https://api.github.com/repos/php-standard-library/filesystem/zipball/4194f7acb105cf1dd836458a7fa5a72f28fe0e15",
+                "reference": "4194f7acb105cf1dd836458a7fa5a72f28fe0e15",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0"
             },
             "conflict": {
@@ -3956,7 +3966,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -3988,27 +3998,27 @@
                 "filesystem"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/filesystem/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/filesystem/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:25+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:50+00:00"
         },
         {
             "name": "php-standard-library/foundation",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/foundation.git",
-                "reference": "9b464388f93b5c496bd6a17912e5cdc846b9df1e"
+                "reference": "400425a75c416acc1f620d38a696305e3bd98099"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/foundation/zipball/9b464388f93b5c496bd6a17912e5cdc846b9df1e",
-                "reference": "9b464388f93b5c496bd6a17912e5cdc846b9df1e",
+                "url": "https://api.github.com/repos/php-standard-library/foundation/zipball/400425a75c416acc1f620d38a696305e3bd98099",
+                "reference": "400425a75c416acc1f620d38a696305e3bd98099",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4019,7 +4029,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4052,27 +4062,27 @@
                 "invariant"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/foundation/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/foundation/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "php-standard-library/interoperability",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/interoperability.git",
-                "reference": "d95ae8d2502d05b7aa14e456b2c7f5e9c1510228"
+                "reference": "01aade5ff983330b796759e99b056821bea6b1b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/interoperability/zipball/d95ae8d2502d05b7aa14e456b2c7f5e9c1510228",
-                "reference": "d95ae8d2502d05b7aa14e456b2c7f5e9c1510228",
+                "url": "https://api.github.com/repos/php-standard-library/interoperability/zipball/01aade5ff983330b796759e99b056821bea6b1b5",
+                "reference": "01aade5ff983330b796759e99b056821bea6b1b5",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4083,7 +4093,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4112,29 +4122,29 @@
                 "interoperability"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/interoperability/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/interoperability/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:28+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:53+00:00"
         },
         {
             "name": "php-standard-library/io",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/io.git",
-                "reference": "cd55c50f5158871c9a77b3fc6a1fca14f3d4d082"
+                "reference": "3ee67a62670763598e7ed830b3a1d842d9dafdc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/io/zipball/cd55c50f5158871c9a77b3fc6a1fca14f3d4d082",
-                "reference": "cd55c50f5158871c9a77b3fc6a1fca14f3d4d082",
+                "url": "https://api.github.com/repos/php-standard-library/io/zipball/3ee67a62670763598e7ed830b3a1d842d9dafdc0",
+                "reference": "3ee67a62670763598e7ed830b3a1d842d9dafdc0",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
-                "php-standard-library/channel": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/async": "^6.4",
+                "php-standard-library/channel": "^6.4",
                 "php-standard-library/foundation": "^6.0",
                 "php-standard-library/result": "^6.0",
                 "revolt/event-loop": "^1.0.8"
@@ -4151,7 +4161,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4185,27 +4195,27 @@
                 "stream"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/io/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/io/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:24+00:00"
+            "time": "2026-10-28T01:24:56+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "php-standard-library/iter",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/iter.git",
-                "reference": "9a53e9e4614b6e30ac23df21bd9bf7540dad79f8"
+                "reference": "2b499d9cb2e0e2bca21a57971b43454da2b1c7b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/iter/zipball/9a53e9e4614b6e30ac23df21bd9bf7540dad79f8",
-                "reference": "9a53e9e4614b6e30ac23df21bd9bf7540dad79f8",
+                "url": "https://api.github.com/repos/php-standard-library/iter/zipball/2b499d9cb2e0e2bca21a57971b43454da2b1c7b7",
+                "reference": "2b499d9cb2e0e2bca21a57971b43454da2b1c7b7",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/comparison": "^6.0",
                 "php-standard-library/either-or-both": "^6.0",
                 "php-standard-library/foundation": "^6.0",
@@ -4224,7 +4234,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4258,30 +4268,30 @@
                 "iterator"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/iter/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/iter/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:48+00:00"
         },
         {
             "name": "php-standard-library/json",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/json.git",
-                "reference": "ba52bbe747e91b2a1c905d3c51b8fc0b9f5af27d"
+                "reference": "3b17984cac8fb9245945552adc85620d7d2a5de2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/json/zipball/ba52bbe747e91b2a1c905d3c51b8fc0b9f5af27d",
-                "reference": "ba52bbe747e91b2a1c905d3c51b8fc0b9f5af27d",
+                "url": "https://api.github.com/repos/php-standard-library/json/zipball/3b17984cac8fb9245945552adc85620d7d2a5de2",
+                "reference": "3b17984cac8fb9245945552adc85620d7d2a5de2",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/type": "^6.0"
+                "php-standard-library/type": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4295,7 +4305,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4328,28 +4338,28 @@
                 "json"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/json/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/json/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:48+00:00"
         },
         {
             "name": "php-standard-library/locale",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/locale.git",
-                "reference": "9687409700fc2392046f43cc4c1494253f8cf178"
+                "reference": "6fb4a7c5a724254bbda6d91dd3e5c874a9f28f60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/locale/zipball/9687409700fc2392046f43cc4c1494253f8cf178",
-                "reference": "9687409700fc2392046f43cc4c1494253f8cf178",
+                "url": "https://api.github.com/repos/php-standard-library/locale/zipball/6fb4a7c5a724254bbda6d91dd3e5c874a9f28f60",
+                "reference": "6fb4a7c5a724254bbda6d91dd3e5c874a9f28f60",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
-                "php": "~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4361,7 +4371,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4391,27 +4401,27 @@
                 "locale"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/locale/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/locale/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "php-standard-library/option",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/option.git",
-                "reference": "d6cfc43ae2d0ce122d861065f5e6a433737b9e93"
+                "reference": "f4e9af458e898a39036c1d80cf27a1acac65f2b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/option/zipball/d6cfc43ae2d0ce122d861065f5e6a433737b9e93",
-                "reference": "d6cfc43ae2d0ce122d861065f5e6a433737b9e93",
+                "url": "https://api.github.com/repos/php-standard-library/option/zipball/f4e9af458e898a39036c1d80cf27a1acac65f2b0",
+                "reference": "f4e9af458e898a39036c1d80cf27a1acac65f2b0",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/comparison": "^6.0",
                 "php-standard-library/foundation": "^6.0"
             },
@@ -4424,7 +4434,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4458,31 +4468,31 @@
                 "some"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/option/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/option/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:26+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/process",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/process.git",
-                "reference": "46895e2c1b19cdd6c48688d1c631f1c23bc524e5"
+                "reference": "db72704d4557db7eb8afe139ea45c6c00b0588f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/process/zipball/46895e2c1b19cdd6c48688d1c631f1c23bc524e5",
-                "reference": "46895e2c1b19cdd6c48688d1c631f1c23bc524e5",
+                "url": "https://api.github.com/repos/php-standard-library/process/zipball/db72704d4557db7eb8afe139ea45c6c00b0588f1",
+                "reference": "db72704d4557db7eb8afe139ea45c6c00b0588f1",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
-                "php-standard-library/date-time": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/async": "^6.4",
+                "php-standard-library/date-time": "^6.4",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/io": "^6.0"
+                "php-standard-library/io": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4496,7 +4506,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4526,27 +4536,27 @@
                 "subprocess"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/process/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/process/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:48+00:00"
         },
         {
             "name": "php-standard-library/promise",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/promise.git",
-                "reference": "97e5c6ffac07058f0ae408c747b5f5c363f3673b"
+                "reference": "2a4b15be89430761402f96199d13a8c389028d9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/promise/zipball/97e5c6ffac07058f0ae408c747b5f5c363f3673b",
-                "reference": "97e5c6ffac07058f0ae408c747b5f5c363f3673b",
+                "url": "https://api.github.com/repos/php-standard-library/promise/zipball/2a4b15be89430761402f96199d13a8c389028d9c",
+                "reference": "2a4b15be89430761402f96199d13a8c389028d9c",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0"
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4557,7 +4567,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4587,29 +4597,29 @@
                 "promise"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/promise/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/promise/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:25+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/range",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/range.git",
-                "reference": "9e08b73482c2c8ee6065e4eb1c6d138ceba56376"
+                "reference": "0150e7f232c830e03acc15b629d88641f3d612d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/range/zipball/9e08b73482c2c8ee6065e4eb1c6d138ceba56376",
-                "reference": "9e08b73482c2c8ee6065e4eb1c6d138ceba56376",
+                "url": "https://api.github.com/repos/php-standard-library/range/zipball/0150e7f232c830e03acc15b629d88641f3d612d9",
+                "reference": "0150e7f232c830e03acc15b629d88641f3d612d9",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/iter": "^6.0"
+                "php-standard-library/iter": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4621,7 +4631,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4653,29 +4663,29 @@
                 "range"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/range/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/range/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:27+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:52+00:00"
         },
         {
             "name": "php-standard-library/regex",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/regex.git",
-                "reference": "199b6e8f3321e7e5978a3f55963d4bd6fbc57317"
+                "reference": "0019320b98c44991e7c63fd1fe54ca46bc017268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/regex/zipball/199b6e8f3321e7e5978a3f55963d4bd6fbc57317",
-                "reference": "199b6e8f3321e7e5978a3f55963d4bd6fbc57317",
+                "url": "https://api.github.com/repos/php-standard-library/regex/zipball/0019320b98c44991e7c63fd1fe54ca46bc017268",
+                "reference": "0019320b98c44991e7c63fd1fe54ca46bc017268",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/type": "^6.0"
+                "php-standard-library/type": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4686,7 +4696,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4719,27 +4729,27 @@
                 "regular-expression"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/regex/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/regex/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:26+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:51+00:00"
         },
         {
             "name": "php-standard-library/result",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/result.git",
-                "reference": "8489291e58eb926d3ffc9e48b23d8fa6678a0ff3"
+                "reference": "74c84e7d64603265bcc66b8bf64ab82513eceb3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/result/zipball/8489291e58eb926d3ffc9e48b23d8fa6678a0ff3",
-                "reference": "8489291e58eb926d3ffc9e48b23d8fa6678a0ff3",
+                "url": "https://api.github.com/repos/php-standard-library/result/zipball/74c84e7d64603265bcc66b8bf64ab82513eceb3d",
+                "reference": "74c84e7d64603265bcc66b8bf64ab82513eceb3d",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0",
                 "php-standard-library/promise": "^6.0"
             },
@@ -4753,7 +4763,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4786,31 +4796,31 @@
                 "result"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/result/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/result/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:48+00:00"
         },
         {
             "name": "php-standard-library/shell",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/shell.git",
-                "reference": "e87e4720403c748036166102df5b825f7bb9ecd1"
+                "reference": "6c2bf0b896174eda9b9f462786a2f0657490de5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/shell/zipball/e87e4720403c748036166102df5b825f7bb9ecd1",
-                "reference": "e87e4720403c748036166102df5b825f7bb9ecd1",
+                "url": "https://api.github.com/repos/php-standard-library/shell/zipball/6c2bf0b896174eda9b9f462786a2f0657490de5d",
+                "reference": "6c2bf0b896174eda9b9f462786a2f0657490de5d",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/async": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/async": "^6.4",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/process": "^6.0"
+                "php-standard-library/process": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4826,7 +4836,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4859,31 +4869,31 @@
                 "shell"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/shell/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/shell/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:23+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:48+00:00"
         },
         {
             "name": "php-standard-library/str",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/str.git",
-                "reference": "ab722aecf6c45531cdf0bf8ee11aa2370d71dff7"
+                "reference": "4dbf9e9dfd2c43e07dce75fd0c9b05796e4595ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/str/zipball/ab722aecf6c45531cdf0bf8ee11aa2370d71dff7",
-                "reference": "ab722aecf6c45531cdf0bf8ee11aa2370d71dff7",
+                "url": "https://api.github.com/repos/php-standard-library/str/zipball/4dbf9e9dfd2c43e07dce75fd0c9b05796e4595ba",
+                "reference": "4dbf9e9dfd2c43e07dce75fd0c9b05796e4595ba",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/default": "^6.0",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/range": "^6.0"
+                "php-standard-library/range": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4894,7 +4904,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -4928,31 +4938,31 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/str/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/str/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:27+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:52+00:00"
         },
         {
             "name": "php-standard-library/type",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/type.git",
-                "reference": "80986810f49ba476d90dfeaa9c41bee0997675eb"
+                "reference": "fde796f5c981865a6235c42dd15e9402b79f172d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/type/zipball/80986810f49ba476d90dfeaa9c41bee0997675eb",
-                "reference": "80986810f49ba476d90dfeaa9c41bee0997675eb",
+                "url": "https://api.github.com/repos/php-standard-library/type/zipball/fde796f5c981865a6235c42dd15e9402b79f172d",
+                "reference": "fde796f5c981865a6235c42dd15e9402b79f172d",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "~8.4.0 || ~8.5.0",
-                "php-standard-library/collection": "^6.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
+                "php-standard-library/collection": "^6.4",
                 "php-standard-library/foundation": "^6.0",
-                "php-standard-library/iter": "^6.0"
+                "php-standard-library/iter": "^6.4"
             },
             "conflict": {
                 "azjezz/psl": "*"
@@ -4969,7 +4979,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -5003,27 +5013,27 @@
                 "validation"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/type/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/type/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:28+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:52+00:00"
         },
         {
             "name": "php-standard-library/vec",
-            "version": "6.3.0",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-standard-library/vec.git",
-                "reference": "5251a921c3d06b2045b4371c191bb60ff0ce47d3"
+                "reference": "fa485aa10be891cafcb5dff6f007228a5e7ab7a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-standard-library/vec/zipball/5251a921c3d06b2045b4371c191bb60ff0ce47d3",
-                "reference": "5251a921c3d06b2045b4371c191bb60ff0ce47d3",
+                "url": "https://api.github.com/repos/php-standard-library/vec/zipball/fa485aa10be891cafcb5dff6f007228a5e7ab7a9",
+                "reference": "fa485aa10be891cafcb5dff6f007228a5e7ab7a9",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.4.0 || ~8.5.0",
+                "php": "~8.4.0 || ~8.5.0 || ~8.6.0",
                 "php-standard-library/foundation": "^6.0"
             },
             "conflict": {
@@ -5039,7 +5049,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-next": "6.3.x-dev"
+                    "dev-next": "6.4.x-dev"
                 }
             },
             "autoload": {
@@ -5073,10 +5083,10 @@
                 "vector"
             ],
             "support": {
-                "source": "https://github.com/php-standard-library/vec/tree/6.3.0"
+                "source": "https://github.com/php-standard-library/vec/tree/6.4.2"
             },
-            "time": "2026-09-25T15:54:11+00:00",
-            "published-time": "2026-09-25T15:59:24+00:00"
+            "time": "2026-10-27T23:29:50+00:00",
+            "published-time": "2026-10-28T15:57:49+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -5264,16 +5274,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.3.6",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
+                "reference": "af8e840551031d254cfdb3a18a62c3470a309c10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
-                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/af8e840551031d254cfdb3a18a62c3470a309c10",
+                "reference": "af8e840551031d254cfdb3a18a62c3470a309c10",
                 "shasum": ""
             },
             "require": {
@@ -5305,10 +5315,10 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.6"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.4.1"
             },
-            "time": "2026-09-27T20:07:45+00:00",
-            "published-time": "2026-09-27T20:08:57+00:00"
+            "time": "2026-10-30T19:36:28+00:00",
+            "published-time": "2026-10-30T19:37:11+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -5431,7 +5441,8 @@
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
                 "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.1.1"
             },
-            "time": "2026-10-06T18:12:32+00:00"
+            "time": "2026-10-06T18:12:32+00:00",
+            "published-time": "2026-10-07T04:59:27+00:00"
         },
         {
             "name": "psr/clock",
@@ -5479,7 +5490,8 @@
                 "issues": "https://github.com/php-fig/clock/issues",
                 "source": "https://github.com/php-fig/clock/tree/1.0.0"
             },
-            "time": "2022-11-25T14:36:26+00:00"
+            "time": "2022-11-25T14:36:26+00:00",
+            "published-time": "2022-11-25T14:59:22+00:00"
         },
         {
             "name": "psr/container",
@@ -6079,7 +6091,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-11T06:42:18+00:00"
+            "time": "2026-08-11T06:42:18+00:00",
+            "published-time": "2026-08-11T06:44:32+00:00"
         },
         {
             "name": "sanmai/duoclock",
@@ -6142,7 +6155,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-26T06:12:34+00:00"
+            "time": "2025-12-26T06:12:34+00:00",
+            "published-time": "2025-12-26T06:13:23+00:00"
         },
         {
             "name": "sanmai/later",
@@ -6206,7 +6220,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-29T07:24:33+00:00"
+            "time": "2026-06-29T07:24:33+00:00",
+            "published-time": "2026-07-29T07:33:40+00:00"
         },
         {
             "name": "sanmai/pipeline",
@@ -6273,7 +6288,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-30T13:46:33+00:00"
+            "time": "2026-09-30T13:46:33+00:00",
+            "published-time": "2026-09-30T13:48:53+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -6533,32 +6549,32 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "8.31.1",
+            "version": "8.31.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "0a40807a48873948bfa7ffce2a4e69ba40cf5e76"
+                "reference": "b5c34b28811ee2ed323c52c7dabe2f2802dd2f8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/0a40807a48873948bfa7ffce2a4e69ba40cf5e76",
-                "reference": "0a40807a48873948bfa7ffce2a4e69ba40cf5e76",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/b5c34b28811ee2ed323c52c7dabe2f2802dd2f8a",
+                "reference": "b5c34b28811ee2ed323c52c7dabe2f2802dd2f8a",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7 || ^1.2.1",
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpdoc-parser": "^2.3.3",
-                "squizlabs/php_codesniffer": "^4.0.1"
+                "phpstan/phpdoc-parser": "^2.3.6",
+                "squizlabs/php_codesniffer": "^4.0.4"
             },
             "require-dev": {
                 "phing/phing": "3.0.1|3.1.2",
                 "php-parallel-lint/php-parallel-lint": "1.4.0",
-                "phpstan/phpstan": "2.2.7",
+                "phpstan/phpstan": "2.3.2",
                 "phpstan/phpstan-deprecation-rules": "2.0.5",
-                "phpstan/phpstan-phpunit": "2.0.18",
-                "phpstan/phpstan-strict-rules": "2.0.12",
-                "phpunit/phpunit": "9.6.34|10.5.63|11.4.4|11.5.56|12.5.33"
+                "phpstan/phpstan-phpunit": "2.1.1",
+                "phpstan/phpstan-strict-rules": "2.1.0",
+                "phpunit/phpunit": "9.6.38|10.5.66|11.4.4|11.5.57|12.5.40"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -6582,7 +6598,7 @@
             ],
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/8.31.1"
+                "source": "https://github.com/slevomat/coding-standard/tree/8.31.3"
             },
             "funding": [
                 {
@@ -6594,7 +6610,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-31T10:42:43+00:00"
+            "time": "2026-10-28T16:34:46+00:00",
+            "published-time": "2026-10-28T16:36:09+00:00"
         },
         {
             "name": "spatie/array-to-xml",
@@ -6747,20 +6764,21 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-08-06T02:45:27+00:00"
+            "time": "2026-08-06T02:45:27+00:00",
+            "published-time": "2026-08-06T02:57:35+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v7.4.21",
+            "version": "v7.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "21f1bc2296f7ff6043241a8dcbc09559b3732820"
+                "reference": "8012f842110b414fd1cc641adb0ed8423353b0bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/21f1bc2296f7ff6043241a8dcbc09559b3732820",
-                "reference": "21f1bc2296f7ff6043241a8dcbc09559b3732820",
+                "url": "https://api.github.com/repos/symfony/console/zipball/8012f842110b414fd1cc641adb0ed8423353b0bb",
+                "reference": "8012f842110b414fd1cc641adb0ed8423353b0bb",
                 "shasum": ""
             },
             "require": {
@@ -6825,7 +6843,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.4.21"
+                "source": "https://github.com/symfony/console/tree/v7.4.22"
             },
             "funding": [
                 {
@@ -6845,8 +6863,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-12T18:45:38+00:00",
-            "published-time": "2026-10-14T06:45:30+00:00"
+            "time": "2026-10-28T11:08:27+00:00",
+            "published-time": "2026-10-28T18:21:33+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -6994,16 +7012,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v8.1.8",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "bd4fed193a3132c91c5c93595cbfc78988915822"
+                "reference": "2f4c0f26106520d82e1b71759d2fb8d32d8b7a43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/bd4fed193a3132c91c5c93595cbfc78988915822",
-                "reference": "bd4fed193a3132c91c5c93595cbfc78988915822",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/2f4c0f26106520d82e1b71759d2fb8d32d8b7a43",
+                "reference": "2f4c0f26106520d82e1b71759d2fb8d32d8b7a43",
                 "shasum": ""
             },
             "require": {
@@ -7038,7 +7056,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v8.1.8"
+                "source": "https://github.com/symfony/finder/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -7058,8 +7076,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-26T06:33:49+00:00",
-            "published-time": "2026-09-29T14:09:19+00:00"
+            "time": "2026-10-19T17:00:07+00:00",
+            "published-time": "2026-10-28T18:25:54+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7147,16 +7165,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.43.0",
+            "version": "v1.43.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "5cac8f4db97208823aa353f59a01faad2da52c75"
+                "reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5cac8f4db97208823aa353f59a01faad2da52c75",
-                "reference": "5cac8f4db97208823aa353f59a01faad2da52c75",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/5a8f33c87aeecffce24e721b5064fab05f4becf8",
+                "reference": "5a8f33c87aeecffce24e721b5064fab05f4becf8",
                 "shasum": ""
             },
             "require": {
@@ -7205,7 +7223,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.43.3"
             },
             "funding": [
                 {
@@ -7225,8 +7243,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:46:47+00:00",
-            "published-time": "2026-09-30T10:23:37+00:00"
+            "time": "2026-10-15T09:18:53+00:00",
+            "published-time": "2026-10-28T10:07:44+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -7316,16 +7334,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.43.0",
+            "version": "v1.43.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72"
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/122889ed24dc000165bcbfd77ec412f15cbdfc6a",
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a",
                 "shasum": ""
             },
             "require": {
@@ -7377,7 +7395,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.3"
             },
             "funding": [
                 {
@@ -7397,8 +7415,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-24T15:19:04+00:00",
-            "published-time": "2026-09-30T10:23:35+00:00"
+            "time": "2026-10-28T09:35:49+00:00",
+            "published-time": "2026-10-28T10:07:45+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -7811,16 +7829,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v8.1.9",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "59a682fd049b2d4d37c444f5ac21b7d01b8c7189"
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/59a682fd049b2d4d37c444f5ac21b7d01b8c7189",
-                "reference": "59a682fd049b2d4d37c444f5ac21b7d01b8c7189",
+                "url": "https://api.github.com/repos/symfony/process/zipball/08aa69fa0998bb65a089f9e148a2c0f8b391398e",
+                "reference": "08aa69fa0998bb65a089f9e148a2c0f8b391398e",
                 "shasum": ""
             },
             "require": {
@@ -7852,7 +7870,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v8.1.9"
+                "source": "https://github.com/symfony/process/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -7872,8 +7890,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-08T16:57:43+00:00",
-            "published-time": "2026-10-14T06:48:58+00:00"
+            "time": "2026-10-25T14:40:25+00:00",
+            "published-time": "2026-10-28T18:25:20+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -7965,16 +7983,16 @@
         },
         {
             "name": "symfony/string",
-            "version": "v8.1.9",
+            "version": "v8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "07fb208558f941eab50ec49c89c2a6a93fb11f01"
+                "reference": "6c6110979c0150393bbb336170e286d51ab4d76c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/07fb208558f941eab50ec49c89c2a6a93fb11f01",
-                "reference": "07fb208558f941eab50ec49c89c2a6a93fb11f01",
+                "url": "https://api.github.com/repos/symfony/string/zipball/6c6110979c0150393bbb336170e286d51ab4d76c",
+                "reference": "6c6110979c0150393bbb336170e286d51ab4d76c",
                 "shasum": ""
             },
             "require": {
@@ -8031,7 +8049,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v8.1.9"
+                "source": "https://github.com/symfony/string/tree/v8.1.10"
             },
             "funding": [
                 {
@@ -8051,8 +8069,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-03T15:16:03+00:00",
-            "published-time": "2026-10-14T06:48:42+00:00"
+            "time": "2026-10-23T17:06:53+00:00",
+            "published-time": "2026-10-28T18:24:27+00:00"
         },
         {
             "name": "thecodingmachine/safe",
@@ -8195,7 +8213,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-04T18:08:13+00:00"
+            "time": "2026-02-04T18:08:13+00:00",
+            "published-time": "2026-02-15T15:48:29+00:00"
         },
         {
             "name": "vimeo/psalm",
