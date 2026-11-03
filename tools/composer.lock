@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65db8492fe1dac13d459d29a32a2a366",
+    "content-hash": "04d2969da8c0146daf54b8dac3baea2f",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2258,16 +2258,16 @@
         },
         {
             "name": "infection/infection",
-            "version": "0.35.8",
+            "version": "0.35.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "642f7974a73713e7a2219baea0cd9b0856afba4b"
+                "reference": "3ca3e072dbb578257c636e81b947fe050bc61c69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/642f7974a73713e7a2219baea0cd9b0856afba4b",
-                "reference": "642f7974a73713e7a2219baea0cd9b0856afba4b",
+                "url": "https://api.github.com/repos/infection/infection/zipball/3ca3e072dbb578257c636e81b947fe050bc61c69",
+                "reference": "3ca3e072dbb578257c636e81b947fe050bc61c69",
                 "shasum": ""
             },
             "require": {
@@ -2382,7 +2382,7 @@
             ],
             "support": {
                 "issues": "https://github.com/infection/infection/issues",
-                "source": "https://github.com/infection/infection/tree/0.35.8"
+                "source": "https://github.com/infection/infection/tree/0.35.9"
             },
             "funding": [
                 {
@@ -2394,8 +2394,8 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-10-14T09:21:58+00:00",
-            "published-time": "2026-10-14T09:26:48+00:00"
+            "time": "2026-11-02T17:30:39+00:00",
+            "published-time": "2026-11-02T17:39:26+00:00"
         },
         {
             "name": "infection/mutator",
@@ -8218,16 +8218,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.20.4",
+            "version": "6.20.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "e53db692e6600cf729c88190b892bcf96e1c550e"
+                "reference": "d60ecdbc9e577e67b29f632e3e3847dffd14b7ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/e53db692e6600cf729c88190b892bcf96e1c550e",
-                "reference": "e53db692e6600cf729c88190b892bcf96e1c550e",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/d60ecdbc9e577e67b29f632e3e3847dffd14b7ce",
+                "reference": "d60ecdbc9e577e67b29f632e3e3847dffd14b7ce",
                 "shasum": ""
             },
             "require": {
@@ -8332,8 +8332,8 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-10-29T10:26:19+00:00",
-            "published-time": "2026-10-29T11:27:04+00:00"
+            "time": "2026-11-02T12:47:00+00:00",
+            "published-time": "2026-11-03T00:43:19+00:00"
         },
         {
             "name": "webmozart/assert",
