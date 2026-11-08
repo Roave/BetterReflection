@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a83bab09019e750dc2fd166154243768",
+    "content-hash": "74fbc091d5163401950e36593102492c",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -180,16 +180,16 @@
         },
         {
             "name": "boundwize/structarmed",
-            "version": "0.19.10",
+            "version": "0.21.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/boundwize/structarmed.git",
-                "reference": "2733bae2c04254cb36f08cf96c3cd56bc4cb62a8"
+                "reference": "b7b242144afabe6d022b9a806f0fe5a14f852f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/boundwize/structarmed/zipball/2733bae2c04254cb36f08cf96c3cd56bc4cb62a8",
-                "reference": "2733bae2c04254cb36f08cf96c3cd56bc4cb62a8",
+                "url": "https://api.github.com/repos/boundwize/structarmed/zipball/b7b242144afabe6d022b9a806f0fe5a14f852f8d",
+                "reference": "b7b242144afabe6d022b9a806f0fe5a14f852f8d",
                 "shasum": ""
             },
             "require": {
@@ -246,7 +246,7 @@
             ],
             "support": {
                 "issues": "https://github.com/boundwize/structarmed/issues",
-                "source": "https://github.com/boundwize/structarmed/tree/0.19.10"
+                "source": "https://github.com/boundwize/structarmed/tree/0.21.7"
             },
             "funding": [
                 {
@@ -254,7 +254,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-26T15:02:09+00:00"
+            "time": "2026-11-08T08:15:27+00:00"
         },
         {
             "name": "doctrine/annotations",
