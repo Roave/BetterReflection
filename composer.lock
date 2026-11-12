@@ -4,27 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95f1b4b647985d5e6ac1f74838e79ecc",
+    "content-hash": "8c6eee2f61fee54ae92d30627cd0ff2b",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2026.2",
+            "version": "v2026.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/JetBrains/phpstorm-stubs",
-                "reference": "709e512210784a7c0a677b3a89d35def844a59b9"
+                "url": "https://github.com/JetBrains/phpstorm-stubs.git",
+                "reference": "912ae721089fc48534d3a5795997ee8a2802b8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/709e512210784a7c0a677b3a89d35def844a59b9",
-                "reference": "709e512210784a7c0a677b3a89d35def844a59b9",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/912ae721089fc48534d3a5795997ee8a2802b8cd",
+                "reference": "912ae721089fc48534d3a5795997ee8a2802b8cd",
                 "shasum": ""
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^v3.86",
                 "nikic/php-parser": "^v5.6",
-                "phpdocumentor/reflection-docblock": "^5.6",
-                "phpunit/phpunit": "^12.3"
+                "phpdocumentor/reflection-docblock": "^6.0",
+                "phpunit/phpunit": "^13.2"
             },
             "type": "library",
             "autoload": {
@@ -48,8 +48,11 @@
                 "stubs",
                 "type"
             ],
-            "time": "2026-06-12T13:19:10+00:00",
-            "published-time": "2026-07-22T11:41:13+00:00"
+            "support": {
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2026.3"
+            },
+            "time": "2026-10-19T10:54:17+00:00",
+            "published-time": "2026-11-11T13:34:29+00:00"
         },
         {
             "name": "nikic/php-parser",
