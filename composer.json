@@ -5,7 +5,7 @@
     "require": {
         "php": "~8.4.1 || ~8.5.0 || ~8.6.0",
         "ext-json": "*",
-        "jetbrains/phpstorm-stubs": "2026.2",
+        "jetbrains/phpstorm-stubs": "2026.3",
         "nikic/php-parser": "^5.9.0"
     },
     "authors": [
