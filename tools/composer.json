@@ -3,7 +3,7 @@
         "doctrine/coding-standard": "^14.0.0",
         "infection/infection": "^0.35.10",
         "phpstan/phpstan": "^2.3.5",
-        "phpstan/phpstan-phpunit": "^2.1.1",
+        "phpstan/phpstan-phpunit": "^2.1.2",
         "vimeo/psalm": "^6.20.11",
         "roave/backward-compatibility-check": "^8.27.0"
     },
