@@ -4,7 +4,7 @@
         "infection/infection": "^0.35.12",
         "phpstan/phpstan": "^2.3.6",
         "phpstan/phpstan-phpunit": "^2.1.2",
-        "vimeo/psalm": "^6.20.13",
+        "vimeo/psalm": "^7.10.0",
         "roave/backward-compatibility-check": "^8.27.0"
     },
     "config": {
