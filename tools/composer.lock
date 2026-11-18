@@ -6096,16 +6096,16 @@
         },
         {
             "name": "sanmai/duoclock",
-            "version": "0.1.4",
+            "version": "0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sanmai/DuoClock.git",
-                "reference": "9fa79ec9445c8a43e3e6f5deefdebe920085f284"
+                "reference": "ee0171d29902e5fa29e6d0b8b297667622afcdbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sanmai/DuoClock/zipball/9fa79ec9445c8a43e3e6f5deefdebe920085f284",
-                "reference": "9fa79ec9445c8a43e3e6f5deefdebe920085f284",
+                "url": "https://api.github.com/repos/sanmai/DuoClock/zipball/ee0171d29902e5fa29e6d0b8b297667622afcdbc",
+                "reference": "ee0171d29902e5fa29e6d0b8b297667622afcdbc",
                 "shasum": ""
             },
             "require": {
@@ -6147,7 +6147,7 @@
             "description": "PHP time mocking for tests - PSR-20 clock with mockable sleep(), time(), and TimeSpy for PHPUnit testing",
             "support": {
                 "issues": "https://github.com/sanmai/DuoClock/issues",
-                "source": "https://github.com/sanmai/DuoClock/tree/0.1.4"
+                "source": "https://github.com/sanmai/DuoClock/tree/0.1.5"
             },
             "funding": [
                 {
@@ -6155,8 +6155,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-06T08:04:12+00:00",
-            "published-time": "2026-11-06T08:04:52+00:00"
+            "time": "2026-11-17T23:41:42+00:00",
+            "published-time": "2026-11-17T23:42:09+00:00"
         },
         {
             "name": "sanmai/later",
@@ -7748,16 +7748,16 @@
         },
         {
             "name": "symfony/polyfill-php85",
-            "version": "v1.43.0",
+            "version": "v1.44.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php85.git",
-                "reference": "86a42cbcc07adc331481a5ab310a4024bfc227f6"
+                "reference": "94c794cb5ba51784bc259f11e9f128593297d8dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/86a42cbcc07adc331481a5ab310a4024bfc227f6",
-                "reference": "86a42cbcc07adc331481a5ab310a4024bfc227f6",
+                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/94c794cb5ba51784bc259f11e9f128593297d8dc",
+                "reference": "94c794cb5ba51784bc259f11e9f128593297d8dc",
                 "shasum": ""
             },
             "require": {
@@ -7804,7 +7804,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php85/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-php85/tree/v1.44.0"
             },
             "funding": [
                 {
@@ -7824,8 +7824,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:46:47+00:00",
-            "published-time": "2026-09-30T10:23:32+00:00"
+            "time": "2026-10-30T15:20:09+00:00",
+            "published-time": "2026-11-15T14:20:22+00:00"
         },
         {
             "name": "symfony/process",
@@ -8337,16 +8337,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "2.5.0",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "8a163706bbcac613733dba03f51e13b5eb1bb819"
+                "reference": "e578132c01bd0c64108386ab20d8217cd175ddec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/8a163706bbcac613733dba03f51e13b5eb1bb819",
-                "reference": "8a163706bbcac613733dba03f51e13b5eb1bb819",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/e578132c01bd0c64108386ab20d8217cd175ddec",
+                "reference": "e578132c01bd0c64108386ab20d8217cd175ddec",
                 "shasum": ""
             },
             "require": {
@@ -8397,10 +8397,10 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.5.0"
+                "source": "https://github.com/webmozarts/assert/tree/2.5.1"
             },
-            "time": "2026-10-05T23:14:19+00:00",
-            "published-time": "2026-10-05T23:14:25+00:00"
+            "time": "2026-11-15T13:41:13+00:00",
+            "published-time": "2026-11-15T13:41:42+00:00"
         }
     ],
     "packages-dev": [],
