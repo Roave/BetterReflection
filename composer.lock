@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f41ad5e252cb27ac4b26a8ee951e9d65",
+    "content-hash": "5e3cef7965d4490e815df84ad6615b5e",
     "packages": [
         {
             "name": "jetbrains/phpstorm-stubs",
@@ -503,16 +503,16 @@
         },
         {
             "name": "phpbench/phpbench",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpbench/phpbench.git",
-                "reference": "3d13c0d5dcf8730a67b70fa7fb03b4556b5cc0fe"
+                "reference": "a745fa340629d0b2cba5197e44b1a9428797ba1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpbench/phpbench/zipball/3d13c0d5dcf8730a67b70fa7fb03b4556b5cc0fe",
-                "reference": "3d13c0d5dcf8730a67b70fa7fb03b4556b5cc0fe",
+                "url": "https://api.github.com/repos/phpbench/phpbench/zipball/a745fa340629d0b2cba5197e44b1a9428797ba1b",
+                "reference": "a745fa340629d0b2cba5197e44b1a9428797ba1b",
                 "shasum": ""
             },
             "require": {
@@ -523,7 +523,7 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
-                "php": "^8.2",
+                "php": "^8.3",
                 "phpbench/container": "^2.2",
                 "psr/log": "^1.1 || ^2.0 || ^3.0",
                 "seld/jsonlint": "^1.1",
@@ -590,7 +590,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpbench/phpbench/issues",
-                "source": "https://github.com/phpbench/phpbench/tree/1.7.0"
+                "source": "https://github.com/phpbench/phpbench/tree/1.7.1"
             },
             "funding": [
                 {
@@ -598,8 +598,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-08T19:09:20+00:00",
-            "published-time": "2026-06-08T19:11:37+00:00"
+            "time": "2026-11-21T19:11:14+00:00",
+            "published-time": "2026-11-21T19:12:24+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -990,16 +990,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.4.7",
+            "version": "13.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e6458d44279e3b4fc492d4c41fe8e677efed7a2c"
+                "reference": "291e66a76eb39f2fb8f880d38edc30dbd7acd9a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e6458d44279e3b4fc492d4c41fe8e677efed7a2c",
-                "reference": "e6458d44279e3b4fc492d4c41fe8e677efed7a2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/291e66a76eb39f2fb8f880d38edc30dbd7acd9a2",
+                "reference": "291e66a76eb39f2fb8f880d38edc30dbd7acd9a2",
                 "shasum": ""
             },
             "require": {
@@ -1070,7 +1070,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.4.8"
             },
             "funding": [
                 {
@@ -1078,8 +1078,8 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-11-13T11:10:10+00:00",
-            "published-time": "2026-11-13T11:11:23+00:00"
+            "time": "2026-11-19T12:17:15+00:00",
+            "published-time": "2026-11-19T12:18:28+00:00"
         },
         {
             "name": "psr/cache",

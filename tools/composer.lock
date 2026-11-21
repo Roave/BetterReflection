@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb89c2be0ffa5e8143454c08d5960c23",
+    "content-hash": "cd747bb4301b7a6636888f6eb74b51b1",
     "packages": [
         {
             "name": "amphp/amp",
@@ -5322,11 +5322,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/00cedebb76cc82c1592414fa4f616cefdccda16f",
-                "reference": "00cedebb76cc82c1592414fa4f616cefdccda16f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/90c91c2498849ab8cc4e873864bbf1cb2bf6ea12",
+                "reference": "90c91c2498849ab8cc4e873864bbf1cb2bf6ea12",
                 "shasum": ""
             },
             "require": {
@@ -5382,8 +5382,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-15T19:58:26+00:00",
-            "published-time": "2026-11-15T19:58:39+00:00"
+            "time": "2026-11-19T10:31:11+00:00",
+            "published-time": "2026-11-19T10:31:27+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -8218,16 +8218,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.20.13",
+            "version": "6.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "9dd07528c4f058df1572d40ab2db5c1566a728f2"
+                "reference": "ecd8c23829dd6527337f0f72790c7f894a1a3d0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/9dd07528c4f058df1572d40ab2db5c1566a728f2",
-                "reference": "9dd07528c4f058df1572d40ab2db5c1566a728f2",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/ecd8c23829dd6527337f0f72790c7f894a1a3d0e",
+                "reference": "ecd8c23829dd6527337f0f72790c7f894a1a3d0e",
                 "shasum": ""
             },
             "require": {
@@ -8332,8 +8332,8 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-11-18T12:17:11+00:00",
-            "published-time": "2026-11-18T12:31:30+00:00"
+            "time": "2026-11-20T23:54:00+00:00",
+            "published-time": "2026-11-21T00:44:01+00:00"
         },
         {
             "name": "webmozart/assert",
