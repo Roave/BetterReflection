@@ -182,8 +182,7 @@ class ReflectionClassConstant
      */
     public function isPrivate(): bool
     {
-        // Private constant cannot be final
-        return $this->modifiers === CoreReflectionClassConstant::IS_PRIVATE;
+        return (bool) ($this->modifiers & CoreReflectionClassConstant::IS_PRIVATE);
     }
 
     /**

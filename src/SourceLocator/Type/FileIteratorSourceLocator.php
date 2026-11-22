@@ -37,7 +37,10 @@ class FileIteratorSourceLocator implements SourceLocator
     public function __construct(Iterator $fileInfoIterator, private Locator $astLocator)
     {
         foreach ($fileInfoIterator as $fileInfo) {
-            /** @phpstan-ignore instanceof.alwaysTrue */
+            /**
+             * @psalm-suppress DocblockTypeContradiction
+             * @phpstan-ignore instanceof.alwaysTrue
+             */
             if (! $fileInfo instanceof SplFileInfo) {
                 throw InvalidFileInfo::fromNonSplFileInfo($fileInfo);
             }

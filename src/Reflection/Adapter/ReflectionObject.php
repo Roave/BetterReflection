@@ -40,7 +40,11 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->__toString();
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return class-string
+     *
+     * @psalm-mutation-free
+     */
     public function getName(): string
     {
         return $this->betterReflectionObject->getName();
@@ -82,19 +86,31 @@ final class ReflectionObject extends CoreReflectionObject
         return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return positive-int
+     *
+     * @psalm-mutation-free
+     */
     public function getStartLine(): int
     {
         return $this->betterReflectionObject->getStartLine();
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return positive-int
+     *
+     * @psalm-mutation-free
+     */
     public function getEndLine(): int
     {
         return $this->betterReflectionObject->getEndLine();
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return non-empty-string|false
+     *
+     * @psalm-mutation-free
+     */
     public function getDocComment(): string|false
     {
         return $this->betterReflectionObject->getDocComment() ?? false;
@@ -370,7 +386,11 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isReadOnly();
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return int-mask-of<ReflectionClass::IS_*>
+     *
+     * @psalm-mutation-free
+     */
     public function getModifiers(): int
     {
         return $this->betterReflectionObject->getModifiers();
@@ -483,11 +503,7 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->isSubclassOf($realParentClassName);
     }
 
-    /**
-     * @return array<string, mixed>
-     *
-     * @psalm-suppress LessSpecificImplementedReturnType
-     */
+    /** @return array<string, mixed> */
     public function getStaticProperties(): array
     {
         return $this->betterReflectionObject->getStaticProperties();
@@ -600,7 +616,11 @@ final class ReflectionObject extends CoreReflectionObject
         return $this->betterReflectionObject->getNamespaceName() ?? '';
     }
 
-    /** @psalm-mutation-free */
+    /**
+     * @return non-empty-string
+     *
+     * @psalm-mutation-free
+     */
     public function getShortName(): string
     {
         return $this->betterReflectionObject->getShortName();

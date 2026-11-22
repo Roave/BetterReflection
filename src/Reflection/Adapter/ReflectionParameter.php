@@ -19,6 +19,7 @@ use Roave\BetterReflection\Reflection\ReflectionUnionType as BetterReflectionUni
 use ValueError;
 
 use function array_map;
+use function assert;
 use function count;
 use function sprintf;
 use function strtolower;
@@ -107,6 +108,8 @@ final class ReflectionParameter extends CoreReflectionParameter
                 return null;
             }
 
+            $classType = null;
+
             foreach ($unionTypes as $unionInnerType) {
                 if (! $unionInnerType instanceof BetterReflectionNamedType) {
                     return null;
@@ -119,10 +122,11 @@ final class ReflectionParameter extends CoreReflectionParameter
                 $classType = $unionInnerType;
                 break;
             }
+
+            assert($classType !== null);
         }
 
         try {
-            /** @phpstan-ignore variable.undefined */
             return new ReflectionClass($classType->getClass());
         } catch (LogicException) {
             return null;

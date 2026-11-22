@@ -20,5 +20,17 @@
     <issueHandlers>
         <ClassMustBeFinal errorLevel="suppress"/>
         <MissingOverrideAttribute errorLevel="suppress"/>
+        <!-- Reported only on PHP < 8.6 runtime: inherited class-string<T> of non-generic ReflectionEnum/ReflectionObject -->
+        <LessSpecificImplementedReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Reflection/Adapter/ReflectionEnum.php"/>
+                <file name="src/Reflection/Adapter/ReflectionObject.php"/>
+            </errorLevel>
+        </LessSpecificImplementedReturnType>
     </issueHandlers>
+    <taintAnalysis>
+        <ignoreFiles>
+            <directory name="src" />
+        </ignoreFiles>
+    </taintAnalysis>
 </psalm>
