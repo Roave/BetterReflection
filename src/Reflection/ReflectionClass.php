@@ -287,6 +287,7 @@ class ReflectionClass implements Reflection
         $fileName = $this->getFileName();
 
         if ($fileName === null) {
+            /** @psalm-suppress WeakHash */
             $fileName = sha1($this->locatedSource->getSource());
         }
 
@@ -946,11 +947,11 @@ class ReflectionClass implements Reflection
 
         if ($node instanceof InterfaceNode) {
             $interfaceName = $this->getName();
-            if ($interfaceName === 'UnitEnum') {
+            if ($interfaceName === UnitEnum::class) {
                 $properties['name'] = $createProperty('name', new Node\Identifier('string'));
             }
 
-            if ($interfaceName === 'BackedEnum') {
+            if ($interfaceName === BackedEnum::class) {
                 $properties['value'] = $createProperty('value', new Node\UnionType([
                     new Node\Identifier('int'),
                     new Node\Identifier('string'),

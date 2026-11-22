@@ -1,9 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.15.1@28dc127af1b5aecd52314f6f645bafc10d0e11f9">
+<files psalm-version="7.15.0@2da2040e23d8b54e61be22618bd53517b6bd43df">
+  <file src="src/Reflection/Adapter/ReflectionClass.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionMethod($constructor)]]></code>
+      <code><![CDATA[new ReflectionMethod($method)]]></code>
+      <code><![CDATA[new ReflectionProperty($betterReflectionProperty)]]></code>
+      <code><![CDATA[new self($parentClass)]]></code>
+      <code><![CDATA[new self($trait)]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionClassConstant.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionClass($this->betterClassConstantOrEnumCase->getDeclaringClass())]]></code>
+      <code><![CDATA[new ReflectionClass($this->betterClassConstantOrEnumCase->getImplementingClass())]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionEnum.php">
+    <ImpureMethodCall>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[new ReflectionClass($trait)]]></code>
+      <code><![CDATA[new ReflectionMethod($constructor)]]></code>
+      <code><![CDATA[new ReflectionMethod($method)]]></code>
+      <code><![CDATA[new ReflectionProperty($betterReflectionProperty)]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionEnumBackedCase.php">
+    <ImpureMethodCall>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[new ReflectionClass($this->betterReflectionEnumCase->getDeclaringClass())]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionEnumUnitCase.php">
+    <ImpureMethodCall>
+      <code><![CDATA[Exception\NotImplementedBecauseItTriggersAutoloading::create()]]></code>
+      <code><![CDATA[new ReflectionClass($this->betterReflectionEnumCase->getDeclaringClass())]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionMethod.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionClass($this->betterReflectionMethod->getImplementingClass())]]></code>
+      <code><![CDATA[new self($this->betterReflectionMethod->getPrototype())]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionObject.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionClass($parentClass)]]></code>
+      <code><![CDATA[new ReflectionClass($trait)]]></code>
+      <code><![CDATA[new ReflectionMethod($constructor)]]></code>
+      <code><![CDATA[new ReflectionMethod($method)]]></code>
+      <code><![CDATA[new ReflectionProperty($property)]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionParameter.php">
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionClass($classType->getClass())]]></code>
+      <code><![CDATA[new ReflectionClass($declaringClass)]]></code>
+      <code><![CDATA[new ReflectionFunction($function)]]></code>
+      <code><![CDATA[new ReflectionMethod($function)]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/Adapter/ReflectionProperty.php">
+    <ImmutableDependency>
+      <code><![CDATA[public function isReadable(string|null $scope, object|null $object = null): bool]]></code>
+      <code><![CDATA[public function isWritable(string|null $scope, object|null $object = null): bool]]></code>
+    </ImmutableDependency>
+    <ImpureMethodCall>
+      <code><![CDATA[new ReflectionClass($this->betterReflectionProperty->getImplementingClass())]]></code>
+    </ImpureMethodCall>
+  </file>
   <file src="src/Reflection/Attribute/ReflectionAttributeHelper.php">
     <ImpureMethodCall>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[$attributeNode->name->toLowerString()]]></code>
+      <code><![CDATA[$attributeNode->name->toLowerString()]]></code>
     </ImpureMethodCall>
     <ImpurePropertyFetch>
       <code><![CDATA[$attributeNode->name]]></code>
@@ -14,10 +92,10 @@
   </file>
   <file src="src/Reflection/ReflectionAttribute.php">
     <ImpureFunctionCall>
-      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map(static fn (Node\Expr $value): mixed => $compiler->__invoke($value, $context)->value, $this->arguments)]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[$this->reflector->reflectClass($this->getName())]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionClass.php">
@@ -32,8 +110,6 @@
             [$valueParameter],
             new Node\NullableType(new Node\Identifier('static')),
         )]]></code>
-      <code><![CDATA[$createMethod($method->getAliasName(), $modifiersUsedWithAlias ? $method->getModifiers() : $methodModifiers)]]></code>
-      <code><![CDATA[$createMethod($traitAliasDefinition['alias'], $methodModifiers)]]></code>
       <code><![CDATA[$createMethod('cases', [], new Node\Identifier('array'))]]></code>
       <code><![CDATA[$createProperty('name', new Node\Identifier('string'))]]></code>
       <code><![CDATA[$createProperty('name', new Node\Identifier('string'))]]></code>
@@ -42,201 +118,301 @@
                     new Node\Identifier('int'),
                     new Node\Identifier('string'),
                 ]))]]></code>
-      <code><![CDATA[array_map]]></code>
-      <code><![CDATA[array_map]]></code>
-      <code><![CDATA[array_map]]></code>
-      <code><![CDATA[array_map]]></code>
+      <code><![CDATA[array_map(
+                fn (string $interfaceClassName): ReflectionClass => $this->reflector->reflectClass($interfaceClassName),
+                $implementsClassName,
+            )]]></code>
+      <code><![CDATA[array_map(
+                fn (string $interfaceClassName): array => $this->reflector
+                    ->reflectClass($interfaceClassName)
+                    ->getInterfacesHierarchy(AlreadyVisitedClasses::createEmpty()),
+                $this->getInterfaceClassNames(),
+            )]]></code>
+      <code><![CDATA[array_map(
+            fn (string $traitClassName): ReflectionClass => $this->reflector->reflectClass($traitClassName),
+            $this->traitClassNames,
+        )]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code><![CDATA[createEmpty]]></code>
-      <code><![CDATA[createEmpty]]></code>
-      <code><![CDATA[createEmpty]]></code>
-      <code><![CDATA[createEmpty]]></code>
-      <code><![CDATA[createEmpty]]></code>
-      <code><![CDATA[createFromMethodNode]]></code>
-      <code><![CDATA[createFromNode]]></code>
-      <code><![CDATA[createFromNode]]></code>
-      <code><![CDATA[createFromNode]]></code>
-      <code><![CDATA[getConstants]]></code>
-      <code><![CDATA[getConstants]]></code>
-      <code><![CDATA[getConstants]]></code>
-      <code><![CDATA[getConstants]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getMethods]]></code>
-      <code><![CDATA[getProperties]]></code>
-      <code><![CDATA[getProperties]]></code>
-      <code><![CDATA[getProperties]]></code>
-      <code><![CDATA[getProperties]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[getTraitUses]]></code>
-      <code><![CDATA[isAbstract]]></code>
-      <code><![CDATA[isFinal]]></code>
-      <code><![CDATA[isReadonly]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[push]]></code>
-      <code><![CDATA[reflectClass]]></code>
-      <code><![CDATA[reflectClass]]></code>
-      <code><![CDATA[reflectClass]]></code>
-      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[$alreadyVisitedClasses->push($interfaceClassName)]]></code>
+      <code><![CDATA[$alreadyVisitedClasses->push($this->getName())]]></code>
+      <code><![CDATA[$alreadyVisitedClasses->push($this->getName())]]></code>
+      <code><![CDATA[$alreadyVisitedClasses->push($this->getName())]]></code>
+      <code><![CDATA[$methodNode->name->toLowerString()]]></code>
+      <code><![CDATA[$node->getConstants()]]></code>
+      <code><![CDATA[$node->getConstants()]]></code>
+      <code><![CDATA[$node->getConstants()]]></code>
+      <code><![CDATA[$node->getConstants()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getMethods()]]></code>
+      <code><![CDATA[$node->getProperties()]]></code>
+      <code><![CDATA[$node->getProperties()]]></code>
+      <code><![CDATA[$node->getProperties()]]></code>
+      <code><![CDATA[$node->getProperties()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->getTraitUses()]]></code>
+      <code><![CDATA[$node->isAbstract()]]></code>
+      <code><![CDATA[$node->isFinal()]]></code>
+      <code><![CDATA[$node->isReadonly()]]></code>
+      <code><![CDATA[$this->reflector->reflectClass($parentClassName)]]></code>
+      <code><![CDATA[$this->reflector->reflectClass($parentClassName)]]></code>
+      <code><![CDATA[$this->reflector->reflectClass($stringableClassName)]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()->reflectClass($className)]]></code>
+      <code><![CDATA[AlreadyVisitedClasses::createEmpty()]]></code>
+      <code><![CDATA[AlreadyVisitedClasses::createEmpty()]]></code>
+      <code><![CDATA[AlreadyVisitedClasses::createEmpty()]]></code>
+      <code><![CDATA[AlreadyVisitedClasses::createEmpty()]]></code>
+      <code><![CDATA[AlreadyVisitedClasses::createEmpty()]]></code>
+      <code><![CDATA[CircularReference::fromClassName($parentClassName)]]></code>
+      <code><![CDATA[CircularReference::fromClassName($parentClassName)]]></code>
+      <code><![CDATA[NotAClassReflection::fromReflectionClass($parentClass)]]></code>
+      <code><![CDATA[NotAnInterfaceReflection::fromReflectionClass($this)]]></code>
+      <code><![CDATA[PropertyDoesNotExist::fromName($propertyName)]]></code>
+      <code><![CDATA[PropertyDoesNotExist::fromName($propertyName)]]></code>
+      <code><![CDATA[new Node\Expr\Variable('value')]]></code>
+      <code><![CDATA[new Node\Identifier('array')]]></code>
+      <code><![CDATA[new Node\Identifier('int')]]></code>
+      <code><![CDATA[new Node\Identifier('int')]]></code>
+      <code><![CDATA[new Node\Identifier('static')]]></code>
+      <code><![CDATA[new Node\Identifier('static')]]></code>
+      <code><![CDATA[new Node\Identifier('string')]]></code>
+      <code><![CDATA[new Node\Identifier('string')]]></code>
+      <code><![CDATA[new Node\Identifier('string')]]></code>
+      <code><![CDATA[new Node\Identifier('string')]]></code>
+      <code><![CDATA[new Node\NullableType(new Node\Identifier('static'))]]></code>
+      <code><![CDATA[new Node\Param(
+            new Node\Expr\Variable('value'),
+            null,
+            new Node\UnionType([new Node\Identifier('string'), new Node\Identifier('int')]),
+        )]]></code>
+      <code><![CDATA[new Node\PropertyItem($parameterNameNode->name, $parameterNode->default)]]></code>
+      <code><![CDATA[new Node\Stmt\Property(
+                    $parameterNode->flags,
+                    [new Node\PropertyItem($parameterNameNode->name, $parameterNode->default)],
+                    $parameterNode->getAttributes(),
+                    $parameterNode->type,
+                    $parameterNode->attrGroups,
+                    $parameterNode->hooks,
+                )]]></code>
+      <code><![CDATA[new Node\UnionType([
+                    new Node\Identifier('int'),
+                    new Node\Identifier('string'),
+                ])]]></code>
+      <code><![CDATA[new Node\UnionType([new Node\Identifier('string'), new Node\Identifier('int')])]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionClassConstant.php">
     <ImpureMethodCall>
-      <code><![CDATA[__invoke]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[isFinal]]></code>
-      <code><![CDATA[isPrivate]]></code>
-      <code><![CDATA[isProtected]]></code>
-      <code><![CDATA[isPublic]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->isFinal()]]></code>
+      <code><![CDATA[$node->isPrivate()]]></code>
+      <code><![CDATA[$node->isProtected()]]></code>
+      <code><![CDATA[$node->isPublic()]]></code>
+      <code><![CDATA[(new CompileNodeToValue())->__invoke(
+                $this->value,
+                new CompilerContext($this->reflector, $this),
+            )]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionConstant.php">
     <ImpureMethodCall>
-      <code><![CDATA[__invoke]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()->reflectConstant($constantName)]]></code>
+      <code><![CDATA[(new CompileNodeToValue())->__invoke(
+                $this->value,
+                new CompilerContext($this->reflector, $this),
+            )]]></code>
+      <code><![CDATA[ConstantNodeChecker::assertValidDefineFunctionCall($node)]]></code>
     </ImpureMethodCall>
-  </file>
-  <file src="src/Reflection/ReflectionEnum.php">
-    <ImpureFunctionCall>
-      <code><![CDATA[array_map]]></code>
-      <code><![CDATA[array_map]]></code>
-    </ImpureFunctionCall>
   </file>
   <file src="src/Reflection/ReflectionEnumCase.php">
     <ImpureMethodCall>
-      <code><![CDATA[__invoke]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[(new CompileNodeToValue())->__invoke(
+                $this->value,
+                new CompilerContext($this->reflector, $this),
+            )]]></code>
+    </ImpureMethodCall>
+  </file>
+  <file src="src/Reflection/ReflectionFunction.php">
+    <ImpureFunctionCall>
+      <code><![CDATA[$functionName(...$args)]]></code>
+    </ImpureFunctionCall>
+    <ImpureMethodCall>
+      <code><![CDATA[$configuration->phpParser()]]></code>
+      <code><![CDATA[$configuration->sourceLocator()]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()]]></code>
+      <code><![CDATA[(new BetterReflection())->reflector()->reflectFunction($functionName)]]></code>
+      <code><![CDATA[(new DefaultReflector(new AggregateSourceLocator([
+            $configuration->sourceLocator(),
+            new ClosureSourceLocator($closure, $configuration->phpParser()),
+        ])))->reflectFunction(self::CLOSURE_NAME)]]></code>
+      <code><![CDATA[FunctionDoesNotExist::fromName($functionName)]]></code>
+      <code><![CDATA[new ClosureSourceLocator($closure, $configuration->phpParser())]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionFunctionAbstract.php">
+    <ImpureFunctionCall>
+      <code><![CDATA[fillFromNode]]></code>
+    </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code><![CDATA[createFromNode]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getReturnType]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStmts]]></code>
-      <code><![CDATA[getStmts]]></code>
-      <code><![CDATA[getSubNodeNames]]></code>
-      <code><![CDATA[traverse]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getReturnType()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->getStmts()]]></code>
+      <code><![CDATA[$node->getStmts()]]></code>
+      <code><![CDATA[$node->getSubNodeNames()]]></code>
+      <code><![CDATA[$traverser->traverse($statements)]]></code>
+      <code><![CDATA[CodeLocationMissing::create()]]></code>
+      <code><![CDATA[CodeLocationMissing::create()]]></code>
+      <code><![CDATA[CodeLocationMissing::create()]]></code>
+      <code><![CDATA[CodeLocationMissing::create()]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionMethod.php">
-    <ImpureFunctionCall>
-      <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName(), $args)]]></code>
-      <code><![CDATA[$closure->__invoke($object, $this->getName(), $args)]]></code>
-    </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code><![CDATA[classExists]]></code>
-      <code><![CDATA[isAbstract]]></code>
-      <code><![CDATA[isFinal]]></code>
-      <code><![CDATA[isFinal]]></code>
-      <code><![CDATA[isPrivate]]></code>
-      <code><![CDATA[isProtected]]></code>
-      <code><![CDATA[isPublic]]></code>
-      <code><![CDATA[isStatic]]></code>
-      <code><![CDATA[traitExists]]></code>
+      <code><![CDATA[$node->isAbstract()]]></code>
+      <code><![CDATA[$node->isFinal()]]></code>
+      <code><![CDATA[$node->isFinal()]]></code>
+      <code><![CDATA[$node->isPrivate()]]></code>
+      <code><![CDATA[$node->isProtected()]]></code>
+      <code><![CDATA[$node->isPublic()]]></code>
+      <code><![CDATA[$node->isStatic()]]></code>
+      <code><![CDATA[ClassExistenceChecker::classExists($className)]]></code>
+      <code><![CDATA[ClassExistenceChecker::traitExists($className)]]></code>
+      <code><![CDATA[NoObjectProvided::create()]]></code>
+      <code><![CDATA[ObjectNotInstanceOfClass::fromClassName($implementingClassName)]]></code>
+      <code><![CDATA[new Node\Expr\Variable('value')]]></code>
+      <code><![CDATA[new Node\Identifier('void')]]></code>
+      <code><![CDATA[new Node\Param(new Node\Expr\Variable('value'), type: $type)]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionNamedType.php">
     <ImpureMethodCall>
-      <code><![CDATA[reflectClass]]></code>
+      <code><![CDATA[$this->reflector->reflectClass($this->name)]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionObject.php">
     <ImpureMethodCall>
-      <code><![CDATA[createFromNode]]></code>
-      <code><![CDATA[getNode]]></code>
-      <code><![CDATA[getValue]]></code>
-      <code><![CDATA[makePublic]]></code>
-      <code><![CDATA[setDefault]]></code>
+      <code><![CDATA[$betterReflection->phpParser()]]></code>
+      <code><![CDATA[$betterReflection->reflector()]]></code>
+      <code><![CDATA[$betterReflection->sourceLocator()]]></code>
+      <code><![CDATA[$builder->getNode()]]></code>
+      <code><![CDATA[$builder->makePublic()]]></code>
+      <code><![CDATA[$builder->setDefault($property->getValue($instance))]]></code>
+      <code><![CDATA[$property->getValue($instance)]]></code>
+      <code><![CDATA[$reflector->reflectClass($className)]]></code>
+      <code><![CDATA[new AnonymousClassObjectSourceLocator(
+                    $instance,
+                    $betterReflection->phpParser(),
+                )]]></code>
+      <code><![CDATA[new CoreReflectionObject($this->object)]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionParameter.php">
     <ImpureMethodCall>
-      <code><![CDATA[__invoke]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[toLowerString]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$this->default->name->toLowerString()]]></code>
+      <code><![CDATA[(new CompileNodeToValue())->__invoke(
+                $this->default,
+                new CompilerContext($this->reflector, $this),
+            )]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for parameter "$%s".', $this->name))]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionProperty.php">
     <ImpureFunctionCall>
-      <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName())]]></code>
       <code><![CDATA[$closure->__invoke($implementingClassName, $this->getName(), func_num_args() === 2 ? $value : $object)]]></code>
-      <code><![CDATA[$closure->__invoke($instance, $this->getName())]]></code>
       <code><![CDATA[$closure->__invoke($instance, $this->getName(), $value)]]></code>
     </ImpureFunctionCall>
     <ImpureMethodCall>
-      <code><![CDATA[__invoke]]></code>
-      <code><![CDATA[classExists]]></code>
-      <code><![CDATA[createFromPropertyHook]]></code>
-      <code><![CDATA[getEndLine]]></code>
-      <code><![CDATA[getStartLine]]></code>
-      <code><![CDATA[getStmts]]></code>
-      <code><![CDATA[isAbstract]]></code>
-      <code><![CDATA[isFinal]]></code>
-      <code><![CDATA[isPrivate]]></code>
-      <code><![CDATA[isPrivate]]></code>
-      <code><![CDATA[isPrivateSet]]></code>
-      <code><![CDATA[isProtected]]></code>
-      <code><![CDATA[isProtected]]></code>
-      <code><![CDATA[isProtectedSet]]></code>
-      <code><![CDATA[isPublic]]></code>
-      <code><![CDATA[isPublic]]></code>
-      <code><![CDATA[isPublicSet]]></code>
-      <code><![CDATA[isReadonly]]></code>
-      <code><![CDATA[isStatic]]></code>
-      <code><![CDATA[traitExists]]></code>
-      <code><![CDATA[traverse]]></code>
+      <code><![CDATA[$hook->getStmts()]]></code>
+      <code><![CDATA[$node->getEndLine()]]></code>
+      <code><![CDATA[$node->getStartLine()]]></code>
+      <code><![CDATA[$node->isAbstract()]]></code>
+      <code><![CDATA[$node->isFinal()]]></code>
+      <code><![CDATA[$node->isPrivate()]]></code>
+      <code><![CDATA[$node->isPrivate()]]></code>
+      <code><![CDATA[$node->isPrivateSet()]]></code>
+      <code><![CDATA[$node->isProtected()]]></code>
+      <code><![CDATA[$node->isProtected()]]></code>
+      <code><![CDATA[$node->isProtectedSet()]]></code>
+      <code><![CDATA[$node->isPublic()]]></code>
+      <code><![CDATA[$node->isPublic()]]></code>
+      <code><![CDATA[$node->isPublicSet()]]></code>
+      <code><![CDATA[$node->isReadonly()]]></code>
+      <code><![CDATA[$node->isStatic()]]></code>
+      <code><![CDATA[$traverser->traverse($hookBody)]]></code>
+      <code><![CDATA[(new CompileNodeToValue())->__invoke(
+                $this->default,
+                new CompilerContext(
+                    $this->reflector,
+                    $this,
+                ),
+            )]]></code>
+      <code><![CDATA[ClassExistenceChecker::classExists($className)]]></code>
+      <code><![CDATA[ClassExistenceChecker::traitExists($className)]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()))]]></code>
+      <code><![CDATA[CodeLocationMissing::create(sprintf('Was looking for property "$%s" in "%s".', $this->name, $this->implementingClass->getName()))]]></code>
+      <code><![CDATA[NoObjectProvided::create()]]></code>
+      <code><![CDATA[NotAnObject::fromNonObject($object)]]></code>
+      <code><![CDATA[ObjectNotInstanceOfClass::fromClassName($implementingClassName)]]></code>
+      <code><![CDATA[ObjectNotInstanceOfClass::fromClassName($propertyClass->getName())]]></code>
     </ImpureMethodCall>
   </file>
   <file src="src/Reflection/ReflectionType.php">
     <ImpureMethodCall>
+      <code><![CDATA[$innerUnionType->toLowerString()]]></code>
+      <code><![CDATA[$innerUnionType->toLowerString()]]></code>
+      <code><![CDATA[$type->toLowerString()]]></code>
+      <code><![CDATA[$type->toLowerString()]]></code>
+      <code><![CDATA[$type->toLowerString()]]></code>
+      <code><![CDATA[$type->toLowerString()]]></code>
       <code><![CDATA[new Identifier('null')]]></code>
       <code><![CDATA[new Identifier('null')]]></code>
       <code><![CDATA[new UnionType($types)]]></code>
       <code><![CDATA[new UnionType([$type, new Identifier('null')])]]></code>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
-      <code><![CDATA[toLowerString]]></code>
     </ImpureMethodCall>
     <ImpurePropertyFetch>
       <code><![CDATA[$type->type]]></code>
@@ -246,10 +422,19 @@
   </file>
   <file src="src/Util/CalculateReflectionColumn.php">
     <ImpureMethodCall>
-      <code><![CDATA[getEndFilePos]]></code>
-      <code><![CDATA[getStartFilePos]]></code>
-      <code><![CDATA[hasAttribute]]></code>
-      <code><![CDATA[hasAttribute]]></code>
+      <code><![CDATA[$node->getEndFilePos()]]></code>
+      <code><![CDATA[$node->getStartFilePos()]]></code>
+      <code><![CDATA[$node->hasAttribute('endFilePos')]]></code>
+      <code><![CDATA[$node->hasAttribute('startFilePos')]]></code>
+      <code><![CDATA[InvalidNodePosition::fromPosition($position)]]></code>
+      <code><![CDATA[NoNodePosition::fromNode($node)]]></code>
+      <code><![CDATA[NoNodePosition::fromNode($node)]]></code>
     </ImpureMethodCall>
+  </file>
+  <file src="src/Util/Memoize.php">
+    <ImpurePropertyAssignment>
+      <code><![CDATA[$this->cached]]></code>
+      <code><![CDATA[$this->cb]]></code>
+    </ImpurePropertyAssignment>
   </file>
 </files>

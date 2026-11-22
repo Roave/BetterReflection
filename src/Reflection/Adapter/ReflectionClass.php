@@ -245,7 +245,6 @@ final class ReflectionClass extends CoreReflectionClass
      */
     public function getConstants(int|null $filter = null): array
     {
-        /** @psalm-suppress ImpureFunctionCall */
         return array_map(
             fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
             $this->filterBetterReflectionClassConstants($filter),

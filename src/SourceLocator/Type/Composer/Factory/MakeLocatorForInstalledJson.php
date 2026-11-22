@@ -128,7 +128,7 @@ final class MakeLocatorForInstalledJson
 
                     return [new SingleFileSourceLocator($file, $astLocator)];
                 },
-                array_merge($classMapFiles, $filePaths),
+                array_values(array_merge($classMapFiles, $filePaths)),
             ),
         ));
     }

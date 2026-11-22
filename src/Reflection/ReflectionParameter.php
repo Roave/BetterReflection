@@ -361,7 +361,6 @@ class ReflectionParameter
             return null;
         }
 
-        /** @psalm-suppress ImpureMethodCall */
         $doc = new Doc($docComment);
         /** @psalm-suppress ImpureMethodCall */
         $reformattedDocComment = $doc->getReformattedText();

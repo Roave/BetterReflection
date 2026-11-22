@@ -76,6 +76,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         throw new OutOfBoundsException(sprintf('Property %s::$%s does not exist.', self::class, $name));
     }
 
+    /** @return class-string<UnitEnum> */
     public function getName(): string
     {
         /** @phpstan-var class-string<UnitEnum> */
@@ -115,16 +116,19 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $fileName !== null ? FileHelper::normalizeSystemPath($fileName) : false;
     }
 
+    /** @return positive-int */
     public function getStartLine(): int
     {
         return $this->betterReflectionEnum->getStartLine();
     }
 
+    /** @return positive-int */
     public function getEndLine(): int
     {
         return $this->betterReflectionEnum->getEndLine();
     }
 
+    /** @return non-empty-string|false */
     public function getDocComment(): string|false
     {
         return $this->betterReflectionEnum->getDocComment() ?? false;
@@ -225,7 +229,6 @@ final class ReflectionEnum extends CoreReflectionEnum
      */
     public function getConstants(int|null $filter = null): array
     {
-        /** @psalm-suppress ImpureFunctionCall */
         return array_map(
             fn (BetterReflectionClassConstant|BetterReflectionEnumCase $betterConstantOrEnumCase): mixed => $this->getConstantValue($betterConstantOrEnumCase),
             $this->filterBetterReflectionClassConstants($filter),
@@ -375,6 +378,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->betterReflectionEnum->isReadOnly();
     }
 
+    /** @return int-mask-of<ReflectionClass::IS_*> */
     public function getModifiers(): int
     {
         return $this->betterReflectionEnum->getModifiers();
@@ -482,11 +486,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->implementsInterface($className);
     }
 
-    /**
-     * @return array<string, mixed>
-     *
-     * @psalm-suppress LessSpecificImplementedReturnType
-     */
+    /** @return array<string, mixed> */
     public function getStaticProperties(): array
     {
         return $this->betterReflectionEnum->getStaticProperties();
@@ -554,6 +554,7 @@ final class ReflectionEnum extends CoreReflectionEnum
         return $this->betterReflectionEnum->getNamespaceName() ?? '';
     }
 
+    /** @return non-empty-string */
     public function getShortName(): string
     {
         return $this->betterReflectionEnum->getShortName();

@@ -272,7 +272,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         if (! array_key_exists($lowercaseClassName, $this->classNodes)) {
             $this->parseFile($filePath);
 
-            /** @psalm-suppress RedundantCondition */
             if (! array_key_exists($lowercaseClassName, $this->classNodes)) {
                 // Save `null` so we don't parse the file again for the same $lowercaseClassName
                 $this->classNodes[$lowercaseClassName] = null;
@@ -295,7 +294,6 @@ final class PhpStormStubsSourceStubber implements SourceStubber
         if (! array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
             $this->parseFile($filePath);
 
-            /** @psalm-suppress RedundantCondition */
             if (! array_key_exists($lowercaseFunctionName, $this->functionNodes)) {
                  // Save `null` so we don't parse the file again for the same $lowercaseFunctionName
                  $this->functionNodes[$lowercaseFunctionName] = null;

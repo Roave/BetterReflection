@@ -729,7 +729,6 @@ class ReflectionProperty
             return [$this, $propertyClass];
         }
 
-        /** @psalm-suppress ImpureMethodCall */
         $objectClass = ReflectionClass::createFromInstance($object);
 
         if ($this->isPrivate()) {
@@ -765,7 +764,6 @@ class ReflectionProperty
         if ($object === null) {
             $class = $this->getImplementingClass();
         } else {
-            /** @psalm-suppress ImpureMethodCall */
             $class = ReflectionClass::createFromInstance($object);
         }
 
